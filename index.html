@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Thinking Tank | Mobile LED Effects</title>
+  <meta name="description" content="Custom 5V WS2812B LED effects for bicycles, e-bikes, helmets, vans, motorcycles, automobiles and boats in Los Angeles.">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#top">The Thinking Tank</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link" href="#packages">Packages</a>
+          <a class="nav-link" href="#effects">Effects</a>
+          <a class="nav-link" href="#catalog">Parts</a>
+          <a class="nav-link" href="#request">Request Install</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header id="top" class="hero py-5">
+    <div class="container py-4">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <p class="text-uppercase small fw-bold mb-2">Los Angeles mobile LED effects</p>
+          <h1 class="display-4 fw-bold">Custom lighting that does not look like everybody else's.</h1>
+          <p class="lead">Programmable 5V WS2812B RGB lighting for bicycles, e-bikes, helmets, vans, motorcycles, automobiles and boats.</p>
+          <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-light btn-lg" href="#packages">See Packages</a>
+            <a class="btn btn-outline-light btn-lg" href="#request">Request an Installation</a>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="demo-panel p-4 rounded-4">
+            <h2 class="h4">Current demonstration platform</h2>
+            <ul class="mb-0">
+              <li>Up to 330 individually programmable RGB LEDs</li>
+              <li>ESP32/WLED phone control</li>
+              <li>Multiple independent lighting zones</li>
+              <li>Portable 5V battery-bank power</li>
+              <li>Helmet banner and bicycle installations</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="packages" class="py-5">
+      <div class="container">
+        <h2 class="fw-bold">Bicycle lighting packages</h2>
+        <p class="text-secondary">Final pricing depends on LED count, mounting, wiring access, controller choice and weather protection.</p>
+        <div class="row g-4 mt-1">
+          <div class="col-md-4"><div class="card h-100"><div class="card-body"><h3 class="h5">Kid's Bike</h3><p>Up to 100 programmable RGB LEDs, phone-controlled effects, rechargeable 5V power and removable battery pouch.</p></div></div></div>
+          <div class="col-md-4"><div class="card h-100"><div class="card-body"><h3 class="h5">Standard Bike</h3><p>Up to 200 LEDs with front, frame and rear lighting zones, weather-resistant wiring and programmable effects.</p></div></div></div>
+          <div class="col-md-4"><div class="card h-100"><div class="card-body"><h3 class="h5">Full 330-LED Build</h3><p>ESP32/WLED controller, multiple zones, custom presets, playlists, phone control and removable power system.</p></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="effects" class="py-5 bg-body-tertiary">
+      <div class="container">
+        <h2 class="fw-bold">Effects and control</h2>
+        <div class="row g-4 mt-1">
+          <div class="col-md-6"><div class="p-4 bg-white rounded-3 h-100"><h3 class="h5">Everyday mode</h3><p class="mb-0">Brightness-limited colored effects, segmented zones and saved presets selected from a phone.</p></div></div>
+          <div class="col-md-6"><div class="p-4 bg-white rounded-3 h-100"><h3 class="h5">Custom mode</h3><p class="mb-0">Original sequences, music-reactive patterns, helmet displays, synchronized sections and project-specific programming.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="catalog" class="py-5">
+      <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-end gap-2">
+          <div><h2 class="fw-bold mb-1">Compatible parts catalog</h2><p class="text-secondary mb-0">Focused on 5V WS2812B colored LED systems.</p></div>
+          <select id="categoryFilter" class="form-select catalog-filter" aria-label="Filter parts by category"><option value="all">All categories</option></select>
+        </div>
+        <div id="catalogGrid" class="row g-4 mt-2"></div>
+      </div>
+    </section>
+
+    <section id="request" class="py-5 bg-dark text-white">
+      <div class="container">
+        <div class="row g-4 align-items-center">
+          <div class="col-lg-8"><h2 class="fw-bold">Request an installation</h2><p class="mb-0">Choose the vehicle type, approximate LED package and effects you want. A direct booking form will be connected here next.</p></div>
+          <div class="col-lg-4 text-lg-end"><a class="btn btn-light btn-lg disabled" aria-disabled="true">Request Form Coming Next</a></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="py-4 border-top">
+    <div class="container small d-flex flex-wrap justify-content-between gap-2">
+      <span>Copyright © 2026 Dedric. All rights reserved.</span>
+      <span><a href="PRIVACY.md">Privacy</a> · <a href="TERMS.md">Terms</a></span>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/catalog.js"></script>
+</body>
+</html>
