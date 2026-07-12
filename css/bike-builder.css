@@ -1,0 +1,174 @@
+:root {
+  --builder-green: #20c997;
+  --builder-red: #dc3545;
+  --builder-ink: #14171c;
+  --builder-panel: #f5f7fb;
+}
+
+.builder-hero {
+  color: #fff;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255,255,255,.22), transparent 28%),
+    linear-gradient(135deg, #4213a8, #e00088 70%, #ff8a00);
+}
+
+.builder-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(340px, .95fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.builder-form .accordion-item {
+  border: 0;
+  border-radius: 1rem !important;
+  overflow: hidden;
+  box-shadow: 0 .45rem 1.25rem rgba(20, 23, 28, .08);
+  margin-bottom: 1rem;
+}
+
+.builder-form .accordion-button {
+  font-weight: 800;
+  background: #fff;
+}
+
+.builder-form .accordion-button:not(.collapsed) {
+  color: #4616a8;
+  background: #f0eaff;
+  box-shadow: none;
+}
+
+.question-row {
+  padding: 1rem 0;
+  border-bottom: 1px solid #e8ebf1;
+}
+
+.question-row:last-child { border-bottom: 0; }
+.question-label { font-weight: 750; margin-bottom: .55rem; }
+.question-note { color: #69717d; font-size: .9rem; }
+
+.yes-no {
+  display: inline-flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
+
+.yes-no .btn {
+  min-width: 76px;
+  font-weight: 750;
+}
+
+.conditional-options {
+  margin-top: .85rem;
+  padding: .85rem;
+  border-radius: .8rem;
+  background: #f7f8fb;
+  border: 1px solid #e1e5eb;
+}
+
+.preview-card {
+  position: sticky;
+  top: 5.25rem;
+  border: 0;
+  border-radius: 1.2rem;
+  overflow: hidden;
+  box-shadow: 0 .75rem 2rem rgba(20, 23, 28, .13);
+}
+
+.preview-toolbar {
+  background: #11141a;
+  color: #fff;
+}
+
+.bike-stage {
+  min-height: 520px;
+  padding: .75rem;
+  background:
+    linear-gradient(rgba(255,255,255,.82), rgba(255,255,255,.82)),
+    repeating-linear-gradient(0deg, #dfe3ea 0, #dfe3ea 1px, transparent 1px, transparent 28px),
+    repeating-linear-gradient(90deg, #dfe3ea 0, #dfe3ea 1px, transparent 1px, transparent 28px);
+}
+
+.bike-stage svg { width: 100%; height: auto; display: block; }
+
+.svg-bike-group {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  transition: transform .35s ease;
+}
+
+.zone {
+  transition: stroke .25s ease, fill .25s ease, opacity .25s ease, filter .25s ease;
+}
+
+.zone-on {
+  stroke: var(--builder-green) !important;
+  fill: rgba(32, 201, 151, .17) !important;
+  opacity: 1 !important;
+  filter: drop-shadow(0 0 6px rgba(32, 201, 151, .72));
+}
+
+.zone-off {
+  stroke: var(--builder-red) !important;
+  fill: rgba(220, 53, 69, .04) !important;
+  opacity: .34 !important;
+  stroke-dasharray: 8 6;
+  filter: none;
+}
+
+.part-solid.zone-on { fill: var(--builder-green) !important; }
+.part-solid.zone-off { fill: var(--builder-red) !important; }
+
+.bike-metal { stroke: #2d333b; fill: none; stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; }
+.bike-tire { stroke: #25282d; fill: #fff; stroke-width: 12; }
+.bike-rim { stroke: #9aa2ad; fill: none; stroke-width: 3; }
+.bike-spoke { stroke: #c8ced6; stroke-width: 2; }
+
+.legend-dot {
+  display: inline-block;
+  width: .8rem;
+  height: .8rem;
+  border-radius: 50%;
+  margin-right: .35rem;
+}
+
+.legend-on { background: var(--builder-green); }
+.legend-off { background: var(--builder-red); }
+
+#rearViewPanel[hidden], #kidBikeGroup[hidden] { display: none !important; }
+
+.flag-pulse { animation: flagPulse .75s infinite alternate; }
+@keyframes flagPulse { from { opacity: .35; } to { opacity: 1; } }
+
+.signal-pulse { animation: signalPulse .7s infinite alternate; }
+@keyframes signalPulse { from { opacity: .25; } to { opacity: 1; } }
+
+.stop-pulse { animation: stopPulse 1s infinite; }
+@keyframes stopPulse { 50% { filter: drop-shadow(0 0 13px rgba(255,0,0,.95)); } }
+
+.summary-box {
+  background: #101318;
+  color: #fff;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.summary-box ul { margin-bottom: 0; padding-left: 1.15rem; }
+
+.budget-badge {
+  background: #ece6ff;
+  color: #4616a8;
+  border: 1px solid #d8cbff;
+  font-weight: 800;
+}
+
+@media (max-width: 991.98px) {
+  .builder-shell { grid-template-columns: 1fr; }
+  .preview-card { position: relative; top: auto; order: -1; }
+  .bike-stage { min-height: 400px; }
+}
+
+@media (max-width: 575.98px) {
+  .bike-stage { padding: .25rem; min-height: 330px; }
+  .builder-form .accordion-body { padding: .9rem; }
+}
