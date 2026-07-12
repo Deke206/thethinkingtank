@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Build My Bike | The Thinking Tank LED</title>
+  <meta name="description" content="Design a custom bicycle LED package with an interactive bike guide for frame, wheels, baskets, flags, brake lights, turn signals and helmet lighting.">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="css/bike-builder.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">The Thinking Tank LED</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link" href="index.html#packages">Packages</a>
+          <a class="nav-link active" aria-current="page" href="build-my-bike.html">Build My Bike</a>
+          <a class="nav-link" href="index.html#catalog">Parts</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="builder-hero py-5">
+    <div class="container py-3">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+          <p class="text-uppercase small fw-bold mb-2">Interactive lighting planner</p>
+          <h1 class="display-4 fw-bold">Build My Bike</h1>
+          <p class="lead mb-0">Choose the bicycle size, lighting zones, accessories, safety effects and budget. The bike preview updates immediately: green means selected and red means not selected.</p>
+        </div>
+        <div class="col-lg-4">
+          <div class="demo-panel rounded-4 p-4">
+            <strong>Preview rules</strong>
+            <div class="mt-2"><span class="legend-dot legend-on"></span>Green: included</div>
+            <div><span class="legend-dot legend-off"></span>Red: not included</div>
+            <div class="small mt-2">Rear-view equipment appears when rear baskets, brake lights or turn signals are selected.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="py-5">
+    <div class="container">
+      <div class="builder-shell">
+        <form id="bikeBuilderForm" class="builder-form" novalidate>
+          <div class="accordion" id="builderAccordion">
+
+            <section class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#bikeSetup" aria-expanded="true" aria-controls="bikeSetup">1. Bicycle size and extra kid's bike</button>
+              </h2>
+              <div id="bikeSetup" class="accordion-collapse collapse show" data-bs-parent="#builderAccordion">
+                <div class="accordion-body">
+                  <div class="question-row">
+                    <label class="question-label" for="frameSize">Primary bicycle frame size</label>
+                    <select id="frameSize" name="frameSize" class="form-select">
+                      <option value="toddler">Toddler / balance bike</option>
+                      <option value="preschool">Small child / preschool</option>
+                      <option value="youth">Youth bicycle</option>
+                      <option value="teen">Teen / small adult</option>
+                      <option value="adult" selected>Adult bicycle</option>
+                    </select>
+                  </div>
+                  <div class="question-row">
+                    <div class="question-label">Add a kid's bicycle to this request?</div>
+                    <div class="yes-no">
+                      <input class="btn-check" type="radio" name="addKidBike" id="addKidBikeYes" value="yes">
+                      <label class="btn btn-outline-success" for="addKidBikeYes">Yes</label>
+                      <input class="btn-check" type="radio" name="addKidBike" id="addKidBikeNo" value="no" checked>
+                      <label class="btn btn-outline-danger" for="addKidBikeNo">No</label>
+                    </div>
+                    <div id="kidBikeOptions" class="conditional-options" hidden>
+                      <label class="form-label fw-bold" for="kidFrameSize">Kid's bicycle size</label>
+                      <select id="kidFrameSize" name="kidFrameSize" class="form-select">
+                        <option value="toddler">Toddler / balance bike</option>
+                        <option value="preschool" selected>Small child / preschool</option>
+                        <option value="youth">Youth bicycle</option>
+                      </select>
+                      <div class="question-note mt-2">The second bicycle mirrors the selected lighting zones for this first version of the builder.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#lightingZones" aria-expanded="false" aria-controls="lightingZones">2. Main bicycle lighting zones</button>
+              </h2>
+              <div id="lightingZones" class="accordion-collapse collapse" data-bs-parent="#builderAccordion">
+                <div class="accordion-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="question-row"><div class="question-label">Frame lights</div><div class="yes-no" data-yes-no="frameLights"></div></div>
+                      <div class="question-row"><div class="question-label">Front forks</div><div class="yes-no" data-yes-no="frontForks"></div></div>
+                      <div class="question-row"><div class="question-label">Front wheel</div><div class="yes-no" data-yes-no="frontWheel"></div></div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="question-row"><div class="question-label">Rear wheel</div><div class="yes-no" data-yes-no="rearWheel"></div></div>
+                      <div class="question-row"><div class="question-label">Bicycle handlebar lights</div><div class="yes-no" data-yes-no="handlebars"></div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#basketsStorage" aria-expanded="false" aria-controls="basketsStorage">3. Baskets, pouches and storage</button>
+              </h2>
+              <div id="basketsStorage" class="accordion-collapse collapse" data-bs-parent="#builderAccordion">
+                <div class="accordion-body">
+                  <div class="question-row"><div class="question-label">Front basket lighting</div><div class="yes-no" data-yes-no="frontBasket"></div></div>
+                  <div class="question-row"><div class="question-label">Rear basket lighting</div><div class="yes-no" data-yes-no="rearBasket"></div></div>
+                  <div class="question-row">
+                    <div class="question-label">Handlebar pouch</div>
+                    <div class="yes-no" data-yes-no="pouch"></div>
+                    <div id="pouchOptions" class="conditional-options" hidden>
+                      <label class="form-label fw-bold" for="pouchStyle">Pouch style</label>
+                      <select id="pouchStyle" name="pouchStyle" class="form-select">
+                        <option value="phone holder">Phone holder</option>
+                        <option value="tools and patch kit pouch">Tools and patch kit pouch</option>
+                        <option value="combo phone and tool pouch">Combination phone and tool pouch</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="question-row">
+                    <div class="question-label">Seat pouch</div>
+                    <div class="yes-no" data-yes-no="seatPouch"></div>
+                    <div id="seatPouchOptions" class="conditional-options" hidden>
+                      <label class="form-label fw-bold" for="seatPouchStyle">Seat-pouch kit</label>
+                      <select id="seatPouchStyle" name="seatPouchStyle" class="form-select">
+                        <option value="first aid kit">First-aid kit</option>
+                        <option value="bicycle repair kit">Bicycle repair kit</option>
+                        <option value="first aid and repair combo">First-aid and bicycle-repair combination</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flagControls" aria-expanded="false" aria-controls="flagControls">4. Flag pole and controller</button>
+              </h2>
+              <div id="flagControls" class="accordion-collapse collapse" data-bs-parent="#builderAccordion">
+                <div class="accordion-body">
+                  <div class="question-row">
+                    <div class="question-label">RGB flag pole</div>
+                    <div class="yes-no" data-yes-no="flagPole"></div>
+                    <div id="flagPoleOptions" class="conditional-options" hidden>
+                      <label class="form-label fw-bold" for="flagPoleStyle">Flag-pole style</label>
+                      <select id="flagPoleStyle" name="flagPoleStyle" class="form-select">
+                        <option value="single color">Single color</option>
+                        <option value="RGB">RGB</option>
+                        <option value="caution flashing red">Caution flashing — red</option>
+                        <option value="caution flashing orange">Caution flashing — orange for a kid's bicycle</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="question-row">
+                    <div class="question-label">App control</div>
+                    <div class="yes-no" data-yes-no="appControl"></div>
+                    <div id="preprogrammedOptions" class="conditional-options" hidden>
+                      <label class="form-label fw-bold" for="cycleStyle">Preprogrammed cycled options</label>
+                      <select id="cycleStyle" name="cycleStyle" class="form-select">
+                        <option value="rainbow chase">Rainbow chase</option>
+                        <option value="slow color fade">Slow color fade</option>
+                        <option value="sparkle and pulse">Sparkle and pulse</option>
+                        <option value="solid color rotation">Solid-color rotation</option>
+                        <option value="mixed automatic cycle">Mixed automatic cycle</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rearSafety" aria-expanded="false" aria-controls="rearSafety">5. Rear safety lighting and turn signals</button>
+              </h2>
+              <div id="rearSafety" class="accordion-collapse collapse" data-bs-parent="#builderAccordion">
+                <div class="accordion-body">
+                  <div class="question-row">
+                    <div class="question-label">Rear brake light</div>
+                    <div class="yes-no" data-yes-no="rearBrake"></div>
+                    <div id="rearBrakeOptions" class="conditional-options" hidden>
+                      <label class="form-label fw-bold" for="rearBrakeStyle">Brake-light style</label>
+                      <select id="rearBrakeStyle" name="rearBrakeStyle" class="form-select">
+                        <option value="single red color">Single red color</option>
+                        <option value="RGB rainbow">RGB rainbow</option>
+                        <option value="animated STOP">Animated STOP</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="question-row">
+                    <div class="question-label">Turn signals</div>
+                    <div class="yes-no" data-yes-no="turnSignals"></div>
+                    <div id="turnSignalOptions" class="conditional-options" hidden>
+                      <label class="form-label fw-bold" for="turnSignalStyle">Turn-signal style</label>
+                      <select id="turnSignalStyle" name="turnSignalStyle" class="form-select">
+                        <option value="single orange color">Single orange color</option>
+                        <option value="animated arrows">Animated arrows</option>
+                        <option value="single panel displayed animation">Single-panel displayed animation</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#helmetBudget" aria-expanded="false" aria-controls="helmetBudget">6. Helmet lights and budget</button>
+              </h2>
+              <div id="helmetBudget" class="accordion-collapse collapse" data-bs-parent="#builderAccordion">
+                <div class="accordion-body">
+                  <div class="question-row">
+                    <div class="question-label">Helmet lights</div>
+                    <div class="yes-no" data-yes-no="helmetLights"></div>
+                    <div id="helmetOptions" class="conditional-options" hidden>
+                      <div class="fw-bold mb-2">Select helmet-light options</div>
+                      <div class="form-check"><input class="form-check-input helmet-option" type="checkbox" value="single red rear light" id="helmetRed"><label class="form-check-label" for="helmetRed">Single red rear light</label></div>
+                      <div class="form-check"><input class="form-check-input helmet-option" type="checkbox" value="single white front light" id="helmetWhite"><label class="form-check-label" for="helmetWhite">Single white front light</label></div>
+                      <div class="form-check"><input class="form-check-input helmet-option" type="checkbox" value="strobe" id="helmetStrobe"><label class="form-check-label" for="helmetStrobe">Strobe</label></div>
+                      <div class="form-check"><input class="form-check-input helmet-option" type="checkbox" value="flashing" id="helmetFlashing"><label class="form-check-label" for="helmetFlashing">Flashing</label></div>
+                    </div>
+                  </div>
+                  <div class="question-row">
+                    <label class="question-label" for="budget">Suggested budget</label>
+                    <select id="budget" name="budget" class="form-select"></select>
+                    <div class="question-note mt-2">Budget options run from $100 through $2,000 in $50 steps.</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="summary-box mt-4">
+            <div class="d-flex flex-wrap justify-content-between gap-2 align-items-center mb-2">
+              <h2 class="h5 mb-0">Current build summary</h2>
+              <span id="budgetBadge" class="badge budget-badge">Budget: $300</span>
+            </div>
+            <ul id="buildSummary" aria-live="polite"></ul>
+            <div class="d-flex flex-wrap gap-2 mt-3">
+              <button id="copyBuild" type="button" class="btn btn-light">Copy build summary</button>
+              <button id="resetBuild" type="reset" class="btn btn-outline-light">Reset builder</button>
+            </div>
+            <div id="copyStatus" class="small mt-2" aria-live="polite"></div>
+          </div>
+        </form>
+
+        <aside class="preview-card card" aria-label="Interactive bicycle preview">
+          <div class="preview-toolbar p-3 d-flex justify-content-between align-items-center gap-2">
+            <div><strong>Interactive guide</strong><div id="sizeLabel" class="small text-white-50">Adult bicycle</div></div>
+            <span class="badge text-bg-light">Live preview</span>
+          </div>
+          <div class="bike-stage">
+            <svg id="bikePreview" viewBox="0 0 900 650" role="img" aria-labelledby="bikePreviewTitle bikePreviewDesc">
+              <title id="bikePreviewTitle">Interactive custom bicycle lighting preview</title>
+              <desc id="bikePreviewDesc">Selected bicycle areas are green. Areas not selected are red. Optional baskets, flag pole, pouches and rear safety lights appear in the preview.</desc>
+              <defs>
+                <linearGradient id="rgbGradient" x1="0" x2="1">
+                  <stop offset="0" stop-color="#ff004c"/><stop offset=".24" stop-color="#ff9500"/><stop offset=".48" stop-color="#ffe100"/><stop offset=".7" stop-color="#00d084"/><stop offset="1" stop-color="#6f42c1"/>
+                </linearGradient>
+              </defs>
+
+              <g id="mainBikeGroup" class="svg-bike-group">
+                <circle class="bike-tire" cx="250" cy="435" r="120"/>
+                <circle class="bike-rim" cx="250" cy="435" r="98"/>
+                <circle class="bike-tire" cx="650" cy="435" r="120"/>
+                <circle class="bike-rim" cx="650" cy="435" r="98"/>
+                <g class="bike-spoke">
+                  <path d="M250 337V533M152 435H348M181 366L319 504M181 504L319 366"/>
+                  <path d="M650 337V533M552 435H748M581 366L719 504M581 504L719 366"/>
+                </g>
+
+                <g class="bike-metal">
+                  <path d="M250 435L390 255L515 435L250 435L430 435L390 255"/>
+                  <path d="M390 255L565 250L650 435"/>
+                  <path d="M565 250L590 190L650 182"/>
+                  <path d="M568 250L650 435"/>
+                  <path d="M358 246H420"/>
+                </g>
+
+                <g id="frameLightsSvg" class="zone zone-off" fill="none" stroke-width="16" stroke-linecap="round">
+                  <path d="M250 435L390 255L515 435L250 435"/>
+                  <path d="M390 255L565 250"/>
+                </g>
+                <g id="frontForksSvg" class="zone zone-off" fill="none" stroke-width="16" stroke-linecap="round">
+                  <path d="M565 250L650 435"/><path d="M581 253L662 432"/>
+                </g>
+                <circle id="frontWheelSvg" class="zone zone-off" cx="650" cy="435" r="108" fill="none" stroke-width="12"/>
+                <circle id="rearWheelSvg" class="zone zone-off" cx="250" cy="435" r="108" fill="none" stroke-width="12"/>
+                <path id="handlebarsSvg" class="zone zone-off" d="M590 190L650 182" fill="none" stroke-width="16" stroke-linecap="round"/>
+
+                <g id="frontBasketSvg" class="zone zone-off" stroke-width="8">
+                  <path d="M655 205H795L770 315H675Z"/><path d="M670 235H785M665 270H777M710 210L700 309M750 210L740 309"/>
+                </g>
+                <g id="rearBasketSvg" class="zone zone-off" stroke-width="8">
+                  <path d="M95 250H235L220 350H110Z"/><path d="M105 280H228M102 315H224M145 255L140 345M185 255L180 345"/>
+                </g>
+
+                <g id="flagPoleSvg" class="zone zone-off" fill="none" stroke-width="10" stroke-linecap="round">
+                  <path d="M155 250V55"/>
+                  <path id="flagShape" class="part-solid" d="M160 60H290L255 105L290 150H160Z" stroke-width="4"/>
+                </g>
+
+                <g id="handlebarPouchSvg" class="zone zone-off" stroke-width="6">
+                  <rect x="535" y="200" width="85" height="52" rx="12"/>
+                </g>
+                <g id="seatPouchSvg" class="zone zone-off" stroke-width="6">
+                  <path d="M360 260H420L407 310H370Z"/>
+                </g>
+
+                <g id="rearBrakeSvg" class="zone zone-off part-solid" stroke-width="5">
+                  <rect x="165" y="350" width="65" height="32" rx="8"/>
+                  <text id="brakeText" x="197" y="373" text-anchor="middle" font-size="17" font-weight="900" fill="#fff">BRAKE</text>
+                </g>
+                <g id="turnSignalsSvg" class="zone zone-off part-solid" stroke-width="4">
+                  <path id="rearSignalLeft" d="M115 365L150 340V355H175V375H150V390Z"/>
+                  <path id="rearSignalRight" d="M280 365L245 340V355H220V375H245V390Z"/>
+                </g>
+
+                <g id="helmetSvg" transform="translate(440 80)">
+                  <path d="M0 70C0 20 35 0 75 0s75 20 75 70v15H0Z" fill="#d9dde5" stroke="#2d333b" stroke-width="8"/>
+                  <path id="helmetLightsSvg" class="zone zone-off" d="M18 68C22 30 45 18 75 18s53 12 57 50" fill="none" stroke-width="12" stroke-linecap="round"/>
+                  <circle id="helmetFrontLight" cx="142" cy="70" r="10" fill="#fff" stroke="#2d333b" stroke-width="4"/>
+                  <circle id="helmetRearLight" cx="8" cy="70" r="10" fill="#b5bac3" stroke="#2d333b" stroke-width="4"/>
+                </g>
+              </g>
+
+              <g id="kidBikeGroup" class="svg-bike-group" hidden transform="translate(510 420) scale(.48)">
+                <circle class="bike-tire" cx="120" cy="220" r="88"/><circle class="bike-tire" cx="420" cy="220" r="88"/>
+                <path class="bike-metal" d="M120 220L225 90L315 220L120 220L225 90L355 90L420 220"/>
+                <path id="kidFrameSvg" class="zone zone-off" d="M120 220L225 90L315 220L120 220M225 90H355" fill="none" stroke-width="16"/>
+                <circle id="kidFrontWheelSvg" class="zone zone-off" cx="420" cy="220" r="78" fill="none" stroke-width="12"/>
+                <circle id="kidRearWheelSvg" class="zone zone-off" cx="120" cy="220" r="78" fill="none" stroke-width="12"/>
+                <path id="kidFlagSvg" class="zone zone-off" d="M90 120V-30M95-25H190L160 10L190 45H95Z" fill="none" stroke-width="10"/>
+                <text x="250" y="340" text-anchor="middle" font-size="34" font-weight="800" fill="#2d333b">Added kid's bike</text>
+              </g>
+
+              <g id="rearViewPanel" hidden transform="translate(600 35)">
+                <rect x="0" y="0" width="270" height="250" rx="20" fill="#fff" stroke="#171a20" stroke-width="5"/>
+                <text x="135" y="32" text-anchor="middle" font-size="20" font-weight="900" fill="#171a20">REAR VIEW</text>
+                <circle cx="135" cy="170" r="52" fill="#fff" stroke="#2d333b" stroke-width="11"/>
+                <path d="M135 70V202" stroke="#2d333b" stroke-width="12" stroke-linecap="round"/>
+                <g id="rearBasketRearSvg" class="zone zone-off" stroke-width="7"><rect x="63" y="62" width="144" height="65" rx="8"/><path d="M78 82H192M78 104H192"/></g>
+                <g id="rearBrakeRearSvg" class="zone zone-off part-solid" stroke-width="5"><rect x="98" y="114" width="74" height="34" rx="7"/><text id="rearBrakeRearText" x="135" y="137" text-anchor="middle" font-size="17" font-weight="900" fill="#fff">STOP</text></g>
+                <g id="turnSignalsRearSvg" class="zone zone-off part-solid" stroke-width="4"><path d="M28 134L65 105V122H95V146H65V163Z"/><path d="M242 134L205 105V122H175V146H205V163Z"/></g>
+              </g>
+            </svg>
+          </div>
+          <div class="card-body border-top">
+            <div class="small text-secondary">The diagram is a planning guide, not a precise measurement drawing. Final strip lengths, power requirements and mounting points are confirmed from actual bicycle photos and dimensions.</div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="py-4 border-top">
+    <div class="container small d-flex flex-wrap justify-content-between gap-2">
+      <span>Copyright © 2026 Dedric. All rights reserved.</span>
+      <span><a href="index.html">Home</a> · <a href="PRIVACY.md">Privacy</a> · <a href="TERMS.md">Terms</a></span>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/bike-builder.js"></script>
+</body>
+</html>
