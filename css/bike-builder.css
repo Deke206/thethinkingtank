@@ -1,8 +1,14 @@
 :root {
-  --builder-green: #20c997;
   --builder-red: #dc3545;
   --builder-ink: #14171c;
   --builder-panel: #f5f7fb;
+  --led-pink: #ff2bd6;
+  --led-purple: #7c4dff;
+  --led-blue: #00b8ff;
+  --led-cyan: #00f5d4;
+  --led-lime: #b8ff2c;
+  --led-yellow: #ffe34d;
+  --led-orange: #ff8a00;
 }
 
 .builder-hero {
@@ -101,12 +107,34 @@
   transition: stroke .25s ease, fill .25s ease, opacity .25s ease, filter .25s ease;
 }
 
+/* Selected sections now resemble individual RGB LEDs instead of a solid green highlight. */
 .zone-on {
-  stroke: var(--builder-green) !important;
-  fill: rgba(32, 201, 151, .17) !important;
+  stroke: var(--led-cyan) !important;
+  fill: rgba(124, 77, 255, .10) !important;
   opacity: 1 !important;
-  filter: drop-shadow(0 0 6px rgba(32, 201, 151, .72));
+  stroke-dasharray: 2 10;
+  stroke-linecap: round;
+  animation:
+    rgbStrokeTwinkle 2.65s steps(1, end) infinite,
+    ledTravel .9s linear infinite,
+    ledBrightnessTwinkle 1.35s ease-in-out infinite;
 }
+
+/* Offset the lighting zones so every part does not blink at the same instant. */
+#frameLightsSvg.zone-on,
+#kidFrameSvg.zone-on { animation-delay: -.15s, -.35s, -.55s; }
+#frontForksSvg.zone-on { animation-delay: -.8s, -.1s, -.35s; }
+#frontWheelSvg.zone-on,
+#kidFrontWheelSvg.zone-on { animation-delay: -1.2s, -.55s, -.9s; }
+#rearWheelSvg.zone-on,
+#kidRearWheelSvg.zone-on { animation-delay: -1.75s, -.25s, -.15s; }
+#handlebarsSvg.zone-on,
+#handlebarPouchSvg.zone-on { animation-delay: -.45s, -.7s, -1.05s; }
+#frontBasketSvg.zone-on { animation-delay: -2.1s, -.3s, -.7s; }
+#rearBasketSvg.zone-on,
+#rearBasketRearSvg.zone-on { animation-delay: -1.4s, -.75s, -.25s; }
+#seatPouchSvg.zone-on { animation-delay: -.95s, -.4s, -.8s; }
+#helmetLightsSvg.zone-on { animation-delay: -2.25s, -.6s, -.4s; }
 
 .zone-off {
   stroke: var(--builder-red) !important;
@@ -114,10 +142,51 @@
   opacity: .34 !important;
   stroke-dasharray: 8 6;
   filter: none;
+  animation: none;
 }
 
-.part-solid.zone-on { fill: var(--builder-green) !important; }
+.part-solid.zone-on {
+  fill: var(--led-pink) !important;
+  animation:
+    rgbStrokeTwinkle 2.65s steps(1, end) infinite,
+    rgbFillTwinkle 2.65s steps(1, end) infinite,
+    ledBrightnessTwinkle 1.35s ease-in-out infinite;
+}
+
 .part-solid.zone-off { fill: var(--builder-red) !important; }
+
+@keyframes rgbStrokeTwinkle {
+  0%, 100% { stroke: var(--led-pink); filter: drop-shadow(0 0 4px rgba(255,43,214,.75)); }
+  13% { stroke: var(--led-purple); filter: drop-shadow(0 0 8px rgba(124,77,255,.95)); }
+  27% { stroke: var(--led-blue); filter: drop-shadow(0 0 5px rgba(0,184,255,.75)); }
+  41% { stroke: var(--led-cyan); filter: drop-shadow(0 0 9px rgba(0,245,212,.95)); }
+  56% { stroke: var(--led-lime); filter: drop-shadow(0 0 4px rgba(184,255,44,.72)); }
+  69% { stroke: var(--led-yellow); filter: drop-shadow(0 0 8px rgba(255,227,77,.95)); }
+  84% { stroke: var(--led-orange); filter: drop-shadow(0 0 5px rgba(255,138,0,.78)); }
+}
+
+@keyframes rgbFillTwinkle {
+  0%, 100% { fill: var(--led-pink); }
+  13% { fill: var(--led-purple); }
+  27% { fill: var(--led-blue); }
+  41% { fill: var(--led-cyan); }
+  56% { fill: var(--led-lime); }
+  69% { fill: var(--led-yellow); }
+  84% { fill: var(--led-orange); }
+}
+
+@keyframes ledTravel {
+  to { stroke-dashoffset: -24; }
+}
+
+@keyframes ledBrightnessTwinkle {
+  0%, 100% { opacity: .62; }
+  18% { opacity: 1; }
+  32% { opacity: .74; }
+  47% { opacity: .98; }
+  66% { opacity: .55; }
+  82% { opacity: 1; }
+}
 
 .bike-metal { stroke: #2d333b; fill: none; stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; }
 .bike-tire { stroke: #25282d; fill: #fff; stroke-width: 12; }
@@ -132,8 +201,20 @@
   margin-right: .35rem;
 }
 
-.legend-on { background: var(--builder-green); }
+.legend-on {
+  background: var(--led-cyan);
+  box-shadow: 0 0 8px var(--led-cyan);
+  animation: legendRgbTwinkle 2.2s steps(1, end) infinite, ledBrightnessTwinkle 1.35s ease-in-out infinite;
+}
 .legend-off { background: var(--builder-red); }
+
+@keyframes legendRgbTwinkle {
+  0%, 100% { background: var(--led-pink); box-shadow: 0 0 8px var(--led-pink); }
+  20% { background: var(--led-blue); box-shadow: 0 0 8px var(--led-blue); }
+  40% { background: var(--led-cyan); box-shadow: 0 0 8px var(--led-cyan); }
+  60% { background: var(--led-lime); box-shadow: 0 0 8px var(--led-lime); }
+  80% { background: var(--led-orange); box-shadow: 0 0 8px var(--led-orange); }
+}
 
 #rearViewPanel[hidden], #kidBikeGroup[hidden] { display: none !important; }
 
@@ -160,6 +241,17 @@
   color: #4616a8;
   border: 1px solid #d8cbff;
   font-weight: 800;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zone-on,
+  .part-solid.zone-on,
+  .legend-on {
+    animation: none !important;
+    stroke: var(--led-cyan) !important;
+    fill: rgba(0,245,212,.16) !important;
+    opacity: 1 !important;
+  }
 }
 
 @media (max-width: 991.98px) {
