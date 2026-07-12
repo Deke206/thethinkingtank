@@ -83,6 +83,7 @@
 .bike-stage {
   min-height: 520px;
   padding: .75rem;
+  position: relative;
   background:
     linear-gradient(rgba(255,255,255,.82), rgba(255,255,255,.82)),
     repeating-linear-gradient(0deg, #dfe3ea 0, #dfe3ea 1px, transparent 1px, transparent 28px),
@@ -100,7 +101,20 @@
 #helmetSvg {
   transform-box: fill-box;
   transform-origin: center;
-  translate: -5.5mm -2mm;
+  translate: -10.5mm -4mm;
+}
+
+#rearBasketSvg {
+  transform-box: fill-box;
+  transform-origin: center;
+  translate: 8mm -2mm;
+}
+
+#rearBrakeSvg {
+  transform-box: fill-box;
+  transform-origin: center;
+  translate: -6mm -4mm;
+  cursor: help;
 }
 
 .zone {
@@ -231,6 +245,45 @@
   color: #4616a8;
   border: 1px solid #d8cbff;
   font-weight: 800;
+}
+
+/* Rename the form control without changing the stored field name used by the builder. */
+#rearSafety .question-row:has([data-yes-no="rearBrake"]) > .question-label {
+  font-size: 0;
+}
+
+#rearSafety .question-row:has([data-yes-no="rearBrake"]) > .question-label::after {
+  content: "Rear tail light assembly";
+  font-size: 1rem;
+}
+
+#rearBrakeOptions label[for="rearBrakeStyle"] {
+  font-size: 0;
+}
+
+#rearBrakeOptions label[for="rearBrakeStyle"]::after {
+  content: "Rear tail-light assembly style";
+  font-size: 1rem;
+}
+
+/* Hover explanation for the tail-light object in the live bicycle guide. */
+.bike-stage:has(#rearBrakeSvg:hover)::after {
+  content: "Rear tail light assembly — improves rear visibility and can provide a solid red lamp, RGB effect, or animated STOP display.";
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 20;
+  max-width: min(92%, 370px);
+  padding: .7rem .85rem;
+  border-radius: .7rem;
+  color: #fff;
+  background: rgba(17, 20, 26, .95);
+  border: 1px solid rgba(255,255,255,.22);
+  box-shadow: 0 .65rem 1.5rem rgba(20,23,28,.24);
+  font-size: .86rem;
+  font-weight: 650;
+  line-height: 1.35;
+  pointer-events: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
