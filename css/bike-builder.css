@@ -1,6 +1,7 @@
 :root {
   --builder-green: #20c997;
   --builder-red: #dc3545;
+  --builder-orange: #ff8a00;
   --builder-ink: #14171c;
   --builder-panel: #f5f7fb;
 }
@@ -104,10 +105,11 @@
   translate: -10.5mm -4mm;
 }
 
+/* Final requested position: 10 mm right and 3.5 mm up. */
 #rearBasketSvg {
   transform-box: fill-box;
   transform-origin: center;
-  translate: 8mm -2mm;
+  translate: 10mm -3.5mm;
 }
 
 #rearBrakeSvg {
@@ -115,6 +117,13 @@
   transform-origin: center;
   translate: -6mm -4mm;
   cursor: help;
+}
+
+/* Final requested turn-signal adjustment. */
+#turnSignalsSvg {
+  transform-box: fill-box;
+  transform-origin: center;
+  translate: -2.5mm 0;
 }
 
 .zone {
@@ -140,34 +149,24 @@
   0% {
     stroke-dashoffset: 0;
     opacity: .72;
-    filter:
-      drop-shadow(0 0 2px rgba(255, 0, 140, .75))
-      drop-shadow(0 0 5px rgba(0, 220, 255, .55));
+    filter: drop-shadow(0 0 2px rgba(255, 0, 140, .75)) drop-shadow(0 0 5px rgba(0, 220, 255, .55));
   }
   22% {
     opacity: 1;
-    filter:
-      drop-shadow(0 0 6px rgba(255, 225, 0, 1))
-      drop-shadow(0 0 11px rgba(255, 75, 0, .85));
+    filter: drop-shadow(0 0 6px rgba(255, 225, 0, 1)) drop-shadow(0 0 11px rgba(255, 75, 0, .85));
   }
   48% {
     opacity: .8;
-    filter:
-      drop-shadow(0 0 4px rgba(0, 255, 170, .95))
-      drop-shadow(0 0 9px rgba(0, 110, 255, .72));
+    filter: drop-shadow(0 0 4px rgba(0, 255, 170, .95)) drop-shadow(0 0 9px rgba(0, 110, 255, .72));
   }
   76% {
     opacity: 1;
-    filter:
-      drop-shadow(0 0 6px rgba(170, 45, 255, 1))
-      drop-shadow(0 0 12px rgba(255, 0, 140, .82));
+    filter: drop-shadow(0 0 6px rgba(170, 45, 255, 1)) drop-shadow(0 0 12px rgba(255, 0, 140, .82));
   }
   100% {
     stroke-dashoffset: -56;
     opacity: .72;
-    filter:
-      drop-shadow(0 0 2px rgba(255, 0, 140, .75))
-      drop-shadow(0 0 5px rgba(0, 220, 255, .55));
+    filter: drop-shadow(0 0 2px rgba(255, 0, 140, .75)) drop-shadow(0 0 5px rgba(0, 220, 255, .55));
   }
 }
 
@@ -180,19 +179,13 @@
   animation: none;
 }
 
-.part-solid.zone-on {
-  fill: url(#rgbGradient) !important;
-  stroke: url(#rgbGradient) !important;
-  stroke-dasharray: 1 8;
-  animation: rgbTwinkle .95s linear infinite, solidRgbPulse 1.5s ease-in-out infinite alternate;
+.solid-green-zone.zone-on {
+  fill: rgba(32, 201, 151, .2) !important;
+  stroke: var(--builder-green) !important;
+  stroke-dasharray: none !important;
+  animation: none !important;
+  filter: drop-shadow(0 0 6px rgba(32, 201, 151, .72));
 }
-
-@keyframes solidRgbPulse {
-  from { opacity: .72; }
-  to { opacity: 1; }
-}
-
-.part-solid.zone-off { fill: var(--builder-red) !important; }
 
 .bike-metal { stroke: #2d333b; fill: none; stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; }
 .bike-tire { stroke: #25282d; fill: #fff; stroke-width: 12; }
@@ -219,17 +212,183 @@
 }
 
 .legend-off { background: var(--builder-red); }
-
 #rearViewPanel[hidden], #kidBikeGroup[hidden] { display: none !important; }
 
-.flag-pulse { animation: flagPulse .75s infinite alternate; }
-@keyframes flagPulse { from { opacity: .35; } to { opacity: 1; } }
+/* The pole is illuminated; the flag remains neutral. */
+.flag-pole.zone-on,
+.flag-pole.zone-off {
+  animation: none;
+  filter: none;
+  stroke-dasharray: none;
+}
 
-.signal-pulse { animation: signalPulse .7s infinite alternate; }
-@keyframes signalPulse { from { opacity: .25; } to { opacity: 1; } }
+.flag-pole.zone-on #flagPoleLight,
+.flag-pole.zone-off #flagPoleLight {
+  fill: none !important;
+  stroke-dasharray: none !important;
+}
 
-.stop-pulse { animation: stopPulse 1s infinite; }
-@keyframes stopPulse { 50% { filter: drop-shadow(0 0 13px rgba(255,0,0,.95)); } }
+.flag-solid-red #flagPoleLight {
+  stroke: #dc3545 !important;
+  filter: drop-shadow(0 0 8px rgba(220,53,69,.95));
+}
+
+.flag-flash-red #flagPoleLight {
+  stroke: #dc3545 !important;
+  animation: flagCautionFlash .82s steps(1, end) infinite;
+}
+
+.flag-flash-orange #flagPoleLight {
+  stroke: var(--builder-orange) !important;
+  animation: flagCautionFlash .82s steps(1, end) infinite;
+}
+
+@keyframes flagCautionFlash {
+  0%, 42% { opacity: 1; filter: drop-shadow(0 0 10px currentColor); }
+  43%, 100% { opacity: .16; filter: none; }
+}
+
+/* Tail-light assembly: solid red or center-out pixel sequence. */
+.tail-light.zone-on,
+.tail-light.zone-off {
+  stroke-dasharray: none;
+  animation: none;
+}
+
+.tail-light .tail-housing {
+  fill: #24171a;
+  stroke: #5c242b;
+}
+
+.tail-light .tail-pixel {
+  fill: var(--builder-red);
+  stroke: #ff6978;
+  opacity: .3;
+}
+
+.tail-light.zone-off .tail-pixel {
+  fill: var(--builder-red) !important;
+  stroke: var(--builder-red) !important;
+  opacity: .22;
+  animation: none;
+}
+
+.tail-solid.zone-on .tail-pixel {
+  fill: #ff1738 !important;
+  stroke: #ff8b98 !important;
+  opacity: 1;
+  animation: none;
+  filter: drop-shadow(0 0 5px rgba(255,23,56,.95));
+}
+
+.tail-animated.zone-on .tail-pixel {
+  fill: #ff1738 !important;
+  stroke: #ff8b98 !important;
+  opacity: 0;
+  animation: tailCenterOut 8s linear infinite;
+  filter: drop-shadow(0 0 5px rgba(255,23,56,.95));
+}
+
+.tail-animated .tail-center { animation-delay: 0s !important; }
+.tail-animated .tail-inner { animation-delay: .25s !important; }
+.tail-animated .tail-outer { animation-delay: .5s !important; }
+
+@keyframes tailCenterOut {
+  0%, 10% { opacity: 0; }
+  12%, 88% { opacity: 1; }
+  90%, 100% { opacity: 0; }
+}
+
+/* Turn signals: solid orange or directional orange-to-red sequence. */
+.turn-signal.zone-on,
+.turn-signal.zone-off {
+  stroke-dasharray: none;
+  animation: none;
+}
+
+.turn-signal .signal-segment {
+  stroke-linejoin: round;
+}
+
+.turn-signal.zone-off .signal-segment {
+  fill: var(--builder-red) !important;
+  stroke: var(--builder-red) !important;
+  opacity: .25;
+  animation: none;
+}
+
+.signal-solid-orange.zone-on .signal-segment {
+  fill: var(--builder-orange) !important;
+  stroke: #ffbf66 !important;
+  opacity: 1;
+  animation: none;
+  filter: drop-shadow(0 0 5px rgba(255,138,0,.9));
+}
+
+.signal-animated.zone-on .signal-left .signal-segment {
+  fill: url(#signalGradientLeft) !important;
+  stroke: #ff9f28 !important;
+}
+
+.signal-animated.zone-on .signal-right .signal-segment {
+  fill: url(#signalGradientRight) !important;
+  stroke: #ff9f28 !important;
+}
+
+.signal-animated.zone-on .signal-segment {
+  opacity: .18;
+  animation: directionalSignal 1.2s linear infinite;
+}
+
+.signal-animated .signal-step-1 { animation-delay: 0s !important; }
+.signal-animated .signal-step-2 { animation-delay: .16s !important; }
+.signal-animated .signal-step-3 { animation-delay: .32s !important; }
+
+@keyframes directionalSignal {
+  0%, 20% { opacity: .18; filter: none; }
+  35%, 62% { opacity: 1; filter: drop-shadow(0 0 7px rgba(255,75,0,.95)); }
+  80%, 100% { opacity: .18; filter: none; }
+}
+
+/* App-control icons occupy the lower-right of the preview window. */
+.app-control-icons {
+  opacity: 0;
+  transition: opacity .25s ease;
+  pointer-events: none;
+}
+
+.app-control-icons.has-selection { opacity: 1; }
+
+.control-icon {
+  opacity: .12;
+  transition: opacity .25s ease, filter .25s ease;
+}
+
+.control-icon > circle,
+.control-icon > rect {
+  fill: #11141a;
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+.control-icon path {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.control-icon .icon-dot,
+.control-icon .remote-button {
+  fill: #fff;
+  stroke: none;
+}
+
+.control-icon-on {
+  opacity: 1;
+  filter: drop-shadow(0 0 6px rgba(70,22,168,.55));
+}
 
 .summary-box {
   background: #101318;
@@ -247,33 +406,14 @@
   font-weight: 800;
 }
 
-/* Rename the form control without changing the stored field name used by the builder. */
-#rearSafety .question-row:has([data-yes-no="rearBrake"]) > .question-label {
-  font-size: 0;
-}
-
-#rearSafety .question-row:has([data-yes-no="rearBrake"]) > .question-label::after {
-  content: "Rear tail light assembly";
-  font-size: 1rem;
-}
-
-#rearBrakeOptions label[for="rearBrakeStyle"] {
-  font-size: 0;
-}
-
-#rearBrakeOptions label[for="rearBrakeStyle"]::after {
-  content: "Rear tail-light assembly style";
-  font-size: 1rem;
-}
-
 /* Hover explanation for the tail-light object in the live bicycle guide. */
 .bike-stage:has(#rearBrakeSvg:hover)::after {
-  content: "Rear tail light assembly — improves rear visibility and can provide a solid red lamp, RGB effect, or animated STOP display.";
+  content: "Rear tail light assembly — choose solid red or a center-out red pixel sequence that fills, holds for five seconds, switches off and repeats.";
   position: absolute;
   left: 1rem;
   bottom: 1rem;
   z-index: 20;
-  max-width: min(92%, 370px);
+  max-width: min(92%, 390px);
   padding: .7rem .85rem;
   border-radius: .7rem;
   color: #fff;
@@ -288,10 +428,16 @@
 
 @media (prefers-reduced-motion: reduce) {
   .zone-on,
-  .part-solid.zone-on,
-  .legend-on {
+  .legend-on,
+  .flag-flash-red #flagPoleLight,
+  .flag-flash-orange #flagPoleLight,
+  .tail-animated.zone-on .tail-pixel,
+  .signal-animated.zone-on .signal-segment {
     animation: none !important;
   }
+
+  .tail-animated.zone-on .tail-pixel,
+  .signal-animated.zone-on .signal-segment { opacity: 1; }
 }
 
 @media (max-width: 991.98px) {
