@@ -119,12 +119,22 @@
   cursor: help;
 }
 
-/* Final requested turn-signal adjustment. */
+/* Keep both signals beside the tail light and level with its bottom edge. */
 #turnSignalsSvg {
   transform-box: fill-box;
   transform-origin: center;
-  translate: -2.5mm 0;
+  translate: -6mm -4mm;
 }
+
+.signal-arrow {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+#turnSignalsSvg .signal-left { transform: translate(-17px, -11px); }
+#turnSignalsSvg .signal-right { transform: translate(17px, -11px); }
+#turnSignalsRearSvg .signal-left { transform: translate(-6px, -13px); }
+#turnSignalsRearSvg .signal-right { transform: translate(6px, -13px); }
 
 .zone {
   transition: stroke .25s ease, fill .25s ease, opacity .25s ease, filter .25s ease;
