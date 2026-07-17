@@ -20,7 +20,6 @@ function renderComfortBike() {
       <path d="M665 339V537M566 438H764M595 368L735 508M595 508L735 368M665 339L665 537"/>
     </g>
 
-    <!-- Tires, fenders and comfort-bike hardware -->
     <g aria-hidden="true">
       <path d="M132 421A122 122 0 0 1 352 382" style="stroke:#2d333b;fill:none;stroke-width:9;stroke-linecap:round"/>
       <path d="M552 421A122 122 0 0 1 772 382" style="stroke:#2d333b;fill:none;stroke-width:9;stroke-linecap:round"/>
@@ -31,7 +30,6 @@ function renderComfortBike() {
       <path d="M492 458H525M382 418H414" style="stroke:#2d333b;fill:none;stroke-width:7;stroke-linecap:round"/>
     </g>
 
-    <!-- Structural step-through frame -->
     <g class="bike-metal">
       <path d="M245 438L450 438L382 286L245 438"/>
       <path d="M382 286C407 355 425 401 450 438"/>
@@ -46,58 +44,63 @@ function renderComfortBike() {
       <path d="M548 151C571 139 590 139 614 149"/>
     </g>
 
-    <!-- Selectable lighting zones -->
     <g id="frameLightsSvg" class="zone zone-off" fill="none" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
       <path d="M245 438L450 438L382 286L245 438"/>
       <path d="M382 286C418 352 449 350 482 326C520 298 536 252 568 238"/>
       <path d="M450 438C495 360 527 292 568 238"/>
     </g>
-
     <g id="frontForksSvg" class="zone zone-off" fill="none" stroke-width="16" stroke-linecap="round">
       <path d="M578 264L665 438"/>
       <path d="M595 262L680 435"/>
     </g>
-
     <circle id="frontWheelSvg" class="zone zone-off" cx="665" cy="438" r="110" fill="none" stroke-width="12"/>
     <circle id="rearWheelSvg" class="zone zone-off" cx="245" cy="438" r="110" fill="none" stroke-width="12"/>
     <path id="handlebarsSvg" class="zone zone-off" d="M550 154L584 128M548 151C571 139 590 139 614 149" fill="none" stroke-width="16" stroke-linecap="round"/>
 
-    <!-- Optional front and rear baskets -->
     <g id="frontBasketSvg" class="zone zone-off" stroke-width="8">
       <path d="M608 186H790L770 306H630Z"/>
       <path d="M620 220H784M625 258H778M664 190L654 300M720 190L710 300"/>
     </g>
-
     <g id="rearBasketSvg" class="zone zone-off" stroke-width="8">
       <path d="M92 246H235L222 348H108Z"/>
       <path d="M103 280H230M100 315H226M143 251L138 343M185 251L180 343"/>
     </g>
 
-    <!-- Flag pole mounted to the rear rack -->
-    <g id="flagPoleSvg" class="zone zone-off" fill="none" stroke-width="10" stroke-linecap="round">
-      <path d="M150 310V62"/>
-      <path id="flagShape" class="part-solid" d="M155 68H292L255 112L292 156H155Z" stroke-width="4"/>
+    <g id="flagPoleSvg" class="flag-pole zone zone-off" fill="none" stroke-linecap="round">
+      <path id="flagPoleLight" d="M150 310V62" stroke-width="12"/>
+      <path id="flagShape" d="M157 68H292L255 112L292 156H157Z" fill="#e9ecef" stroke="#2d333b" stroke-width="4"/>
+      <text id="flagPoleModeLabel" x="165" y="47" font-size="15" font-weight="800" fill="#2d333b">FLAG-POLE LED</text>
     </g>
 
-    <!-- Storage positions -->
-    <g id="handlebarPouchSvg" class="zone zone-off" stroke-width="6">
+    <g id="handlebarPouchSvg" class="zone zone-off solid-green-zone" stroke-width="6">
       <rect x="540" y="164" width="88" height="54" rx="13"/>
     </g>
-    <g id="seatPouchSvg" class="zone zone-off" stroke-width="6">
+    <g id="seatPouchSvg" class="zone zone-off solid-green-zone" stroke-width="6">
       <path d="M332 214H397L386 266H345Z"/>
     </g>
 
-    <!-- Rear brake light and turn signals -->
-    <g id="rearBrakeSvg" class="zone zone-off part-solid" stroke-width="5">
-      <rect x="170" y="347" width="72" height="34" rx="8"/>
-      <text id="brakeText" x="206" y="371" text-anchor="middle" font-size="17" font-weight="900" fill="#fff">BRAKE</text>
-    </g>
-    <g id="turnSignalsSvg" class="zone zone-off part-solid" stroke-width="4">
-      <path id="rearSignalLeft" d="M112 365L151 337V354H178V377H151V394Z"/>
-      <path id="rearSignalRight" d="M300 365L261 337V354H234V377H261V394Z"/>
+    <g id="rearBrakeSvg" class="tail-light zone zone-off" stroke-width="5">
+      <rect class="tail-housing" x="166" y="345" width="80" height="38" rx="8"/>
+      <rect class="tail-pixel tail-outer" x="172" y="352" width="10" height="24" rx="2"/>
+      <rect class="tail-pixel tail-inner" x="186" y="352" width="10" height="24" rx="2"/>
+      <rect class="tail-pixel tail-center" x="200" y="352" width="12" height="24" rx="2"/>
+      <rect class="tail-pixel tail-inner" x="216" y="352" width="10" height="24" rx="2"/>
+      <rect class="tail-pixel tail-outer" x="230" y="352" width="10" height="24" rx="2"/>
     </g>
 
-    <!-- Helmet preview remains above the bicycle -->
+    <g id="turnSignalsSvg" class="turn-signal zone zone-off" stroke-width="3">
+      <g id="rearSignalLeft" class="signal-arrow signal-left">
+        <path class="signal-segment signal-step-3" d="M106 365L139 337V353H151V378H139V394Z"/>
+        <rect class="signal-segment signal-step-2" x="151" y="353" width="13" height="25" rx="2"/>
+        <rect class="signal-segment signal-step-1" x="164" y="353" width="13" height="25" rx="2"/>
+      </g>
+      <g id="rearSignalRight" class="signal-arrow signal-right">
+        <rect class="signal-segment signal-step-1" x="235" y="353" width="13" height="25" rx="2"/>
+        <rect class="signal-segment signal-step-2" x="248" y="353" width="13" height="25" rx="2"/>
+        <path class="signal-segment signal-step-3" d="M306 365L273 337V353H261V378H273V394Z"/>
+      </g>
+    </g>
+
     <g id="helmetSvg" transform="translate(430 60)">
       <path d="M0 70C0 20 35 0 75 0s75 20 75 70v15H0Z" fill="#d9dde5" stroke="#2d333b" stroke-width="8"/>
       <path id="helmetLightsSvg" class="zone zone-off" d="M18 68C22 30 45 18 75 18s53 12 57 50" fill="none" stroke-width="12" stroke-linecap="round"/>
@@ -118,7 +121,7 @@ function renderComfortBike() {
     <path id="kidFrameSvg" class="zone zone-off" d="M120 220L270 220L225 103L120 220M225 103C246 162 265 160 292 140C314 123 331 93 350 90M270 220L350 90" fill="none" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
     <circle id="kidFrontWheelSvg" class="zone zone-off" cx="420" cy="220" r="78" fill="none" stroke-width="12"/>
     <circle id="kidRearWheelSvg" class="zone zone-off" cx="120" cy="220" r="78" fill="none" stroke-width="12"/>
-    <path id="kidFlagSvg" class="zone zone-off" d="M90 120V-30M95-25H190L160 10L190 45H95Z" fill="none" stroke-width="10"/>
+    <path id="kidFlagSvg" class="zone zone-off" d="M90 120V-30" fill="none" stroke-width="10"/>
     <text x="250" y="340" text-anchor="middle" font-size="34" font-weight="800" fill="#2d333b">Added kid's bike</text>`;
 }
 
@@ -189,6 +192,7 @@ const conditionalMap = {
   pouch: 'pouchOptions',
   seatPouch: 'seatPouchOptions',
   flagPole: 'flagPoleOptions',
+  appControl: 'appControlOptions',
   rearBrake: 'rearBrakeOptions',
   turnSignals: 'turnSignalOptions',
   helmetLights: 'helmetOptions'
@@ -236,38 +240,75 @@ function updateConditionalOptions() {
   Object.entries(conditionalMap).forEach(([name, id]) => {
     document.getElementById(id).hidden = !isYes(name);
   });
-  document.getElementById('preprogrammedOptions').hidden = isYes('appControl');
 }
 
-function updateStyles() {
-  const flagShape = document.getElementById('flagShape');
-  const flagStyle = document.getElementById('flagPoleStyle').value;
-  const flagGroup = document.getElementById('flagPoleSvg');
-  flagGroup.classList.remove('flag-pulse');
-  let flagFill = '#6f42c1';
-  if (flagStyle === 'RGB') flagFill = 'url(#rgbGradient)';
-  if (flagStyle.includes('red')) { flagFill = '#dc3545'; flagGroup.classList.add('flag-pulse'); }
-  if (flagStyle.includes('orange')) { flagFill = '#ff8a00'; flagGroup.classList.add('flag-pulse'); }
-  flagShape.style.setProperty('fill', isYes('flagPole') ? flagFill : 'rgba(220,53,69,.04)', 'important');
+function updateFlagPoleStyle() {
+  const enabled = isYes('flagPole');
+  const style = document.getElementById('flagPoleStyle').value;
+  const group = document.getElementById('flagPoleSvg');
+  const pole = document.getElementById('flagPoleLight');
+  const label = document.getElementById('flagPoleModeLabel');
 
-  const brakeStyle = document.getElementById('rearBrakeStyle').value;
-  const brakeText = document.getElementById('brakeText');
-  const rearBrakeText = document.getElementById('rearBrakeRearText');
-  const brakeGroups = [document.getElementById('rearBrakeSvg'), document.getElementById('rearBrakeRearSvg')];
-  brakeGroups.forEach((group) => group.classList.remove('stop-pulse'));
-  brakeText.textContent = brakeStyle === 'animated STOP' ? 'STOP' : 'BRAKE';
-  rearBrakeText.textContent = brakeStyle === 'animated STOP' ? 'STOP' : 'BRAKE';
-  if (isYes('rearBrake') && brakeStyle === 'animated STOP') brakeGroups.forEach((group) => group.classList.add('stop-pulse'));
+  group.classList.remove('flag-flash-red', 'flag-flash-orange', 'flag-solid-red');
+  if (enabled) {
+    if (style === 'caution flashing color orange') group.classList.add('flag-flash-orange');
+    else if (style === 'caution flashing color red') group.classList.add('flag-flash-red');
+    else group.classList.add('flag-solid-red');
+  }
 
-  const signalStyle = document.getElementById('turnSignalStyle').value;
-  const signalGroups = [document.getElementById('turnSignalsSvg'), document.getElementById('turnSignalsRearSvg')];
-  signalGroups.forEach((group) => group.classList.toggle('signal-pulse', isYes('turnSignals') && signalStyle !== 'single orange color'));
+  pole.style.opacity = enabled ? '1' : '.34';
+  label.textContent = enabled ? style.toUpperCase() : 'FLAG-POLE LED';
+  label.style.opacity = enabled ? '1' : '.45';
+}
 
+function updateTailLightStyle() {
+  const enabled = isYes('rearBrake');
+  const animated = document.getElementById('rearBrakeStyle').value === 'animated center-out';
+  ['rearBrakeSvg', 'rearBrakeRearSvg'].forEach((id) => {
+    const group = document.getElementById(id);
+    group.classList.toggle('tail-solid', enabled && !animated);
+    group.classList.toggle('tail-animated', enabled && animated);
+  });
+}
+
+function updateTurnSignalStyle() {
+  const enabled = isYes('turnSignals');
+  const animated = document.getElementById('turnSignalStyle').value === 'animated directional gradient';
+  ['turnSignalsSvg', 'turnSignalsRearSvg'].forEach((id) => {
+    const group = document.getElementById(id);
+    group.classList.toggle('signal-solid-orange', enabled && !animated);
+    group.classList.toggle('signal-animated', enabled && animated);
+  });
+}
+
+function updateAppControlIcons() {
+  const enabled = isYes('appControl');
+  const map = {
+    wifiIcon: document.getElementById('appWifi').checked,
+    bluetoothIcon: document.getElementById('appBluetooth').checked,
+    remoteIcon: document.getElementById('appRemote').checked
+  };
+
+  Object.entries(map).forEach(([id, selected]) => {
+    document.getElementById(id).classList.toggle('control-icon-on', enabled && selected);
+  });
+  document.getElementById('appControlIcons').classList.toggle('has-selection', enabled && Object.values(map).some(Boolean));
+}
+
+function updateHelmetStyle() {
   const helmetEnabled = isYes('helmetLights');
   const redSelected = document.getElementById('helmetRed').checked;
   const whiteSelected = document.getElementById('helmetWhite').checked;
   document.getElementById('helmetRearLight').setAttribute('fill', helmetEnabled && redSelected ? '#ff1f3d' : '#b5bac3');
   document.getElementById('helmetFrontLight').setAttribute('fill', helmetEnabled && whiteSelected ? '#ffffff' : '#b5bac3');
+}
+
+function updateSpecialStyles() {
+  updateFlagPoleStyle();
+  updateTailLightStyle();
+  updateTurnSignalStyle();
+  updateAppControlIcons();
+  updateHelmetStyle();
 }
 
 function updateRearView() {
@@ -277,12 +318,26 @@ function updateRearView() {
 
 function humanLabel(name) {
   const labels = {
-    frameLights: 'Frame lights', frontForks: 'Front-fork lights', frontWheel: 'Front-wheel lights',
-    rearWheel: 'Rear-wheel lights', handlebars: 'Handlebar lights', frontBasket: 'Front basket',
-    rearBasket: 'Rear basket', pouch: 'Handlebar pouch', seatPouch: 'Seat pouch', flagPole: 'Flag pole',
-    appControl: 'App control', rearBrake: 'Rear brake light', turnSignals: 'Turn signals', helmetLights: 'Helmet lights'
+    frameLights: 'Frame lights',
+    frontForks: 'Front-fork lights',
+    frontWheel: 'Front-wheel lights',
+    rearWheel: 'Rear-wheel lights',
+    handlebars: 'Handlebar lights',
+    frontBasket: 'Front basket',
+    rearBasket: 'Rear basket',
+    pouch: 'Handlebar pouch',
+    seatPouch: 'Rear pouch',
+    flagPole: 'Flag-pole LEDs',
+    appControl: 'App Control',
+    rearBrake: 'Rear tail light assembly',
+    turnSignals: 'Turn signals',
+    helmetLights: 'Helmet lights'
   };
   return labels[name] || name;
+}
+
+function checkedValues(selector) {
+  return [...document.querySelectorAll(`${selector}:checked`)].map((input) => input.value);
 }
 
 function buildSummaryLines() {
@@ -293,22 +348,25 @@ function buildSummaryLines() {
   }
 
   Object.keys(yesNoDefaults).forEach((name) => {
-    if (name === 'appControl') return;
     if (isYes(name)) lines.push(humanLabel(name));
   });
 
-  if (isYes('flagPole')) lines.push(`Flag style: ${document.getElementById('flagPoleStyle').value}`);
-  if (isYes('pouch')) lines.push(`Handlebar pouch: ${document.getElementById('pouchStyle').value}`);
-  if (isYes('seatPouch')) lines.push(`Seat pouch: ${document.getElementById('seatPouchStyle').value}`);
-  if (isYes('rearBrake')) lines.push(`Brake-light style: ${document.getElementById('rearBrakeStyle').value}`);
-  if (isYes('turnSignals')) lines.push(`Turn-signal style: ${document.getElementById('turnSignalStyle').value}`);
+  if (isYes('flagPole')) lines.push(`Flag-pole style: ${document.getElementById('flagPoleStyle').value}`);
+  if (isYes('pouch')) lines.push(`Handlebar pouch: ${document.getElementById('pouchStyle').value}; solid green preview`);
+  if (isYes('seatPouch')) lines.push(`Rear pouch: ${document.getElementById('seatPouchStyle').value}; solid green preview`);
+  if (isYes('rearBrake')) lines.push(`Tail-light style: ${document.getElementById('rearBrakeStyle').selectedOptions[0].textContent}`);
+  if (isYes('turnSignals')) lines.push(`Turn-signal style: ${document.getElementById('turnSignalStyle').selectedOptions[0].textContent}`);
+
+  if (isYes('appControl')) {
+    const controls = checkedValues('.app-control-option');
+    lines.push(`App Control methods: ${controls.length ? controls.join(', ') : 'none selected'}`);
+  }
 
   if (isYes('helmetLights')) {
-    const helmetChoices = [...document.querySelectorAll('.helmet-option:checked')].map((input) => input.value);
+    const helmetChoices = checkedValues('.helmet-option');
     lines.push(`Helmet options: ${helmetChoices.length ? helmetChoices.join(', ') : 'lighting requested; details not selected'}`);
   }
 
-  lines.push(isYes('appControl') ? 'Controller: app-controlled' : `Controller: preprogrammed — ${document.getElementById('cycleStyle').value}`);
   lines.push(`Suggested budget: $${Number(budgetSelect.value).toLocaleString()}`);
   return lines;
 }
@@ -324,7 +382,7 @@ function updateBuilder() {
   updateBikeSize();
   updateConditionalOptions();
   updateRearView();
-  updateStyles();
+  updateSpecialStyles();
   updateSummary();
 }
 
@@ -338,6 +396,9 @@ form.addEventListener('reset', () => {
       const input = document.getElementById(`${name}${value === 'yes' ? 'Yes' : 'No'}`);
       if (input) input.checked = true;
     });
+    document.getElementById('appWifi').checked = true;
+    document.getElementById('appBluetooth').checked = false;
+    document.getElementById('appRemote').checked = false;
     budgetSelect.value = '300';
     copyStatus.textContent = '';
     updateBuilder();
