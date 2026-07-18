@@ -1,6 +1,6 @@
-# LED Oddities — Mobile LED Effects
+# ShyneTyme Works — Mobile LED Effects
 
-A Bootstrap 5 website and product catalog for 5V WS2812B mobile LED projects in Los Angeles, including bicycles, e-bikes, helmets, vans, motorcycles, automobiles, boats, patios, and custom installations. LED Oddities is the current working rebrand while the final business name is being selected.
+A Bootstrap 5 website and product catalog for ShyneTyme Works: custom 5V WS2812B mobile LED projects in Los Angeles, including bicycles, e-bikes, helmets, vans, motorcycles, automobiles, boats, patios, and custom installations.
 
 ## Initial website goals
 
