@@ -9,8 +9,8 @@
 .builder-hero {
   color: #fff;
   background:
-    radial-gradient(circle at 15% 20%, rgba(255,255,255,.22), transparent 28%),
-    linear-gradient(135deg, #4213a8, #e00088 70%, #ff8a00);
+    radial-gradient(circle at 15% 20%, rgba(49,230,255,.24), transparent 28%),
+    linear-gradient(135deg, #030918, #0b3167 58%, #5f3fbd);
 }
 
 .builder-shell {
@@ -34,8 +34,8 @@
 }
 
 .builder-form .accordion-button:not(.collapsed) {
-  color: #4616a8;
-  background: #f0eaff;
+  color: #075b72;
+  background: #e3faff;
   box-shadow: none;
 }
 
