@@ -169,7 +169,7 @@ const sizeConfig = {
   preschool: { label: 'Small child / preschool bicycle', scale: 0.75 },
   youth: { label: 'Youth bicycle', scale: 0.85 },
   teen: { label: 'Teen / small-adult bicycle', scale: 0.94 },
-  adult: { label: 'Adult step-through comfort bicycle', scale: 1 }
+  adult: { label: 'Adult Bicycle', scale: 1 }
 };
 
 const zoneTargets = {
