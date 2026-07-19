@@ -14,7 +14,7 @@
   <meta property="og:url" content="https://shynetyme.works/">
   <meta property="og:image" content="https://shynetyme.works/assets/images/shynetyme-works-hero.webp">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="preload" as="image" href="assets/images/shynetyme-works-hero.webp" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/images/hero-scene-work.webp" fetchpriority="high">
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
@@ -43,6 +43,36 @@
   </nav>
 
   <header id="top" class="hero py-5">
+    <div class="hero-carousel" id="heroCarousel" role="region" aria-roledescription="carousel" aria-label="ShyneTyme community scenes">
+      <div class="hero-carousel__scene is-active" role="group" aria-roledescription="slide" aria-label="1 of 4: After-work homecoming">
+        <img src="assets/images/hero-scene-work.webp" width="1600" height="900" alt="" fetchpriority="high">
+      </div>
+      <div class="hero-carousel__scene" role="group" aria-roledescription="slide" aria-label="2 of 4: School-day homecoming" aria-hidden="true">
+        <img src="assets/images/hero-scene-school.webp" width="1600" height="900" alt="" loading="lazy">
+      </div>
+      <div class="hero-carousel__scene" role="group" aria-roledescription="slide" aria-label="3 of 4: Neighborhood dance break" aria-hidden="true">
+        <img src="assets/images/hero-scene-dance.webp" width="1600" height="900" alt="" loading="lazy">
+      </div>
+      <div class="hero-carousel__scene" role="group" aria-roledescription="slide" aria-label="4 of 4: Marina homecoming" aria-hidden="true">
+        <img src="assets/images/hero-scene-marina.webp" width="1600" height="900" alt="" loading="lazy">
+      </div>
+      <div class="hero-carousel__sparkle" aria-hidden="true"></div>
+
+      <div class="hero-carousel__controls" role="group" aria-label="Hero scene controls">
+        <button class="hero-carousel__button" type="button" data-hero-prev aria-label="Show previous scene">‹</button>
+        <button class="hero-carousel__button hero-carousel__toggle" type="button" data-hero-toggle aria-label="Pause scene rotation" aria-pressed="false">Pause</button>
+        <button class="hero-carousel__button" type="button" data-hero-next aria-label="Show next scene">›</button>
+        <div class="hero-carousel__dots" role="group" aria-label="Choose a hero scene">
+          <button type="button" data-hero-slide="0" aria-label="Show after-work homecoming" aria-current="true"></button>
+          <button type="button" data-hero-slide="1" aria-label="Show school-day homecoming"></button>
+          <button type="button" data-hero-slide="2" aria-label="Show neighborhood dance break"></button>
+          <button type="button" data-hero-slide="3" aria-label="Show marina homecoming"></button>
+        </div>
+        <span class="hero-carousel__status" data-hero-status>Scene 1 of 4 · After-work homecoming</span>
+        <span class="hero-carousel__progress" aria-hidden="true"><span></span></span>
+      </div>
+    </div>
+
     <div class="container py-4">
       <div class="row align-items-center g-4">
         <div class="col-lg-7">
@@ -70,20 +100,20 @@
             <a class="btn btn-neon-cyan" href="build-my-bike.html">Light My Ride</a>
           </aside>
 
-          <div class="effects-center">
-            <p class="section-kicker">Color with a pulse</p>
-            <h2 class="section-title">Welcome to ShyneTyme Works!</h2>
-            <div class="effects-card-grid">
-              <article class="led-info-card led-info-card--violet">
-                <h3>What is ShyneTyme Works?</h3>
-                <p>Brightness-limited colored effects, segmented zones and saved presets selected from a phone.</p>
-              </article>
-              <article class="led-info-card led-info-card--pink">
-                <h3>Custom mode</h3>
-                <p>Original sequences, music-reactive patterns, helmet displays, synchronized sections and project-specific programming.</p>
-              </article>
+          <article class="effects-center shynetyme-story">
+            <div class="story-led-matrix" aria-hidden="true">
+              <span>RIDE BRIGHT · DRIVE AWARE · FLOAT LIT · SHYNE AT HOME · RIDE BRIGHT · DRIVE AWARE · FLOAT LIT · SHYNE AT HOME ·</span>
+              <span>BIKES ✦ AUTOS ✦ MOTORCYCLES ✦ BOATS ✦ HOMES ✦ BIKES ✦ AUTOS ✦ MOTORCYCLES ✦ BOATS ✦ HOMES ✦</span>
+              <span>DIRECT YO LYTE · COLOR THE NYTE · MAKE THE WORKS TWINKLE · DIRECT YO LYTE · COLOR THE NYTE · MAKE THE WORKS TWINKLE ·</span>
             </div>
-          </div>
+            <div class="shynetyme-story__content">
+              <p class="section-kicker">Color with a pulse</p>
+              <h2 class="section-title">Bringin’ the Shyne back into the Nyte Tyme.</h2>
+              <p>While we work each day and every night to survive the darkness, sometimes you have to become a beacon of Shynning lyte—safe, aware, and twinkling to your music whether you’re riding, driving, boating, or lighting your home.</p>
+              <p>ShyneTyme Works brings creative works to the lyte, helping you direct your glow toward the right items and diodes to create a particular, unique set of LED lytes. Our services and growing product catalog are built to shape the mood, environment, space, and mobile aura around you into a twinkling, sparkling, messaged Shyne.</p>
+              <p class="shynetyme-story__signoff">So take a little Tyme to contemplate how that little lyte of yours—or your young one’s—can be brought out. And just maybe, you’ll want the Works!</p>
+            </div>
+          </article>
 
           <!-- Right ad-copy rail: replace this draft when campaign copy is ready. -->
           <aside class="ad-copy-card ad-copy-card--pink" aria-labelledby="beyond-bike-ad-title">
@@ -136,6 +166,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/catalog.js"></script>
+  <script src="js/hero-carousel.js"></script>
   <script src="js/site-guide.js"></script>
   <script type="application/ld+json">
   {
