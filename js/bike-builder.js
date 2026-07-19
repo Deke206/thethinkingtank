@@ -224,6 +224,17 @@ function updateBikeSize() {
   const translateX = Math.round(450 - (441 * stageScale));
   const translateY = Math.round(642 - (560 * stageScale));
   group.setAttribute('transform', `translate(${translateX} ${translateY}) scale(${stageScale})`);
+
+  // Fit the controller icons between the wheels and align them to the tire bottoms.
+  const wheelGapCenterX = translateX + (455 * stageScale);
+  const wheelBottomY = translateY + (560 * stageScale);
+  const iconScale = Math.min(1, Math.max(0.76, ((176 * stageScale) - 8) / 143));
+  const iconTranslateX = Math.round(wheelGapCenterX - (72 * iconScale));
+  const iconTranslateY = Math.round(wheelBottomY - (43 * iconScale));
+  document.getElementById('appControlIcons').setAttribute(
+    'transform',
+    `translate(${iconTranslateX} ${iconTranslateY}) scale(${iconScale})`
+  );
   document.getElementById('sizeLabel').textContent = config.label;
 
   const addKid = selectedValue('addKidBike') === 'yes';

@@ -367,10 +367,10 @@
   80%, 100% { opacity: .18; filter: none; }
 }
 
-/* App-control icons occupy the lower-right of the preview window. */
+/* App-control icons sit between the wheels and follow the selected frame size. */
 .app-control-icons {
   opacity: 0;
-  transition: opacity .25s ease;
+  transition: opacity .25s ease, transform .35s ease;
   pointer-events: none;
 }
 
