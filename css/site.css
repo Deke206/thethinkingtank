@@ -28,7 +28,7 @@ body { background: #fff; color: #111827; }
 .hero .container { padding-top: 1.6rem; padding-bottom: 7.5rem; }
 .hero .col-lg-7 { max-width: 760px; }
 .hero-kicker { color: var(--cyan); letter-spacing: .2em; text-shadow: 0 0 12px rgba(49,230,255,.8); }
-.neon-headline { max-width: 13ch; font-size: clamp(2.55rem, 6vw, 5.4rem); line-height: .94; letter-spacing: -.045em; text-wrap: balance; text-shadow: 0 0 2px #fff, 0 0 17px rgba(49,230,255,.7), 0 0 34px rgba(138,109,255,.45); }
+.neon-headline { max-width: 13ch; line-height: .94; letter-spacing: -.045em; text-wrap: balance; text-shadow: 0 0 2px #fff, 0 0 17px rgba(49,230,255,.7), 0 0 34px rgba(138,109,255,.45); }
 .hero .lead { max-width: 650px; color: var(--ice); text-shadow: 0 2px 9px #000; }
 .hero .btn-light { background: var(--cyan); border-color: var(--cyan); color: var(--night); box-shadow: 0 0 22px rgba(49,230,255,.48); }
 .hero .btn-outline-light:hover { color: var(--night); background: var(--ice); }
