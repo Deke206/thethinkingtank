@@ -410,10 +410,92 @@
 .summary-box ul { margin-bottom: 0; padding-left: 1.15rem; }
 
 .budget-badge {
-  background: #ece6ff;
-  color: #4616a8;
-  border: 1px solid #d8cbff;
+  background: rgba(155, 131, 255, .18);
+  color: #e8e1ff;
+  border: 1px solid rgba(155, 131, 255, .48);
   font-weight: 800;
+}
+
+/* ShyneTyme night skin: shared typography and controls come from site.css. */
+.builder-page main {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(49, 230, 255, .08), transparent 28rem),
+    radial-gradient(circle at 88% 34%, rgba(255, 90, 185, .07), transparent 28rem),
+    linear-gradient(180deg, #030918, #07162c);
+}
+
+.builder-hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 12% 25%, rgba(49, 230, 255, .28), transparent 24rem),
+    radial-gradient(circle at 86% 30%, rgba(255, 90, 185, .18), transparent 25rem),
+    linear-gradient(135deg, #030918, #0b3167 58%, #391f72);
+  border-bottom: 1px solid rgba(49, 230, 255, .22);
+}
+
+.builder-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, rgba(223, 250, 255, .45) 0 1px, transparent 1.6px);
+  background-size: 52px 52px;
+  mask-image: linear-gradient(90deg, #000, transparent 80%);
+  opacity: .3;
+}
+
+.builder-hero .container { position: relative; z-index: 1; }
+.builder-hero h1 { font-size: clamp(2.7rem, 7vw, 5rem); text-shadow: 0 1px 0 #fff, 0 0 18px rgba(49, 230, 255, .52), 0 12px 30px rgba(0, 0, 0, .46); }
+.builder-hero p { color: #dffaff; }
+.demo-panel { color: #eef8ff; background: rgba(3, 9, 24, .7); border: 1px solid rgba(49, 230, 255, .38); box-shadow: 0 18px 40px rgba(0, 0, 0, .28), inset 0 1px 0 rgba(255, 255, 255, .08); backdrop-filter: blur(10px); }
+
+.builder-form .accordion-item {
+  color: var(--text);
+  background: linear-gradient(145deg, rgba(15, 38, 70, .97), rgba(5, 17, 37, .98));
+  border: 1px solid rgba(138, 220, 255, .17);
+  box-shadow: 0 .75rem 1.7rem rgba(0, 0, 0, .24);
+}
+
+.builder-form .accordion-button {
+  color: #ecf7ff;
+  background: linear-gradient(180deg, #122c4d, #0a1e38);
+  text-shadow: 0 0 10px rgba(49, 230, 255, .22);
+}
+
+.builder-form .accordion-button::after { filter: invert(1) brightness(1.8) hue-rotate(155deg); }
+.builder-form .accordion-button:not(.collapsed) { color: #fff; background: linear-gradient(100deg, rgba(49, 230, 255, .18), rgba(155, 131, 255, .23)); box-shadow: inset 4px 0 0 var(--cyan); }
+.builder-form .accordion-button:focus { z-index: 2; border-color: var(--cyan); box-shadow: 0 0 0 .22rem rgba(49, 230, 255, .2); }
+.builder-form .accordion-body { color: var(--text); background: rgba(3, 12, 28, .45); }
+.question-row { border-color: rgba(138, 220, 255, .13); }
+.question-label { color: #f3f9ff; font-family: var(--heading-font); }
+.question-note { color: #aebed5; }
+
+.conditional-options {
+  color: var(--text);
+  background: rgba(7, 23, 44, .9);
+  border-color: rgba(155, 131, 255, .28);
+  box-shadow: inset 0 1px 9px rgba(0, 0, 0, .26);
+}
+
+.form-check-input { background-color: #07172c; border-color: rgba(49, 230, 255, .42); }
+.form-check-input:checked { background-color: #6e57d9; border-color: #b2a4ff; box-shadow: 0 0 10px rgba(155, 131, 255, .36); }
+.form-check-label { color: #d9e7f7; }
+
+.preview-card {
+  border: 1px solid rgba(49, 230, 255, .28);
+  box-shadow: 0 .9rem 2.4rem rgba(0, 0, 0, .38), 0 0 24px rgba(49, 230, 255, .08);
+}
+
+.preview-toolbar { background: linear-gradient(100deg, #07172c, #171440); }
+.preview-card .card-body { background: #07172c; }
+.preview-card .card-body .text-secondary { color: #b8c6dc !important; }
+
+.summary-box {
+  color: var(--text);
+  background: linear-gradient(135deg, #0a1d38, #141337);
+  border: 1px solid rgba(155, 131, 255, .34);
+  box-shadow: 0 18px 38px rgba(0, 0, 0, .3), 0 0 24px rgba(155, 131, 255, .08);
 }
 
 /* Hover explanation for the tail-light object in the live bicycle guide. */
