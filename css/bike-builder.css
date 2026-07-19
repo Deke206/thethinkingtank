@@ -85,13 +85,31 @@
   min-height: 520px;
   padding: .75rem;
   position: relative;
-  background:
-    linear-gradient(rgba(255,255,255,.82), rgba(255,255,255,.82)),
-    repeating-linear-gradient(0deg, #dfe3ea 0, #dfe3ea 1px, transparent 1px, transparent 28px),
-    repeating-linear-gradient(90deg, #dfe3ea 0, #dfe3ea 1px, transparent 1px, transparent 28px);
+  isolation: isolate;
+  overflow: hidden;
+  background: #06152f url('../assets/images/bike-planner-street.webp') center 48% / cover no-repeat;
 }
 
-.bike-stage svg { width: 100%; height: auto; display: block; }
+.bike-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(3, 9, 24, .06), rgba(3, 9, 24, .22)),
+    radial-gradient(ellipse at 50% 58%, rgba(240, 247, 255, .62) 0%, rgba(225, 238, 248, .46) 36%, rgba(9, 25, 48, .2) 70%, rgba(3, 9, 24, .52) 100%);
+  backdrop-filter: saturate(.68) contrast(.86);
+}
+
+.bike-stage svg {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 .35rem .5rem rgba(0, 0, 0, .38));
+}
 
 .svg-bike-group {
   transform-box: fill-box;
