@@ -87,28 +87,16 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: #06152f url('../assets/images/bike-planner-street.webp') center 48% / cover no-repeat;
-}
-
-.bike-stage::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(180deg, rgba(3, 9, 24, .06), rgba(3, 9, 24, .22)),
-    radial-gradient(ellipse at 50% 58%, rgba(240, 247, 255, .62) 0%, rgba(225, 238, 248, .46) 36%, rgba(9, 25, 48, .2) 70%, rgba(3, 9, 24, .52) 100%);
-  backdrop-filter: saturate(.68) contrast(.86);
+  background: #06152f url('../assets/images/bike-planner-street.webp') center center / cover no-repeat;
 }
 
 .bike-stage svg {
   position: relative;
   z-index: 1;
   width: 100%;
-  height: auto;
+  height: 520px;
   display: block;
-  filter: drop-shadow(0 .35rem .5rem rgba(0, 0, 0, .38));
+  filter: drop-shadow(0 .25rem .3rem rgba(0, 0, 0, .48));
 }
 
 .svg-bike-group {
@@ -554,9 +542,11 @@
   .builder-shell { grid-template-columns: 1fr; }
   .preview-card { position: relative; top: auto; order: -1; }
   .bike-stage { min-height: 400px; }
+  .bike-stage svg { height: 400px; }
 }
 
 @media (max-width: 575.98px) {
   .bike-stage { padding: .25rem; min-height: 330px; }
+  .bike-stage svg { height: 330px; }
   .builder-form .accordion-body { padding: .9rem; }
 }

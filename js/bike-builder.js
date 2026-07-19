@@ -219,9 +219,11 @@ function updateBikeSize() {
   const value = document.getElementById('frameSize').value;
   const config = sizeConfig[value];
   const group = document.getElementById('mainBikeGroup');
-  const translateX = Math.round((1 - config.scale) * 445);
-  const translateY = Math.round((1 - config.scale) * 565);
-  group.setAttribute('transform', `translate(${translateX} ${translateY}) scale(${config.scale})`);
+  // Center the actual artwork and keep every frame size planted on one road line.
+  const stageScale = config.scale * 1.05;
+  const translateX = Math.round(450 - (441 * stageScale));
+  const translateY = Math.round(642 - (560 * stageScale));
+  group.setAttribute('transform', `translate(${translateX} ${translateY}) scale(${stageScale})`);
   document.getElementById('sizeLabel').textContent = config.label;
 
   const addKid = selectedValue('addKidBike') === 'yes';
@@ -232,7 +234,9 @@ function updateBikeSize() {
   if (addKid) {
     const kidValue = document.getElementById('kidFrameSize').value;
     const kidScaleMap = { toddler: 0.38, preschool: 0.46, youth: 0.54 };
-    kidGroup.setAttribute('transform', `translate(505 430) scale(${kidScaleMap[kidValue] || 0.46})`);
+    const kidScale = kidScaleMap[kidValue] || 0.46;
+    const kidTranslateY = Math.round(642 - (308 * kidScale));
+    kidGroup.setAttribute('transform', `translate(505 ${kidTranslateY}) scale(${kidScale})`);
   }
 }
 
