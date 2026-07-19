@@ -1,6 +1,6 @@
 # Copyright Notice
 
-Copyright © 2026 Dedric. All rights reserved.
+Copyright © 2026 DeacStudio. All rights reserved.
 
 Unless otherwise identified, the original photographs, videos, written content, service-package descriptions, graphics, branding, product-catalog organization, and installation documentation in this repository may not be copied, republished, redistributed, modified, sold, or used commercially without prior written permission.
 

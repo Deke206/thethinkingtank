@@ -421,7 +421,7 @@ form.addEventListener('reset', () => {
 });
 
 document.getElementById('copyBuild').addEventListener('click', async () => {
-  const text = `THE THINKING TANK LED — BUILD MY BIKE\n\n${buildSummaryLines().map((line) => `• ${line}`).join('\n')}`;
+  const text = `SHYNETYME WORKS — BUILD MY BIKE\n\n${buildSummaryLines().map((line) => `• ${line}`).join('\n')}`;
   try {
     await navigator.clipboard.writeText(text);
     copyStatus.textContent = 'Build summary copied.';
