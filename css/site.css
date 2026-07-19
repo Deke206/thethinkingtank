@@ -217,7 +217,6 @@ a:hover { color: var(--ice); }
 .home-page main > section { position: relative; border-top: 1px solid rgba(138, 220, 255, .1); }
 .home-page main > section::before { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(circle, rgba(49, 230, 255, .13) 0 1px, transparent 1.6px); background-size: 46px 46px; mask-image: linear-gradient(90deg, #000, transparent 38%); opacity: .24; }
 
-#packages { background: linear-gradient(180deg, #06152f, #07182d); }
 .section-title { font-size: clamp(2rem, 4vw, 3.45rem); line-height: 1.05; }
 
 .card, .led-info-card, .ad-copy-card {
@@ -229,10 +228,6 @@ a:hover { color: var(--ice); }
 .card { color: var(--text); border-radius: 1rem; overflow: hidden; }
 .card p { color: var(--muted); }
 .card:hover { transform: translateY(-5px); border-color: rgba(49, 230, 255, .46); box-shadow: 0 22px 44px rgba(0, 0, 0, .34), 0 0 22px rgba(49, 230, 255, .1); transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
-#packages .col-md-4:nth-child(1) .card { border-top: 3px solid var(--cyan); }
-#packages .col-md-4:nth-child(2) .card { border-top: 3px solid var(--violet); }
-#packages .col-md-4:nth-child(3) .card { border-top: 3px solid var(--pink); }
-
 .effects-stage {
   background:
     radial-gradient(circle at 50% 5%, rgba(155, 131, 255, .18), transparent 30rem),
