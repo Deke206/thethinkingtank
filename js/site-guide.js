@@ -17,18 +17,13 @@
   });
 })();
 
-/*
- * Build My Bike device parity fixes.
- * This block is intentionally page-scoped so the planner keeps its full LED
- * simulation on phones/tablets and smaller bicycle sizes remain centered.
- */
+/* Keep the Build My Bike LED simulation animated on every device. */
 (() => {
   const form = document.getElementById('bikeBuilderForm');
   const frameSizeSelect = document.getElementById('frameSize');
   const mainBike = document.getElementById('mainBikeGroup');
   const appControlIcons = document.getElementById('appControlIcons');
-  const sizeLabel = document.getElementById('sizeLabel');
-  if (!form || !frameSizeSelect || !mainBike || !appControlIcons || !sizeLabel) return;
+  if (!form || !frameSizeSelect || !mainBike || !appControlIcons) return;
 
   document.documentElement.classList.add('force-bike-planner-motion');
 
@@ -70,46 +65,63 @@
     document.head.appendChild(motionStyle);
   }
 
-  const sizeConfig = {
-    toddler: { label: 'Toddler / balance bike', scale: 0.66 },
-    preschool: { label: 'Small child / preschool bicycle', scale: 0.75 },
-    youth: { label: 'Youth bicycle', scale: 0.85 },
-    teen: { label: 'Teen / small-adult bicycle', scale: 0.94 },
-    adult: { label: 'Adult Bicycle', scale: 1 }
-  };
+  const repositionedSizes = new Set(['toddler', 'preschool', 'youth']);
+  const bikePreview = document.getElementById('bikePreview');
+  const adultTransform = 'translate(-13 54) scale(1.05)';
 
-  const artworkCenterX = 441;
-  const artworkCenterY = 280;
-  const adultScale = 1.05;
-  const adultTranslateY = 54;
-  const adultVisualCenterY = adultTranslateY + (artworkCenterY * adultScale);
+  const placeSmallBikeInAdultViewportArea = () => {
+    if (!repositionedSizes.has(frameSizeSelect.value) || !bikePreview) return;
 
-  const applyPrimaryBikePlacement = () => {
-    const config = sizeConfig[frameSizeSelect.value] || sizeConfig.adult;
-    const stageScale = Number((config.scale * adultScale).toFixed(4));
+    const currentTransform = mainBike.transform.baseVal.consolidate();
+    if (!currentTransform) return;
 
-    // Keep every size centered on the adult bike's visual center instead of
-    // forcing small bikes down to the adult tire baseline where phones clip them.
-    const translateX = Math.round(450 - (artworkCenterX * stageScale));
-    const translateY = Math.round(adultVisualCenterY - (artworkCenterY * stageScale));
-    mainBike.setAttribute('transform', `translate(${translateX} ${translateY}) scale(${stageScale})`);
+    // Preserve the exact scale assigned by bike-builder.js and measure only the
+    // translation needed to occupy the adult bicycle's rendered viewport area.
+    const currentScale = currentTransform.matrix.a;
+    const currentTranslateX = currentTransform.matrix.e;
+    const currentTranslateY = currentTransform.matrix.f;
+    const previousTransition = mainBike.style.transition;
+    mainBike.style.transition = 'none';
 
-    // Keep the selected controller icons attached to the repositioned bike.
-    const wheelGapCenterX = translateX + (455 * stageScale);
-    const wheelBottomY = translateY + (560 * stageScale);
-    const iconScale = Math.min(1, Math.max(0.76, ((176 * stageScale) - 8) / 143));
+    const currentTransformValue = mainBike.getAttribute('transform');
+    mainBike.setAttribute('transform', adultTransform);
+    const adultRect = mainBike.getBoundingClientRect();
+    mainBike.setAttribute('transform', currentTransformValue);
+    const currentRect = mainBike.getBoundingClientRect();
+
+    const svgMatrix = bikePreview.getScreenCTM();
+    if (!svgMatrix || !svgMatrix.a || !svgMatrix.d) {
+      mainBike.style.transition = previousTransition;
+      return;
+    }
+
+    const adultCenterX = adultRect.left + (adultRect.width / 2);
+    const currentCenterX = currentRect.left + (currentRect.width / 2);
+    const translateX = currentTranslateX + ((adultCenterX - currentCenterX) / Math.abs(svgMatrix.a));
+    const translateY = currentTranslateY + ((adultRect.top - currentRect.top) / Math.abs(svgMatrix.d));
+
+    mainBike.setAttribute(
+      'transform',
+      `translate(${translateX.toFixed(3)} ${translateY.toFixed(3)}) scale(${currentScale})`
+    );
+    mainBike.style.transition = previousTransition;
+
+    // Keep the controller icons attached to the bicycle after the position-only move.
+    const wheelGapCenterX = translateX + (455 * currentScale);
+    const wheelBottomY = translateY + (560 * currentScale);
+    const iconScale = Math.min(1, Math.max(0.76, ((176 * currentScale) - 8) / 143));
     const iconTranslateX = Math.round(wheelGapCenterX - (72 * iconScale));
     const iconTranslateY = Math.round(wheelBottomY - (43 * iconScale));
     appControlIcons.setAttribute(
       'transform',
       `translate(${iconTranslateX} ${iconTranslateY}) scale(${iconScale})`
     );
-    sizeLabel.textContent = config.label;
   };
 
-  const applyAfterBuilderUpdate = () => requestAnimationFrame(applyPrimaryBikePlacement);
-  form.addEventListener('change', applyAfterBuilderUpdate);
-  form.addEventListener('reset', () => setTimeout(applyPrimaryBikePlacement, 0));
-  window.addEventListener('pageshow', applyPrimaryBikePlacement);
-  applyPrimaryBikePlacement();
+  const placeAfterBuilderUpdate = () => requestAnimationFrame(placeSmallBikeInAdultViewportArea);
+  form.addEventListener('change', placeAfterBuilderUpdate);
+  form.addEventListener('reset', () => setTimeout(placeSmallBikeInAdultViewportArea, 0));
+  window.addEventListener('pageshow', placeSmallBikeInAdultViewportArea);
+  window.addEventListener('resize', placeAfterBuilderUpdate);
+  placeSmallBikeInAdultViewportArea();
 })();
