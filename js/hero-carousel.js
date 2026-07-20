@@ -2,6 +2,60 @@
   const carousel = document.getElementById('heroCarousel');
   if (!carousel) return;
 
+  document.documentElement.classList.add('force-homepage-motion');
+  if (!document.getElementById('homepageMotionOverride')) {
+    const motionStyle = document.createElement('style');
+    motionStyle.id = 'homepageMotionOverride';
+    motionStyle.textContent = `
+      @media (prefers-reduced-motion: reduce) {
+        html.force-homepage-motion body.home-page .nav-link::after {
+          transition: transform .2s ease !important;
+        }
+        html.force-homepage-motion body.home-page .hero-carousel__scene {
+          transition: opacity 1.4s ease, visibility 1.4s step-end !important;
+        }
+        html.force-homepage-motion body.home-page .hero-carousel__scene.is-active {
+          transition: opacity 1.4s ease, visibility 0s !important;
+        }
+        html.force-homepage-motion body.home-page .hero-carousel__scene.is-active img {
+          animation: hero-scene-drift var(--scene-duration, 35000ms) ease-out both !important;
+        }
+        html.force-homepage-motion body.home-page .hero-carousel__sparkle {
+          animation: hero-stars 8s steps(4, end) infinite alternate !important;
+        }
+        html.force-homepage-motion body.home-page .hero-carousel.is-running .hero-carousel__progress span {
+          animation: hero-progress var(--scene-duration, 35000ms) linear forwards !important;
+        }
+        html.force-homepage-motion body.home-page .hero-carousel__button {
+          transition: transform .16s ease, color .16s ease, border-color .16s ease !important;
+        }
+        html.force-homepage-motion body.home-page .btn {
+          transition: transform .16s ease, box-shadow .16s ease, filter .16s ease !important;
+        }
+        html.force-homepage-motion body.home-page .card:hover {
+          transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease !important;
+        }
+        html.force-homepage-motion body.home-page .effects-center {
+          animation: story-border 14s linear infinite !important;
+        }
+        html.force-homepage-motion body.home-page .story-led-matrix span {
+          animation: story-message 34s linear infinite !important;
+        }
+        html.force-homepage-motion body.home-page .story-led-matrix span:nth-child(2) {
+          animation-direction: reverse !important;
+          animation-duration: 41s !important;
+        }
+        html.force-homepage-motion body.home-page .story-led-matrix span:nth-child(3) {
+          animation-duration: 37s !important;
+        }
+        html.force-homepage-motion body.home-page .site-guide-button img {
+          transition: transform .2s ease !important;
+        }
+      }
+    `;
+    document.head.appendChild(motionStyle);
+  }
+
   const hero = carousel.closest('.hero');
   const scenes = [...carousel.querySelectorAll('.hero-carousel__scene')];
   const dots = [...carousel.querySelectorAll('[data-hero-slide]')];
@@ -9,7 +63,6 @@
   const nextButton = carousel.querySelector('[data-hero-next]');
   const toggleButton = carousel.querySelector('[data-hero-toggle]');
   const status = carousel.querySelector('[data-hero-status]');
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const previewMode = new URLSearchParams(window.location.search).has('preview');
   const sceneDuration = previewMode ? 6500 : 35000;
   const sceneNames = [
@@ -21,7 +74,7 @@
 
   let currentScene = 0;
   let timer;
-  let userPaused = reducedMotion.matches;
+  let userPaused = false;
   let temporarilyPaused = false;
 
   carousel.style.setProperty('--scene-duration', `${sceneDuration}ms`);
@@ -100,11 +153,6 @@
   });
 
   document.addEventListener('visibilitychange', restartTimer);
-  reducedMotion.addEventListener('change', (event) => {
-    userPaused = event.matches;
-    updateToggle();
-    restartTimer();
-  });
 
   updateToggle();
   showScene(0);
