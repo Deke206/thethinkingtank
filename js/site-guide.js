@@ -86,7 +86,7 @@
 
   const applyPrimaryBikePlacement = () => {
     const config = sizeConfig[frameSizeSelect.value] || sizeConfig.adult;
-    const stageScale = config.scale * adultScale;
+    const stageScale = Number((config.scale * adultScale).toFixed(4));
 
     // Keep every size centered on the adult bike's visual center instead of
     // forcing small bikes down to the adult tire baseline where phones clip them.
