@@ -66,29 +66,45 @@
   }
 
   const repositionedSizes = new Set(['toddler', 'preschool', 'youth']);
-  const adultScale = 1.05;
-  const adultTranslateX = Math.round(450 - (441 * adultScale));
-  const adultTranslateY = Math.round(642 - (560 * adultScale));
+  const bikePreview = document.getElementById('bikePreview');
+  const adultTransform = 'translate(-13 54) scale(1.05)';
 
   const placeSmallBikeInAdultViewportArea = () => {
-    if (!repositionedSizes.has(frameSizeSelect.value)) return;
+    if (!repositionedSizes.has(frameSizeSelect.value) || !bikePreview) return;
 
     const currentTransform = mainBike.transform.baseVal.consolidate();
-    const bounds = mainBike.getBBox();
-    if (!currentTransform || !bounds.width || !bounds.height) return;
+    if (!currentTransform) return;
 
-    // Reuse the scale already assigned by bike-builder.js. This changes position only.
+    // Preserve the exact scale assigned by bike-builder.js and measure only the
+    // translation needed to occupy the adult bicycle's rendered viewport area.
     const currentScale = currentTransform.matrix.a;
-    const artworkCenterX = bounds.x + (bounds.width / 2);
-    const adultCenterX = adultTranslateX + (artworkCenterX * adultScale);
-    const adultTopY = adultTranslateY + (bounds.y * adultScale);
-    const translateX = Math.round(adultCenterX - (artworkCenterX * currentScale));
-    const translateY = Math.round(adultTopY - (bounds.y * currentScale));
+    const currentTranslateX = currentTransform.matrix.e;
+    const currentTranslateY = currentTransform.matrix.f;
+    const previousTransition = mainBike.style.transition;
+    mainBike.style.transition = 'none';
+
+    const currentTransformValue = mainBike.getAttribute('transform');
+    mainBike.setAttribute('transform', adultTransform);
+    const adultRect = mainBike.getBoundingClientRect();
+    mainBike.setAttribute('transform', currentTransformValue);
+    const currentRect = mainBike.getBoundingClientRect();
+
+    const svgMatrix = bikePreview.getScreenCTM();
+    if (!svgMatrix || !svgMatrix.a || !svgMatrix.d) {
+      mainBike.style.transition = previousTransition;
+      return;
+    }
+
+    const adultCenterX = adultRect.left + (adultRect.width / 2);
+    const currentCenterX = currentRect.left + (currentRect.width / 2);
+    const translateX = currentTranslateX + ((adultCenterX - currentCenterX) / Math.abs(svgMatrix.a));
+    const translateY = currentTranslateY + ((adultRect.top - currentRect.top) / Math.abs(svgMatrix.d));
 
     mainBike.setAttribute(
       'transform',
-      `translate(${translateX} ${translateY}) scale(${currentScale})`
+      `translate(${translateX.toFixed(3)} ${translateY.toFixed(3)}) scale(${currentScale})`
     );
+    mainBike.style.transition = previousTransition;
 
     // Keep the controller icons attached to the bicycle after the position-only move.
     const wheelGapCenterX = translateX + (455 * currentScale);
@@ -106,5 +122,6 @@
   form.addEventListener('change', placeAfterBuilderUpdate);
   form.addEventListener('reset', () => setTimeout(placeSmallBikeInAdultViewportArea, 0));
   window.addEventListener('pageshow', placeSmallBikeInAdultViewportArea);
+  window.addEventListener('resize', placeAfterBuilderUpdate);
   placeSmallBikeInAdultViewportArea();
 })();
