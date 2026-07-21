@@ -11,6 +11,20 @@
   const close = panel?.querySelector('.site-guide-close');
   const navbar = document.querySelector('.navbar .navbar-nav');
   const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  const builderHero = document.querySelector('.builder-hero');
+  const demoPanel = builderHero?.querySelector('.demo-panel');
+  const builderCopy = builderHero ? {
+    kicker: builderHero.querySelector('.text-uppercase')?.textContent.trim() || '',
+    title: builderHero.querySelector('h1')?.textContent.trim() || '',
+    lead: builderHero.querySelector('.lead')?.textContent.trim() || ''
+  } : null;
+
+  const escapeHtml = (value) => value.replace(/[&<>"]/g, (character) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;'
+  })[character]);
 
   const builderPages = [
     { href: 'build-my-bike.html', label: 'Bicycle' },
@@ -70,9 +84,13 @@
   }
 
   if (!document.body.classList.contains('home-page') && !document.querySelector('.global-led-banner')) {
+    const pageTitle = builderCopy?.title ? escapeHtml(builderCopy.title) : 'SHYNETYME WORKS';
+    const pageKicker = builderCopy?.kicker ? escapeHtml(builderCopy.kicker) : 'LOS ANGELES MOBILE LED EFFECTS';
+    const pageLead = builderCopy?.lead ? escapeHtml(builderCopy.lead) : 'CUSTOM LIGHTING THAT DOES NOT LOOK LIKE EVERYBODY ELSE\'S.';
+    const builderBanner = Boolean(builderCopy);
     const banner = document.createElement('section');
-    banner.className = 'global-led-banner';
-    banner.setAttribute('aria-label', 'ShyneTyme Works mobile LED services');
+    banner.className = 'hero global-led-banner py-5';
+    banner.setAttribute('aria-label', builderBanner ? `${builderCopy.title} introduction` : 'ShyneTyme Works mobile LED services');
     banner.innerHTML = `
       <div class="global-led-banner__frame">
         <div class="global-led-banner__scenes" aria-hidden="true">
@@ -82,14 +100,33 @@
           <img src="assets/images/hero-scene-marina.webp" width="1600" height="900" alt="">
         </div>
         <div class="global-led-banner__shade" aria-hidden="true"></div>
-        <div class="global-led-banner__sign">
+        <div class="global-led-banner__sign${builderBanner ? ' global-led-banner__sign--page' : ''}">
           <div class="global-led-banner__brand"><span>SHYNETYME WORKS</span><span>LOS ANGELES</span></div>
-          <div class="global-led-banner__row global-led-banner__row--cyan"><span>RIDE BRIGHT · DRIVE AWARE · FLOAT LIT · BICYCLES · AUTOS · YACHTS · SHYNETYME WORKS · RIDE BRIGHT · DRIVE AWARE · FLOAT LIT ·</span></div>
-          <div class="global-led-banner__row global-led-banner__row--pink"><span>CUSTOM LIGHTING THAT DOES NOT LOOK LIKE EVERYBODY ELSE'S. ✦ PROGRAMMABLE MOBILE LED EFFECTS ✦ CUSTOM LIGHTING THAT DOES NOT LOOK LIKE EVERYBODY ELSE'S. ✦</span></div>
+          <div class="global-led-banner__row global-led-banner__row--cyan${builderBanner ? ' global-led-banner__row--page' : ''}">
+            ${builderBanner
+              ? `<span class="global-led-banner__page-copy"><strong>${pageTitle}</strong><small>${pageKicker}</small></span>`
+              : '<span>RIDE BRIGHT · DRIVE AWARE · FLOAT LIT · BICYCLES · AUTOS · YACHTS · SHYNETYME WORKS · RIDE BRIGHT · DRIVE AWARE · FLOAT LIT ·</span>'}
+          </div>
+          <div class="global-led-banner__row global-led-banner__row--pink${builderBanner ? ' global-led-banner__row--page' : ''}">
+            ${builderBanner
+              ? `<span class="global-led-banner__page-copy global-led-banner__page-copy--lead">${pageLead}</span>`
+              : '<span>CUSTOM LIGHTING THAT DOES NOT LOOK LIKE EVERYBODY ELSE\'S. ✦ PROGRAMMABLE MOBILE LED EFFECTS ✦ CUSTOM LIGHTING THAT DOES NOT LOOK LIKE EVERYBODY ELSE\'S. ✦</span>'}
+          </div>
         </div>
       </div>`;
     const nav = document.querySelector('.navbar');
     nav?.insertAdjacentElement('afterend', banner);
+  }
+
+  if (builderHero) {
+    const previewBody = document.querySelector('.preview-card.card .card-body.border-top');
+    if (demoPanel && previewBody) {
+      const previewRules = document.createElement('div');
+      previewRules.className = 'preview-rules';
+      while (demoPanel.firstChild) previewRules.appendChild(demoPanel.firstChild);
+      previewBody.prepend(previewRules);
+    }
+    builderHero.remove();
   }
 
   if (!button || !panel || !close) return;
