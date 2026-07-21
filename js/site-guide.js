@@ -1,30 +1,50 @@
 (() => {
-  if (!document.querySelector('link[href="css/global-theme.css"]')) {
-    const theme = document.createElement('link');
-    theme.rel = 'stylesheet';
-    theme.href = 'css/global-theme.css';
-    document.head.appendChild(theme);
-  }
+  const ensureSharedStyle = (id, href) => {
+    let link = document.getElementById(id);
+    if (!link) {
+      link = document.createElement('link');
+      link.id = id;
+      link.rel = 'stylesheet';
+      document.head.appendChild(link);
+    }
+    link.href = href;
+  };
+
+  ensureSharedStyle('shynetymeHomepageSignStyles', 'css/homepage-led-sign.css?v=20260721-3');
+  ensureSharedStyle('shynetymeGlobalThemeStyles', 'css/global-theme.css?v=20260721-3');
 
   const button = document.querySelector('.site-guide-button');
   const panel = document.getElementById('siteGuidePanel');
   const close = panel?.querySelector('.site-guide-close');
   const navbar = document.querySelector('.navbar .navbar-nav');
   const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-  const builderHero = document.querySelector('.builder-hero');
-  const demoPanel = builderHero?.querySelector('.demo-panel');
-  const builderCopy = builderHero ? {
-    kicker: builderHero.querySelector('.text-uppercase')?.textContent.trim() || '',
-    title: builderHero.querySelector('h1')?.textContent.trim() || '',
-    lead: builderHero.querySelector('.lead')?.textContent.trim() || ''
+  const isHomePage = document.body.classList.contains('home-page');
+  const introHeader = isHomePage
+    ? null
+    : (document.querySelector('.builder-hero') || document.querySelector('body > header'));
+  const demoPanel = introHeader?.querySelector('.demo-panel');
+  const introParagraphs = introHeader ? [...introHeader.querySelectorAll('p')] : [];
+  const kickerElement = introHeader?.querySelector('.hero-kicker, .section-kicker, .text-uppercase');
+  const leadElement = introHeader?.querySelector('.lead');
+  const detailElement = introParagraphs.find((paragraph) => paragraph !== kickerElement && paragraph !== leadElement);
+  const introCopy = introHeader ? {
+    kicker: kickerElement?.textContent.trim() || '',
+    title: introHeader.querySelector('h1')?.textContent.trim() || 'ShyneTyme Works',
+    lead: leadElement?.textContent.trim() || '',
+    detail: detailElement?.textContent.trim() || ''
   } : null;
 
-  const escapeHtml = (value) => value.replace(/[&<>"]/g, (character) => ({
+  const escapeHtml = (value) => String(value).replace(/[&<>"]/g, (character) => ({
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
     '"': '&quot;'
   })[character]);
+
+  const marqueeText = (value) => {
+    const clean = escapeHtml(value || 'SHYNETYME WORKS');
+    return `${clean} ✦ ${clean} ✦ ${clean} ✦`;
+  };
 
   const builderPages = [
     { href: 'build-my-bike.html', label: 'Bicycle' },
@@ -83,42 +103,68 @@
     navbar.appendChild(requestLink);
   }
 
-  if (!document.body.classList.contains('home-page') && !document.querySelector('.global-led-banner')) {
-    const pageTitle = builderCopy?.title ? escapeHtml(builderCopy.title) : 'SHYNETYME WORKS';
-    const pageKicker = builderCopy?.kicker ? escapeHtml(builderCopy.kicker) : 'LOS ANGELES MOBILE LED EFFECTS';
-    const pageLead = builderCopy?.lead ? escapeHtml(builderCopy.lead) : 'CUSTOM LIGHTING THAT DOES NOT LOOK LIKE EVERYBODY ELSE\'S.';
-    const builderBanner = Boolean(builderCopy);
-    const banner = document.createElement('section');
-    banner.className = 'hero global-led-banner py-5';
-    banner.setAttribute('aria-label', builderBanner ? `${builderCopy.title} introduction` : 'ShyneTyme Works mobile LED services');
+  if (!isHomePage && !document.querySelector('.interior-hero')) {
+    const pageTitle = introCopy?.title || 'ShyneTyme Works';
+    const pageLead = introCopy?.lead || 'Custom lighting that does not look like everybody else\'s.';
+    const pageSupport = [introCopy?.kicker, introCopy?.detail].filter(Boolean).join(' · ')
+      || 'Los Angeles mobile LED effects';
+    const titleId = `interior-led-title-${currentPage.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`;
+    const banner = document.createElement('header');
+
+    banner.className = 'hero interior-hero py-5';
+    banner.setAttribute('aria-label', `${pageTitle} introduction`);
     banner.innerHTML = `
-      <div class="global-led-banner__frame">
-        <div class="global-led-banner__scenes" aria-hidden="true">
-          <img src="assets/images/hero-scene-work.webp" width="1600" height="900" alt="">
-          <img src="assets/images/hero-scene-school.webp" width="1600" height="900" alt="">
-          <img src="assets/images/hero-scene-dance.webp" width="1600" height="900" alt="">
-          <img src="assets/images/hero-scene-marina.webp" width="1600" height="900" alt="">
+      <div class="hero-carousel" id="heroCarousel" role="region" aria-roledescription="carousel" aria-label="ShyneTyme community scenes">
+        <div class="hero-carousel__scene is-active" role="group" aria-roledescription="slide" aria-label="1 of 4: After-work homecoming">
+          <img src="assets/images/hero-scene-work.webp" width="1600" height="900" alt="" fetchpriority="high">
         </div>
-        <div class="global-led-banner__shade" aria-hidden="true"></div>
-        <div class="global-led-banner__sign${builderBanner ? ' global-led-banner__sign--page' : ''}">
-          <div class="global-led-banner__brand"><span>SHYNETYME WORKS</span><span>LOS ANGELES</span></div>
-          <div class="global-led-banner__row global-led-banner__row--cyan${builderBanner ? ' global-led-banner__row--page' : ''}">
-            ${builderBanner
-              ? `<span class="global-led-banner__page-copy"><strong>${pageTitle}</strong><small>${pageKicker}</small></span>`
-              : '<span>RIDE BRIGHT · DRIVE AWARE · FLOAT LIT · BICYCLES · AUTOS · YACHTS · SHYNETYME WORKS · RIDE BRIGHT · DRIVE AWARE · FLOAT LIT ·</span>'}
+        <div class="hero-carousel__scene" role="group" aria-roledescription="slide" aria-label="2 of 4: School-day homecoming" aria-hidden="true">
+          <img src="assets/images/hero-scene-school.webp" width="1600" height="900" alt="" loading="lazy">
+        </div>
+        <div class="hero-carousel__scene" role="group" aria-roledescription="slide" aria-label="3 of 4: Neighborhood dance break" aria-hidden="true">
+          <img src="assets/images/hero-scene-dance.webp" width="1600" height="900" alt="" loading="lazy">
+        </div>
+        <div class="hero-carousel__scene" role="group" aria-roledescription="slide" aria-label="4 of 4: Marina homecoming" aria-hidden="true">
+          <img src="assets/images/hero-scene-marina.webp" width="1600" height="900" alt="" loading="lazy">
+        </div>
+        <div class="hero-carousel__sparkle" aria-hidden="true"></div>
+      </div>
+
+      <div class="container py-4 hero-led-storefront">
+        <div class="led-storefront-sign__frame">
+          <div class="led-storefront-sign__brand" aria-hidden="true">
+            <span>SHYNETYME WORKS</span>
+            <span>LOS ANGELES</span>
           </div>
-          <div class="global-led-banner__row global-led-banner__row--pink${builderBanner ? ' global-led-banner__row--page' : ''}">
-            ${builderBanner
-              ? `<span class="global-led-banner__page-copy global-led-banner__page-copy--lead">${pageLead}</span>`
-              : '<span>CUSTOM LIGHTING THAT DOES NOT LOOK LIKE EVERYBODY ELSE\'S. ✦ PROGRAMMABLE MOBILE LED EFFECTS ✦ CUSTOM LIGHTING THAT DOES NOT LOOK LIKE EVERYBODY ELSE\'S. ✦</span>'}
+
+          <h1 id="${titleId}" class="visually-hidden">${escapeHtml(pageTitle)}</h1>
+
+          <div class="led-storefront-sign__rows" aria-labelledby="${titleId}">
+            <div class="led-storefront-sign__row led-storefront-sign__row--cyan" aria-label="${escapeHtml(pageTitle)}">
+              <span aria-hidden="true">${marqueeText(pageTitle)}</span>
+            </div>
+            <div class="led-storefront-sign__row led-storefront-sign__row--pink led-storefront-sign__row--reverse" aria-label="${escapeHtml(pageLead)}">
+              <span aria-hidden="true">${marqueeText(pageLead)}</span>
+            </div>
+            <div class="led-storefront-sign__row led-storefront-sign__row--amber" aria-label="${escapeHtml(pageSupport)}">
+              <span aria-hidden="true">${marqueeText(pageSupport)}</span>
+            </div>
           </div>
         </div>
       </div>`;
+
     const nav = document.querySelector('.navbar');
     nav?.insertAdjacentElement('afterend', banner);
+
+    if (!document.querySelector('script[data-shynetyme-interior-carousel]')) {
+      const carouselScript = document.createElement('script');
+      carouselScript.src = 'js/hero-carousel.js?v=20260721-3';
+      carouselScript.dataset.shynetymeInteriorCarousel = 'true';
+      document.body.appendChild(carouselScript);
+    }
   }
 
-  if (builderHero) {
+  if (introHeader) {
     const previewBody = document.querySelector('.preview-card.card .card-body.border-top');
     if (demoPanel && previewBody) {
       const previewRules = document.createElement('div');
@@ -126,7 +172,7 @@
       while (demoPanel.firstChild) previewRules.appendChild(demoPanel.firstChild);
       previewBody.prepend(previewRules);
     }
-    builderHero.remove();
+    introHeader.remove();
   }
 
   if (!button || !panel || !close) return;
