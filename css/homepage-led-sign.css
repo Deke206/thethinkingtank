@@ -149,6 +149,23 @@ body.home-page .hero .hero-led-storefront {
   border-top: 1px solid rgba(49, 230, 255, .22);
 }
 
+body.home-page .effects-stage__shell {
+  width: 100%;
+  max-width: none;
+  padding-right: clamp(5px, .55vw, 10px);
+  padding-left: clamp(5px, .55vw, 10px);
+}
+
+body.home-page .effects-center {
+  border-width: 3px;
+}
+
+body.home-page .ad-copy-card {
+  border-width: 3px;
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--accent) 72%, transparent);
+}
+
 @keyframes led-sign-scroll-left {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
