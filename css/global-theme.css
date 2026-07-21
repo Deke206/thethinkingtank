@@ -144,3 +144,8 @@ a.btn,button.btn[type="submit"]{animation:shyneButtonBreath 5.8s ease-in-out inf
   .page-location-bar__inner{min-height:46px}
 }
 @media(prefers-reduced-motion:reduce){a.btn,button.btn[type="submit"]{animation:none}}
+
+.py-5 {
+  padding-top: 0rem !important;
+  padding-bottom: 1rem !important;
+}
