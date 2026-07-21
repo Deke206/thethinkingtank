@@ -1,0 +1,203 @@
+body.home-page .hero .hero-led-storefront {
+  width: min(100%, 1120px);
+  padding-top: clamp(1rem, 3vw, 2.25rem) !important;
+  padding-bottom: clamp(1rem, 3vw, 2.25rem) !important;
+}
+
+.hero-led-storefront .led-storefront-sign__frame {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1rem, 2.5vw, 1.7rem);
+  overflow: hidden;
+  border: clamp(4px, .55vw, 8px) solid transparent;
+  border-radius: 1rem;
+  background:
+    linear-gradient(180deg, rgba(1, 4, 12, .96), rgba(6, 19, 38, .97) 48%, rgba(1, 4, 12, .98)) padding-box,
+    linear-gradient(90deg, #31e6ff 0 16%, #9b83ff 16% 32%, #ff5ab9 32% 49%, #ffc562 49% 66%, #55e6b5 66% 83%, #31e6ff 83% 100%) border-box;
+  box-shadow:
+    0 0 0 3px rgba(0, 0, 0, .96),
+    0 0 0 5px rgba(49, 230, 255, .24),
+    0 20px 48px rgba(0, 0, 0, .58),
+    0 0 28px rgba(49, 230, 255, .4),
+    0 0 46px rgba(255, 90, 185, .25),
+    inset 0 0 30px rgba(0, 0, 0, .94);
+  backdrop-filter: blur(4px);
+}
+
+.hero-led-storefront .led-storefront-sign__frame::before {
+  content: "";
+  position: absolute;
+  inset: .45rem;
+  z-index: -1;
+  border: 2px dotted rgba(223, 250, 255, .76);
+  border-radius: .65rem;
+  box-shadow:
+    0 0 8px rgba(49, 230, 255, .62),
+    inset 0 0 9px rgba(255, 90, 185, .42);
+  pointer-events: none;
+}
+
+.led-storefront-sign__brand {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .4rem 1rem;
+  margin: .15rem .35rem .85rem;
+  padding: .55rem .75rem;
+  border: 1px solid rgba(49, 230, 255, .48);
+  border-radius: .55rem;
+  background: rgba(1, 4, 12, .9);
+  box-shadow: inset 0 0 14px rgba(49, 230, 255, .1), 0 0 10px rgba(49, 230, 255, .14);
+  color: var(--ice);
+  font-family: var(--heading-font);
+  font-size: clamp(.72rem, 1.15vw, .95rem);
+  font-weight: 800;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px var(--cyan), 0 0 16px rgba(49, 230, 255, .72);
+}
+
+.led-storefront-sign__brand span:last-child {
+  color: var(--pink);
+  text-shadow: 0 0 8px var(--pink), 0 0 16px rgba(255, 90, 185, .66);
+}
+
+.led-storefront-sign__rows {
+  display: grid;
+  gap: clamp(.5rem, 1vw, .78rem);
+  margin: 0 .35rem;
+}
+
+.led-storefront-sign__row {
+  --row-color: var(--cyan);
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: clamp(3.35rem, 5.4vw, 4.8rem);
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--row-color) 62%, transparent);
+  border-radius: .48rem;
+  background:
+    repeating-radial-gradient(circle at 2px 2px, rgba(255, 255, 255, .06) 0 1px, transparent 1.4px 5px),
+    linear-gradient(180deg, rgba(9, 22, 42, .94), rgba(1, 5, 14, .99));
+  box-shadow:
+    inset 0 0 18px rgba(0, 0, 0, .9),
+    inset 0 0 9px color-mix(in srgb, var(--row-color) 18%, transparent),
+    0 0 12px color-mix(in srgb, var(--row-color) 20%, transparent);
+}
+
+.led-storefront-sign__row::before,
+.led-storefront-sign__row::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 2;
+  width: clamp(1rem, 4vw, 2.8rem);
+  pointer-events: none;
+}
+
+.led-storefront-sign__row::before {
+  left: 0;
+  background: linear-gradient(90deg, #02050d, transparent);
+}
+
+.led-storefront-sign__row::after {
+  right: 0;
+  background: linear-gradient(-90deg, #02050d, transparent);
+}
+
+.led-storefront-sign__row span {
+  display: block;
+  width: max-content;
+  min-width: max-content;
+  padding-inline: 1.2rem;
+  color: var(--row-color);
+  background-image: radial-gradient(circle, var(--row-color) 0 1.1px, transparent 1.3px);
+  background-size: 4px 4px;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: var(--heading-font);
+  font-size: clamp(1rem, 1.75vw, 1.48rem);
+  font-weight: 800;
+  letter-spacing: .13em;
+  line-height: 1.15;
+  white-space: nowrap;
+  filter: drop-shadow(0 0 3px var(--row-color)) drop-shadow(0 0 7px color-mix(in srgb, var(--row-color) 65%, transparent));
+  animation: led-sign-scroll-left 24s linear infinite;
+  will-change: transform;
+}
+
+.led-storefront-sign__row--reverse span {
+  animation-name: led-sign-scroll-right;
+}
+
+.led-storefront-sign__row--pink { --row-color: var(--pink); }
+.led-storefront-sign__row--amber { --row-color: var(--amber); }
+.led-storefront-sign__row--violet { --row-color: var(--violet); }
+.led-storefront-sign__row--mint { --row-color: var(--mint); }
+.led-storefront-sign__row--ice { --row-color: var(--ice); }
+
+.led-storefront-sign__row:nth-child(2) span { animation-duration: 30s; }
+.led-storefront-sign__row:nth-child(3) span { animation-duration: 34s; }
+
+.shynetyme-story {
+  display: flex;
+  flex-direction: column;
+}
+
+.shynetyme-story__content {
+  flex: 1 1 auto;
+}
+
+.shynetyme-story__actions {
+  position: relative;
+  z-index: 3;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  padding-bottom: .15rem;
+  border-top: 1px solid rgba(49, 230, 255, .22);
+}
+
+@keyframes led-sign-scroll-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes led-sign-scroll-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+@media (max-width: 767.98px) {
+  body.home-page .hero .hero-led-storefront {
+    padding-right: .8rem;
+    padding-left: .8rem;
+  }
+
+  .hero-led-storefront .led-storefront-sign__frame {
+    padding: .9rem .6rem;
+  }
+
+  .led-storefront-sign__brand {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .led-storefront-sign__row {
+    min-height: 3.2rem;
+  }
+
+  .led-storefront-sign__row span {
+    font-size: .95rem;
+    letter-spacing: .1em;
+  }
+
+  .shynetyme-story__actions .btn {
+    flex: 1 1 100%;
+  }
+}
