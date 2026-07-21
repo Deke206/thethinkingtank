@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Build My Yacht | ShyneTyme Works</title>
+  <meta name="description" content="Plan a liveaboard yacht LED installation with selectable deck walking spaces, gangways, railings, mast and living-quarter lighting zones.">
+  <meta name="theme-color" content="#06152f">
+  <link rel="canonical" href="https://shynetyme.works/build-my-yacht.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ShyneTyme Works">
+  <meta property="og:title" content="Build My Yacht | ShyneTyme Works">
+  <meta property="og:description" content="Interactive liveaboard yacht LED lighting planner.">
+  <meta property="og:url" content="https://shynetyme.works/build-my-yacht.html">
+  <meta property="og:image" content="https://shynetyme.works/assets/images/shynetyme-works-hero.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oxanium:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="css/bike-builder.css">
+  <link rel="stylesheet" href="css/vehicle-builder.css">
+</head>
+<body class="builder-page yacht-builder-page">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold brand-lockup" href="index.html"><img src="assets/brand/favicon-32.png" width="34" height="34" alt=""> <span>ShyneTyme <em>Works</em></span></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link active" aria-current="page" href="build-my-yacht.html">Build My Yacht</a>
+          <a class="nav-link" href="index.html#effects">Effects</a>
+          <a class="nav-link" href="catalog.html">Catalog</a>
+          <a class="nav-link" href="index.html#request">Request Install</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="builder-hero py-5">
+    <div class="container py-3">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+          <p class="text-uppercase small fw-bold mb-2">Interactive marine lighting planner</p>
+          <h1 class="display-4 fw-bold">Build My Yacht</h1>
+          <p class="lead mb-0">Plan a liveaboard yacht installation across deck walking spaces, gangways, railings, mast and living quarters. The planner changes to the most useful angle for each selected section.</p>
+        </div>
+        <div class="col-lg-4">
+          <div class="demo-panel rounded-4 p-4">
+            <strong>Live-view rules</strong>
+            <div class="mt-2"><span class="legend-dot legend-on"></span>Selected lighting zone</div>
+            <div><span class="legend-dot legend-off"></span>Available but not selected</div>
+            <div class="small mt-2">Deck choices open the deck plan; living-quarter choices open the interior plan.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="py-5">
+    <div class="container">
+      <div class="builder-shell">
+        <form id="vehicleBuilderForm" class="builder-form" novalidate data-builder-name="Build My Yacht" data-subject-label="Liveaboard yacht" data-default-view="profile">
+          <div class="accordion" id="builderAccordion">
+            <section class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#yachtSetup" aria-expanded="true" aria-controls="yachtSetup">1. Yacht setup and lighting style</button>
+              </h2>
+              <div id="yachtSetup" class="accordion-collapse collapse show" data-bs-parent="#builderAccordion">
+                <div class="accordion-body">
+                  <div class="question-row">
+                    <label class="question-label" for="vesselStyle">Vessel profile</label>
+                    <select id="vesselStyle" class="form-select" data-summary-label="Vessel profile">
+                      <option selected>Liveaboard cruising yacht</option>
+                    </select>
+                  </div>
+                  <div class="question-row">
+                    <label class="question-label" for="effectStyle">Primary LED effect</label>
+                    <select id="effectStyle" class="form-select" data-summary-label="Primary LED effect">
+                      <option>Warm solid accent</option>
+                      <option selected>Animated color flow</option>
+                      <option>Music-reactive entertainment pattern</option>
+                      <option>Safety-focused warm white and amber</option>
+                    </select>
+                  </div>
+                  <div class="question-row">
+                    <label class="question-label" for="colorStyle">Color direction</label>
+                    <select id="colorStyle" class="form-select" data-summary-label="Color direction">
+                      <option selected>Full RGB palette</option>
+                      <option>Warm marine ambience</option>
+                      <option>Cool ocean palette</option>
+                      <option>Single requested color</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#yachtExterior" aria-expanded="false" aria-controls="yachtExterior">2. Railings and mast</button>
+              </h2>
+              <div id="yachtExterior" class="accordion-collapse collapse" data-bs-parent="#builderAccordion">
+                <div class="accordion-body">
+                  <div class="question-row"><div class="question-label">Perimeter railings</div><div class="yes-no" data-yes-no="railings" data-default="yes" data-label="Perimeter railings" data-view="profile"></div></div>
+                  <div class="question-row"><div class="question-label">Main mast</div><div class="yes-no" data-yes-no="mast" data-default="no" data-label="Main mast" data-view="profile"></div></div>
+                </div>
+              </div>
+            </section>
+
+            <section class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#yachtDeck" aria-expanded="false" aria-controls="yachtDeck">3. Deck walking spaces and gangways</button>
+              </h2>
+              <div id="yachtDeck" class="accordion-collapse collapse" data-bs-parent="#builderAccordion">
+                <div class="accordion-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="question-row"><div class="question-label">Foredeck walking space</div><div class="yes-no" data-yes-no="foredeck" data-default="yes" data-label="Foredeck walking space" data-view="deck"></div></div>
+                      <div class="question-row"><div class="question-label">Aft deck walking space</div><div class="yes-no" data-yes-no="aftDeck" data-default="no" data-label="Aft deck walking space" data-view="deck"></div></div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="question-row"><div class="question-label">Port gangway</div><div class="yes-no" data-yes-no="portGangway" data-default="no" data-label="Port gangway" data-view="deck"></div></div>
+                      <div class="question-row"><div class="question-label">Starboard gangway</div><div class="yes-no" data-yes-no="starboardGangway" data-default="no" data-label="Starboard gangway" data-view="deck"></div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#yachtInterior" aria-expanded="false" aria-controls="yachtInterior">4. Living quarters</button>
+              </h2>
+              <div id="yachtInterior" class="accordion-collapse collapse" data-bs-parent="#builderAccordion">
+                <div class="accordion-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="question-row"><div class="question-label">Salon and galley perimeter</div><div class="yes-no" data-yes-no="salonGalley" data-default="no" data-label="Salon and galley perimeter" data-view="quarters"></div></div>
+                      <div class="question-row"><div class="question-label">Sleeping quarters</div><div class="yes-no" data-yes-no="sleepingQuarters" data-default="no" data-label="Sleeping quarters" data-view="quarters"></div></div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="question-row"><div class="question-label">Interior passage and step lights</div><div class="yes-no" data-yes-no="interiorPassage" data-default="no" data-label="Interior passage and step lights" data-view="quarters"></div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#yachtControls" aria-expanded="false" aria-controls="yachtControls">5. App control, marine power and budget</button>
+              </h2>
+              <div id="yachtControls" class="accordion-collapse collapse" data-bs-parent="#builderAccordion">
+                <div class="accordion-body">
+                  <div class="question-row">
+                    <div class="question-label">App Control</div>
+                    <div class="yes-no" data-yes-no="appControl" data-default="yes" data-label="App Control" data-conditional-target="appControlOptions"></div>
+                    <div id="appControlOptions" class="conditional-options" data-summary-group="App control methods" data-summary-when="appControl">
+                      <div class="fw-bold mb-2">Select every control method requested</div>
+                      <div class="form-check"><input class="form-check-input" data-controller-option data-default-checked="true" type="checkbox" value="Wi-Fi" id="appWifi" checked><label class="form-check-label" for="appWifi">Wi-Fi</label></div>
+                      <div class="form-check"><input class="form-check-input" data-controller-option data-default-checked="false" type="checkbox" value="Bluetooth" id="appBluetooth"><label class="form-check-label" for="appBluetooth">Bluetooth</label></div>
+                      <div class="form-check"><input class="form-check-input" data-controller-option data-default-checked="false" type="checkbox" value="Preprogrammed device" id="appRemote"><label class="form-check-label" for="appRemote">Preprogrammed device</label></div>
+                    </div>
+                  </div>
+                  <div class="question-row">
+                    <label class="question-label" for="powerSource">Power approach</label>
+                    <select id="powerSource" class="form-select" data-summary-label="Power approach">
+                      <option selected>Marine electrical system with isolated fused controller</option>
+                      <option>Separate rechargeable battery bank</option>
+                      <option>Installer recommendation after vessel inspection</option>
+                    </select>
+                  </div>
+                  <div class="question-row">
+                    <label class="question-label" for="budget">Suggested budget</label>
+                    <select id="budget" class="form-select" data-min="500" data-max="15000" data-step="500" data-default="3000"></select>
+                    <div class="question-note mt-2">Budget options run from $500 through $15,000 in $500 steps.</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="summary-box mt-4">
+            <div class="d-flex flex-wrap justify-content-between gap-2 align-items-center mb-2">
+              <h2 class="h5 mb-0">Current yacht build summary</h2>
+              <span id="budgetBadge" class="badge budget-badge">Budget: $3,000</span>
+            </div>
+            <ul id="buildSummary" aria-live="polite"></ul>
+            <div class="d-flex flex-wrap gap-2 mt-3">
+              <button id="copyBuild" type="button" class="btn btn-light">Copy build summary</button>
+              <button id="resetBuild" type="reset" class="btn btn-outline-light">Reset builder</button>
+            </div>
+            <div id="copyStatus" class="small mt-2" aria-live="polite"></div>
+          </div>
+        </form>
+
+        <aside class="preview-card card" aria-label="Interactive liveaboard yacht preview">
+          <div class="preview-toolbar p-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div><strong>Liveaboard Yacht Lighting Planner</strong><div id="viewLabel" class="small text-white-50">Side profile</div></div>
+            <div class="preview-view-buttons" role="group" aria-label="Yacht preview angles">
+              <button type="button" class="btn btn-outline-light active" data-view-button="profile" data-view-label="Side profile" aria-pressed="true">Profile</button>
+              <button type="button" class="btn btn-outline-light" data-view-button="deck" data-view-label="Top-down deck plan" aria-pressed="false">Deck</button>
+              <button type="button" class="btn btn-outline-light" data-view-button="quarters" data-view-label="Living-quarters plan" aria-pressed="false">Quarters</button>
+            </div>
+          </div>
+          <div class="vehicle-stage">
+            <svg id="yachtPreview" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="yachtPreviewTitle yachtPreviewDesc">
+              <title id="yachtPreviewTitle">Interactive liveaboard yacht LED lighting preview</title>
+              <desc id="yachtPreviewDesc">Three selectable views show mast and railing zones, deck walking spaces and gangways, and living-quarter zones.</desc>
+              <defs>
+                <linearGradient id="rgbGradient" x1="0" x2="1">
+                  <stop offset="0" stop-color="#ff004c"/><stop offset=".24" stop-color="#ff9500"/><stop offset=".48" stop-color="#ffe100"/><stop offset=".7" stop-color="#00d084"/><stop offset="1" stop-color="#6f42c1"/>
+                </linearGradient>
+                <linearGradient id="rgbFillGradient" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#ff0b78"/><stop offset=".33" stop-color="#ffb000"/><stop offset=".66" stop-color="#00d6ff"/><stop offset="1" stop-color="#7f42ff"/>
+                </linearGradient>
+              </defs>
+
+              <g data-preview-view="profile">
+                <text class="view-title" x="45" y="55">SIDE PROFILE</text>
+                <text class="view-note" x="45" y="82">Mast and perimeter railing coverage</text>
+                <path class="water-line" d="M70 500Q180 480 290 500T510 500T730 500T930 500"/>
+                <path class="vehicle-outline" d="M104 402H881Q845 474 760 488H240Q152 475 104 402Z"/>
+                <path class="deck-surface" d="M170 343H822L882 402H104Z"/>
+                <path class="room-shell" d="M395 211H675L755 343H330Z"/>
+                <path class="vehicle-window" d="M418 238H488V311H377Z"/>
+                <path class="vehicle-window" d="M505 238H577V311H505Z"/>
+                <path class="vehicle-window" d="M594 238H654L708 311H594Z"/>
+                <path class="vehicle-detail" d="M492 211L522 118M520 118L520 348M520 118L697 314M520 118L363 329"/>
+                <path class="zone vehicle-zone zone-off" data-zone-target="mast" d="M520 116V348" fill="none" stroke-width="17"/>
+                <path class="zone vehicle-zone zone-off" data-zone-target="railings" d="M147 332H825M161 310V350M219 307V347M278 306V346M735 306V346M792 309V350" fill="none" stroke-width="11"/>
+              </g>
+
+              <g data-preview-view="deck" hidden>
+                <text class="view-title" x="45" y="55">TOP-DOWN DECK PLAN</text>
+                <text class="view-note" x="45" y="82">Walking spaces, port gangway and starboard gangway</text>
+                <path class="deck-surface" d="M500 96Q724 109 850 252Q906 315 876 420Q821 536 500 556Q179 536 124 420Q94 315 150 252Q276 109 500 96Z"/>
+                <rect class="room-shell" x="333" y="210" width="334" height="232" rx="80"/>
+                <rect class="vehicle-window" x="402" y="236" width="196" height="78" rx="28"/>
+                <path class="vehicle-detail" d="M500 115V210M500 442V539M333 326H667"/>
+                <path class="zone vehicle-zone zone-fill zone-off" data-zone-target="foredeck" d="M310 122Q500 75 690 122L647 199H353Z" stroke-width="8"/>
+                <path class="zone vehicle-zone zone-fill zone-off" data-zone-target="aftDeck" d="M323 455H677L739 500Q500 577 261 500Z" stroke-width="8"/>
+                <path class="zone vehicle-zone zone-off" data-zone-target="portGangway" d="M278 213Q223 316 274 437" fill="none" stroke-width="24"/>
+                <path class="zone vehicle-zone zone-off" data-zone-target="starboardGangway" d="M722 213Q777 316 726 437" fill="none" stroke-width="24"/>
+                <path class="zone vehicle-zone zone-off" data-zone-target="railings" d="M202 185Q112 278 144 414Q194 512 500 545Q806 512 856 414Q888 278 798 185" fill="none" stroke-width="12"/>
+              </g>
+
+              <g data-preview-view="quarters" hidden>
+                <text class="view-title" x="45" y="55">LIVING-QUARTERS PLAN</text>
+                <text class="view-note" x="45" y="82">Salon, galley, sleeping quarters and passage lights</text>
+                <path class="room-shell" d="M500 98Q745 110 837 258V461Q735 542 500 554Q265 542 163 461V258Q255 110 500 98Z"/>
+                <rect class="room-fixture" x="262" y="184" width="210" height="130" rx="32"/>
+                <rect class="room-fixture" x="528" y="184" width="210" height="130" rx="32"/>
+                <rect class="room-fixture" x="300" y="390" width="400" height="108" rx="38"/>
+                <rect class="vehicle-panel" x="466" y="312" width="68" height="222" rx="26"/>
+                <path class="zone vehicle-zone zone-off" data-zone-target="salonGalley" d="M248 172H752V326H248Z" fill="none" stroke-width="18"/>
+                <path class="zone vehicle-zone zone-off" data-zone-target="sleepingQuarters" d="M286 379H714V510H286Z" fill="none" stroke-width="18"/>
+                <path class="zone vehicle-zone zone-off" data-zone-target="interiorPassage" d="M500 318V526M424 338H576M424 365H576M424 392H576M424 419H576M424 446H576" fill="none" stroke-width="13"/>
+              </g>
+
+              <g transform="translate(785 530) scale(.82)" aria-label="Selected control methods">
+                <g class="control-icon" data-controller-icon="Wi-Fi" transform="translate(0 0)"><circle cx="22" cy="22" r="21"/><path d="M9 17C16 10 28 10 35 17M14 23C19 18 25 18 30 23M20 29C22 27 24 27 26 29"/><circle class="icon-dot" cx="23" cy="34" r="2.8"/></g>
+                <g class="control-icon" data-controller-icon="Bluetooth" transform="translate(53 0)"><circle cx="22" cy="22" r="21"/><path d="M20 8V36L31 26L14 15M20 8L31 18L14 29"/></g>
+                <g class="control-icon" data-controller-icon="Preprogrammed device" transform="translate(106 0)"><rect x="7" y="1" width="30" height="42" rx="8"/><circle class="icon-dot" cx="22" cy="12" r="4"/><circle class="icon-dot" cx="15" cy="24" r="3"/><circle class="icon-dot" cx="29" cy="24" r="3"/></g>
+              </g>
+            </svg>
+          </div>
+          <div class="card-body border-top">
+            <div class="small text-secondary">This is a planning illustration, not a vessel survey. Final strip lengths, marine-grade waterproofing, power load, navigation-light separation and mounting points must be confirmed on the actual yacht.</div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="py-4 border-top">
+    <div class="container small d-flex flex-wrap justify-content-between gap-2">
+      <span>Copyright © 2026 DeacStudio. All rights reserved.</span>
+      <span><a href="index.html">Home</a> · <a href="PRIVACY.md">Privacy</a> · <a href="TERMS.md">Terms</a></span>
+    </div>
+  </footer>
+
+  <button class="site-guide-button" type="button" aria-expanded="false" aria-controls="siteGuidePanel" aria-label="Open Chuck's LED helper">
+    <img src="assets/brand/pet-chuck-mark.png" width="104" height="104" alt="Chuck, the ShyneTyme Works robot-cat helper">
+  </button>
+  <aside class="site-guide-panel" id="siteGuidePanel" hidden aria-label="Chuck's quick help">
+    <button class="site-guide-close" type="button" aria-label="Close helper">×</button>
+    <strong>Yacht build helper</strong>
+    <span>Select exterior, deck or living-quarter zones, then copy the finished build.</span>
+    <a href="#builderAccordion">Continue builder</a>
+    <a href="catalog.html">Browse Catalog</a>
+  </aside>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/vehicle-builder.js"></script>
+  <script src="js/site-guide.js"></script>
+</body>
+</html>
