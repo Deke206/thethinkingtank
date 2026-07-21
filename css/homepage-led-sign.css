@@ -1,7 +1,16 @@
+body.home-page .hero::before {
+  background: none;
+}
+
 body.home-page .hero .hero-led-storefront {
-  width: min(100%, 1120px);
+  width: clamp(480px, 48vw, 620px);
+  max-width: calc(100% - .75rem);
+  margin-right: auto;
+  margin-left: 0;
   padding-top: clamp(1rem, 3vw, 2.25rem) !important;
+  padding-right: 0;
   padding-bottom: clamp(1rem, 3vw, 2.25rem) !important;
+  padding-left: clamp(.75rem, 2vw, 1.5rem);
 }
 
 .hero-led-storefront .led-storefront-sign__frame {
@@ -9,21 +18,17 @@ body.home-page .hero .hero-led-storefront {
   z-index: 2;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  min-height: clamp(390px, 54vh, 480px);
   padding: clamp(1rem, 2.5vw, 1.7rem);
   overflow: hidden;
   border: clamp(4px, .55vw, 8px) solid transparent;
   border-radius: 1rem;
   background:
-    linear-gradient(180deg, rgba(1, 4, 12, .96), rgba(6, 19, 38, .97) 48%, rgba(1, 4, 12, .98)) padding-box,
+    linear-gradient(180deg, rgba(1, 4, 12, .94), rgba(8, 28, 50, .94) 48%, rgba(1, 4, 12, .96)) padding-box,
     linear-gradient(90deg, #31e6ff 0 16%, #9b83ff 16% 32%, #ff5ab9 32% 49%, #ffc562 49% 66%, #55e6b5 66% 83%, #31e6ff 83% 100%) border-box;
-  box-shadow:
-    0 0 0 3px rgba(0, 0, 0, .96),
-    0 0 0 5px rgba(49, 230, 255, .24),
-    0 20px 48px rgba(0, 0, 0, .58),
-    0 0 28px rgba(49, 230, 255, .4),
-    0 0 46px rgba(255, 90, 185, .25),
-    inset 0 0 30px rgba(0, 0, 0, .94);
-  backdrop-filter: blur(4px);
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 .hero-led-storefront .led-storefront-sign__frame::before {
@@ -31,11 +36,9 @@ body.home-page .hero .hero-led-storefront {
   position: absolute;
   inset: .45rem;
   z-index: -1;
-  border: 2px dotted rgba(223, 250, 255, .76);
+  border: 2px dotted rgba(223, 250, 255, .9);
   border-radius: .65rem;
-  box-shadow:
-    0 0 8px rgba(49, 230, 255, .62),
-    inset 0 0 9px rgba(255, 90, 185, .42);
+  box-shadow: none;
   pointer-events: none;
 }
 
@@ -45,29 +48,31 @@ body.home-page .hero .hero-led-storefront {
   align-items: center;
   justify-content: space-between;
   gap: .4rem 1rem;
-  margin: .15rem .35rem .85rem;
-  padding: .55rem .75rem;
-  border: 1px solid rgba(49, 230, 255, .48);
+  margin: .15rem .35rem 1rem;
+  padding: .7rem .8rem;
+  border: 1px solid rgba(49, 230, 255, .72);
   border-radius: .55rem;
-  background: rgba(1, 4, 12, .9);
-  box-shadow: inset 0 0 14px rgba(49, 230, 255, .1), 0 0 10px rgba(49, 230, 255, .14);
-  color: var(--ice);
+  background: rgba(1, 4, 12, .78);
+  box-shadow: none;
+  color: #fff;
   font-family: var(--heading-font);
-  font-size: clamp(.72rem, 1.15vw, .95rem);
+  font-size: clamp(.78rem, 1.25vw, 1rem);
   font-weight: 800;
   letter-spacing: .18em;
   text-transform: uppercase;
-  text-shadow: 0 0 8px var(--cyan), 0 0 16px rgba(49, 230, 255, .72);
+  text-shadow: 0 0 4px #fff, 0 0 10px var(--cyan), 0 0 18px rgba(49, 230, 255, .9);
 }
 
 .led-storefront-sign__brand span:last-child {
-  color: var(--pink);
-  text-shadow: 0 0 8px var(--pink), 0 0 16px rgba(255, 90, 185, .66);
+  color: #fff;
+  text-shadow: 0 0 4px #fff, 0 0 10px var(--pink), 0 0 18px rgba(255, 90, 185, .88);
 }
 
 .led-storefront-sign__rows {
   display: grid;
-  gap: clamp(.5rem, 1vw, .78rem);
+  flex: 1 1 auto;
+  grid-template-rows: repeat(3, minmax(5.25rem, 1fr));
+  gap: clamp(.65rem, 1.2vw, .95rem);
   margin: 0 .35rem;
 }
 
@@ -76,38 +81,19 @@ body.home-page .hero .hero-led-storefront {
   position: relative;
   display: flex;
   align-items: center;
-  min-height: clamp(3.35rem, 5.4vw, 4.8rem);
+  min-height: clamp(5.25rem, 8.5vw, 7rem);
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--row-color) 62%, transparent);
+  border: 1px solid color-mix(in srgb, var(--row-color) 82%, transparent);
   border-radius: .48rem;
   background:
-    repeating-radial-gradient(circle at 2px 2px, rgba(255, 255, 255, .06) 0 1px, transparent 1.4px 5px),
-    linear-gradient(180deg, rgba(9, 22, 42, .94), rgba(1, 5, 14, .99));
-  box-shadow:
-    inset 0 0 18px rgba(0, 0, 0, .9),
-    inset 0 0 9px color-mix(in srgb, var(--row-color) 18%, transparent),
-    0 0 12px color-mix(in srgb, var(--row-color) 20%, transparent);
+    repeating-radial-gradient(circle at 2px 2px, rgba(255, 255, 255, .1) 0 1px, transparent 1.4px 5px),
+    linear-gradient(180deg, rgba(12, 36, 63, .88), rgba(2, 10, 24, .94));
+  box-shadow: none;
 }
 
 .led-storefront-sign__row::before,
 .led-storefront-sign__row::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  z-index: 2;
-  width: clamp(1rem, 4vw, 2.8rem);
-  pointer-events: none;
-}
-
-.led-storefront-sign__row::before {
-  left: 0;
-  background: linear-gradient(90deg, #02050d, transparent);
-}
-
-.led-storefront-sign__row::after {
-  right: 0;
-  background: linear-gradient(-90deg, #02050d, transparent);
+  display: none;
 }
 
 .led-storefront-sign__row span {
@@ -116,18 +102,18 @@ body.home-page .hero .hero-led-storefront {
   min-width: max-content;
   padding-inline: 1.2rem;
   color: var(--row-color);
-  background-image: radial-gradient(circle, var(--row-color) 0 1.1px, transparent 1.3px);
-  background-size: 4px 4px;
+  background-image: radial-gradient(circle, #fff 0 .65px, var(--row-color) .8px 1.35px, transparent 1.55px);
+  background-size: 3.6px 3.6px;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   font-family: var(--heading-font);
-  font-size: clamp(1rem, 1.75vw, 1.48rem);
+  font-size: clamp(1.05rem, 1.9vw, 1.58rem);
   font-weight: 800;
   letter-spacing: .13em;
   line-height: 1.15;
   white-space: nowrap;
-  filter: drop-shadow(0 0 3px var(--row-color)) drop-shadow(0 0 7px color-mix(in srgb, var(--row-color) 65%, transparent));
+  filter: brightness(1.35) saturate(1.18) drop-shadow(0 0 2px #fff) drop-shadow(0 0 7px var(--row-color));
   animation: led-sign-scroll-left 24s linear infinite;
   will-change: transform;
 }
@@ -175,11 +161,16 @@ body.home-page .hero .hero-led-storefront {
 
 @media (max-width: 767.98px) {
   body.home-page .hero .hero-led-storefront {
+    width: 100%;
+    max-width: none;
+    margin-right: auto;
+    margin-left: auto;
     padding-right: .8rem;
     padding-left: .8rem;
   }
 
   .hero-led-storefront .led-storefront-sign__frame {
+    min-height: 350px;
     padding: .9rem .6rem;
   }
 
@@ -188,12 +179,16 @@ body.home-page .hero .hero-led-storefront {
     text-align: center;
   }
 
+  .led-storefront-sign__rows {
+    grid-template-rows: repeat(3, minmax(4.25rem, 1fr));
+  }
+
   .led-storefront-sign__row {
-    min-height: 3.2rem;
+    min-height: 4.25rem;
   }
 
   .led-storefront-sign__row span {
-    font-size: .95rem;
+    font-size: 1rem;
     letter-spacing: .1em;
   }
 
