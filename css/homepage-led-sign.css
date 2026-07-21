@@ -1,59 +1,41 @@
-.led-storefront-sign {
-  padding: clamp(.75rem, 2vw, 1.25rem);
-  background:
-    linear-gradient(150deg, rgba(7, 17, 34, .99), rgba(1, 4, 12, .995)) padding-box,
-    linear-gradient(110deg, var(--cyan), var(--violet), var(--pink), var(--amber), var(--mint), var(--cyan)) border-box;
-  box-shadow:
-    0 24px 60px rgba(0, 0, 0, .48),
-    0 0 32px rgba(49, 230, 255, .18),
-    0 0 48px rgba(255, 90, 185, .12),
-    inset 0 1px 0 rgba(255, 255, 255, .08);
+body.home-page .hero .hero-led-storefront {
+  width: min(100%, 1120px);
+  padding-top: clamp(1rem, 3vw, 2.25rem) !important;
+  padding-bottom: clamp(1rem, 3vw, 2.25rem) !important;
 }
 
-.led-storefront-sign::before {
-  opacity: .42;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, .78) 0 1px, transparent 1.7px);
-  background-size: 8px 8px;
-  mask-image: none;
-}
-
-.led-storefront-sign::after {
-  background:
-    radial-gradient(ellipse at center, rgba(9, 24, 48, .18), rgba(1, 4, 12, .92) 82%),
-    linear-gradient(90deg, rgba(49, 230, 255, .05), transparent 25%, transparent 75%, rgba(255, 90, 185, .05));
-}
-
-.led-storefront-sign__frame {
+.hero-led-storefront .led-storefront-sign__frame {
   position: relative;
   z-index: 2;
   display: flex;
   flex-direction: column;
-  min-height: 100%;
   padding: clamp(1rem, 2.5vw, 1.7rem);
   overflow: hidden;
-  border: clamp(4px, .5vw, 7px) solid transparent;
+  border: clamp(4px, .55vw, 8px) solid transparent;
   border-radius: 1rem;
   background:
-    linear-gradient(180deg, #02050d, #061326 48%, #02050d) padding-box,
+    linear-gradient(180deg, rgba(1, 4, 12, .96), rgba(6, 19, 38, .97) 48%, rgba(1, 4, 12, .98)) padding-box,
     linear-gradient(90deg, #31e6ff 0 16%, #9b83ff 16% 32%, #ff5ab9 32% 49%, #ffc562 49% 66%, #55e6b5 66% 83%, #31e6ff 83% 100%) border-box;
   box-shadow:
-    0 0 0 3px rgba(0, 0, 0, .95),
-    0 0 0 5px rgba(49, 230, 255, .22),
-    0 0 24px rgba(49, 230, 255, .34),
-    0 0 38px rgba(255, 90, 185, .2),
-    inset 0 0 28px rgba(0, 0, 0, .92);
+    0 0 0 3px rgba(0, 0, 0, .96),
+    0 0 0 5px rgba(49, 230, 255, .24),
+    0 20px 48px rgba(0, 0, 0, .58),
+    0 0 28px rgba(49, 230, 255, .4),
+    0 0 46px rgba(255, 90, 185, .25),
+    inset 0 0 30px rgba(0, 0, 0, .94);
+  backdrop-filter: blur(4px);
 }
 
-.led-storefront-sign__frame::before {
+.hero-led-storefront .led-storefront-sign__frame::before {
   content: "";
   position: absolute;
   inset: .45rem;
   z-index: -1;
-  border: 2px dotted rgba(223, 250, 255, .72);
+  border: 2px dotted rgba(223, 250, 255, .76);
   border-radius: .65rem;
   box-shadow:
-    0 0 8px rgba(49, 230, 255, .55),
-    inset 0 0 8px rgba(255, 90, 185, .35);
+    0 0 8px rgba(49, 230, 255, .62),
+    inset 0 0 9px rgba(255, 90, 185, .42);
   pointer-events: none;
 }
 
@@ -65,10 +47,10 @@
   gap: .4rem 1rem;
   margin: .15rem .35rem .85rem;
   padding: .55rem .75rem;
-  border: 1px solid rgba(49, 230, 255, .42);
+  border: 1px solid rgba(49, 230, 255, .48);
   border-radius: .55rem;
   background: rgba(1, 4, 12, .9);
-  box-shadow: inset 0 0 14px rgba(49, 230, 255, .08);
+  box-shadow: inset 0 0 14px rgba(49, 230, 255, .1), 0 0 10px rgba(49, 230, 255, .14);
   color: var(--ice);
   font-family: var(--heading-font);
   font-size: clamp(.72rem, 1.15vw, .95rem);
@@ -85,26 +67,26 @@
 
 .led-storefront-sign__rows {
   display: grid;
-  gap: clamp(.42rem, 1vw, .72rem);
+  gap: clamp(.5rem, 1vw, .78rem);
   margin: 0 .35rem;
 }
 
 .led-storefront-sign__row {
   --row-color: var(--cyan);
   position: relative;
-  overflow: hidden;
-  min-height: clamp(3.35rem, 5.2vw, 4.65rem);
   display: flex;
   align-items: center;
-  border: 1px solid color-mix(in srgb, var(--row-color) 58%, transparent);
+  min-height: clamp(3.35rem, 5.4vw, 4.8rem);
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--row-color) 62%, transparent);
   border-radius: .48rem;
   background:
-    repeating-radial-gradient(circle at 2px 2px, rgba(255, 255, 255, .055) 0 1px, transparent 1.4px 5px),
-    linear-gradient(180deg, rgba(9, 22, 42, .92), rgba(1, 5, 14, .98));
+    repeating-radial-gradient(circle at 2px 2px, rgba(255, 255, 255, .06) 0 1px, transparent 1.4px 5px),
+    linear-gradient(180deg, rgba(9, 22, 42, .94), rgba(1, 5, 14, .99));
   box-shadow:
-    inset 0 0 18px rgba(0, 0, 0, .88),
-    inset 0 0 8px color-mix(in srgb, var(--row-color) 16%, transparent),
-    0 0 10px color-mix(in srgb, var(--row-color) 15%, transparent);
+    inset 0 0 18px rgba(0, 0, 0, .9),
+    inset 0 0 9px color-mix(in srgb, var(--row-color) 18%, transparent),
+    0 0 12px color-mix(in srgb, var(--row-color) 20%, transparent);
 }
 
 .led-storefront-sign__row::before,
@@ -140,7 +122,7 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
   font-family: var(--heading-font);
-  font-size: clamp(1rem, 1.65vw, 1.38rem);
+  font-size: clamp(1rem, 1.75vw, 1.48rem);
   font-weight: 800;
   letter-spacing: .13em;
   line-height: 1.15;
@@ -160,32 +142,25 @@
 .led-storefront-sign__row--mint { --row-color: var(--mint); }
 .led-storefront-sign__row--ice { --row-color: var(--ice); }
 
-.led-storefront-sign__row:nth-child(2) span { animation-duration: 31s; }
-.led-storefront-sign__row:nth-child(3) span { animation-duration: 27s; }
-.led-storefront-sign__row:nth-child(4) span { animation-duration: 36s; }
-.led-storefront-sign__row:nth-child(5) span { animation-duration: 34s; }
-.led-storefront-sign__row:nth-child(6) span { animation-duration: 38s; }
+.led-storefront-sign__row:nth-child(2) span { animation-duration: 30s; }
+.led-storefront-sign__row:nth-child(3) span { animation-duration: 34s; }
 
-.led-storefront-sign__footer {
-  margin: auto .35rem .1rem;
-  padding-top: 1rem;
-  text-align: center;
+.shynetyme-story {
+  display: flex;
+  flex-direction: column;
 }
 
-.led-storefront-sign__footer p {
-  margin: 0 0 .9rem;
-  color: var(--amber);
-  font-family: var(--heading-font);
-  font-size: clamp(.72rem, 1.2vw, .95rem);
-  font-weight: 800;
-  letter-spacing: .13em;
-  text-shadow: 0 0 7px rgba(255, 197, 98, .85), 0 0 15px rgba(255, 197, 98, .4);
+.shynetyme-story__content {
+  flex: 1 1 auto;
 }
 
 .shynetyme-story__actions {
   position: relative;
   z-index: 3;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
   padding-bottom: .15rem;
+  border-top: 1px solid rgba(49, 230, 255, .22);
 }
 
 @keyframes led-sign-scroll-left {
@@ -199,7 +174,12 @@
 }
 
 @media (max-width: 767.98px) {
-  .led-storefront-sign__frame {
+  body.home-page .hero .hero-led-storefront {
+    padding-right: .8rem;
+    padding-left: .8rem;
+  }
+
+  .hero-led-storefront .led-storefront-sign__frame {
     padding: .9rem .6rem;
   }
 
