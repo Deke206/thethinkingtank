@@ -1,16 +1,133 @@
 (() => {
+  if (!document.querySelector('link[href="css/global-theme.css"]')) {
+    const theme = document.createElement('link');
+    theme.rel = 'stylesheet';
+    theme.href = 'css/global-theme.css';
+    document.head.appendChild(theme);
+  }
+
   const button = document.querySelector('.site-guide-button');
   const panel = document.getElementById('siteGuidePanel');
   const close = panel?.querySelector('.site-guide-close');
+  const navbar = document.querySelector('.navbar .navbar-nav');
+  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  const builderHero = document.querySelector('.builder-hero');
+  const demoPanel = builderHero?.querySelector('.demo-panel');
+  const builderCopy = builderHero ? {
+    kicker: builderHero.querySelector('.text-uppercase')?.textContent.trim() || '',
+    title: builderHero.querySelector('h1')?.textContent.trim() || '',
+    lead: builderHero.querySelector('.lead')?.textContent.trim() || ''
+  } : null;
 
-  document.querySelectorAll('.navbar .nav-link').forEach((link) => {
+  const escapeHtml = (value) => value.replace(/[&<>"]/g, (character) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;'
+  })[character]);
+
+  const builderPages = [
+    { href: 'build-my-bike.html', label: 'Bicycle' },
+    { href: 'build-my-auto.html', label: 'Auto' },
+    { href: 'build-my-yacht.html', label: 'Yachts' }
+  ];
+
+  document.querySelectorAll('a').forEach((link) => {
     const href = link.getAttribute('href') || '';
     const label = link.textContent.trim();
+
     if (label === 'Parts' || href.endsWith('#catalog')) {
       link.textContent = 'Catalog';
       link.setAttribute('href', 'catalog.html');
     }
+
+    if (label === 'Effects' || label === 'Explore Effects' || href === '#effects' || href.endsWith('index.html#effects')) {
+      link.remove();
+      return;
+    }
+
+    if (label === 'Request Install' || href === '#request' || href.endsWith('index.html#request')) {
+      link.textContent = 'Request Install';
+      link.setAttribute('href', 'contact.html');
+    }
   });
+
+  if (navbar && !navbar.querySelector('.builder-nav-dropdown')) {
+    const builderHrefs = new Set(builderPages.map((page) => page.href));
+
+    [...navbar.children].forEach((item) => {
+      const link = item.matches('a') ? item : item.querySelector('a');
+      const href = link?.getAttribute('href')?.split('#')[0];
+      if (href && builderHrefs.has(href)) item.remove();
+    });
+
+    const activeBuilder = builderPages.some((page) => page.href === currentPage);
+    const dropdown = document.createElement('div');
+    dropdown.className = 'nav-item dropdown builder-nav-dropdown';
+    dropdown.innerHTML = `
+      <a class="nav-link dropdown-toggle${activeBuilder ? ' active' : ''}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Builders</a>
+      <ul class="dropdown-menu dropdown-menu-dark">
+        ${builderPages.map((page) => {
+          const active = page.href === currentPage;
+          return `<li><a class="dropdown-item${active ? ' active' : ''}" ${active ? 'aria-current="page"' : ''} href="${page.href}">${page.label}</a></li>`;
+        }).join('')}
+      </ul>`;
+    navbar.prepend(dropdown);
+  }
+
+  if (navbar && !navbar.querySelector('a[href="contact.html"]')) {
+    const requestLink = document.createElement('a');
+    requestLink.className = `nav-link${currentPage === 'contact.html' ? ' active' : ''}`;
+    requestLink.href = 'contact.html';
+    requestLink.textContent = 'Request Install';
+    navbar.appendChild(requestLink);
+  }
+
+  if (!document.body.classList.contains('home-page') && !document.querySelector('.global-led-banner')) {
+    const pageTitle = builderCopy?.title ? escapeHtml(builderCopy.title) : 'SHYNETYME WORKS';
+    const pageKicker = builderCopy?.kicker ? escapeHtml(builderCopy.kicker) : 'LOS ANGELES MOBILE LED EFFECTS';
+    const pageLead = builderCopy?.lead ? escapeHtml(builderCopy.lead) : 'CUSTOM LIGHTING THAT DOES NOT LOOK LIKE EVERYBODY ELSE\'S.';
+    const builderBanner = Boolean(builderCopy);
+    const banner = document.createElement('section');
+    banner.className = 'hero global-led-banner py-5';
+    banner.setAttribute('aria-label', builderBanner ? `${builderCopy.title} introduction` : 'ShyneTyme Works mobile LED services');
+    banner.innerHTML = `
+      <div class="global-led-banner__frame">
+        <div class="global-led-banner__scenes" aria-hidden="true">
+          <img src="assets/images/hero-scene-work.webp" width="1600" height="900" alt="">
+          <img src="assets/images/hero-scene-school.webp" width="1600" height="900" alt="">
+          <img src="assets/images/hero-scene-dance.webp" width="1600" height="900" alt="">
+          <img src="assets/images/hero-scene-marina.webp" width="1600" height="900" alt="">
+        </div>
+        <div class="global-led-banner__shade" aria-hidden="true"></div>
+        <div class="global-led-banner__sign${builderBanner ? ' global-led-banner__sign--page' : ''}">
+          <div class="global-led-banner__brand"><span>SHYNETYME WORKS</span><span>LOS ANGELES</span></div>
+          <div class="global-led-banner__row global-led-banner__row--cyan${builderBanner ? ' global-led-banner__row--page' : ''}">
+            ${builderBanner
+              ? `<span class="global-led-banner__page-copy"><strong>${pageTitle}</strong><small>${pageKicker}</small></span>`
+              : '<span>RIDE BRIGHT · DRIVE AWARE · FLOAT LIT · BICYCLES · AUTOS · YACHTS · SHYNETYME WORKS · RIDE BRIGHT · DRIVE AWARE · FLOAT LIT ·</span>'}
+          </div>
+          <div class="global-led-banner__row global-led-banner__row--pink${builderBanner ? ' global-led-banner__row--page' : ''}">
+            ${builderBanner
+              ? `<span class="global-led-banner__page-copy global-led-banner__page-copy--lead">${pageLead}</span>`
+              : '<span>CUSTOM LIGHTING THAT DOES NOT LOOK LIKE EVERYBODY ELSE\'S. ✦ PROGRAMMABLE MOBILE LED EFFECTS ✦ CUSTOM LIGHTING THAT DOES NOT LOOK LIKE EVERYBODY ELSE\'S. ✦</span>'}
+          </div>
+        </div>
+      </div>`;
+    const nav = document.querySelector('.navbar');
+    nav?.insertAdjacentElement('afterend', banner);
+  }
+
+  if (builderHero) {
+    const previewBody = document.querySelector('.preview-card.card .card-body.border-top');
+    if (demoPanel && previewBody) {
+      const previewRules = document.createElement('div');
+      previewRules.className = 'preview-rules';
+      while (demoPanel.firstChild) previewRules.appendChild(demoPanel.firstChild);
+      previewBody.prepend(previewRules);
+    }
+    builderHero.remove();
+  }
 
   if (!button || !panel || !close) return;
 
@@ -85,8 +202,6 @@
     const currentTransform = mainBike.transform.baseVal.consolidate();
     if (!currentTransform) return;
 
-    // Preserve the exact scale assigned by bike-builder.js and measure only the
-    // translation needed to occupy the adult bicycle's rendered viewport area.
     const currentScale = currentTransform.matrix.a;
     const currentTranslateX = currentTransform.matrix.e;
     const currentTranslateY = currentTransform.matrix.f;
@@ -109,22 +224,15 @@
     const currentCenterX = currentRect.left + (currentRect.width / 2);
     const translateX = currentTranslateX + ((adultCenterX - currentCenterX) / Math.abs(svgMatrix.a));
     const translateY = currentTranslateY + ((adultRect.top - currentRect.top) / Math.abs(svgMatrix.d));
-    mainBike.setAttribute(
-      'transform',
-      `translate(${translateX.toFixed(3)} ${translateY.toFixed(3)}) scale(${currentScale})`
-    );
+    mainBike.setAttribute('transform', `translate(${translateX.toFixed(3)} ${translateY.toFixed(3)}) scale(${currentScale})`);
     mainBike.style.transition = previousTransition;
 
-    // Keep the controller icons attached to the bicycle after the position-only move.
     const wheelGapCenterX = translateX + (455 * currentScale);
     const wheelBottomY = translateY + (560 * currentScale);
     const iconScale = Math.min(1, Math.max(0.76, ((176 * currentScale) - 8) / 143));
     const iconTranslateX = Math.round(wheelGapCenterX - (72 * iconScale));
     const iconTranslateY = Math.round(wheelBottomY - (43 * iconScale));
-    appControlIcons.setAttribute(
-      'transform',
-      `translate(${iconTranslateX} ${iconTranslateY}) scale(${iconScale})`
-    );
+    appControlIcons.setAttribute('transform', `translate(${iconTranslateX} ${iconTranslateY}) scale(${iconScale})`);
   };
 
   const placeAfterBuilderUpdate = () => requestAnimationFrame(placeSmallBikeInAdultViewportArea);

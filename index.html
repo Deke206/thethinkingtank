@@ -24,6 +24,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="css/site.css">
   <link rel="stylesheet" href="css/homepage-led-sign.css">
+  <link rel="stylesheet" href="css/global-theme.css">
 </head>
 <body class="home-page">
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
@@ -34,10 +35,16 @@
       </button>
       <div class="collapse navbar-collapse" id="navMenu">
         <div class="navbar-nav ms-auto">
-          <a class="nav-link" href="build-my-bike.html">Build My Bike</a>
-          <a class="nav-link" href="#effects">Effects</a>
+          <div class="nav-item dropdown builder-nav-dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Builders</a>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              <li><a class="dropdown-item" href="build-my-bike.html">Bicycle</a></li>
+              <li><a class="dropdown-item" href="build-my-auto.html">Auto</a></li>
+              <li><a class="dropdown-item" href="build-my-yacht.html">Yachts</a></li>
+            </ul>
+          </div>
           <a class="nav-link" href="catalog.html">Catalog</a>
-          <a class="nav-link" href="#request">Request Install</a>
+          <a class="nav-link" href="contact.html">Request Install</a>
         </div>
       </div>
     </div>
@@ -85,15 +92,14 @@
   </header>
 
   <main>
-    <section id="effects" class="effects-stage py-5">
+    <section id="showcase" class="effects-stage py-5">
       <div class="container-fluid effects-stage__shell">
         <div class="effects-layout">
-          <!-- Left ad-copy rail: replace this draft when campaign copy is ready. -->
           <aside class="ad-copy-card ad-copy-card--cyan" aria-labelledby="ride-ad-title">
             <p class="section-kicker">Bikes · E-bikes · Helmets</p>
             <h2 id="ride-ad-title">Own the night.</h2>
             <p>Turn a daily ride into rolling light art with a build planned around your bike—not pulled from a box.</p>
-            <a class="btn btn-neon-cyan" href="build-my-bike.html">Light My Ride</a>
+            <a class="btn btn-neon-cyan" href="build-my-bike.html">Build My Bicycle</a>
           </aside>
 
           <article class="effects-center shynetyme-story">
@@ -110,27 +116,26 @@
               <p class="shynetyme-story__signoff">So take a little Tyme to contemplate how that little lyte of yours—or your young one’s—can be brought out. And just maybe, you’ll want the Works!</p>
             </div>
             <div class="shynetyme-story__actions d-flex flex-wrap justify-content-center gap-2">
-              <a class="btn btn-light btn-lg" href="build-my-bike.html">Build My Bike</a>
-              <a class="btn btn-outline-light btn-lg" href="#effects">Explore Effects</a>
+              <a class="btn btn-light btn-lg" href="build-my-bike.html">Bicycle Builder</a>
+              <a class="btn btn-outline-light btn-lg" href="contact.html">Request an Installation</a>
             </div>
           </article>
 
-          <!-- Right ad-copy rail: replace this draft when campaign copy is ready. -->
           <aside class="ad-copy-card ad-copy-card--pink" aria-labelledby="beyond-bike-ad-title">
             <p class="section-kicker">Autos · Motorcycles · Boats</p>
             <h2 id="beyond-bike-ad-title">Make ordinary glow weird.</h2>
             <p>Programmable zones, custom sequences and installation ideas for anything that deserves a brighter personality.</p>
-            <a class="btn btn-neon-pink" href="#request">Start Something Strange</a>
+            <a class="btn btn-neon-pink" href="contact.html">Start Something Strange</a>
           </aside>
         </div>
       </div>
     </section>
 
-    <section id="request" class="py-5 bg-dark text-white">
+    <section id="contact-cta" class="py-5 bg-dark text-white">
       <div class="container">
         <div class="row g-4 align-items-center">
-          <div class="col-lg-8"><h2 class="fw-bold">Start with the bike builder</h2><p class="mb-0">Choose the bicycle size, lighting areas, baskets, pouches, flag, controller, brake light, turn signals, helmet lighting and budget.</p></div>
-          <div class="col-lg-4 text-lg-end"><a class="btn btn-light btn-lg" href="build-my-bike.html">Build My Bike</a></div>
+          <div class="col-lg-8"><h2 class="fw-bold">Ready to turn a builder plan into a real project?</h2><p class="mb-0">Send the copied build summary, photos, budget and timing through the installation request page.</p></div>
+          <div class="col-lg-4 text-lg-end"><a class="btn btn-light btn-lg" href="contact.html">Request Install</a></div>
         </div>
       </div>
     </section>
@@ -149,10 +154,10 @@
   <aside class="site-guide-panel" id="siteGuidePanel" hidden aria-label="Chuck's quick help">
     <button class="site-guide-close" type="button" aria-label="Close helper">×</button>
     <strong>Need a spark?</strong>
-    <span>I can point you toward a custom build.</span>
-    <a href="build-my-bike.html">Build My Bike</a>
+    <span>Choose a builder or send a project request.</span>
+    <a href="build-my-bike.html">Bicycle Builder</a>
     <a href="catalog.html">Browse Catalog</a>
-    <a href="#effects">Explore Effects</a>
+    <a href="contact.html">Request Install</a>
   </aside>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

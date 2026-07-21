@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Build My Auto | ShyneTyme Works</title>
+  <meta name="description" content="Plan a custom full-size sedan LED installation with selectable underbody, wheel-well, wheel-rim, interior-trim and foot-well lighting zones.">
+  <meta name="theme-color" content="#06152f">
+  <link rel="canonical" href="https://shynetyme.works/build-my-auto.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ShyneTyme Works">
+  <meta property="og:title" content="Build My Auto | ShyneTyme Works">
+  <meta property="og:description" content="Interactive full-size sedan LED lighting planner.">
+  <meta property="og:url" content="https://shynetyme.works/build-my-auto.html">
+  <meta property="og:image" content="https://shynetyme.works/assets/images/shynetyme-works-hero.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oxanium:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="css/bike-builder.css">
+  <link rel="stylesheet" href="css/vehicle-builder.css">
+</head>
+<body class="builder-page auto-builder-page">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold brand-lockup" href="index.html"><img src="assets/brand/favicon-32.png" width="34" height="34" alt=""> <span>ShyneTyme <em>Works</em></span></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link active" aria-current="page" href="build-my-auto.html">Build My Auto</a>
+          <a class="nav-link" href="index.html#effects">Effects</a>
+          <a class="nav-link" href="catalog.html">Catalog</a>
+          <a class="nav-link" href="index.html#request">Request Install</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="builder-hero py-5">
+    <div class="container py-3">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+          <p class="text-uppercase small fw-bold mb-2">Interactive automotive lighting planner</p>
+          <h1 class="display-4 fw-bold">Build My Auto</h1>
+          <p class="lead mb-0">Plan a full-size sedan installation by selecting exterior and interior LED zones. The live view changes angles when a selected area belongs inside the cabin.</p>
+        </div>
+        <div class="col-lg-4">
+          <div class="demo-panel rounded-4 p-4">
+            <strong>Live-view rules</strong>
+            <div class="mt-2"><span class="legend-dot legend-on"></span>Selected lighting zone</div>
+            <div><span class="legend-dot legend-off"></span>Available but not selected</div>
+            <div class="small mt-2">Selecting an interior option automatically switches the planner to the cabin view.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="py-5">
+    <div class="container">
+      <div class="builder-shell">
+        <form id="vehicleBuilderForm" class="builder-form" novalidate data-builder-name="Build My Auto" data-subject-label="Full-size sedan" data-default-view="exterior">
+          <div class="accordion" id="builderAccordion">
+            <section class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#autoSetup" aria-expanded="true" aria-controls="autoSetup">1. Sedan setup and lighting style</button>
+              </h2>
+              <div id="autoSetup" class="accordion-collapse collapse show" data-bs-parent="#builderAccordion">
+                <div class="accordion-body">
+                  <div class="question-row">
+                    <label class="question-label" for="vehicleStyle">Vehicle profile</label>
+                    <select id="vehicleStyle" class="form-select" data-summary-label="Vehicle profile">
+                      <option selected>Full-size four-door sedan</option>
+                    </select>
+                  </div>
+                  <div class="question-row">
+                    <label class="question-label" for="effectStyle">Primary LED effect</label>
+                    <select id="effectStyle" class="form-select" data-summary-label="Primary LED effect">
+                      <option>Solid color</option>
+                      <option selected>Animated color flow</option>
+                      <option>Music-reactive pattern</option>
+                      <option>Safety-focused white, amber and red</option>
+                    </select>
+                  </div>
+                  <div class="question-row">
+                    <label class="question-label" for="colorStyle">Color direction</label>
+                    <select id="colorStyle" class="form-select" data-summary-label="Color direction">
+                      <option selected>Full RGB palette</option>
+                      <option>Cool colors</option>
+                      <option>Warm colors</option>
+                      <option>Single requested color</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#autoExterior" aria-expanded="false" aria-controls="autoExterior">2. Exterior lighting zones</button>
+              </h2>
+              <div id="autoExterior" class="accordion-collapse collapse" data-bs-parent="#builderAccordion">
+                <div class="accordion-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="question-row"><div class="question-label">Underbody perimeter</div><div class="yes-no" data-yes-no="underbody" data-default="yes" data-label="Underbody perimeter" data-view="exterior"></div></div>
+                      <div class="question-row"><div class="question-label">Front wheel well</div><div class="yes-no" data-yes-no="frontWheelWell" data-default="no" data-label="Front wheel well" data-view="exterior"></div></div>
+                      <div class="question-row"><div class="question-label">Rear wheel well</div><div class="yes-no" data-yes-no="rearWheelWell" data-default="no" data-label="Rear wheel well" data-view="exterior"></div></div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="question-row"><div class="question-label">Front wheel rim</div><div class="yes-no" data-yes-no="frontWheelRim" data-default="yes" data-label="Front wheel rim" data-view="exterior"></div></div>
+                      <div class="question-row"><div class="question-label">Rear wheel rim</div><div class="yes-no" data-yes-no="rearWheelRim" data-default="yes" data-label="Rear wheel rim" data-view="exterior"></div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#autoInterior" aria-expanded="false" aria-controls="autoInterior">3. Interior sections and foot wells</button>
+              </h2>
+              <div id="autoInterior" class="accordion-collapse collapse" data-bs-parent="#builderAccordion">
+                <div class="accordion-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="question-row"><div class="question-label">Dashboard and center console</div><div class="yes-no" data-yes-no="dashboardConsole" data-default="no" data-label="Dashboard and center console" data-view="interior"></div></div>
+                      <div class="question-row"><div class="question-label">Door-panel accent sections</div><div class="yes-no" data-yes-no="doorPanels" data-default="no" data-label="Door-panel accent sections" data-view="interior"></div></div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="question-row"><div class="question-label">Front foot wells</div><div class="yes-no" data-yes-no="frontFootwells" data-default="no" data-label="Front foot wells" data-view="interior"></div></div>
+                      <div class="question-row"><div class="question-label">Rear foot wells</div><div class="yes-no" data-yes-no="rearFootwells" data-default="no" data-label="Rear foot wells" data-view="interior"></div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#autoControls" aria-expanded="false" aria-controls="autoControls">4. App control, power and budget</button>
+              </h2>
+              <div id="autoControls" class="accordion-collapse collapse" data-bs-parent="#builderAccordion">
+                <div class="accordion-body">
+                  <div class="question-row">
+                    <div class="question-label">App Control</div>
+                    <div class="yes-no" data-yes-no="appControl" data-default="yes" data-label="App Control" data-conditional-target="appControlOptions"></div>
+                    <div id="appControlOptions" class="conditional-options" data-summary-group="App control methods" data-summary-when="appControl">
+                      <div class="fw-bold mb-2">Select every control method requested</div>
+                      <div class="form-check"><input class="form-check-input" data-controller-option data-default-checked="true" type="checkbox" value="Wi-Fi" id="appWifi" checked><label class="form-check-label" for="appWifi">Wi-Fi</label></div>
+                      <div class="form-check"><input class="form-check-input" data-controller-option data-default-checked="false" type="checkbox" value="Bluetooth" id="appBluetooth"><label class="form-check-label" for="appBluetooth">Bluetooth</label></div>
+                      <div class="form-check"><input class="form-check-input" data-controller-option data-default-checked="false" type="checkbox" value="Preprogrammed device" id="appRemote"><label class="form-check-label" for="appRemote">Preprogrammed device</label></div>
+                    </div>
+                  </div>
+                  <div class="question-row">
+                    <label class="question-label" for="powerSource">Power approach</label>
+                    <select id="powerSource" class="form-select" data-summary-label="Power approach">
+                      <option selected>Vehicle electrical system with fused controller</option>
+                      <option>Separate rechargeable battery bank</option>
+                      <option>Installer recommendation after inspection</option>
+                    </select>
+                  </div>
+                  <div class="question-row">
+                    <label class="question-label" for="budget">Suggested budget</label>
+                    <select id="budget" class="form-select" data-min="250" data-max="5000" data-step="250" data-default="1000"></select>
+                    <div class="question-note mt-2">Budget options run from $250 through $5,000 in $250 steps.</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="summary-box mt-4">
+            <div class="d-flex flex-wrap justify-content-between gap-2 align-items-center mb-2">
+              <h2 class="h5 mb-0">Current auto build summary</h2>
+              <span id="budgetBadge" class="badge budget-badge">Budget: $1,000</span>
+            </div>
+            <ul id="buildSummary" aria-live="polite"></ul>
+            <div class="d-flex flex-wrap gap-2 mt-3">
+              <button id="copyBuild" type="button" class="btn btn-light">Copy build summary</button>
+              <button id="resetBuild" type="reset" class="btn btn-outline-light">Reset builder</button>
+            </div>
+            <div id="copyStatus" class="small mt-2" aria-live="polite"></div>
+          </div>
+        </form>
+
+        <aside class="preview-card card" aria-label="Interactive full-size sedan preview">
+          <div class="preview-toolbar p-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div><strong>Full-Size Sedan Lighting Planner</strong><div id="viewLabel" class="small text-white-50">Exterior side view</div></div>
+            <div class="preview-view-buttons" role="group" aria-label="Sedan preview angles">
+              <button type="button" class="btn btn-outline-light active" data-view-button="exterior" data-view-label="Exterior side view" aria-pressed="true">Exterior</button>
+              <button type="button" class="btn btn-outline-light" data-view-button="interior" data-view-label="Top-down cabin view" aria-pressed="false">Interior</button>
+            </div>
+          </div>
+          <div class="vehicle-stage">
+            <svg id="autoPreview" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="autoPreviewTitle autoPreviewDesc">
+              <title id="autoPreviewTitle">Interactive full-size sedan LED lighting preview</title>
+              <desc id="autoPreviewDesc">Two selectable views show exterior underbody, wheel-well and wheel-rim zones plus interior trim and foot-well zones.</desc>
+              <defs>
+                <linearGradient id="rgbGradient" x1="0" x2="1">
+                  <stop offset="0" stop-color="#ff004c"/><stop offset=".24" stop-color="#ff9500"/><stop offset=".48" stop-color="#ffe100"/><stop offset=".7" stop-color="#00d084"/><stop offset="1" stop-color="#6f42c1"/>
+                </linearGradient>
+                <linearGradient id="rgbFillGradient" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#ff0b78"/><stop offset=".33" stop-color="#ffb000"/><stop offset=".66" stop-color="#00d6ff"/><stop offset="1" stop-color="#7f42ff"/>
+                </linearGradient>
+              </defs>
+
+              <g data-preview-view="exterior">
+                <text class="view-title" x="45" y="55">EXTERIOR SIDE VIEW</text>
+                <text class="view-note" x="45" y="82">Underbody, wheel wells and wheel rims</text>
+                <path d="M70 520H930" class="water-line" opacity=".28"/>
+                <path class="vehicle-outline" d="M118 416L152 312Q165 265 229 249L342 221Q397 145 492 137H630Q704 143 770 225L844 248Q891 261 908 309L928 392Q932 425 893 434H817Q798 354 720 354Q641 354 622 434H374Q354 354 276 354Q198 354 178 434H139Q107 431 118 416Z"/>
+                <path class="vehicle-window" d="M370 224Q412 164 493 158H548V228Z"/>
+                <path class="vehicle-window" d="M568 158H624Q682 164 741 228H568Z"/>
+                <path class="vehicle-detail" d="M557 158V353M346 230L320 351M744 229L785 351M172 310H900M380 271H738"/>
+                <circle class="vehicle-tire" cx="276" cy="425" r="87"/>
+                <circle class="vehicle-rim-base" cx="276" cy="425" r="51"/>
+                <circle class="vehicle-tire" cx="720" cy="425" r="87"/>
+                <circle class="vehicle-rim-base" cx="720" cy="425" r="51"/>
+                <path class="zone vehicle-zone zone-off" data-zone-target="underbody" d="M165 478Q500 505 835 478" fill="none" stroke-width="18"/>
+                <path class="zone vehicle-zone zone-off" data-zone-target="frontWheelWell" d="M636 410A86 86 0 0 1 804 410" fill="none" stroke-width="16"/>
+                <path class="zone vehicle-zone zone-off" data-zone-target="rearWheelWell" d="M192 410A86 86 0 0 1 360 410" fill="none" stroke-width="16"/>
+                <circle class="zone vehicle-zone zone-off" data-zone-target="frontWheelRim" cx="720" cy="425" r="58" fill="none" stroke-width="14"/>
+                <circle class="zone vehicle-zone zone-off" data-zone-target="rearWheelRim" cx="276" cy="425" r="58" fill="none" stroke-width="14"/>
+              </g>
+
+              <g data-preview-view="interior" hidden>
+                <text class="view-title" x="45" y="55">TOP-DOWN CABIN VIEW</text>
+                <text class="view-note" x="45" y="82">Interior trim sections and front/rear foot wells</text>
+                <rect class="vehicle-panel" x="170" y="104" width="660" height="458" rx="165"/>
+                <rect class="vehicle-window" x="225" y="133" width="550" height="85" rx="38"/>
+                <rect class="vehicle-outline" x="220" y="220" width="560" height="292" rx="84"/>
+                <rect class="vehicle-panel" x="442" y="221" width="116" height="290" rx="38"/>
+                <rect class="vehicle-panel" x="266" y="248" width="142" height="102" rx="30"/>
+                <rect class="vehicle-panel" x="592" y="248" width="142" height="102" rx="30"/>
+                <rect class="vehicle-panel" x="266" y="410" width="142" height="72" rx="28"/>
+                <rect class="vehicle-panel" x="592" y="410" width="142" height="72" rx="28"/>
+                <path class="zone vehicle-zone zone-off" data-zone-target="dashboardConsole" d="M258 232Q500 180 742 232M500 234V479" fill="none" stroke-width="17"/>
+                <path class="zone vehicle-zone zone-off" data-zone-target="doorPanels" d="M228 254V455M772 254V455" fill="none" stroke-width="17"/>
+                <rect class="zone vehicle-zone zone-fill zone-off" data-zone-target="frontFootwells" x="261" y="352" width="152" height="48" rx="18" stroke-width="7"/>
+                <rect class="zone vehicle-zone zone-fill zone-off" data-zone-target="frontFootwells" x="587" y="352" width="152" height="48" rx="18" stroke-width="7"/>
+                <rect class="zone vehicle-zone zone-fill zone-off" data-zone-target="rearFootwells" x="261" y="487" width="152" height="43" rx="17" stroke-width="7"/>
+                <rect class="zone vehicle-zone zone-fill zone-off" data-zone-target="rearFootwells" x="587" y="487" width="152" height="43" rx="17" stroke-width="7"/>
+              </g>
+
+              <g transform="translate(785 530) scale(.82)" aria-label="Selected control methods">
+                <g class="control-icon" data-controller-icon="Wi-Fi" transform="translate(0 0)"><circle cx="22" cy="22" r="21"/><path d="M9 17C16 10 28 10 35 17M14 23C19 18 25 18 30 23M20 29C22 27 24 27 26 29"/><circle class="icon-dot" cx="23" cy="34" r="2.8"/></g>
+                <g class="control-icon" data-controller-icon="Bluetooth" transform="translate(53 0)"><circle cx="22" cy="22" r="21"/><path d="M20 8V36L31 26L14 15M20 8L31 18L14 29"/></g>
+                <g class="control-icon" data-controller-icon="Preprogrammed device" transform="translate(106 0)"><rect x="7" y="1" width="30" height="42" rx="8"/><circle class="icon-dot" cx="22" cy="12" r="4"/><circle class="icon-dot" cx="15" cy="24" r="3"/><circle class="icon-dot" cx="29" cy="24" r="3"/></g>
+              </g>
+            </svg>
+          </div>
+          <div class="card-body border-top">
+            <div class="small text-secondary">This is a planning illustration, not a measurement drawing. Final strip lengths, weatherproofing, power load and legal placement must be confirmed from the actual sedan.</div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="py-4 border-top">
+    <div class="container small d-flex flex-wrap justify-content-between gap-2">
+      <span>Copyright © 2026 DeacStudio. All rights reserved.</span>
+      <span><a href="index.html">Home</a> · <a href="PRIVACY.md">Privacy</a> · <a href="TERMS.md">Terms</a></span>
+    </div>
+  </footer>
+
+  <button class="site-guide-button" type="button" aria-expanded="false" aria-controls="siteGuidePanel" aria-label="Open Chuck's LED helper">
+    <img src="assets/brand/pet-chuck-mark.png" width="104" height="104" alt="Chuck, the ShyneTyme Works robot-cat helper">
+  </button>
+  <aside class="site-guide-panel" id="siteGuidePanel" hidden aria-label="Chuck's quick help">
+    <button class="site-guide-close" type="button" aria-label="Close helper">×</button>
+    <strong>Auto build helper</strong>
+    <span>Select exterior or interior zones, then copy the finished build.</span>
+    <a href="#builderAccordion">Continue builder</a>
+    <a href="catalog.html">Browse Catalog</a>
+  </aside>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/vehicle-builder.js"></script>
+  <script src="js/site-guide.js"></script>
+</body>
+</html>
