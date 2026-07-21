@@ -2,27 +2,36 @@
 
 A Bootstrap 5 website and product catalog for ShyneTyme Works: custom 5V WS2812B mobile LED projects in Los Angeles, including bicycles, e-bikes, helmets, vans, motorcycles, automobiles, boats, patios, and custom installations.
 
-## Initial website goals
+## Website goals
 
 - Show working bicycle and helmet LED effects.
 - Explain phone-controlled ESP32/WLED lighting.
 - Present simple installation packages.
-- Catalog compatible 5V WS2812B parts.
-- Collect installation requests through a direct website form.
-- Support a future BTF-LIGHTING product and field-testing partnership.
+- Maintain a focused catalog of compatible 5V WS2812B parts.
+- Collect installation requests through the interactive bicycle builder.
 
 ## Repository structure
 
 ```text
 index.html
+catalog.html
+build-my-bike.html
 css/site.css
+css/bike-builder.css
 js/catalog.js
+js/bike-builder.js
+js/hero-carousel.js
+js/site-guide.js
 data/products.json
 COPYRIGHT.md
 THIRD_PARTY_NOTICES.md
 PRIVACY.md
 TERMS.md
 ```
+
+## Catalog
+
+`catalog.html` loads the retained product list from `data/products.json` through `js/catalog.js`. The catalog remains independent from any scraper and can later be connected to Shopify product data or purchase links.
 
 ## Publishing
 
