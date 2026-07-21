@@ -2,6 +2,13 @@
   const button = document.querySelector('.site-guide-button');
   const panel = document.getElementById('siteGuidePanel');
   const close = panel?.querySelector('.site-guide-close');
+  const navbar = document.querySelector('.navbar .navbar-nav');
+
+  const builderPages = [
+    { href: 'build-my-bike.html', label: "Child's Bicycle" },
+    { href: 'build-my-auto.html', label: 'Auto' },
+    { href: 'build-my-yacht.html', label: 'Yachts' }
+  ];
 
   document.querySelectorAll('.navbar .nav-link').forEach((link) => {
     const href = link.getAttribute('href') || '';
@@ -11,6 +18,30 @@
       link.setAttribute('href', 'catalog.html');
     }
   });
+
+  if (navbar && !navbar.querySelector('.builder-nav-dropdown')) {
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    const builderHrefs = new Set(builderPages.map((page) => page.href));
+
+    [...navbar.children].forEach((item) => {
+      const link = item.matches('a') ? item : item.querySelector('a');
+      const href = link?.getAttribute('href')?.split('#')[0];
+      if (href && builderHrefs.has(href)) item.remove();
+    });
+
+    const activeBuilder = builderPages.some((page) => page.href === currentPage);
+    const dropdown = document.createElement('div');
+    dropdown.className = 'nav-item dropdown builder-nav-dropdown';
+    dropdown.innerHTML = `
+      <a class="nav-link dropdown-toggle${activeBuilder ? ' active' : ''}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Builders</a>
+      <ul class="dropdown-menu dropdown-menu-dark">
+        ${builderPages.map((page) => {
+          const active = page.href === currentPage;
+          return `<li><a class="dropdown-item${active ? ' active' : ''}" ${active ? 'aria-current="page"' : ''} href="${page.href}">${page.label}</a></li>`;
+        }).join('')}
+      </ul>`;
+    navbar.prepend(dropdown);
+  }
 
   if (!button || !panel || !close) return;
 
