@@ -78,7 +78,15 @@
     const target = document.querySelector(config.target);
     if (!target) return;
 
-    target.id = 'request-info';
+    let requestAnchor = document.getElementById('request-info');
+    if (!requestAnchor) {
+      requestAnchor = document.createElement('span');
+      requestAnchor.id = 'request-info';
+      requestAnchor.className = 'request-info-anchor';
+      requestAnchor.setAttribute('aria-hidden', 'true');
+      requestAnchor.style.cssText = 'display:block;height:0;scroll-margin-top:34vh;';
+      target.insertAdjacentElement('beforebegin', requestAnchor);
+    }
     target.setAttribute('tabindex', '-1');
 
     const hero = document.querySelector('.interior-hero, body.home-page > header.hero, body > header.hero');
