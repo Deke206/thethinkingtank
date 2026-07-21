@@ -156,6 +156,13 @@ body.home-page .effects-stage__shell {
   padding-left: clamp(5px, .55vw, 10px);
 }
 
+body.home-page .effects-layout {
+  --effects-shell-inset: clamp(5px, .55vw, 10px);
+  --hero-frame-inset: clamp(.75rem, 2vw, 1.5rem);
+  width: calc(100% - (var(--hero-frame-inset) - var(--effects-shell-inset)));
+  margin-left: calc(var(--hero-frame-inset) - var(--effects-shell-inset));
+}
+
 body.home-page .effects-center {
   border-width: 3px;
 }
@@ -184,6 +191,10 @@ body.home-page .ad-copy-card {
     margin-left: auto;
     padding-right: .8rem;
     padding-left: .8rem;
+  }
+
+  body.home-page .effects-layout {
+    --hero-frame-inset: .8rem;
   }
 
   .hero-led-storefront .led-storefront-sign__frame {
