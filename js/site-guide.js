@@ -2,6 +2,16 @@
   const button = document.querySelector('.site-guide-button');
   const panel = document.getElementById('siteGuidePanel');
   const close = panel?.querySelector('.site-guide-close');
+
+  document.querySelectorAll('.navbar .nav-link').forEach((link) => {
+    const href = link.getAttribute('href') || '';
+    const label = link.textContent.trim();
+    if (label === 'Parts' || href.endsWith('#catalog')) {
+      link.textContent = 'Catalog';
+      link.setAttribute('href', 'catalog.html');
+    }
+  });
+
   if (!button || !panel || !close) return;
 
   const setOpen = (open) => {
@@ -99,7 +109,6 @@
     const currentCenterX = currentRect.left + (currentRect.width / 2);
     const translateX = currentTranslateX + ((adultCenterX - currentCenterX) / Math.abs(svgMatrix.a));
     const translateY = currentTranslateY + ((adultRect.top - currentRect.top) / Math.abs(svgMatrix.d));
-
     mainBike.setAttribute(
       'transform',
       `translate(${translateX.toFixed(3)} ${translateY.toFixed(3)}) scale(${currentScale})`
