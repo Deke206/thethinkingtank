@@ -12,7 +12,7 @@ The Bootstrap copyright and license notice must be retained when Bootstrap code 
 
 ## Product Names and Trademarks
 
-BTF-LIGHTING, Amazon, WLED, ESP32, Arduino, WS2812B, and other product or company names belong to their respective owners.
+Amazon, WLED, ESP32, Arduino, WS2812B, and other product or company names belong to their respective owners.
 
 Their appearance on this website does not imply ownership, manufacturer authorization, endorsement, or sponsorship unless specifically stated.
 
