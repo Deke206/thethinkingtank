@@ -1,25 +1,290 @@
 (() => {
+  const ensureSharedStyle = (id, href) => {
+    let link = document.getElementById(id);
+    if (!link) {
+      link = document.createElement('link');
+      link.id = id;
+      link.rel = 'stylesheet';
+      document.head.appendChild(link);
+    }
+    link.href = href;
+  };
+
+  ensureSharedStyle('shynetymeHomepageSignStyles', 'css/homepage-led-sign.css?v=20260721-8');
+  ensureSharedStyle('shynetymeGlobalThemeStyles', 'css/global-theme.css?v=20260721-8');
+
+  const button = document.querySelector('.site-guide-button');
+  const panel = document.getElementById('siteGuidePanel');
+  const close = panel?.querySelector('.site-guide-close');
   const navbar = document.querySelector('.navbar .navbar-nav');
   const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  const isHomePage = document.body.classList.contains('home-page');
+  const introHeader = isHomePage
+    ? null
+    : (document.querySelector('.builder-hero') || document.querySelector('body > header'));
+  const demoPanel = introHeader?.querySelector('.demo-panel');
+  const introParagraphs = introHeader ? [...introHeader.querySelectorAll('p')] : [];
+  const kickerElement = introHeader?.querySelector('.hero-kicker, .section-kicker, .text-uppercase');
+  const leadElement = introHeader?.querySelector('.lead');
+  const detailElement = introParagraphs.find((paragraph) => paragraph !== kickerElement && paragraph !== leadElement);
+  const introCopy = introHeader ? {
+    kicker: kickerElement?.textContent.trim() || '',
+    title: introHeader.querySelector('h1')?.textContent.trim() || 'ShyneTyme Works',
+    lead: leadElement?.textContent.trim() || '',
+    detail: detailElement?.textContent.trim() || ''
+  } : null;
 
-  /* REMOVE REQUEST ANCHOR MODIFICATION */
+  const escapeHtml = (value) => String(value).replace(/[&<>"]/g, (character) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;'
+  })[character]);
 
-  /* KEEP NAV CLEAN */
+  const marqueeText = (value) => {
+    const clean = escapeHtml(value || 'SHYNETYME WORKS');
+    return `${clean} ✦ ${clean} ✦ ${clean} ✦`;
+  };
+
+  const builderPages = [
+    { href: 'build-my-bike.html', label: 'Bicycle' },
+    { href: 'build-my-auto.html', label: 'Auto' },
+    { href: 'build-my-yacht.html', label: 'Yachts' }
+  ];
+
   document.querySelectorAll('a').forEach((link) => {
     const href = link.getAttribute('href') || '';
     const label = link.textContent.trim();
 
-    if (label === 'Effects' || href.includes('#effects')) {
+    if (label === 'Parts' || href.endsWith('#catalog')) {
+      link.textContent = 'Catalog';
+      link.setAttribute('href', 'catalog.html');
+    }
+
+    if (label === 'Effects' || label === 'Explore Effects' || href === '#effects' || href.endsWith('index.html#effects')) {
       link.remove();
       return;
     }
 
-    if (label === 'Request Install' || href.includes('#request')) {
-      link.setAttribute('href','contact.html');
+    if (label === 'Request Install' || href === '#request' || href.endsWith('index.html#request')) {
+      link.textContent = 'Request Install';
+      link.setAttribute('href', 'contact.html');
     }
   });
 
-  /* REMOVE ANY OLD PAGE LOCATION BAR */
-  const oldBar = document.querySelector('.page-location-bar');
-  if (oldBar) oldBar.remove();
+  if (navbar && !navbar.querySelector('.builder-nav-dropdown')) {
+    const builderHrefs = new Set(builderPages.map((page) => page.href));
+
+    [...navbar.children].forEach((item) => {
+      const link = item.matches('a') ? item : item.querySelector('a');
+      const href = link?.getAttribute('href')?.split('#')[0];
+      if (href && builderHrefs.has(href)) item.remove();
+    });
+
+    const activeBuilder = builderPages.some((page) => page.href === currentPage);
+    const dropdown = document.createElement('div');
+    dropdown.className = 'nav-item dropdown builder-nav-dropdown';
+    dropdown.innerHTML = `
+      <a class="nav-link dropdown-toggle${activeBuilder ? ' active' : ''}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Builders</a>
+      <ul class="dropdown-menu dropdown-menu-dark">
+        ${builderPages.map((page) => {
+          const active = page.href === currentPage;
+          return `<li><a class="dropdown-item${active ? ' active' : ''}" ${active ? 'aria-current="page"' : ''} href="${page.href}">${page.label}</a></li>`;
+        }).join('')}
+      </ul>`;
+    navbar.prepend(dropdown);
+  }
+
+  if (navbar && !navbar.querySelector('a[href="contact.html"]')) {
+    const requestLink = document.createElement('a');
+    requestLink.className = `nav-link${currentPage === 'contact.html' ? ' active' : ''}`;
+    requestLink.href = 'contact.html';
+    requestLink.textContent = 'Request Install';
+    navbar.appendChild(requestLink);
+  }
+
+  if (!isHomePage && !document.querySelector('.interior-hero')) {
+    const pageTitle = introCopy?.title || 'ShyneTyme Works';
+    const pageLead = introCopy?.lead || 'Custom lighting that does not look like everybody else\'s.';
+    const pageSupport = [introCopy?.kicker, introCopy?.detail].filter(Boolean).join(' · ')
+      || 'Los Angeles mobile LED effects';
+    const titleId = `interior-led-title-${currentPage.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`;
+    const banner = document.createElement('header');
+
+    banner.className = 'hero interior-hero py-5';
+    banner.setAttribute('aria-label', `${pageTitle} introduction`);
+    banner.innerHTML = `
+      <div class="hero-carousel" id="heroCarousel" role="region" aria-roledescription="carousel" aria-label="ShyneTyme community scenes">
+        <div class="hero-carousel__scene is-active" role="group" aria-roledescription="slide" aria-label="1 of 4: After-work homecoming">
+          <img src="assets/images/hero-scene-work.webp" width="1600" height="900" alt="" fetchpriority="high">
+        </div>
+        <div class="hero-carousel__scene" role="group" aria-roledescription="slide" aria-label="2 of 4: School-day homecoming" aria-hidden="true">
+          <img src="assets/images/hero-scene-school.webp" width="1600" height="900" alt="" loading="lazy">
+        </div>
+        <div class="hero-carousel__scene" role="group" aria-roledescription="slide" aria-label="3 of 4: Neighborhood dance break" aria-hidden="true">
+          <img src="assets/images/hero-scene-dance.webp" width="1600" height="900" alt="" loading="lazy">
+        </div>
+        <div class="hero-carousel__scene" role="group" aria-roledescription="slide" aria-label="4 of 4: Marina homecoming" aria-hidden="true">
+          <img src="assets/images/hero-scene-marina.webp" width="1600" height="900" alt="" loading="lazy">
+        </div>
+        <div class="hero-carousel__sparkle" aria-hidden="true"></div>
+      </div>
+
+      <div class="container py-4 hero-led-storefront">
+        <div class="led-storefront-sign__frame">
+          <div class="led-storefront-sign__brand" aria-hidden="true">
+            <span>SHYNETYME.WORKS</span>
+            <span>LOS ANGELES 90034</span>
+          </div>
+
+          <h1 id="${titleId}" class="visually-hidden">${escapeHtml(pageTitle)}</h1>
+
+          <div class="led-storefront-sign__rows" aria-labelledby="${titleId}">
+            <div class="led-storefront-sign__row led-storefront-sign__row--cyan" aria-label="${escapeHtml(pageTitle)}">
+              <span aria-hidden="true">${marqueeText(pageTitle)}</span>
+            </div>
+            <div class="led-storefront-sign__row led-storefront-sign__row--pink led-storefront-sign__row--reverse" aria-label="${escapeHtml(pageLead)}">
+              <span aria-hidden="true">${marqueeText(pageLead)}</span>
+            </div>
+            <div class="led-storefront-sign__row led-storefront-sign__row--amber" aria-label="${escapeHtml(pageSupport)}">
+              <span aria-hidden="true">${marqueeText(pageSupport)}</span>
+            </div>
+          </div>
+        </div>
+      </div>`;
+
+    const nav = document.querySelector('.navbar');
+    nav?.insertAdjacentElement('afterend', banner);
+
+    if (!document.querySelector('script[data-shynetyme-interior-carousel]')) {
+      const carouselScript = document.createElement('script');
+      carouselScript.src = 'js/hero-carousel.js?v=20260721-8';
+      carouselScript.dataset.shynetymeInteriorCarousel = 'true';
+      document.body.appendChild(carouselScript);
+    }
+  }
+
+  if (introHeader) {
+    const previewBody = document.querySelector('.preview-card.card .card-body.border-top');
+    if (demoPanel && previewBody) {
+      const previewRules = document.createElement('div');
+      previewRules.className = 'preview-rules';
+      while (demoPanel.firstChild) previewRules.appendChild(demoPanel.firstChild);
+      previewBody.prepend(previewRules);
+    }
+    introHeader.remove();
+  }
+
+  if (!button || !panel || !close) return;
+
+  const setOpen = (open) => {
+    panel.hidden = !open;
+    button.setAttribute('aria-expanded', String(open));
+    if (open) panel.querySelector('a')?.focus();
+  };
+
+  button.addEventListener('click', () => setOpen(panel.hidden));
+  close.addEventListener('click', () => { setOpen(false); button.focus(); });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !panel.hidden) { setOpen(false); button.focus(); }
+  });
+})();
+
+/* Keep the Build My Bike LED simulation animated on every device. */
+(() => {
+  const form = document.getElementById('bikeBuilderForm');
+  const frameSizeSelect = document.getElementById('frameSize');
+  const mainBike = document.getElementById('mainBikeGroup');
+  const appControlIcons = document.getElementById('appControlIcons');
+  if (!form || !frameSizeSelect || !mainBike || !appControlIcons) return;
+
+  document.documentElement.classList.add('force-bike-planner-motion');
+
+  if (!document.getElementById('bikePlannerMotionOverride')) {
+    const motionStyle = document.createElement('style');
+    motionStyle.id = 'bikePlannerMotionOverride';
+    motionStyle.textContent = `
+      html.force-bike-planner-motion .zone-on {
+        animation: rgbTwinkle 1.35s linear infinite !important;
+      }
+      html.force-bike-planner-motion .zone-on:nth-of-type(2n) {
+        animation-delay: -.35s !important;
+        animation-duration: 1.05s !important;
+      }
+      html.force-bike-planner-motion .zone-on:nth-of-type(3n) {
+        animation-delay: -.7s !important;
+        animation-duration: 1.65s !important;
+      }
+      html.force-bike-planner-motion .legend-on {
+        animation: legendTwinkle .9s infinite alternate !important;
+      }
+      html.force-bike-planner-motion .flag-flash-red #flagPoleLight,
+      html.force-bike-planner-motion .flag-flash-orange #flagPoleLight {
+        animation: flagCautionFlash .82s steps(1, end) infinite !important;
+      }
+      html.force-bike-planner-motion .tail-animated.zone-on .tail-pixel {
+        animation: tailCenterOut 8s linear infinite !important;
+      }
+      html.force-bike-planner-motion .tail-animated .tail-center { animation-delay: 0s !important; }
+      html.force-bike-planner-motion .tail-animated .tail-inner { animation-delay: .25s !important; }
+      html.force-bike-planner-motion .tail-animated .tail-outer { animation-delay: .5s !important; }
+      html.force-bike-planner-motion .signal-animated.zone-on .signal-segment {
+        animation: directionalSignal 1.2s linear infinite !important;
+      }
+      html.force-bike-planner-motion .signal-animated .signal-step-1 { animation-delay: 0s !important; }
+      html.force-bike-planner-motion .signal-animated .signal-step-2 { animation-delay: .16s !important; }
+      html.force-bike-planner-motion .signal-animated .signal-step-3 { animation-delay: .32s !important; }
+    `;
+    document.head.appendChild(motionStyle);
+  }
+
+  const repositionedSizes = new Set(['toddler', 'preschool', 'youth']);
+  const bikePreview = document.getElementById('bikePreview');
+  const adultTransform = 'translate(-13 54) scale(1.05)';
+
+  const placeSmallBikeInAdultViewportArea = () => {
+    if (!repositionedSizes.has(frameSizeSelect.value) || !bikePreview) return;
+
+    const currentTransform = mainBike.transform.baseVal.consolidate();
+    if (!currentTransform) return;
+
+    const currentScale = currentTransform.matrix.a;
+    const currentTranslateX = currentTransform.matrix.e;
+    const currentTranslateY = currentTransform.matrix.f;
+    const previousTransition = mainBike.style.transition;
+    mainBike.style.transition = 'none';
+
+    const currentTransformValue = mainBike.getAttribute('transform');
+    mainBike.setAttribute('transform', adultTransform);
+    const adultRect = mainBike.getBoundingClientRect();
+    mainBike.setAttribute('transform', currentTransformValue);
+    const currentRect = mainBike.getBoundingClientRect();
+
+    const svgMatrix = bikePreview.getScreenCTM();
+    if (!svgMatrix || !svgMatrix.a || !svgMatrix.d) {
+      mainBike.style.transition = previousTransition;
+      return;
+    }
+
+    const adultCenterX = adultRect.left + (adultRect.width / 2);
+    const currentCenterX = currentRect.left + (currentRect.width / 2);
+    const translateX = currentTranslateX + ((adultCenterX - currentCenterX) / Math.abs(svgMatrix.a));
+    const translateY = currentTranslateY + ((adultRect.top - currentRect.top) / Math.abs(svgMatrix.d));
+    mainBike.setAttribute('transform', `translate(${translateX.toFixed(3)} ${translateY.toFixed(3)}) scale(${currentScale})`);
+    mainBike.style.transition = previousTransition;
+
+    const wheelGapCenterX = translateX + (455 * currentScale);
+    const wheelBottomY = translateY + (560 * currentScale);
+    const iconScale = Math.min(1, Math.max(0.76, ((176 * currentScale) - 8) / 143));
+    const iconTranslateX = Math.round(wheelGapCenterX - (72 * iconScale));
+    const iconTranslateY = Math.round(wheelBottomY - (43 * iconScale));
+    appControlIcons.setAttribute('transform', `translate(${iconTranslateX} ${iconTranslateY}) scale(${iconScale})`);
+  };
+
+  const placeAfterBuilderUpdate = () => requestAnimationFrame(placeSmallBikeInAdultViewportArea);
+  form.addEventListener('change', placeAfterBuilderUpdate);
+  form.addEventListener('reset', () => setTimeout(placeSmallBikeInAdultViewportArea, 0));
+  window.addEventListener('pageshow', placeSmallBikeInAdultViewportArea);
+  window.addEventListener('resize', placeAfterBuilderUpdate);
+  placeSmallBikeInAdultViewportArea();
 })();
