@@ -1,0 +1,123 @@
+name: Apply index effects-on cleanup
+
+on:
+  push:
+    paths:
+      - .github/workflows/apply-index-effects-on.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply-effects-on-cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Remove hero buttons and reduced-motion/mobile shutoffs
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          index_path = Path('index.html')
+          css_path = Path('css/site.css')
+          script_path = Path('js/hero-carousel.js')
+          workflow_path = Path('.github/workflows/apply-index-effects-on.yml')
+
+          html = index_path.read_text(encoding='utf-8')
+          html, hero_buttons_removed = re.subn(
+              r'\n\s*<div class="hero-led-actions">\s*\n\s*<a class="btn btn-light btn-lg" href="build-my-bike\.html">Build My Bike</a>\s*\n\s*<a class="btn btn-outline-light btn-lg" href="#effects">Explore Effects</a>\s*\n\s*</div>',
+              '',
+              html,
+              count=1,
+          )
+          if hero_buttons_removed != 1:
+              raise SystemExit('Hero LED action buttons were not found or were already changed in index.html')
+          index_path.write_text(html, encoding='utf-8')
+
+          css = css_path.read_text(encoding='utf-8')
+
+          patterns = [
+              (r'\n@media \(prefers-reduced-motion: reduce\) \{\s*\n\s*html \{ scroll-behavior: auto; \}\s*\n\s*\*, \*::before, \*::after \{ animation-duration: \.001ms !important; animation-iteration-count: 1 !important; transition-duration: \.001ms !important; \}\s*\n\}', 'global reduced-motion override'),
+              (r'\n\.hero-led-actions \{\s*\n\s*display: flex;\s*\n\s*flex-wrap: wrap;\s*\n\s*justify-content: center;\s*\n\s*gap: \.75rem;\s*\n\s*margin-top: \.35rem;\s*\n\}', 'hero LED action CSS'),
+              (r'\n@media \(max-width: 575\.98px\) \{\s*\n\s*\.hero-led-stack \{ gap: \.58rem; \}\s*\n\s*\.hero-led-banner \{ border-radius: \.75rem; \}\s*\n\s*\.hero-led-banner__group \{ gap: 1\.5rem; padding-right: 1\.5rem; \}\s*\n\s*\.hero-led-actions \.btn \{ flex: 1 1 100%; \}\s*\n\}', 'hero LED mobile override'),
+              (r'\n@media \(prefers-reduced-motion: reduce\) \{\s*\n\s*\.hero-led-banner,\s*\n\s*\.hero-led-banner__track \{\s*\n\s*animation: none;\s*\n\s*\}\s*\n\s*\.hero-led-banner__track \{\s*\n\s*width: 100%;\s*\n\s*justify-content: center;\s*\n\s*padding: \.8rem;\s*\n\s*\}\s*\n\s*\.hero-led-banner__group:first-child \{\s*\n\s*justify-content: center;\s*\n\s*width: 100%;\s*\n\s*padding-right: 0;\s*\n\s*white-space: normal;\s*\n\s*text-align: center;\s*\n\s*\}\s*\n\s*\.hero-led-banner__group \+ \.hero-led-banner__group \{\s*\n\s*display: none;\s*\n\s*\}\s*\n\}', 'hero LED reduced-motion override'),
+          ]
+
+          for pattern, label in patterns:
+              css, count = re.subn(pattern, '', css, count=1)
+              if count != 1:
+                  raise SystemExit(f'{label} was not found or was already changed in css/site.css')
+
+          # Remove old, no-longer-used hero button mobile helper if still present.
+          css = css.replace('  .hero .d-flex .btn { flex: 1 1 100%; }\n', '')
+
+          if 'prefers-reduced-motion' in css:
+              raise SystemExit('A reduced-motion override still remains in css/site.css')
+          if 'hero-led-actions' in css:
+              raise SystemExit('Hero LED action styling still remains in css/site.css')
+
+          css_path.write_text(css.strip() + '\n', encoding='utf-8')
+
+          script_path.write_text("""(() => {
+            const carousel = document.getElementById('heroCarousel');
+            if (!carousel) return;
+
+            const scenes = [...carousel.querySelectorAll('.hero-carousel__scene')];
+            if (scenes.length < 2) return;
+
+            const sceneDuration = 8000;
+            let currentScene = 0;
+            let timer;
+
+            carousel.style.setProperty('--scene-duration', `${sceneDuration}ms`);
+
+            function scheduleNextScene() {
+              window.clearTimeout(timer);
+              if (document.hidden) return;
+              timer = window.setTimeout(() => showScene(currentScene + 1), sceneDuration);
+            }
+
+            function showScene(index) {
+              currentScene = (index + scenes.length) % scenes.length;
+
+              scenes.forEach((scene, sceneIndex) => {
+                const active = sceneIndex === currentScene;
+                scene.classList.toggle('is-active', active);
+                scene.setAttribute('aria-hidden', String(!active));
+              });
+
+              scheduleNextScene();
+            }
+
+            document.addEventListener('visibilitychange', scheduleNextScene);
+            showScene(0);
+          })();
+          """, encoding='utf-8')
+
+          workflow_path.unlink(missing_ok=True)
+
+          checks = {
+              'index hero LED action buttons': 'hero-led-actions' not in index_path.read_text(encoding='utf-8'),
+              'CSS reduced-motion overrides': 'prefers-reduced-motion' not in css_path.read_text(encoding='utf-8'),
+              'CSS hero LED actions': 'hero-led-actions' not in css_path.read_text(encoding='utf-8'),
+              'JS reduced-motion logic': 'reducedMotion' not in script_path.read_text(encoding='utf-8') and 'prefers-reduced-motion' not in script_path.read_text(encoding='utf-8'),
+          }
+          failed = [name for name, ok in checks.items() if not ok]
+          if failed:
+              raise SystemExit('Failed checks: ' + ', '.join(failed))
+          PY
+
+      - name: Commit cleanup
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html css/site.css js/hero-carousel.js .github/workflows/apply-index-effects-on.yml
+          git commit -m "Keep index effects always on"
+          git push
