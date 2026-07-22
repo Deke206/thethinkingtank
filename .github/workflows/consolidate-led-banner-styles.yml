@@ -1,0 +1,58 @@
+name: Consolidate LED banner styles
+
+on:
+  push:
+    paths:
+      - .github/workflows/consolidate-led-banner-styles.yml
+
+permissions:
+  contents: write
+
+jobs:
+  consolidate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Move LED banner CSS into shared site stylesheet
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          index_path = Path('index.html')
+          site_path = Path('css/site.css')
+          extra_path = Path('css/hero-led-banners.css')
+
+          html = index_path.read_text(encoding='utf-8')
+          extra_link = '  <link rel="stylesheet" href="css/hero-led-banners.css">\n'
+          if extra_link not in html:
+              raise SystemExit('The separate LED banner stylesheet link was not found.')
+          index_path.write_text(html.replace(extra_link, '', 1), encoding='utf-8')
+
+          site_css = site_path.read_text(encoding='utf-8').rstrip() + '\n'
+          led_css = extra_path.read_text(encoding='utf-8').strip()
+          if '.hero-led-stack {' in site_css:
+              raise SystemExit('LED banner styles already exist in site.css; refusing to duplicate them.')
+          site_css += '\n/* Shared hero LED scrolling banners */\n' + led_css + '\n'
+          site_path.write_text(site_css, encoding='utf-8')
+          PY
+
+      - name: Remove temporary and separate files
+        shell: bash
+        run: |
+          rm css/hero-led-banners.css
+          rm -f .github/workflows/apply-led-hero-banners.yml
+          rm .github/workflows/consolidate-led-banner-styles.yml
+
+      - name: Commit consolidated site structure
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html css/site.css css/hero-led-banners.css .github/workflows/apply-led-hero-banners.yml .github/workflows/consolidate-led-banner-styles.yml
+          git commit -m "Consolidate LED hero banners into shared site CSS"
+          git push
