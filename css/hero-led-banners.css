@@ -1,0 +1,164 @@
+.hero-led-stack {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: .8rem;
+  width: 100%;
+}
+
+.hero-led-banner {
+  --ticker-duration: 18s;
+  position: relative;
+  overflow: hidden;
+  min-height: clamp(3.5rem, 7vw, 5.4rem);
+  border: 2px solid transparent;
+  border-radius: 1rem;
+  background:
+    linear-gradient(180deg, rgba(2, 6, 17, .96), rgba(7, 22, 44, .94)) padding-box,
+    linear-gradient(90deg, #ff5ab9, #ffe45e, #48a9ff, #ff5ab9) border-box;
+  background-size: auto, 300% 100%;
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, .34),
+    0 0 20px rgba(72, 169, 255, .18),
+    inset 0 0 20px rgba(49, 230, 255, .05);
+  animation: hero-led-border-flow 5s linear infinite;
+}
+
+.hero-led-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, .035) 0 1px, transparent 1px 4px),
+    radial-gradient(circle, rgba(134, 224, 255, .16) 0 1px, transparent 1.35px);
+  background-size: auto, 7px 7px;
+  mix-blend-mode: screen;
+}
+
+.hero-led-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(2, 6, 17, .96), transparent 7%, transparent 93%, rgba(2, 6, 17, .96));
+}
+
+.hero-led-banner__track {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  width: max-content;
+  min-height: inherit;
+  animation: hero-led-scroll-left var(--ticker-duration) linear infinite;
+  will-change: transform;
+}
+
+.hero-led-banner--reverse .hero-led-banner__track {
+  animation-name: hero-led-scroll-right;
+}
+
+.hero-led-banner__group {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 2.4rem;
+  padding-right: 2.4rem;
+  white-space: nowrap;
+}
+
+.hero-led-banner__message {
+  margin: 0;
+  color: #f8fdff;
+  font-family: var(--heading-font);
+  font-size: clamp(1rem, 2.4vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: .1em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 4px #fff,
+    0 0 10px #48a9ff,
+    0 0 18px rgba(255, 90, 185, .68);
+}
+
+.hero-led-banner--headline {
+  --ticker-duration: 23s;
+  min-height: clamp(4.2rem, 8vw, 6.2rem);
+}
+
+.hero-led-banner--headline .hero-led-banner__message {
+  font-size: clamp(1.3rem, 3.5vw, 2.65rem);
+  letter-spacing: .06em;
+}
+
+.hero-led-banner--details {
+  --ticker-duration: 31s;
+}
+
+.hero-led-banner--details .hero-led-banner__message {
+  font-size: clamp(.9rem, 2vw, 1.45rem);
+  letter-spacing: .08em;
+}
+
+.hero-led-separator {
+  color: #ffe45e;
+  font-size: 1.25em;
+  text-shadow: 0 0 8px #ffe45e, 0 0 15px rgba(255, 90, 185, .55);
+}
+
+.hero-led-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .75rem;
+  margin-top: .35rem;
+}
+
+@keyframes hero-led-scroll-left {
+  to { transform: translateX(-50%); }
+}
+
+@keyframes hero-led-scroll-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes hero-led-border-flow {
+  to { background-position: 0 0, 300% 0; }
+}
+
+@media (max-width: 575.98px) {
+  .hero-led-stack { gap: .58rem; }
+  .hero-led-banner { border-radius: .75rem; }
+  .hero-led-banner__group { gap: 1.5rem; padding-right: 1.5rem; }
+  .hero-led-actions .btn { flex: 1 1 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-led-banner,
+  .hero-led-banner__track {
+    animation: none;
+  }
+
+  .hero-led-banner__track {
+    width: 100%;
+    justify-content: center;
+    padding: .8rem;
+  }
+
+  .hero-led-banner__group:first-child {
+    justify-content: center;
+    width: 100%;
+    padding-right: 0;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .hero-led-banner__group[aria-hidden="true"] {
+    display: none;
+  }
+}
