@@ -7,9 +7,9 @@ body.home-page .hero .hero-led-storefront {
   max-width: calc(100% - .75rem);
   margin-right: auto;
   margin-left: 0;
-  padding-top: clamp(1rem, 3vw, 2.25rem) !important;
+  padding-top: 0 !important;
   padding-right: 0;
-  padding-bottom: clamp(1rem, 3vw, 2.25rem) !important;
+  padding-bottom: 1rem !important;
   padding-left: clamp(.75rem, 2vw, 1.5rem);
 }
 
@@ -19,13 +19,13 @@ body.home-page .hero .hero-led-storefront {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: clamp(390px, 54vh, 480px);
+  min-height: clamp(260px, 36vh, 340px);
   padding: clamp(1rem, 2.5vw, 1.7rem);
   overflow: hidden;
   border: clamp(4px, .55vw, 8px) solid transparent;
   border-radius: 1rem;
   background:
-    linear-gradient(180deg, rgba(1, 4, 12, .94), rgba(8, 28, 50, .94) 48%, rgba(1, 4, 12, .96)) padding-box,
+    transparent padding-box,
     linear-gradient(90deg, #31e6ff 0 16%, #9b83ff 16% 32%, #ff5ab9 32% 49%, #ffc562 49% 66%, #55e6b5 66% 83%, #31e6ff 83% 100%) border-box;
   box-shadow: none;
   backdrop-filter: none;
@@ -198,7 +198,7 @@ body.home-page .ad-copy-card {
   }
 
   .hero-led-storefront .led-storefront-sign__frame {
-    min-height: 350px;
+    min-height: 250px;
     padding: .9rem .6rem;
   }
 
