@@ -158,7 +158,7 @@
     text-align: center;
   }
 
-  .hero-led-banner__group[aria-hidden="true"] {
+  .hero-led-banner__group + .hero-led-banner__group {
     display: none;
   }
 }
