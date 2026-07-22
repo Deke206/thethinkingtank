@@ -34,11 +34,66 @@
   const carousel = document.getElementById('heroCarousel');
   if (!carousel) return;
 
-  document.documentElement.classList.add('force-homepage-motion');
+  document.documentElement.classList.add('force-homepage-motion', 'force-site-motion');
   if (!document.getElementById('homepageMotionOverride')) {
     const motionStyle = document.createElement('style');
     motionStyle.id = 'homepageMotionOverride';
     motionStyle.textContent = `
+      @keyframes shyne-story-dot-drift {
+        0% { background-position: 0 0; opacity: .18; }
+        50% { opacity: .34; }
+        100% { background-position: 80px 48px; opacity: .18; }
+      }
+
+      @keyframes shyne-shared-panel-border {
+        to { background-position: 0 0, 320% 0; }
+      }
+
+      html.force-site-motion body.home-page .shynetyme-story::before {
+        animation: shyne-story-dot-drift 18s linear infinite;
+        will-change: background-position, opacity;
+      }
+
+      html.force-site-motion body.home-page .story-led-matrix span {
+        animation-play-state: running;
+        will-change: transform;
+      }
+
+      html.force-site-motion .preview-card.card,
+      html.force-site-motion .summary-box,
+      html.force-site-motion .catalog-page #catalog > .container,
+      html.force-site-motion .contact-panel,
+      html.force-site-motion .map-panel,
+      html.force-site-motion .thanks-panel {
+        background-size: auto, 320% 100% !important;
+        background-position: 0 0, 0 0;
+        animation: shyne-shared-panel-border 14s linear infinite !important;
+        will-change: background-position;
+      }
+
+      @media (max-width: 767.98px) {
+        html.force-site-motion body.home-page .effects-center {
+          animation: story-border 14s linear infinite !important;
+        }
+
+        html.force-site-motion body.home-page .shynetyme-story::before {
+          animation: shyne-story-dot-drift 18s linear infinite !important;
+        }
+
+        html.force-site-motion body.home-page .story-led-matrix span {
+          animation: story-message 34s linear infinite !important;
+        }
+
+        html.force-site-motion body.home-page .story-led-matrix span:nth-child(2) {
+          animation-direction: reverse !important;
+          animation-duration: 41s !important;
+        }
+
+        html.force-site-motion body.home-page .story-led-matrix span:nth-child(3) {
+          animation-duration: 37s !important;
+        }
+      }
+
       @media (prefers-reduced-motion: reduce) {
         html.force-homepage-motion body.home-page .nav-link::after {
           transition: transform .2s ease !important;
@@ -64,14 +119,35 @@
         html.force-homepage-motion .card:hover {
           transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease !important;
         }
-        html.force-homepage-motion body.home-page .effects-center {
+        html.force-site-motion body.home-page .effects-center {
           animation: story-border 14s linear infinite !important;
+        }
+        html.force-site-motion body.home-page .shynetyme-story::before {
+          animation: shyne-story-dot-drift 18s linear infinite !important;
+        }
+        html.force-site-motion body.home-page .story-led-matrix span {
+          animation: story-message 34s linear infinite !important;
+        }
+        html.force-site-motion body.home-page .story-led-matrix span:nth-child(2) {
+          animation-direction: reverse !important;
+          animation-duration: 41s !important;
+        }
+        html.force-site-motion body.home-page .story-led-matrix span:nth-child(3) {
+          animation-duration: 37s !important;
         }
         html.force-homepage-motion .led-storefront-sign__row span {
           animation-iteration-count: infinite !important;
         }
         html.force-homepage-motion .site-guide-button img {
           transition: transform .2s ease !important;
+        }
+        html.force-site-motion .preview-card.card,
+        html.force-site-motion .summary-box,
+        html.force-site-motion .catalog-page #catalog > .container,
+        html.force-site-motion .contact-panel,
+        html.force-site-motion .map-panel,
+        html.force-site-motion .thanks-panel {
+          animation: shyne-shared-panel-border 14s linear infinite !important;
         }
       }
     `;
