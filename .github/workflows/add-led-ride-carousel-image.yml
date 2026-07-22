@@ -1,0 +1,40 @@
+name: Add LED ride carousel image
+on:
+  push:
+    paths:
+      - '.github/workflows/add-led-ride-carousel-image.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore uploaded image and add fifth slide
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p assets/images
+          gh api repos/${{ github.repository }}/git/blobs/c84a6587ef411af87c1424f9be4b7863cd4b1cf7 --jq .content | tr -d '\n' | base64 --decode > assets/images/hero-scene-led-ride.webp
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          html = p.read_text()
+          html = html.replace('1 of 4: After-work homecoming', '1 of 5: After-work homecoming')
+          html = html.replace('2 of 4: School-day homecoming', '2 of 5: School-day homecoming')
+          html = html.replace('3 of 4: Neighborhood dance break', '3 of 5: Neighborhood dance break')
+          html = html.replace('4 of 4: Marina homecoming', '4 of 5: Marina homecoming')
+          marker = '''      <div class="hero-carousel__sparkle" aria-hidden="true"></div>'''
+          slide = '''      <div class="hero-carousel__scene" role="group" aria-roledescription="slide" aria-label="5 of 5: Community LED night ride" aria-hidden="true">\n        <img src="assets/images/hero-scene-led-ride.webp" width="1279" height="720" alt="A large community night ride with bicycles and trikes covered in colorful programmable LED lights" loading="lazy">\n      </div>\n'''
+          if 'hero-scene-led-ride.webp' not in html:
+              html = html.replace(marker, slide + marker)
+          p.write_text(html)
+          PY
+      - name: Commit image and carousel update
+        run: |
+          rm .github/workflows/add-led-ride-carousel-image.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html assets/images/hero-scene-led-ride.webp .github/workflows/add-led-ride-carousel-image.yml
+          git commit -m 'Add community LED night ride to hero carousel'
+          git push
