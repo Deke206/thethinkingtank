@@ -1,42 +1,4 @@
 (() => {
-  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-  const routeConfig = {
-    'index.html': {
-      label: 'Home',
-      target: '#showcase'
-    },
-    'build-my-bike.html': {
-      label: 'Build My Bicycle',
-      target: '.builder-shell'
-    },
-    'build-my-auto.html': {
-      label: 'Build My Auto',
-      target: '.builder-shell'
-    },
-    'build-my-yacht.html': {
-      label: 'Build My Yacht',
-      target: '.builder-shell'
-    },
-    'catalog.html': {
-      label: 'Compatible Parts Catalog',
-      target: '#catalog .container, #catalog'
-    },
-    'contact.html': {
-      label: 'Request an Installation',
-      target: '.contact-panel, main'
-    },
-    'contact-thanks.html': {
-      label: 'Request Received',
-      target: '.thanks-panel, main'
-    },
-    'sitemap.html': {
-      label: 'Site Map',
-      target: 'main'
-    }
-  };
-
-  const config = routeConfig[currentPage];
-
   const brand = document.querySelector('.brand-lockup');
   if (brand) {
     const brandIcon = brand.querySelector('img');
@@ -48,83 +10,24 @@
     if (brandLabel) brandLabel.innerHTML = 'ShyneTyme<span class="brand-dot">.</span>Works';
   }
 
-  const requestRoutes = new Set([
-    'build-my-bike.html',
-    'build-my-auto.html',
-    'build-my-yacht.html',
-    'catalog.html',
-    'contact.html'
-  ]);
-
-  const addRequestAnchor = () => {
-    document.querySelectorAll('a[href]').forEach((link) => {
+  const removeInjectedAnchors = () => {
+    document.querySelectorAll('a[href$="#request-info"]').forEach((link) => {
       const href = link.getAttribute('href') || '';
-      if (!href || href.startsWith('#') || href.includes('://') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
-
-      const [path, hash = ''] = href.split('#');
-      const fileName = path.split('/').pop();
-      if (!requestRoutes.has(fileName)) return;
-      if (hash === 'request-info') return;
-
-      link.setAttribute('href', `${path}#request-info`);
+      const cleanHref = href.replace(/#request-info$/, '');
+      if (cleanHref) link.setAttribute('href', cleanHref);
+      else link.removeAttribute('href');
     });
-  };
 
-  const installPageLocation = () => {
-    if (!config || document.querySelector('.page-location-bar')) return;
+    document.querySelector('.page-location-bar')?.remove();
+    document.getElementById('request-info')?.remove();
 
-    const target = document.querySelector(config.target);
-    if (!target) return;
-
-    let requestAnchor = document.getElementById('request-info');
-    if (!requestAnchor) {
-      requestAnchor = document.createElement('span');
-      requestAnchor.id = 'request-info';
-      requestAnchor.className = 'request-info-anchor';
-      requestAnchor.setAttribute('aria-hidden', 'true');
-      requestAnchor.style.cssText = 'display:block;height:0;scroll-margin-top:34vh;';
-      target.insertAdjacentElement('beforebegin', requestAnchor);
+    if (window.location.hash === '#request-info') {
+      window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
     }
-    target.setAttribute('tabindex', '-1');
-
-    const hero = document.querySelector('.interior-hero, body.home-page > header.hero, body > header.hero');
-    if (!hero) return;
-
-    const bar = document.createElement('nav');
-    bar.className = 'page-location-bar';
-    bar.setAttribute('aria-label', 'Current page and content jump');
-    bar.innerHTML = `
-      <div class="container page-location-bar__inner">
-        <span class="page-location-bar__site">ShyneTyme.Works</span>
-        <span class="page-location-bar__separator" aria-hidden="true"></span>
-        <a class="page-location-bar__anchor" href="#request-info">${config.label}</a>
-      </div>`;
-    hero.insertAdjacentElement('afterend', bar);
-
-    const centerRequestInfo = (behavior = 'auto') => {
-      window.requestAnimationFrame(() => {
-        window.setTimeout(() => {
-          target.scrollIntoView({ behavior, block: 'center', inline: 'nearest' });
-          target.focus({ preventScroll: true });
-        }, 60);
-      });
-    };
-
-    bar.querySelector('.page-location-bar__anchor')?.addEventListener('click', (event) => {
-      event.preventDefault();
-      window.history.replaceState(null, '', '#request-info');
-      centerRequestInfo('smooth');
-    });
-
-    if (window.location.hash === '#request-info') centerRequestInfo('auto');
   };
 
-  addRequestAnchor();
-  installPageLocation();
-  window.setTimeout(() => {
-    addRequestAnchor();
-    installPageLocation();
-  }, 120);
+  removeInjectedAnchors();
+  window.setTimeout(removeInjectedAnchors, 120);
 })();
 
 (() => {
@@ -151,6 +54,9 @@
         }
         html.force-homepage-motion .hero-carousel__sparkle {
           animation: hero-stars 8s steps(4, end) infinite alternate !important;
+        }
+        html.force-homepage-motion .hero-led-storefront .led-storefront-sign__frame {
+          animation: led-panel-border-flow 14s linear infinite !important;
         }
         html.force-homepage-motion .btn {
           transition: transform .16s ease, box-shadow .16s ease, filter .16s ease !important;
