@@ -1,0 +1,184 @@
+name: Apply LED hero banners
+
+on:
+  push:
+    paths:
+      - .github/workflows/apply-led-hero-banners.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update-led-banners:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build three scrolling LED banners
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          index_path = Path('index.html')
+          css_path = Path('css/site.css')
+
+          html = index_path.read_text(encoding='utf-8')
+          old_html = '''    <div class="container py-4">
+                <div class="row align-items-center g-4">
+                  <div class="col-lg-7">
+                    <p class="hero-kicker text-uppercase small fw-bold mb-2">Los Angeles mobile LED effects</p>
+                    <h1 class="display-4 fw-bold neon-headline">Custom lighting that does not look like everybody else's.</h1>
+                    <p class="lead">Programmable 5V WS2812B RGB lighting for bicycles, e-bikes, helmets, vans, motorcycles, automobiles and boats.</p>
+                    <div class="d-flex flex-wrap gap-2">
+                      <a class="btn btn-light btn-lg" href="build-my-bike.html">Build My Bike</a>
+                      <a class="btn btn-outline-light btn-lg" href="#effects">Explore Effects</a>
+                    </div>
+                  </div>
+                </div>
+              </div>'''.replace('              ', '')
+
+          new_html = '''    <div class="container py-4 hero-led-container">
+                <div class="hero-led-stack" aria-label="ShyneTyme Works introduction">
+                  <p class="hero-led-banner hero-led-banner--pink" aria-label="Los Angeles mobile LED effects">
+                    <span class="hero-led-track" aria-hidden="true">
+                      <span>LOS ANGELES MOBILE LED EFFECTS ✦</span>
+                      <span>LOS ANGELES MOBILE LED EFFECTS ✦</span>
+                    </span>
+                  </p>
+                  <h1 class="hero-led-banner hero-led-banner--yellow" aria-label="Custom lighting that does not look like everybody else's.">
+                    <span class="hero-led-track hero-led-track--reverse" aria-hidden="true">
+                      <span>CUSTOM LIGHTING THAT DOES NOT LOOK LIKE EVERYBODY ELSE'S ✦</span>
+                      <span>CUSTOM LIGHTING THAT DOES NOT LOOK LIKE EVERYBODY ELSE'S ✦</span>
+                    </span>
+                  </h1>
+                  <p class="hero-led-banner hero-led-banner--blue" aria-label="Programmable 5V WS2812B RGB lighting for bicycles, e-bikes, helmets, vans, motorcycles, automobiles and boats.">
+                    <span class="hero-led-track hero-led-track--slow" aria-hidden="true">
+                      <span>PROGRAMMABLE 5V WS2812B RGB LIGHTING FOR BICYCLES, E-BIKES, HELMETS, VANS, MOTORCYCLES, AUTOMOBILES AND BOATS ✦</span>
+                      <span>PROGRAMMABLE 5V WS2812B RGB LIGHTING FOR BICYCLES, E-BIKES, HELMETS, VANS, MOTORCYCLES, AUTOMOBILES AND BOATS ✦</span>
+                    </span>
+                  </p>
+                </div>
+                <div class="hero-led-actions d-flex flex-wrap justify-content-center gap-2">
+                  <a class="btn btn-light btn-lg" href="build-my-bike.html">Build My Bike</a>
+                  <a class="btn btn-outline-light btn-lg" href="#effects">Explore Effects</a>
+                </div>
+              </div>'''.replace('              ', '')
+
+          if old_html not in html:
+              raise SystemExit('The current index hero text block was not found.')
+          index_path.write_text(html.replace(old_html, new_html, 1), encoding='utf-8')
+
+          css = css_path.read_text(encoding='utf-8')
+          marker = '.hero .lead { max-width: 650px; color: var(--ice); text-shadow: 0 2px 9px #000; }\n\n'
+          led_css = '''.hero-led-container { width: min(1180px, calc(100% - 1rem)); }
+          .hero-led-stack { display: grid; gap: clamp(.58rem, 1.4vw, .9rem); }
+          .hero-led-banner {
+            --led-color: var(--cyan);
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            margin: 0;
+            padding: clamp(.72rem, 1.5vw, 1rem) 0;
+            border: 3px solid transparent;
+            border-radius: 1rem;
+            background:
+              linear-gradient(180deg, rgba(2, 6, 17, .94), rgba(7, 22, 44, .94)) padding-box,
+              linear-gradient(110deg, var(--pink), var(--amber), var(--blue), var(--pink)) border-box;
+            background-size: 100% 100%, 300% 100%;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .38), 0 0 24px color-mix(in srgb, var(--led-color) 23%, transparent), inset 0 1px 0 rgba(255, 255, 255, .1);
+            color: var(--led-color);
+            font-family: var(--heading-font);
+            font-size: clamp(.86rem, 2.2vw, 1.35rem);
+            font-weight: 800;
+            letter-spacing: .15em;
+            line-height: 1.15;
+            text-transform: uppercase;
+            text-shadow: 0 0 5px currentColor, 0 0 12px currentColor, 0 0 22px color-mix(in srgb, currentColor 58%, transparent);
+            animation: hero-led-border 5s linear infinite;
+          }
+          .hero-led-banner::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            opacity: .24;
+            pointer-events: none;
+            background-image: radial-gradient(circle, rgba(255, 255, 255, .75) 0 1px, transparent 1.5px);
+            background-size: 6px 6px;
+          }
+          .hero-led-banner--pink { --led-color: #ff72c7; }
+          .hero-led-banner--yellow { --led-color: #ffe16b; font-size: clamp(1.05rem, 3vw, 1.8rem); }
+          .hero-led-banner--blue { --led-color: #65c7ff; }
+          .hero-led-track {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            width: max-content;
+            will-change: transform;
+            animation: hero-led-scroll 13s linear infinite;
+          }
+          .hero-led-track span { flex: 0 0 auto; padding-right: 4rem; white-space: nowrap; }
+          .hero-led-track--reverse { animation-direction: reverse; animation-duration: 17s; }
+          .hero-led-track--slow { animation-duration: 22s; }
+          .hero-led-actions { margin-top: clamp(1rem, 2vw, 1.4rem); }
+
+          @keyframes hero-led-scroll {
+            to { transform: translateX(-50%); }
+          }
+
+          @keyframes hero-led-border {
+            to { background-position: 0 0, 300% 0; }
+          }
+
+          '''.replace('          ', '')
+
+          if marker not in css:
+              raise SystemExit('The shared hero CSS insertion point was not found.')
+          css = css.replace(marker, marker + led_css, 1)
+
+          responsive_marker = '@media (prefers-reduced-motion: reduce) {'
+          responsive_css = '''@media (max-width: 991.98px) {
+            .hero-led-container { width: min(100%, calc(100% - .5rem)); }
+          }
+
+          @media (max-width: 767.98px) {
+            .hero-led-banner { border-width: 2px; letter-spacing: .1em; }
+            .hero-led-track span { padding-right: 2.5rem; }
+          }
+
+          @media (max-width: 575.98px) {
+            .hero-led-banner { border-radius: .75rem; }
+          }
+
+          '''.replace('          ', '')
+          if responsive_marker not in css:
+              raise SystemExit('The reduced-motion CSS block was not found.')
+          css = css.replace(responsive_marker, responsive_css + responsive_marker, 1)
+          css = css.replace(
+              '  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }\n}',
+              '  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }\n  .hero-led-track { transform: translateX(0) !important; }\n}',
+              1,
+          )
+          css_path.write_text(css, encoding='utf-8')
+
+          final_html = index_path.read_text(encoding='utf-8')
+          final_css = css_path.read_text(encoding='utf-8')
+          if final_html.count('hero-led-banner') != 3:
+              raise SystemExit('Exactly three LED banners were not created.')
+          if 'hero-led-scroll' not in final_css or 'hero-led-border' not in final_css:
+              raise SystemExit('LED banner animations are missing.')
+          PY
+
+      - name: Commit website edit and remove workflow
+        shell: bash
+        run: |
+          rm .github/workflows/apply-led-hero-banners.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html css/site.css .github/workflows/apply-led-hero-banners.yml
+          git commit -m "Turn hero copy into LED scrolling banners"
+          git push
