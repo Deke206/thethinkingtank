@@ -22,7 +22,7 @@ body.home-page .hero .hero-led-storefront {
   min-height: clamp(260px, 36vh, 340px);
   padding: clamp(1rem, 2.5vw, 1.7rem);
   overflow: hidden;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
   border-radius: 1rem;
   background:
     linear-gradient(transparent, transparent) padding-box,
@@ -209,7 +209,7 @@ body.home-page .ad-copy-card {
   .hero-led-storefront .led-storefront-sign__frame {
     min-height: 250px;
     padding: .9rem .6rem;
-    border-width: 2px;
+    border-width: 1px;
     animation: led-panel-border-flow 14s linear infinite;
   }
 
