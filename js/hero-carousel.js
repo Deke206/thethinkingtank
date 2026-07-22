@@ -5,7 +5,6 @@
   const scenes = [...carousel.querySelectorAll('.hero-carousel__scene')];
   if (scenes.length < 2) return;
 
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const sceneDuration = 8000;
   let currentScene = 0;
   let timer;
@@ -14,7 +13,7 @@
 
   function scheduleNextScene() {
     window.clearTimeout(timer);
-    if (reducedMotion.matches || document.hidden) return;
+    if (document.hidden) return;
     timer = window.setTimeout(() => showScene(currentScene + 1), sceneDuration);
   }
 
@@ -31,6 +30,5 @@
   }
 
   document.addEventListener('visibilitychange', scheduleNextScene);
-  reducedMotion.addEventListener('change', scheduleNextScene);
   showScene(0);
 })();

@@ -471,17 +471,12 @@ footer a { color: var(--ice); }
 @media (max-width: 575.98px) {
   .hero { min-height: 600px; }
   .hero .container { padding-top: 2.5rem !important; padding-bottom: 2.5rem; }
-  .hero .d-flex .btn { flex: 1 1 100%; }
   .effects-stage__shell { padding-right: .8rem; padding-left: .8rem; }
   .effects-center, .ad-copy-card { border-radius: 1rem; }
   .shynetyme-story__content > p:not(.section-kicker) { line-height: 1.68; }
   .site-guide-button { width: 76px; height: 76px; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
-}
 
 /* Shared hero LED scrolling banners */
 .hero-led-stack {
@@ -596,13 +591,6 @@ footer a { color: var(--ice); }
   text-shadow: 0 0 8px #ffe45e, 0 0 15px rgba(255, 90, 185, .55);
 }
 
-.hero-led-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: .75rem;
-  margin-top: .35rem;
-}
 
 @keyframes hero-led-scroll-left {
   to { transform: translateX(-50%); }
@@ -615,36 +603,4 @@ footer a { color: var(--ice); }
 
 @keyframes hero-led-border-flow {
   to { background-position: 0 0, 300% 0; }
-}
-
-@media (max-width: 575.98px) {
-  .hero-led-stack { gap: .58rem; }
-  .hero-led-banner { border-radius: .75rem; }
-  .hero-led-banner__group { gap: 1.5rem; padding-right: 1.5rem; }
-  .hero-led-actions .btn { flex: 1 1 100%; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-led-banner,
-  .hero-led-banner__track {
-    animation: none;
-  }
-
-  .hero-led-banner__track {
-    width: 100%;
-    justify-content: center;
-    padding: .8rem;
-  }
-
-  .hero-led-banner__group:first-child {
-    justify-content: center;
-    width: 100%;
-    padding-right: 0;
-    white-space: normal;
-    text-align: center;
-  }
-
-  .hero-led-banner__group + .hero-led-banner__group {
-    display: none;
-  }
 }
