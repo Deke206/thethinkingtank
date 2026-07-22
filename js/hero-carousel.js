@@ -36,8 +36,6 @@
   };
 
   const config = routeConfig[currentPage];
-  const globalTheme = document.querySelector('link[href*="css/global-theme.css"]');
-  if (globalTheme) globalTheme.href = 'css/global-theme.css?v=20260721-6';
 
   const brand = document.querySelector('.brand-lockup');
   if (brand) {
@@ -100,7 +98,6 @@
         <span class="page-location-bar__site">ShyneTyme.Works</span>
         <span class="page-location-bar__separator" aria-hidden="true"></span>
         <a class="page-location-bar__anchor" href="#request-info">${config.label}</a>
-        <span class="page-location-bar__hint">Jump to request information</span>
       </div>`;
     hero.insertAdjacentElement('afterend', bar);
 
