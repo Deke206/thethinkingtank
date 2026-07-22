@@ -7,7 +7,7 @@ body.home-page .hero .hero-led-storefront {
   max-width: calc(100% - .75rem);
   margin-right: auto;
   margin-left: 0;
-  padding-top: 0 !important;
+  padding-top: 2.5px !important;
   padding-right: 0;
   padding-bottom: 1rem !important;
   padding-left: clamp(.75rem, 2vw, 1.5rem);
@@ -22,39 +22,28 @@ body.home-page .hero .hero-led-storefront {
   min-height: clamp(260px, 36vh, 340px);
   padding: clamp(1rem, 2.5vw, 1.7rem);
   overflow: hidden;
-  border: clamp(4px, .55vw, 8px) solid transparent;
+  border: 2px solid transparent;
   border-radius: 1rem;
   background:
     linear-gradient(transparent, transparent) padding-box,
     linear-gradient(
       110deg,
-      #31e6ff 0%,
-      #9b83ff 16%,
-      #ff5ab9 32%,
-      #ffc562 49%,
-      #55e6b5 66%,
-      #31e6ff 83%,
-      #9b83ff 100%
+      var(--cyan),
+      var(--violet),
+      var(--pink),
+      var(--amber),
+      var(--cyan)
     ) border-box;
   background-size: auto, 320% 100%;
   background-position: 0 0, 0 0;
-  box-shadow:
-    0 0 16px rgba(49, 230, 255, .24),
-    0 0 28px rgba(255, 90, 185, .14);
+  box-shadow: none;
   backdrop-filter: none;
-  animation: led-panel-border-flow 8s linear infinite;
+  animation: led-panel-border-flow 14s linear infinite;
   will-change: background-position;
 }
 
 .hero-led-storefront .led-storefront-sign__frame::before {
-  content: "";
-  position: absolute;
-  inset: .45rem;
-  z-index: -1;
-  border: 2px dotted rgba(223, 250, 255, .9);
-  border-radius: .65rem;
-  box-shadow: none;
-  pointer-events: none;
+  display: none;
 }
 
 .led-storefront-sign__brand {
@@ -65,9 +54,9 @@ body.home-page .hero .hero-led-storefront {
   gap: .4rem 1rem;
   margin: .15rem .35rem 1rem;
   padding: .7rem .8rem;
-  border: 1px solid rgba(49, 230, 255, .72);
-  border-radius: .55rem;
-  background: rgba(1, 4, 12, .78);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   box-shadow: none;
   color: #fff;
   font-family: var(--heading-font);
@@ -98,7 +87,7 @@ body.home-page .hero .hero-led-storefront {
   align-items: center;
   min-height: clamp(5.25rem, 8.5vw, 7rem);
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--row-color) 82%, transparent);
+  border: 0;
   border-radius: .48rem;
   background:
     repeating-radial-gradient(circle at 2px 2px, rgba(255, 255, 255, .1) 0 1px, transparent 1.4px 5px),
@@ -208,6 +197,7 @@ body.home-page .ad-copy-card {
     max-width: none;
     margin-right: auto;
     margin-left: auto;
+    padding-top: 2.5px !important;
     padding-right: .8rem;
     padding-left: .8rem;
   }
@@ -219,7 +209,8 @@ body.home-page .ad-copy-card {
   .hero-led-storefront .led-storefront-sign__frame {
     min-height: 250px;
     padding: .9rem .6rem;
-    animation: led-panel-border-flow 8s linear infinite;
+    border-width: 2px;
+    animation: led-panel-border-flow 14s linear infinite;
   }
 
   .led-storefront-sign__brand {
