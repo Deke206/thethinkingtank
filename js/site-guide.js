@@ -1,17 +1,25 @@
 (() => {
   const ensureSharedStyle = (id, href) => {
-    let link = document.getElementById(id);
+    const baseHref = href.split('?')[0];
+    let link = document.getElementById(id)
+      || [...document.querySelectorAll('link[rel="stylesheet"]')].find((candidate) => {
+        const candidateHref = candidate.getAttribute('href') || '';
+        return candidateHref.split('?')[0] === baseHref;
+      });
+
     if (!link) {
       link = document.createElement('link');
-      link.id = id;
       link.rel = 'stylesheet';
       document.head.appendChild(link);
     }
+
+    link.id = id;
     link.href = href;
+    return link;
   };
 
-  ensureSharedStyle('shynetymeHomepageSignStyles', 'css/homepage-led-sign.css?v=20260721-8');
-  ensureSharedStyle('shynetymeGlobalThemeStyles', 'css/global-theme.css?v=20260721-8');
+  ensureSharedStyle('shynetymeHomepageSignStyles', 'css/homepage-led-sign.css?v=20260721-9');
+  ensureSharedStyle('shynetymeGlobalThemeStyles', 'css/global-theme.css?v=20260721-9');
 
   const button = document.querySelector('.site-guide-button');
   const panel = document.getElementById('siteGuidePanel');
@@ -158,7 +166,7 @@
 
     if (!document.querySelector('script[data-shynetyme-interior-carousel]')) {
       const carouselScript = document.createElement('script');
-      carouselScript.src = 'js/hero-carousel.js?v=20260721-8';
+      carouselScript.src = 'js/hero-carousel.js?v=20260721-9';
       carouselScript.dataset.shynetymeInteriorCarousel = 'true';
       document.body.appendChild(carouselScript);
     }
