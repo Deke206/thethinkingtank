@@ -1,16 +1,4 @@
 (() => {
-  const interactionStylesHref = 'css/site-interactions.css?v=20260722-nav-breadcrumb';
-
-  const ensureInteractionStyles = () => {
-    const alreadyLoaded = [...document.styleSheets].some((sheet) => sheet.href?.includes('site-interactions.css'));
-    if (alreadyLoaded || document.querySelector('link[href*="site-interactions.css"]')) return;
-
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = interactionStylesHref;
-    document.head.appendChild(link);
-  };
-
   const getPageKey = () => {
     const fileName = window.location.pathname.split('/').filter(Boolean).pop() || 'index.html';
     return fileName.toLowerCase();
@@ -59,7 +47,6 @@
     });
   };
 
-  ensureInteractionStyles();
   insertBreadcrumbTicker();
   bindNavigationFlare();
 
