@@ -1,0 +1,77 @@
+.house-builder-page .vehicle-stage {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(49, 230, 255, .15), transparent 28rem),
+    radial-gradient(circle at 82% 82%, rgba(255, 58, 200, .12), transparent 28rem),
+    linear-gradient(155deg, #020713 0%, #071b34 55%, #11152d 100%);
+}
+
+.house-shell {
+  fill: #e9e1d2;
+  stroke: #17202b;
+  stroke-width: 9;
+}
+
+.house-room {
+  fill: #f6f0e5;
+  stroke: #3b4653;
+  stroke-width: 5;
+}
+
+.house-room--garage {
+  fill: #cfd5dc;
+}
+
+.house-room--wet {
+  fill: #d9eef2;
+}
+
+.house-room--kitchen {
+  fill: #f1dfbe;
+}
+
+.house-fixture {
+  fill: #aeb8c4;
+  stroke: #36404b;
+  stroke-width: 4;
+}
+
+.house-window {
+  fill: none;
+  stroke: #8feaff;
+  stroke-width: 10;
+  stroke-linecap: round;
+}
+
+.house-door {
+  fill: none;
+  stroke: #6b7684;
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.house-label {
+  fill: #17202b;
+  font-family: Oxanium, Inter, sans-serif;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-anchor: middle;
+}
+
+.house-sub-label {
+  fill: #495565;
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.house-builder-page .summary-box #planningLaborEstimate {
+  color: #dff9ff;
+  background: rgba(49, 230, 255, .07);
+}
+
+@media (max-width: 575.98px) {
+  .house-label { font-size: 16px; }
+  .house-sub-label { font-size: 11px; }
+}
