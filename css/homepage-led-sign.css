@@ -7,7 +7,7 @@ body.home-page .hero .hero-led-storefront {
   max-width: calc(100% - .75rem);
   margin-right: auto;
   margin-left: 0;
-  padding-top: 2.5px !important;
+  padding-top: 0 !important;
   padding-right: 0;
   padding-bottom: 1rem !important;
   padding-left: clamp(.75rem, 2vw, 1.5rem);
@@ -197,7 +197,7 @@ body.home-page .ad-copy-card {
     max-width: none;
     margin-right: auto;
     margin-left: auto;
-    padding-top: 2.5px !important;
+    padding-top: 0 !important;
     padding-right: .8rem;
     padding-left: .8rem;
   }
