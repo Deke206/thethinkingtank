@@ -49,6 +49,20 @@
         to { background-position: 0 0, 320% 0; }
       }
 
+      html.force-homepage-motion .hero-led-storefront .led-storefront-sign__row span {
+        animation: led-sign-scroll-left 24s linear infinite !important;
+        animation-play-state: running !important;
+        will-change: transform;
+      }
+
+      html.force-homepage-motion .hero-led-storefront .led-storefront-sign__row:nth-child(2) span {
+        animation: led-sign-scroll-right 30s linear infinite !important;
+      }
+
+      html.force-homepage-motion .hero-led-storefront .led-storefront-sign__row:nth-child(3) span {
+        animation: led-sign-scroll-left 34s linear infinite !important;
+      }
+
       html.force-site-motion body.home-page .shynetyme-story::before {
         animation: shyne-story-dot-drift 18s linear infinite;
         will-change: background-position, opacity;
@@ -72,6 +86,19 @@
       }
 
       @media (max-width: 767.98px) {
+        html.force-homepage-motion .hero-led-storefront .led-storefront-sign__row span {
+          animation: led-sign-scroll-left 24s linear infinite !important;
+          animation-play-state: running !important;
+        }
+
+        html.force-homepage-motion .hero-led-storefront .led-storefront-sign__row:nth-child(2) span {
+          animation: led-sign-scroll-right 30s linear infinite !important;
+        }
+
+        html.force-homepage-motion .hero-led-storefront .led-storefront-sign__row:nth-child(3) span {
+          animation: led-sign-scroll-left 34s linear infinite !important;
+        }
+
         html.force-site-motion body.home-page .effects-center {
           animation: story-border 14s linear infinite !important;
         }
@@ -113,6 +140,16 @@
         html.force-homepage-motion .hero-led-storefront .led-storefront-sign__frame {
           animation: led-panel-border-flow 14s linear infinite !important;
         }
+        html.force-homepage-motion .hero-led-storefront .led-storefront-sign__row span {
+          animation: led-sign-scroll-left 24s linear infinite !important;
+          animation-play-state: running !important;
+        }
+        html.force-homepage-motion .hero-led-storefront .led-storefront-sign__row:nth-child(2) span {
+          animation: led-sign-scroll-right 30s linear infinite !important;
+        }
+        html.force-homepage-motion .hero-led-storefront .led-storefront-sign__row:nth-child(3) span {
+          animation: led-sign-scroll-left 34s linear infinite !important;
+        }
         html.force-homepage-motion .btn {
           transition: transform .16s ease, box-shadow .16s ease, filter .16s ease !important;
         }
@@ -134,9 +171,6 @@
         }
         html.force-site-motion body.home-page .story-led-matrix span:nth-child(3) {
           animation-duration: 37s !important;
-        }
-        html.force-homepage-motion .led-storefront-sign__row span {
-          animation-iteration-count: infinite !important;
         }
         html.force-homepage-motion .site-guide-button img {
           transition: transform .2s ease !important;
