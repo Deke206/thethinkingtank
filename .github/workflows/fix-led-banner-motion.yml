@@ -1,0 +1,56 @@
+name: Fix LED banner motion
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-led-banner-motion.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Strengthen LED animations and bust cache
+        shell: python
+        run: |
+          from pathlib import Path
+          index = Path('index.html')
+          css = Path('css/site.css')
+
+          html = index.read_text()
+          html = html.replace('href="css/site.css"', 'href="css/site.css?v=20260722-led-motion"')
+          index.write_text(html)
+
+          text = css.read_text()
+          text = text.replace(
+              'animation: hero-led-border-flow 5s linear infinite;',
+              'animation: hero-led-border-flow 3.5s linear infinite !important;\n  animation-play-state: running !important;'
+          )
+          text = text.replace(
+              'animation: hero-led-scroll-left var(--ticker-duration) linear infinite;\n  will-change: transform;',
+              'animation: hero-led-scroll-left var(--ticker-duration) linear infinite !important;\n  animation-play-state: running !important;\n  will-change: transform;'
+          )
+          text = text.replace(
+              '@keyframes hero-led-scroll-left {\n  to { transform: translateX(-50%); }\n}',
+              '@keyframes hero-led-scroll-left {\n  from { transform: translate3d(0, 0, 0); }\n  to { transform: translate3d(-50%, 0, 0); }\n}'
+          )
+          text = text.replace(
+              '@keyframes hero-led-scroll-right {\n  from { transform: translateX(-50%); }\n  to { transform: translateX(0); }\n}',
+              '@keyframes hero-led-scroll-right {\n  from { transform: translate3d(-50%, 0, 0); }\n  to { transform: translate3d(0, 0, 0); }\n}'
+          )
+          text = text.replace(
+              '@keyframes hero-led-border-flow {\n  to { background-position: 0 0, 300% 0; }\n}',
+              '@keyframes hero-led-border-flow {\n  from { background-position: 0 0, 0% 50%; }\n  to { background-position: 0 0, 300% 50%; }\n}'
+          )
+          css.write_text(text)
+      - name: Commit final fix and remove workflow
+        run: |
+          rm .github/workflows/fix-led-banner-motion.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html css/site.css .github/workflows/fix-led-banner-motion.yml
+          git commit -m "Fix visible LED banner motion and refresh CSS cache"
+          git push
