@@ -392,7 +392,6 @@ p {
   min-width: max-content;
   padding-inline: 1.2rem;
   color: var(--row-color);
-  background-image: radial-gradient(circle, #fff 0 .65px, var(--row-color) .8px 1.35px, transparent 1.55px);
   background-size: 3.6px 3.6px;
   -webkit-background-clip: text;
   background-clip: text;
