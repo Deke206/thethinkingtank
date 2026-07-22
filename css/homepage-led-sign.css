@@ -25,10 +25,25 @@ body.home-page .hero .hero-led-storefront {
   border: clamp(4px, .55vw, 8px) solid transparent;
   border-radius: 1rem;
   background:
-    transparent padding-box,
-    linear-gradient(90deg, #31e6ff 0 16%, #9b83ff 16% 32%, #ff5ab9 32% 49%, #ffc562 49% 66%, #55e6b5 66% 83%, #31e6ff 83% 100%) border-box;
-  box-shadow: none;
+    linear-gradient(transparent, transparent) padding-box,
+    linear-gradient(
+      110deg,
+      #31e6ff 0%,
+      #9b83ff 16%,
+      #ff5ab9 32%,
+      #ffc562 49%,
+      #55e6b5 66%,
+      #31e6ff 83%,
+      #9b83ff 100%
+    ) border-box;
+  background-size: auto, 320% 100%;
+  background-position: 0 0, 0 0;
+  box-shadow:
+    0 0 16px rgba(49, 230, 255, .24),
+    0 0 28px rgba(255, 90, 185, .14);
   backdrop-filter: none;
+  animation: led-panel-border-flow 8s linear infinite;
+  will-change: background-position;
 }
 
 .hero-led-storefront .led-storefront-sign__frame::before {
@@ -173,6 +188,10 @@ body.home-page .ad-copy-card {
   border-color: color-mix(in srgb, var(--accent) 72%, transparent);
 }
 
+@keyframes led-panel-border-flow {
+  to { background-position: 0 0, 320% 0; }
+}
+
 @keyframes led-sign-scroll-left {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
@@ -200,6 +219,7 @@ body.home-page .ad-copy-card {
   .hero-led-storefront .led-storefront-sign__frame {
     min-height: 250px;
     padding: .9rem .6rem;
+    animation: led-panel-border-flow 8s linear infinite;
   }
 
   .led-storefront-sign__brand {
@@ -218,6 +238,7 @@ body.home-page .ad-copy-card {
   .led-storefront-sign__row span {
     font-size: 1rem;
     letter-spacing: .1em;
+    animation-play-state: running;
   }
 
   .shynetyme-story__actions .btn {
