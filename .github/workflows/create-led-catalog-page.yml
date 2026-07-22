@@ -21,10 +21,7 @@ jobs:
           index = index_path.read_text()
           build = build_path.read_text()
 
-          # Remove catalog section from index.
           index = re.sub(r'\n\s*<section id="catalog" class="py-5">.*?</section>\n', '\n', index, flags=re.S)
-
-          # Update index navigation labels and destinations.
           index = index.replace('href="build-my-bike.html">Build My Bike</a>', 'href="build-my-bike.html">Build</a>')
           index = index.replace('href="#catalog">Parts</a>', 'href="led-catalog.html">LED Catalog</a>')
 
@@ -50,10 +47,8 @@ jobs:
       </div>
     </div>'''
 
-          # Update Build page navigation.
           build = build.replace('href="build-my-bike.html">Build My Bike</a>', 'href="build-my-bike.html">Build</a>')
           build = build.replace('href="index.html#catalog">Parts</a>', 'href="led-catalog.html">LED Catalog</a>')
-          build = build.replace('href="index.html#effects">Effects</a>', 'href="index.html#effects">Effects</a>')
           build = build.replace('css/site.css"', 'css/site.css?v=20260722-shared-page-banners"')
 
           build_banner = banner.format(
@@ -63,7 +58,6 @@ jobs:
           )
           build = re.sub(r'<header class="builder-hero py-5">.*?</header>', '<header class="builder-hero py-5">\n' + build_banner + '\n  </header>', build, count=1, flags=re.S)
 
-          # Build dedicated catalog page using existing catalog grid and shared JS.
           catalog_banner = banner.format(
             line1='ShyneTyme Works LED Catalog',
             line2='Programmable LED parts for custom builds',
