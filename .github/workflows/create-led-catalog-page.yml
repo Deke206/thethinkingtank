@@ -1,0 +1,147 @@
+name: Create LED catalog page
+on:
+  push:
+    paths:
+      - '.github/workflows/create-led-catalog-page.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create catalog page and shared banner headers
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          index_path = Path('index.html')
+          build_path = Path('build-my-bike.html')
+          index = index_path.read_text()
+          build = build_path.read_text()
+
+          # Remove catalog section from index.
+          index = re.sub(r'\n\s*<section id="catalog" class="py-5">.*?</section>\n', '\n', index, flags=re.S)
+
+          # Update index navigation labels and destinations.
+          index = index.replace('href="build-my-bike.html">Build My Bike</a>', 'href="build-my-bike.html">Build</a>')
+          index = index.replace('href="#catalog">Parts</a>', 'href="led-catalog.html">LED Catalog</a>')
+
+          banner = '''
+    <div class="container py-4 hero-led-stack">
+      <div class="hero-led-banner" aria-hidden="true">
+        <div class="hero-led-banner__track">
+          <div class="hero-led-banner__group"><span class="hero-led-banner__message">{line1}</span><span class="hero-led-separator">✦</span></div>
+          <div class="hero-led-banner__group"><span class="hero-led-banner__message">{line1}</span><span class="hero-led-separator">✦</span></div>
+        </div>
+      </div>
+      <div class="hero-led-banner hero-led-banner--headline hero-led-banner--reverse" aria-hidden="true">
+        <div class="hero-led-banner__track">
+          <div class="hero-led-banner__group"><span class="hero-led-banner__message">{line2}</span><span class="hero-led-separator">✦</span></div>
+          <div class="hero-led-banner__group"><span class="hero-led-banner__message">{line2}</span><span class="hero-led-separator">✦</span></div>
+        </div>
+      </div>
+      <div class="hero-led-banner hero-led-banner--details" aria-hidden="true">
+        <div class="hero-led-banner__track">
+          <div class="hero-led-banner__group"><span class="hero-led-banner__message">{line3}</span><span class="hero-led-separator">✦</span></div>
+          <div class="hero-led-banner__group"><span class="hero-led-banner__message">{line3}</span><span class="hero-led-separator">✦</span></div>
+        </div>
+      </div>
+    </div>'''
+
+          # Update Build page navigation.
+          build = build.replace('href="build-my-bike.html">Build My Bike</a>', 'href="build-my-bike.html">Build</a>')
+          build = build.replace('href="index.html#catalog">Parts</a>', 'href="led-catalog.html">LED Catalog</a>')
+          build = build.replace('href="index.html#effects">Effects</a>', 'href="index.html#effects">Effects</a>')
+          build = build.replace('css/site.css"', 'css/site.css?v=20260722-shared-page-banners"')
+
+          build_banner = banner.format(
+            line1='Interactive LED bicycle builder',
+            line2='Build your custom illuminated ride',
+            line3='Choose lighting zones, accessories, safety effects, app controls and budget'
+          )
+          build = re.sub(r'<header class="builder-hero py-5">.*?</header>', '<header class="builder-hero py-5">\n' + build_banner + '\n  </header>', build, count=1, flags=re.S)
+
+          # Build dedicated catalog page using existing catalog grid and shared JS.
+          catalog_banner = banner.format(
+            line1='ShyneTyme Works LED Catalog',
+            line2='Programmable LED parts for custom builds',
+            line3='Browse compatible 5V WS2812B lighting, controllers, wiring and accessories'
+          )
+
+          catalog = f'''<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LED Catalog | ShyneTyme Works</title>
+  <meta name="description" content="Browse compatible programmable LED parts, controllers, wiring and accessories for ShyneTyme Works custom lighting builds.">
+  <meta name="theme-color" content="#06152f">
+  <link rel="canonical" href="https://shynetyme.works/led-catalog.html">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oxanium:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css?v=20260722-shared-page-banners">
+</head>
+<body class="catalog-page">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold brand-lockup" href="index.html"><img src="assets/brand/favicon-32.png" width="34" height="34" alt=""> <span>ShyneTyme <em>Works</em></span></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link" href="build-my-bike.html">Build</a>
+          <a class="nav-link" href="index.html#effects">Effects</a>
+          <a class="nav-link active" aria-current="page" href="led-catalog.html">LED Catalog</a>
+          <a class="nav-link" href="index.html#request">Request Install</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="catalog-hero py-5">
+{catalog_banner}
+  </header>
+
+  <main>
+    <section id="catalog" class="py-5">
+      <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-end gap-2">
+          <div><h1 class="fw-bold mb-1">LED Catalog</h1><p class="text-secondary mb-0">Focused on compatible 5V WS2812B colored LED systems.</p></div>
+          <select id="categoryFilter" class="form-select catalog-filter" aria-label="Filter parts by category"><option value="all">All categories</option></select>
+        </div>
+        <div id="catalogGrid" class="row g-4 mt-2"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="py-4 border-top">
+    <div class="container small d-flex flex-wrap justify-content-between gap-2">
+      <span>Copyright © 2026 DeacStudio. All rights reserved.</span>
+      <span><a href="PRIVACY.md">Privacy</a> · <a href="TERMS.md">Terms</a></span>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/catalog.js"></script>
+</body>
+</html>
+'''
+
+          index_path.write_text(index)
+          build_path.write_text(build)
+          Path('led-catalog.html').write_text(catalog)
+          PY
+      - name: Commit changes and remove workflow
+        run: |
+          rm .github/workflows/create-led-catalog-page.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html build-my-bike.html led-catalog.html .github/workflows/create-led-catalog-page.yml
+          git commit -m 'Create LED Catalog page and shared banner headers'
+          git push
