@@ -802,3 +802,250 @@ footer a { color: var(--ice); }
     padding-bottom: 1rem !important;
   }
 }
+/* Contact page request form, map and animated socials */
+.contact-main {
+  background:
+    radial-gradient(circle at 12% 18%, rgba(49, 230, 255, .12), transparent 24rem),
+    radial-gradient(circle at 86% 30%, rgba(255, 90, 185, .13), transparent 25rem),
+    linear-gradient(180deg, #030918, #07162c 48%, #030918);
+}
+
+.contact-panel {
+  height: 100%;
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+  border: 2px solid transparent;
+  border-radius: 1.35rem;
+  color: var(--text);
+  background:
+    linear-gradient(145deg, rgba(8, 24, 48, .97), rgba(3, 9, 24, .98)) padding-box,
+    linear-gradient(125deg, var(--cyan), var(--violet), var(--pink), var(--amber), var(--cyan)) border-box;
+  background-size: auto, 420% 100%;
+  box-shadow:
+    0 22px 52px rgba(0, 0, 0, .34),
+    0 0 30px rgba(49, 230, 255, .12),
+    0 0 44px rgba(255, 90, 185, .09),
+    inset 0 1px 0 rgba(255, 255, 255, .08);
+  animation: contact-border-flow 5.8s linear infinite, contact-panel-glow 2.8s ease-in-out infinite alternate;
+}
+
+.contact-panel:hover,
+.contact-panel:focus-within {
+  box-shadow:
+    0 24px 58px rgba(0, 0, 0, .38),
+    0 0 38px rgba(49, 230, 255, .28),
+    0 0 52px rgba(255, 90, 185, .18),
+    inset 0 1px 0 rgba(255, 255, 255, .1);
+}
+
+.contact-form .form-label {
+  color: var(--ice);
+  font-family: var(--heading-font);
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.contact-form .form-control,
+.contact-form .form-select {
+  color: var(--text);
+  background-color: rgba(3, 9, 24, .72);
+  border-color: rgba(49, 230, 255, .34);
+  box-shadow: inset 0 1px 6px rgba(0, 0, 0, .42);
+}
+
+.contact-form .form-control::placeholder { color: rgba(216, 233, 247, .58); }
+.contact-form .form-control:focus,
+.contact-form .form-select:focus {
+  color: #fff;
+  background-color: rgba(6, 21, 47, .94);
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 .22rem rgba(49, 230, 255, .18), inset 0 1px 6px rgba(0, 0, 0, .35);
+}
+
+.map-frame {
+  overflow: hidden;
+  min-height: 430px;
+  border: 2px solid transparent;
+  border-radius: 1.1rem;
+  background:
+    linear-gradient(145deg, rgba(3, 9, 24, .9), rgba(6, 21, 47, .88)) padding-box,
+    linear-gradient(125deg, var(--cyan), var(--violet), var(--pink), var(--amber), var(--cyan)) border-box;
+  background-size: auto, 420% 100%;
+  box-shadow: inset 0 0 26px rgba(49, 230, 255, .08), 0 14px 34px rgba(0, 0, 0, .28), 0 0 28px rgba(255, 90, 185, .12);
+  animation: contact-border-flow 5.8s linear infinite, contact-map-pulse 3.2s ease-in-out infinite alternate;
+}
+
+.map-frame iframe {
+  display: block;
+  width: 100%;
+  height: 430px;
+  border: 0;
+  filter: saturate(.92) contrast(1.05) brightness(.9);
+}
+
+.social-led-banner {
+  position: relative;
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: 1.2rem;
+  background:
+    linear-gradient(180deg, rgba(2, 6, 17, .96), rgba(7, 22, 44, .94)) padding-box,
+    linear-gradient(90deg, #ff5ab9, #ffe45e, #48a9ff, #55e6b5, #ff5ab9) border-box;
+  background-size: auto, 420% 100%;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, .34), 0 0 24px rgba(72, 169, 255, .18), 0 0 46px rgba(255, 90, 185, .16);
+  animation: hero-led-border-flow 2.8s linear infinite, social-banner-float 4s ease-in-out infinite alternate;
+}
+
+.social-led-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, .035) 0 1px, transparent 1px 4px),
+    radial-gradient(circle, rgba(134, 224, 255, .14) 0 1px, transparent 1.35px);
+  background-size: auto, 7px 7px;
+  animation: social-pixel-drift 1.6s steps(5, end) infinite;
+}
+
+.social-led-banner::after {
+  content: "";
+  position: absolute;
+  inset: -45%;
+  pointer-events: none;
+  opacity: .64;
+  background:
+    radial-gradient(circle at 18% 42%, rgba(255, 255, 255, .95) 0 2px, transparent 3px),
+    radial-gradient(circle at 36% 26%, rgba(49, 230, 255, .9) 0 1px, transparent 3px),
+    radial-gradient(circle at 58% 62%, rgba(255, 90, 185, .9) 0 2px, transparent 4px),
+    radial-gradient(circle at 80% 34%, rgba(255, 228, 94, .9) 0 1px, transparent 3px),
+    conic-gradient(from 90deg, transparent, rgba(49, 230, 255, .16), transparent, rgba(255, 90, 185, .16), transparent);
+  filter: blur(.2px) saturate(1.4);
+  transform-origin: center;
+  animation: social-magic-sweep 6s linear infinite;
+}
+
+.social-led-banner__track {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .8rem;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.social-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .72rem 1rem;
+  border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(6, 21, 47, .82);
+  font-family: var(--heading-font);
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-decoration: none;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(49, 230, 255, .72);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, .38), 0 0 18px rgba(49, 230, 255, .12);
+  opacity: 0;
+  transform: translateX(-24px) translateY(18px) scale(.92);
+  animation:
+    social-roll-bounce .9s cubic-bezier(.2, 1.38, .42, 1) both,
+    social-chip-twinkle 2.4s ease-in-out 1s infinite alternate;
+}
+
+.social-chip__icon {
+  display: inline-grid;
+  flex: 0 0 auto;
+  width: 2rem;
+  height: 2rem;
+  padding: .38rem;
+  border-radius: 50%;
+  color: var(--night);
+  fill: currentColor;
+  background: var(--cyan);
+  box-shadow: 0 0 14px rgba(49, 230, 255, .62);
+  animation: social-icon-bob 1.8s ease-in-out infinite alternate;
+}
+
+.social-chip--instagram { animation-delay: .18s, 1.18s; }
+.social-chip--whatsapp { animation-delay: .36s, 1.36s; }
+.social-chip--facebook .social-chip__icon { background: var(--blue); }
+.social-chip--instagram .social-chip__icon { background: linear-gradient(135deg, var(--amber), var(--pink), var(--violet)); }
+.social-chip--whatsapp .social-chip__icon { background: var(--mint); }
+.social-chip:hover,
+.social-chip:focus-visible {
+  color: #fff;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 0 rgba(0, 0, 0, .4), 0 0 24px rgba(255, 90, 185, .22);
+}
+
+@keyframes contact-border-flow {
+  from { background-position: 0 0, 0% 50%; }
+  to { background-position: 0 0, 420% 50%; }
+}
+
+@keyframes contact-panel-glow {
+  from { filter: saturate(1) brightness(1); }
+  to { filter: saturate(1.18) brightness(1.07); }
+}
+
+@keyframes contact-map-pulse {
+  from { box-shadow: inset 0 0 26px rgba(49, 230, 255, .08), 0 14px 34px rgba(0, 0, 0, .28), 0 0 20px rgba(255, 90, 185, .08); }
+  to { box-shadow: inset 0 0 34px rgba(49, 230, 255, .16), 0 16px 38px rgba(0, 0, 0, .32), 0 0 38px rgba(255, 90, 185, .2); }
+}
+
+@keyframes social-banner-float {
+  from { transform: translateY(0); }
+  to { transform: translateY(-4px); }
+}
+
+@keyframes social-pixel-drift {
+  from { background-position: 0 0, 0 0; }
+  to { background-position: 0 4px, 7px 7px; }
+}
+
+@keyframes social-magic-sweep {
+  from { transform: translateX(-14%) rotate(0deg); }
+  to { transform: translateX(14%) rotate(360deg); }
+}
+
+@keyframes social-roll-bounce {
+  0% { opacity: 0; transform: translateX(-36px) translateY(18px) rotate(-10deg) scale(.9); }
+  72% { opacity: 1; transform: translateX(4px) translateY(-8px) rotate(2deg) scale(1.04); }
+  100% { opacity: 1; transform: translateX(0) translateY(0) rotate(0) scale(1); }
+}
+
+@keyframes social-chip-twinkle {
+  from { filter: brightness(1) saturate(1); }
+  to { filter: brightness(1.18) saturate(1.28); }
+}
+
+@keyframes social-icon-bob {
+  from { transform: translateY(0) rotate(-4deg); }
+  to { transform: translateY(-3px) rotate(4deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-panel,
+  .map-frame,
+  .social-led-banner,
+  .social-led-banner::before,
+  .social-led-banner::after,
+  .social-chip,
+  .social-chip__icon {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .map-frame,
+  .map-frame iframe { min-height: 320px; height: 320px; }
+  .social-led-banner__track { justify-content: flex-start; }
+}
