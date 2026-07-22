@@ -327,7 +327,7 @@ p {
   min-height: clamp(260px, 36vh, 340px);
   padding: clamp(1rem, 2.5vw, 1.7rem);
   overflow: hidden;
-  border: 1px solid transparent;
+  border: 1rem solid transparent;
   border-radius: 1rem;
   background:
     linear-gradient(transparent, transparent) padding-box,
