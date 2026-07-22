@@ -5,7 +5,7 @@
   const scenes = [...carousel.querySelectorAll('.hero-carousel__scene')];
   if (scenes.length < 2) return;
 
-  const sceneDuration = 8000;
+  const sceneDuration = 5500;
   let currentScene = 0;
   let timer;
 
@@ -13,7 +13,6 @@
 
   function scheduleNextScene() {
     window.clearTimeout(timer);
-    if (document.hidden) return;
     timer = window.setTimeout(() => showScene(currentScene + 1), sceneDuration);
   }
 
@@ -29,6 +28,5 @@
     scheduleNextScene();
   }
 
-  document.addEventListener('visibilitychange', scheduleNextScene);
   showScene(0);
 })();
