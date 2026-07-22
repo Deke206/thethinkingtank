@@ -18,8 +18,8 @@
     return link;
   };
 
-  ensureSharedStyle('shynetymeHomepageSignStyles', 'css/homepage-led-sign.css?v=20260721-9');
-  ensureSharedStyle('shynetymeGlobalThemeStyles', 'css/global-theme.css?v=20260721-9');
+  ensureSharedStyle('shynetymeHomepageSignStyles', 'css/homepage-led-sign.css?v=20260721-11');
+  ensureSharedStyle('shynetymeGlobalThemeStyles', 'css/global-theme.css?v=20260721-11');
 
   const button = document.querySelector('.site-guide-button');
   const panel = document.getElementById('siteGuidePanel');
@@ -166,7 +166,7 @@
 
     if (!document.querySelector('script[data-shynetyme-interior-carousel]')) {
       const carouselScript = document.createElement('script');
-      carouselScript.src = 'js/hero-carousel.js?v=20260721-9';
+      carouselScript.src = 'js/hero-carousel.js?v=20260721-11';
       carouselScript.dataset.shynetymeInteriorCarousel = 'true';
       document.body.appendChild(carouselScript);
     }
