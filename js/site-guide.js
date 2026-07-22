@@ -21,6 +21,13 @@
   ensureSharedStyle('shynetymeHomepageSignStyles', 'css/homepage-led-sign.css?v=20260721-12');
   ensureSharedStyle('shynetymeGlobalThemeStyles', 'css/global-theme.css?v=20260721-12');
 
+  if (!document.querySelector('script[data-shynetyme-builder-transfer]')) {
+    const transferScript = document.createElement('script');
+    transferScript.src = 'js/builder-transfer.js?v=20260721-1';
+    transferScript.dataset.shynetymeBuilderTransfer = 'true';
+    document.body.appendChild(transferScript);
+  }
+
   const button = document.querySelector('.site-guide-button');
   const panel = document.getElementById('siteGuidePanel');
   const close = panel?.querySelector('.site-guide-close');
@@ -57,8 +64,29 @@
   const builderPages = [
     { href: 'build-my-bike.html', label: 'Bicycle' },
     { href: 'build-my-auto.html', label: 'Auto' },
-    { href: 'build-my-yacht.html', label: 'Yachts' }
+    { href: 'build-my-yacht.html', label: 'Yachts' },
+    { href: 'build-my-house.html', label: 'Home' }
   ];
+
+  const existingBuilderMenu = navbar?.querySelector('.builder-nav-dropdown .dropdown-menu');
+  if (existingBuilderMenu) {
+    builderPages.forEach((page) => {
+      let link = existingBuilderMenu.querySelector(`a[href="${page.href}"]`);
+      if (!link) {
+        const item = document.createElement('li');
+        link = document.createElement('a');
+        link.className = 'dropdown-item';
+        link.href = page.href;
+        link.textContent = page.label;
+        item.appendChild(link);
+        existingBuilderMenu.appendChild(item);
+      }
+      const active = page.href === currentPage;
+      link.classList.toggle('active', active);
+      if (active) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+    });
+  }
 
   document.querySelectorAll('a').forEach((link) => {
     const href = link.getAttribute('href') || '';
