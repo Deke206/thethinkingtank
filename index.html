@@ -18,66 +18,37 @@
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oxanium:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="css/site.css">
-  <link rel="stylesheet" href="css/homepage-led-sign.css?v=20260721-12">
-  <link rel="stylesheet" href="css/global-theme.css?v=20260721-12">
-  <style>
-    .builder-button-group {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: .4rem;
-    }
-
-    .builder-button-group .btn {
-      flex: 0 1 auto;
-      min-height: 34px;
-      padding: .35rem .65rem;
-      font-size: .78rem;
-      line-height: 1.15;
-    }
-
-    .ad-copy-card .builder-button-group {
-      margin-top: auto;
-    }
-
-    .ad-copy-card .builder-button-group .btn {
-      margin-top: 0;
-    }
-  </style>
+  <link rel="stylesheet" href="css/index.css">
 </head>
-<body class="home-page">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-    <div class="container">
-      <a class="navbar-brand fw-bold brand-lockup" href="#top">
+<body>
+  <nav class="site-nav" aria-label="Primary navigation">
+    <div class="site-nav__inner">
+      <a class="brand" href="#top" aria-label="ShyneTyme Works home">
         <img src="assets/brand/favicon-32.png" width="40" height="40" alt="">
-        <span>ShyneTyme<span class="brand-dot">.</span>Works</span>
+        <span>ShyneTyme<span class="brand__dot">.</span>Works</span>
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+
+      <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="siteNavMenu" aria-label="Open navigation">
+        <span></span><span></span><span></span>
       </button>
-      <div class="collapse navbar-collapse" id="navMenu">
-        <div class="navbar-nav ms-auto">
-          <div class="nav-item dropdown builder-nav-dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Builders</a>
-            <ul class="dropdown-menu dropdown-menu-dark">
-              <li><a class="dropdown-item" href="build-my-bike.html#request-info">Bicycle</a></li>
-              <li><a class="dropdown-item" href="build-my-auto.html#request-info">Auto</a></li>
-              <li><a class="dropdown-item" href="build-my-yacht.html#request-info">Yachts</a></li>
-            </ul>
+
+      <div class="site-nav__menu" id="siteNavMenu">
+        <div class="nav-dropdown">
+          <button class="nav-link nav-dropdown__toggle" type="button" aria-expanded="false">Builders</button>
+          <div class="nav-dropdown__menu">
+            <a href="build-my-bike.html#request-info">Bicycle</a>
+            <a href="build-my-auto.html#request-info">Auto</a>
+            <a href="build-my-yacht.html#request-info">Yachts</a>
+            <a href="build-my-house.html#request-info">Home</a>
           </div>
-          <a class="nav-link" href="catalog.html#request-info">Catalog</a>
-          <a class="nav-link" href="contact.html#request-info">Request Install</a>
         </div>
+        <a class="nav-link" href="catalog.html#request-info">Catalog</a>
+        <a class="nav-link" href="contact.html#request-info">Request Install</a>
       </div>
     </div>
   </nav>
 
-  <header id="top" class="hero py-5">
+  <header id="top" class="hero">
     <div class="hero-carousel" id="heroCarousel" role="region" aria-roledescription="carousel" aria-label="ShyneTyme community scenes">
       <div class="hero-carousel__scene is-active" role="group" aria-roledescription="slide" aria-label="1 of 4: After-work homecoming">
         <img src="assets/images/hero-scene-work.webp" width="1600" height="900" alt="" fetchpriority="high">
@@ -94,88 +65,91 @@
       <div class="hero-carousel__sparkle" aria-hidden="true"></div>
     </div>
 
-    <div class="container py-4 hero-led-storefront">
-      <div class="led-storefront-sign__frame">
-        <div class="led-storefront-sign__brand" aria-hidden="true">
+    <div class="hero__content">
+      <section class="led-info-panel" aria-labelledby="heroLedTitle">
+        <div class="led-info-panel__brand" aria-hidden="true">
           <span>SHYNETYME.WORKS</span>
           <span>LOS ANGELES 90034</span>
         </div>
 
-        <h1 id="hero-led-title" class="visually-hidden">Custom lighting that does not look like everybody else's.</h1>
+        <h1 id="heroLedTitle" class="visually-hidden">Custom lighting that does not look like everybody else's.</h1>
 
-        <div class="led-storefront-sign__rows" aria-labelledby="hero-led-title">
-          <div class="led-storefront-sign__row led-storefront-sign__row--cyan" aria-label="Los Angeles mobile LED effects">
+        <div class="led-info-panel__rows">
+          <div class="led-info-row led-info-row--cyan" aria-label="Los Angeles mobile LED effects">
             <span aria-hidden="true">LOS ANGELES MOBILE LED EFFECTS ✦ LOS ANGELES MOBILE LED EFFECTS ✦ LOS ANGELES MOBILE LED EFFECTS ✦</span>
           </div>
-          <div class="led-storefront-sign__row led-storefront-sign__row--pink led-storefront-sign__row--reverse" aria-label="Custom lighting that does not look like everybody else's.">
-            <span aria-hidden="true">CUSTOM LIGHTING THAT DOES NOT LOOK LIKE EVERYBODY ELSE'S. ✦ CUSTOM LIGHTING THAT DOES NOT LOOK LIKE EVERYBODY ELSE'S. ✦</span>
+          <div class="led-info-row led-info-row--pink led-info-row--reverse" aria-label="Custom lighting that does not look like everybody else's.">
+            <span aria-hidden="true">CUSTOM LIGHTING THAT DOES NOT LOOK LIKE EVERYBODY ELSE'S. ✦ CUSTOM LIGHTING THAT DOES NOT LOOK LIKE EVERYBODY ELSE'S. ✦ CUSTOM LIGHTING THAT DOES NOT LOOK LIKE EVERYBODY ELSE'S. ✦</span>
           </div>
-          <div class="led-storefront-sign__row led-storefront-sign__row--amber" aria-label="Programmable 5V WS2812B RGB lighting for bicycles, e-bikes, helmets, vans, motorcycles, automobiles and boats.">
+          <div class="led-info-row led-info-row--amber" aria-label="Programmable 5V WS2812B RGB lighting for bicycles, e-bikes, helmets, vans, motorcycles, automobiles and boats.">
             <span aria-hidden="true">PROGRAMMABLE 5V WS2812B RGB LIGHTING FOR BICYCLES, E-BIKES, HELMETS, VANS, MOTORCYCLES, AUTOMOBILES AND BOATS. ✦ PROGRAMMABLE 5V WS2812B RGB LIGHTING FOR BICYCLES, E-BIKES, HELMETS, VANS, MOTORCYCLES, AUTOMOBILES AND BOATS. ✦</span>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   </header>
 
   <main>
-    <section id="showcase" class="effects-stage py-5">
-      <div class="container-fluid effects-stage__shell">
-        <div class="effects-layout">
-          <aside class="ad-copy-card ad-copy-card--cyan" aria-labelledby="ride-ad-title">
-            <p class="section-kicker">Bikes · E-bikes · Helmets</p>
-            <h2 id="ride-ad-title">Own the night.</h2>
-            <p>Turn a daily ride into rolling light art with a build planned around your bike—not pulled from a box.</p>
-            <div class="builder-button-group" aria-label="Open a vehicle builder">
-              <a class="btn btn-neon-cyan builder-choice-btn" href="build-my-bike.html">Bicycle</a>
-              <a class="btn btn-outline-light builder-choice-btn" href="build-my-auto.html">Auto</a>
-              <a class="btn btn-neon-pink builder-choice-btn" href="build-my-yacht.html">Boat</a>
-            </div>
-          </aside>
+    <section id="showcase" class="showcase" aria-label="ShyneTyme services">
+      <div class="showcase__grid">
+        <aside class="promo-card promo-card--cyan" aria-labelledby="rideAdTitle">
+          <p class="section-kicker">Bikes · E-bikes · Helmets</p>
+          <h2 id="rideAdTitle">Own the night.</h2>
+          <p>Turn a daily ride into rolling light art with a build planned around your bike—not pulled from a box.</p>
+          <div class="button-group" aria-label="Open a vehicle builder">
+            <a class="button button--cyan" href="build-my-bike.html">Bicycle</a>
+            <a class="button button--outline" href="build-my-auto.html">Auto</a>
+            <a class="button button--pink" href="build-my-yacht.html">Boat</a>
+            <a class="button button--outline" href="build-my-house.html">Home</a>
+          </div>
+        </aside>
 
-          <article class="effects-center shynetyme-story">
-            <div class="story-led-matrix" aria-hidden="true">
-              <span>RIDE BRIGHT · DRIVE AWARE · FLOAT LIT · SHYNE AT HOME · RIDE BRIGHT · DRIVE AWARE · FLOAT LIT · SHYNE AT HOME ·</span>
-              <span>BIKES ✦ AUTOS ✦ MOTORCYCLES ✦ BOATS ✦ HOMES ✦ BIKES ✦ AUTOS ✦ MOTORCYCLES ✦ BOATS ✦ HOMES ✦</span>
-              <span>DIRECT YO LYTE · COLOR THE NYTE · MAKE THE WORKS TWINKLE · DIRECT YO LYTE · COLOR THE NYTE · MAKE THE WORKS TWINKLE ·</span>
-            </div>
-            <div class="shynetyme-story__content">
-              <p class="section-kicker">Color with a pulse</p>
-              <h2 class="section-title">Bringin’ the Shyne back into the Nyte Tyme.</h2>
-              <p>While we work each day and every night to survive the darkness, sometimes you have to become a beacon of Shynning lyte—safe, aware, and twinkling to your music whether you’re riding, driving, boating, or lighting your home.</p>
-              <p>ShyneTyme Works brings creative works to the lyte, helping you direct your glow toward the right items and diodes to create a particular, unique set of LED lytes. Our services and growing product catalog are built to shape the mood, environment, space, and mobile aura around you into a twinkling, sparkling, messaged Shyne.</p>
-              <p class="shynetyme-story__signoff">So take a little Tyme to contemplate how that little lyte of yours—or your young one’s—can be brought out. And just maybe, you’ll want the Works!</p>
-            </div>
-            <div class="shynetyme-story__actions builder-button-group d-flex flex-wrap justify-content-center" aria-label="Choose a builder or request installation">
-              <a class="btn btn-light builder-choice-btn" href="build-my-bike.html">Bicycle</a>
-              <a class="btn btn-outline-light builder-choice-btn" href="build-my-auto.html">Auto</a>
-              <a class="btn btn-neon-pink builder-choice-btn" href="build-my-yacht.html">Boat</a>
-              <a class="btn btn-outline-light builder-choice-btn" href="contact.html">Request Install</a>
-            </div>
-          </article>
+        <article class="story-panel">
+          <div class="story-panel__matrix" aria-hidden="true">
+            <span>RIDE BRIGHT · DRIVE AWARE · FLOAT LIT · SHYNE AT HOME · RIDE BRIGHT · DRIVE AWARE · FLOAT LIT · SHYNE AT HOME ·</span>
+            <span>BIKES ✦ AUTOS ✦ MOTORCYCLES ✦ BOATS ✦ HOMES ✦ BIKES ✦ AUTOS ✦ MOTORCYCLES ✦ BOATS ✦ HOMES ✦</span>
+            <span>DIRECT YO LYTE · COLOR THE NYTE · MAKE THE WORKS TWINKLE · DIRECT YO LYTE · COLOR THE NYTE · MAKE THE WORKS TWINKLE ·</span>
+          </div>
 
-          <aside class="ad-copy-card ad-copy-card--pink" aria-labelledby="beyond-bike-ad-title">
-            <p class="section-kicker">Autos · Motorcycles · Boats</p>
-            <h2 id="beyond-bike-ad-title">Make ordinary glow weird.</h2>
-            <p>Programmable zones, custom sequences and installation ideas for anything that deserves a brighter personality.</p>
-            <a class="btn btn-neon-pink" href="contact.html#request-info">Start Something Strange</a>
-          </aside>
-        </div>
+          <div class="story-panel__content">
+            <p class="section-kicker">Color with a pulse</p>
+            <h2>Bringin’ the Shyne back into the Nyte Tyme.</h2>
+            <p>While we work each day and every night to survive the darkness, sometimes you have to become a beacon of Shynning lyte—safe, aware, and twinkling to your music whether you’re riding, driving, boating, or lighting your home.</p>
+            <p>ShyneTyme Works brings creative works to the lyte, helping you direct your glow toward the right items and diodes to create a particular, unique set of LED lytes. Our services and growing product catalog are built to shape the mood, environment, space, and mobile aura around you into a twinkling, sparkling, messaged Shyne.</p>
+            <p class="story-panel__signoff">So take a little Tyme to contemplate how that little lyte of yours—or your young one’s—can be brought out. And just maybe, you’ll want the Works!</p>
+          </div>
+
+          <div class="button-group button-group--center" aria-label="Choose a builder or request installation">
+            <a class="button button--light" href="build-my-bike.html">Bicycle</a>
+            <a class="button button--outline" href="build-my-auto.html">Auto</a>
+            <a class="button button--pink" href="build-my-yacht.html">Boat</a>
+            <a class="button button--outline" href="build-my-house.html">Home</a>
+            <a class="button button--outline" href="contact.html">Request Install</a>
+          </div>
+        </article>
+
+        <aside class="promo-card promo-card--pink" aria-labelledby="beyondBikeAdTitle">
+          <p class="section-kicker">Autos · Motorcycles · Boats</p>
+          <h2 id="beyondBikeAdTitle">Make ordinary glow weird.</h2>
+          <p>Programmable zones, custom sequences and installation ideas for anything that deserves a brighter personality.</p>
+          <a class="button button--pink" href="contact.html#request-info">Start Something Strange</a>
+        </aside>
       </div>
     </section>
 
-    <section id="contact-cta" class="py-5 bg-dark text-white">
-      <div class="container">
-        <div class="row g-4 align-items-center">
-          <div class="col-lg-8"><h2 class="fw-bold">Ready to turn a builder plan into a real project?</h2><p class="mb-0">Send the copied build summary, photos, budget and timing through the installation request page.</p></div>
-          <div class="col-lg-4 text-lg-end"><a class="btn btn-light btn-lg" href="contact.html#request-info">Request Install</a></div>
+    <section class="contact-cta">
+      <div class="contact-cta__inner">
+        <div>
+          <h2>Ready to turn a builder plan into a real project?</h2>
+          <p>Send the copied build summary, photos, budget and timing through the installation request page.</p>
         </div>
+        <a class="button button--light button--large" href="contact.html#request-info">Request Install</a>
       </div>
     </section>
   </main>
 
-  <footer class="py-4 border-top">
-    <div class="container small d-flex flex-wrap justify-content-between gap-2">
+  <footer class="site-footer">
+    <div class="site-footer__inner">
       <span>Copyright © 2026 DeacStudio. All rights reserved.</span>
       <span><a href="PRIVACY.md">Privacy</a> · <a href="TERMS.md">Terms</a></span>
     </div>
@@ -184,6 +158,7 @@
   <button class="site-guide-button" type="button" aria-expanded="false" aria-controls="siteGuidePanel" aria-label="Open Chuck's LED helper">
     <img src="assets/brand/pet-chuck-mark.png" width="104" height="104" alt="Chuck, the ShyneTyme Works robot-cat helper">
   </button>
+
   <aside class="site-guide-panel" id="siteGuidePanel" hidden aria-label="Chuck's quick help">
     <button class="site-guide-close" type="button" aria-label="Close helper">×</button>
     <strong>Need a spark?</strong>
@@ -191,13 +166,12 @@
     <a href="build-my-bike.html">Bicycle</a>
     <a href="build-my-auto.html">Auto</a>
     <a href="build-my-yacht.html">Boat</a>
+    <a href="build-my-house.html">Home</a>
     <a href="catalog.html">Catalog</a>
     <a href="contact.html">Request Install</a>
   </aside>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="js/hero-carousel.js?v=20260721-11"></script>
-  <script src="js/site-guide.js?v=20260721-12"></script>
+  <script src="js/index.js"></script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
