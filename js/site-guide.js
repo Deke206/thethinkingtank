@@ -11,6 +11,7 @@
   const bikeBuilderUpgradeUrl = new URL("js/bike-builder-upgrade.js?v=20260723-liveview-upgrade", siteRoot).href;
   const bikeBuilderSizeHotfixUrl = new URL("js/bike-builder-size-hotfix.js?v=20260724-primary-only-small-frames", siteRoot).href;
   const aboutDekeUrl = new URL("aboutmeDeke/", siteRoot).href;
+  const homeBuilderUrl = new URL("build-my-home.html", siteRoot).href;
 
   const loadSharedStylesheet = (href, dataAttribute) => {
     if (document.querySelector(`link[${dataAttribute}]`)) return;
@@ -68,8 +69,23 @@
 
   const pageLabels = {
     "build-my-bike.html": "Build",
+    "build-my-home.html": "Home Builder",
     "led-catalog.html": "LED Catalog",
     "contact.html": "Request Install"
+  };
+
+  const insertHomeBuilderLinks = () => {
+    const nav = document.querySelector(".navbar .navbar-nav");
+    const existing = nav && [...nav.querySelectorAll("a")].some((item) => item.getAttribute("href")?.includes("build-my-home"));
+    if (nav && !existing) {
+      const link = document.createElement("a");
+      link.className = "nav-link";
+      link.href = homeBuilderUrl;
+      link.textContent = "Home Builder";
+      link.dataset.homeBuilderLink = "true";
+      const bikeLink = [...nav.querySelectorAll("a")].find((item) => item.getAttribute("href")?.includes("build-my-bike"));
+      nav.insertBefore(link, bikeLink?.nextSibling || null);
+    }
   };
 
   const insertAboutDekeLinks = () => {
@@ -133,6 +149,7 @@
   };
 
   loadSharedStyles();
+  insertHomeBuilderLinks();
   insertAboutDekeLinks();
   insertBreadcrumbTicker();
   bindNavigationFlare();
