@@ -1,13 +1,16 @@
 /*
- * One shared hero, LED-banner and breadcrumb alignment system.
- * Every page follows the same Bootstrap container edge as the navbar brand.
+ * Shared hero, LED-matrix and breadcrumb presentation.
+ * Every page uses the same hero frame and one cached matrix engine.
  */
 
 :root {
   --site-hero-banner-width: 450px;
+  --site-matrix-hero-height: clamp(540px, 52vw, 620px);
+  --site-matrix-ribbon-height: clamp(82px, 8vw, 98px);
+  --site-matrix-breadcrumb-height: clamp(66px, 7vw, 82px);
 }
 
-/* Match Bootstrap's container width and left/right gutters exactly. */
+/* Keep the original HTML banners uniform as a fallback before JavaScript mounts. */
 .hero > .container.hero-led-stack,
 .breadcrumb-ticker__rail {
   width: 100% !important;
@@ -35,23 +38,33 @@
   margin: 0 !important;
 }
 
+.hero-led-stack { gap: .68rem !important; }
+.hero-led-banner { min-height: clamp(3.35rem, 5.4vw, 4.35rem) !important; }
+.hero-led-banner--headline { min-height: clamp(4rem, 6.5vw, 5.15rem) !important; }
+.hero-led-banner__message,
+.deke-page .deke-hero .hero-led-banner__message { font-size: clamp(1rem, 2.4vw, 1.85rem) !important; }
+.hero-led-banner--headline .hero-led-banner__message,
+.deke-page .deke-hero .hero-led-banner--headline .hero-led-banner__message { font-size: clamp(1.3rem, 3.5vw, 2.65rem) !important; }
+.hero-led-banner--details .hero-led-banner__message,
+.deke-page .deke-hero .hero-led-banner--details .hero-led-banner__message { font-size: clamp(.9rem, 2vw, 1.45rem) !important; }
+
+/* One generous, but not full-screen, image area across the whole site. */
 .hero,
 .deke-page .deke-hero {
-  min-height: clamp(450px, 43vw, 525px) !important;
-  max-height: none !important;
+  min-height: var(--site-matrix-hero-height) !important;
+  max-height: min(78svh, 620px) !important;
   align-items: center !important;
-  padding-top: 1.75rem !important;
-  padding-bottom: 1.75rem !important;
+  padding: 0 !important;
   background-position: center center !important;
 }
 
 .hero .container,
 .deke-page .deke-hero .container {
-  padding-top: .85rem !important;
-  padding-bottom: .85rem !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
 
-/* Remove the dark veil that was laid across every header image. */
+/* Keep the page photography bright and present. */
 .hero::before,
 .deke-page .deke-hero::after {
   content: none !important;
@@ -59,33 +72,76 @@
   background: none !important;
 }
 
-.hero-led-stack {
-  gap: .68rem !important;
+/* The old three HTML marquees remain for accessible page text, while canvas owns the visible presentation. */
+.hero--matrix-framed .hero-led-stack {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
 }
 
-.hero-led-banner {
-  min-height: clamp(3.35rem, 5.4vw, 4.35rem) !important;
+.site-matrix-ribbon {
+  position: absolute;
+  right: 0;
+  left: 0;
+  z-index: 5;
+  height: var(--site-matrix-ribbon-height);
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    linear-gradient(180deg, rgba(2, 6, 17, .99), rgba(6, 21, 47, .97)),
+    radial-gradient(circle at 15% 50%, rgba(49, 230, 255, .15), transparent 26rem),
+    radial-gradient(circle at 82% 50%, rgba(255, 90, 185, .13), transparent 24rem);
+  border-top: 2px solid rgba(49, 230, 255, .72);
+  border-bottom: 2px solid rgba(255, 90, 185, .62);
+  box-shadow:
+    0 0 26px rgba(49, 230, 255, .17),
+    0 0 38px rgba(255, 90, 185, .11),
+    inset 0 1px 0 rgba(255, 255, 255, .09),
+    inset 0 0 22px rgba(49, 230, 255, .05);
 }
 
-.hero-led-banner--headline {
-  min-height: clamp(4rem, 6.5vw, 5.15rem) !important;
+.site-matrix-ribbon::before,
+.site-matrix-ribbon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 
-.hero-led-banner__message,
-.deke-page .deke-hero .hero-led-banner__message {
-  font-size: clamp(1rem, 2.4vw, 1.85rem) !important;
+.site-matrix-ribbon::before {
+  z-index: 2;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 4px),
+    linear-gradient(90deg, rgba(2,6,17,.74), transparent 8%, transparent 92%, rgba(2,6,17,.74));
 }
 
-.hero-led-banner--headline .hero-led-banner__message,
-.deke-page .deke-hero .hero-led-banner--headline .hero-led-banner__message {
-  font-size: clamp(1.3rem, 3.5vw, 2.65rem) !important;
+.site-matrix-ribbon::after {
+  z-index: 3;
+  opacity: .58;
+  background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,.09) 42%, transparent 64%);
+  transform: translateX(-120%);
+  animation: site-matrix-glass-sweep 7.8s ease-in-out infinite;
 }
 
-.hero-led-banner--details .hero-led-banner__message,
-.deke-page .deke-hero .hero-led-banner--details .hero-led-banner__message {
-  font-size: clamp(.9rem, 2vw, 1.45rem) !important;
+.site-matrix-ribbon--top { top: 0; }
+.site-matrix-ribbon--bottom { bottom: 0; }
+
+.site-matrix-canvas {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: transparent;
 }
 
+/* Preserve the original image carousel as the visual subject between the ribbons. */
 .hero-carousel__scene {
   overflow: hidden;
   background: #030918;
@@ -96,7 +152,6 @@
   display: none !important;
 }
 
-/* Show the original image brightness and color instead of darkening it. */
 .hero-carousel__scene img {
   width: 100% !important;
   height: 100% !important;
@@ -111,9 +166,48 @@
   animation: hero-scene-drift var(--scene-duration, 8000ms) ease-out both !important;
 }
 
-.breadcrumb-ticker__rail {
-  padding-top: .62rem !important;
-  padding-bottom: .62rem !important;
+/* The breadcrumb remains the landing trail, but uses the same matrix hardware. */
+.breadcrumb-ticker--matrix {
+  min-height: var(--site-matrix-breadcrumb-height);
+  background:
+    linear-gradient(180deg, rgba(2, 6, 17, .99), rgba(6, 21, 47, .98)),
+    radial-gradient(circle at 25% 50%, rgba(49, 230, 255, .12), transparent 24rem),
+    radial-gradient(circle at 78% 50%, rgba(255, 90, 185, .11), transparent 22rem);
+  border-top: 2px solid rgba(49, 230, 255, .65);
+  border-bottom: 2px solid rgba(255, 90, 185, .55);
+}
+
+.breadcrumb-ticker--matrix .breadcrumb-ticker__rail {
+  position: relative;
+  height: var(--site-matrix-breadcrumb-height);
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+.breadcrumb-ticker--matrix .breadcrumb-ticker__list {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+}
+
+.site-matrix-canvas--breadcrumb {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes site-matrix-glass-sweep {
+  0%, 22% { transform: translateX(-120%); opacity: 0; }
+  36% { opacity: .72; }
+  66%, 100% { transform: translateX(120%); opacity: 0; }
 }
 
 @media (min-width: 576px) {
@@ -142,24 +236,27 @@
 }
 
 @media (max-width: 991.98px) {
-  .hero,
-  .deke-page .deke-hero {
-    min-height: clamp(430px, 63vw, 500px) !important;
-    padding-top: 1.45rem !important;
-    padding-bottom: 1.45rem !important;
+  :root {
+    --site-matrix-hero-height: clamp(510px, 75vw, 580px);
+    --site-matrix-ribbon-height: clamp(76px, 11vw, 90px);
   }
 
-  .hero-carousel__scene img {
-    object-position: center center !important;
+  .hero,
+  .deke-page .deke-hero {
+    max-height: min(80svh, 580px) !important;
   }
 }
 
 @media (max-width: 575.98px) {
+  :root {
+    --site-matrix-hero-height: 500px;
+    --site-matrix-ribbon-height: 72px;
+    --site-matrix-breadcrumb-height: 64px;
+  }
+
   .hero,
   .deke-page .deke-hero {
-    min-height: 420px !important;
-    padding-top: 1.15rem !important;
-    padding-bottom: 1.15rem !important;
+    max-height: min(82svh, 500px) !important;
   }
 
   .hero > .container.hero-led-stack,
@@ -167,17 +264,10 @@
     padding-right: .75rem !important;
     padding-left: .75rem !important;
   }
-
-  .hero-led-banner {
-    min-height: 3.25rem !important;
-  }
-
-  .hero-led-banner--headline {
-    min-height: 4rem !important;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .site-matrix-ribbon::after { animation-duration: 14s; }
   .hero-carousel__scene.is-active img {
     animation: none !important;
     transform: none !important;
