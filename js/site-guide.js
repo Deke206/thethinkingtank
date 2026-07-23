@@ -2,12 +2,15 @@
   "use strict";
 
   const scriptElement = document.currentScript;
-  const scriptUrl = scriptElement?.src ? new URL(scriptElement.src, window.location.href) : null;
-  const siteRoot = scriptUrl ? new URL("../", scriptUrl) : new URL("./", window.location.href);
+  const scriptUrl = scriptElement?.src
+    ? new URL(scriptElement.src, window.location.href)
+    : new URL("js/site-guide.js", window.location.href);
+  const siteRoot = new URL("../", scriptUrl);
+
   const motionCssUrl = new URL("css/site-motion.css?v=20260723-real-chuck-frames", siteRoot).href;
-  const heroCssUrl = new URL("css/site-hero.css?v=20260723-uniform-header-v2", siteRoot).href;
+  const heroCssUrl = new URL("css/site-hero.css?v=20260724-bright-carousel-repair", siteRoot).href;
   const chuckCssUrl = new URL("css/about-deke-chuck.css?v=20260724-sitewide-chuck-200", siteRoot).href;
-  const chuckComponentUrl = new URL("js/about-deke-chuck.js?v=20260724-sitewide-chuck-200", siteRoot).href;
+  const chuckComponentUrl = new URL("js/about-deke-chuck.js?v=20260724-restored-sitewide-chuck", siteRoot).href;
   const bikeBuilderUpgradeUrl = new URL("js/bike-builder-upgrade.js?v=20260723-liveview-upgrade", siteRoot).href;
   const bikeBuilderSizeHotfixUrl = new URL("js/bike-builder-size-hotfix.js?v=20260724-primary-only-small-frames", siteRoot).href;
   const aboutDekeUrl = new URL("aboutmeDeke/", siteRoot).href;
@@ -47,12 +50,14 @@
 
   const loadBikeBuilderUpgrade = () => {
     if (!document.getElementById("bikeBuilderForm")) return;
+
     const existing = document.querySelector("script[data-bike-builder-upgrade]");
     if (existing) {
       if (window.ShynetymeBikeBuilderRenderer) loadBikeBuilderSizeHotfix();
       else existing.addEventListener("load", loadBikeBuilderSizeHotfix, { once: true });
       return;
     }
+
     const script = document.createElement("script");
     script.src = bikeBuilderUpgradeUrl;
     script.defer = true;
