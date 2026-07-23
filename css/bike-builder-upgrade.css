@@ -1,0 +1,157 @@
+/* Build My Bike live-view upgrade: body selector, explicit views and equipment layers. */
+.preview-toolbar {
+  flex-wrap: wrap;
+}
+
+.preview-view-buttons {
+  display: inline-flex;
+  gap: .35rem;
+  padding: .25rem;
+  border: 1px solid rgba(255, 255, 255, .28);
+  border-radius: .8rem;
+  background: rgba(255, 255, 255, .08);
+}
+
+.preview-view-button {
+  min-width: 62px;
+  border: 0;
+  border-radius: .58rem;
+  padding: .48rem .7rem;
+  color: rgba(255, 255, 255, .78);
+  background: transparent;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.preview-view-button:hover,
+.preview-view-button:focus-visible {
+  color: #fff;
+  background: rgba(255, 255, 255, .14);
+  outline: 2px solid rgba(49, 230, 255, .72);
+  outline-offset: 2px;
+}
+
+.preview-view-button.active {
+  color: #07111e;
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(49, 230, 255, .45), 0 0 14px rgba(49, 230, 255, .42);
+}
+
+.equipment-options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .7rem;
+}
+
+.equipment-option {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  min-height: 48px;
+  padding: .72rem .8rem;
+  border: 1px solid #dbe1ea;
+  border-radius: .75rem;
+  background: #fff;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.equipment-option:hover {
+  border-color: #68d8ff;
+  box-shadow: 0 0 0 3px rgba(49, 230, 255, .12);
+}
+
+.equipment-option input {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: 0 0 auto;
+  accent-color: #0b7ca0;
+}
+
+#mainBikeGroup[hidden],
+#kidBikeGroup[hidden],
+#frontViewPanel[hidden],
+#rearViewPanel[hidden] {
+  display: none !important;
+}
+
+.equipment-layer {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity .25s ease, stroke .25s ease, fill .25s ease, filter .25s ease;
+  stroke: #2d333b;
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: rgba(255, 255, 255, .88);
+}
+
+.equipment-layer.equipment-off {
+  opacity: 0;
+  pointer-events: none;
+  filter: none;
+}
+
+.equipment-layer.equipment-on {
+  opacity: 1;
+  stroke: #20c997;
+  fill: rgba(32, 201, 151, .2);
+  filter: drop-shadow(0 0 5px rgba(32, 201, 151, .82));
+}
+
+.equipment-layer.equipment-on text {
+  fill: #fff;
+  stroke: none;
+  filter: drop-shadow(0 0 4px rgba(0, 0, 0, .85));
+}
+
+#headlightSvg.equipment-on,
+#frontHeadlightView.equipment-on {
+  stroke: #fff7b2;
+  fill: #fffde8;
+  filter: drop-shadow(0 0 5px #fff) drop-shadow(0 0 14px rgba(255, 235, 104, .95));
+}
+
+#underglowSvg.equipment-on {
+  fill: none;
+  stroke: url(#rgbGradient);
+  animation: underglowPulse 1.4s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 7px rgba(0, 220, 255, .95)) drop-shadow(0 0 13px rgba(255, 0, 140, .72));
+}
+
+#ledSignSvg.equipment-on {
+  stroke: #31e6ff;
+  fill: rgba(5, 12, 28, .94);
+  filter: drop-shadow(0 0 8px rgba(49, 230, 255, .85));
+}
+
+#batteryBoxSvg.equipment-on,
+#controllerBoxSvg.equipment-on {
+  stroke: #31e6ff;
+  fill: rgba(6, 21, 47, .9);
+}
+
+#cargoTrailerSvg.equipment-on circle {
+  fill: #fff;
+  stroke: #25282d;
+}
+
+@keyframes underglowPulse {
+  from { opacity: .64; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 575.98px) {
+  .preview-view-buttons {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .preview-view-button {
+    flex: 1 1 0;
+  }
+
+  .equipment-options-grid {
+    grid-template-columns: 1fr;
+  }
+}

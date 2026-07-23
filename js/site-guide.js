@@ -7,6 +7,7 @@
   const motionCssUrl = new URL("css/site-motion.css?v=20260723-real-chuck-frames", siteRoot).href;
   const heroCssUrl = new URL("css/site-hero.css?v=20260723-uniform-header-v2", siteRoot).href;
   const chuckSpriteUrl = new URL("js/chuck-sprite.js?v=20260723-real-chuck-frames", siteRoot).href;
+  const bikeBuilderUpgradeUrl = new URL("js/bike-builder-upgrade.js?v=20260723-liveview-upgrade", siteRoot).href;
   const scanAtlasUrl = new URL("assets/brand/chuck-search-map.webp?v=20260723", siteRoot).href;
   const laptopAtlasUrl = new URL("assets/brand/chuck-search-laptop.webp?v=20260723", siteRoot).href;
   const aboutDekeUrl = new URL("aboutmeDeke/", siteRoot).href;
@@ -23,6 +24,15 @@
   const loadSharedStyles = () => {
     loadSharedStylesheet(motionCssUrl, "data-shynetyme-motion");
     loadSharedStylesheet(heroCssUrl, "data-shynetyme-hero");
+  };
+
+  const loadBikeBuilderUpgrade = () => {
+    if (!document.getElementById("bikeBuilderForm") || document.querySelector("script[data-bike-builder-upgrade]")) return;
+    const script = document.createElement("script");
+    script.src = bikeBuilderUpgradeUrl;
+    script.defer = true;
+    script.dataset.bikeBuilderUpgrade = "true";
+    document.body.appendChild(script);
   };
 
   const loadChuckSprite = () => new Promise((resolve) => {
@@ -127,6 +137,7 @@
   insertAboutDekeLinks();
   insertBreadcrumbTicker();
   bindNavigationFlare();
+  loadBikeBuilderUpgrade();
 
   const button = document.querySelector(".site-guide-button");
   const panel = document.getElementById("siteGuidePanel");
