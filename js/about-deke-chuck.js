@@ -1,8 +1,6 @@
 (() => {
   "use strict";
 
-  if (window.ShynetymeChuck?.mounted) return;
-
   const scriptElement = document.currentScript;
   const scriptUrl = scriptElement?.src
     ? new URL(scriptElement.src, window.location.href)
@@ -10,13 +8,19 @@
   const siteRoot = new URL("../", scriptUrl);
 
   const chuckCssUrl = new URL("css/about-deke-chuck.css?v=20260724-sitewide-chuck-200", siteRoot).href;
+  const heroCssUrl = new URL("css/site-hero.css?v=20260724-random-matrix-ribbons", siteRoot).href;
+  const matrixScriptUrl = new URL("js/site-led-matrix.js?v=20260724-random-matrix-ribbons", siteRoot).href;
   const chuckSpriteUrl = new URL("js/chuck-sprite.js?v=20260724-real-chuck-frames", siteRoot).href;
   const scanAtlasUrl = new URL("assets/brand/chuck-search-map.webp?v=20260723", siteRoot).href;
   const laptopAtlasUrl = new URL("assets/brand/chuck-search-laptop.webp?v=20260723", siteRoot).href;
   const fallbackImageUrl = new URL("assets/brand/pet-chuck-mark.png", siteRoot).href;
 
   const loadStylesheet = (href, dataAttribute) => {
-    if (document.querySelector(`link[${dataAttribute}]`)) return;
+    const existing = document.querySelector(`link[${dataAttribute}]`);
+    if (existing) {
+      if (existing.href !== href) existing.href = href;
+      return;
+    }
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = href;
@@ -24,7 +28,29 @@
     document.head.appendChild(link);
   };
 
+  const loadLedMatrix = () => {
+    if (window.ShynetymeLedMatrix) {
+      window.ShynetymeLedMatrix.init();
+      return;
+    }
+    const existing = document.querySelector("script[data-shynetyme-led-matrix]");
+    if (existing) {
+      existing.addEventListener("load", () => window.ShynetymeLedMatrix?.init(), { once: true });
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = matrixScriptUrl;
+    script.defer = true;
+    script.dataset.shynetymeLedMatrix = "true";
+    script.addEventListener("load", () => window.ShynetymeLedMatrix?.init(), { once: true });
+    document.head.appendChild(script);
+  };
+
   loadStylesheet(chuckCssUrl, "data-shynetyme-chuck");
+  loadStylesheet(heroCssUrl, "data-shynetyme-hero");
+  loadLedMatrix();
+
+  if (window.ShynetymeChuck?.mounted) return;
 
   const removeRetiredGuide = () => {
     document.querySelectorAll(".site-guide-button, #siteGuidePanel").forEach((element) => element.remove());
