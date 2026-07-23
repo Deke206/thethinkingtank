@@ -1,0 +1,120 @@
+/*
+ * Shared LED matrix presentation only.
+ * The matrix engine is intentionally separate from Chuck and the general hero layout.
+ */
+
+:root {
+  --site-matrix-ribbon-height: clamp(78px, 7.5vw, 94px);
+  --site-matrix-breadcrumb-height: clamp(62px, 6.5vw, 76px);
+}
+
+/* The original HTML banner copy remains in the document for accessibility and fallback. */
+.hero--matrix-framed .hero-led-stack {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+}
+
+.site-matrix-ribbon {
+  position: absolute;
+  right: 0;
+  left: 0;
+  z-index: 5;
+  height: var(--site-matrix-ribbon-height);
+  overflow: hidden;
+  contain: layout paint;
+  isolation: isolate;
+  background-color: #020611;
+  background-image:
+    radial-gradient(circle, rgba(49, 230, 255, .08) 0 1px, transparent 1.45px),
+    radial-gradient(circle, rgba(255, 90, 185, .055) 0 1px, transparent 1.4px),
+    linear-gradient(180deg, rgba(2, 6, 17, .97), rgba(6, 21, 47, .95));
+  background-position: 0 0, 4px 4px, 0 0;
+  background-size: 9px 9px, 11px 11px, auto;
+  border-top: 2px solid rgba(49, 230, 255, .72);
+  border-bottom: 2px solid rgba(255, 90, 185, .62);
+  box-shadow:
+    0 0 22px rgba(49, 230, 255, .14),
+    0 0 30px rgba(255, 90, 185, .09),
+    inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+
+.site-matrix-ribbon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.026) 0 1px, transparent 1px 4px),
+    linear-gradient(90deg, rgba(2,6,17,.68), transparent 7%, transparent 93%, rgba(2,6,17,.68));
+}
+
+.site-matrix-ribbon--top { top: 0; }
+.site-matrix-ribbon--bottom { bottom: 0; }
+
+.site-matrix-canvas {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  image-rendering: pixelated;
+  filter: saturate(1.18) drop-shadow(0 0 4px rgba(49, 230, 255, .3));
+}
+
+/* The breadcrumb stays page-specific, while using the same LED hardware look. */
+.breadcrumb-ticker--matrix {
+  min-height: var(--site-matrix-breadcrumb-height);
+  contain: layout paint;
+  background-color: #020611;
+  background-image:
+    radial-gradient(circle, rgba(49, 230, 255, .07) 0 1px, transparent 1.4px),
+    radial-gradient(circle, rgba(155, 131, 255, .055) 0 1px, transparent 1.4px),
+    linear-gradient(180deg, rgba(2, 6, 17, .98), rgba(6, 21, 47, .97));
+  background-position: 0 0, 5px 5px, 0 0;
+  background-size: 9px 9px, 12px 12px, auto;
+  border-top: 2px solid rgba(49, 230, 255, .62);
+  border-bottom: 2px solid rgba(255, 90, 185, .5);
+}
+
+.breadcrumb-ticker--matrix .breadcrumb-ticker__rail {
+  position: relative;
+  height: var(--site-matrix-breadcrumb-height);
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+.breadcrumb-ticker--matrix .breadcrumb-ticker__list {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+}
+
+.site-matrix-canvas--breadcrumb {
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 575.98px) {
+  :root {
+    --site-matrix-ribbon-height: 68px;
+    --site-matrix-breadcrumb-height: 60px;
+  }
+}
