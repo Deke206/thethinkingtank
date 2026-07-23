@@ -10,12 +10,14 @@
   const motionCssUrl = new URL("css/site-motion.css?v=20260723-real-chuck-frames", siteRoot).href;
   const heroCssUrl = new URL("css/site-hero.css?v=20260724-clean-shared-hero", siteRoot).href;
   const matrixCssUrl = new URL("css/site-led-matrix.css?v=20260724-performance-cleanup", siteRoot).href;
+  const navigationCssUrl = new URL("css/site-navigation.css?v=20260724-build-dropdown-flare", siteRoot).href;
   const matrixScriptUrl = new URL("js/site-led-matrix.js?v=20260724-performance-cleanup", siteRoot).href;
   const chuckComponentUrl = new URL("js/about-deke-chuck.js?v=20260724-bottom-only-chuck", siteRoot).href;
   const bikeBuilderUpgradeUrl = new URL("js/bike-builder-upgrade.js?v=20260723-liveview-upgrade", siteRoot).href;
   const bikeBuilderSizeHotfixUrl = new URL("js/bike-builder-size-hotfix.js?v=20260724-primary-only-small-frames", siteRoot).href;
-  const aboutDekeUrl = new URL("aboutmeDeke/", siteRoot).href;
+  const bikeBuilderUrl = new URL("build-my-bike.html", siteRoot).href;
   const homeBuilderUrl = new URL("build-my-home.html", siteRoot).href;
+  const aboutDekeUrl = new URL("aboutmeDeke/", siteRoot).href;
 
   const loadSharedStylesheet = (href, dataAttribute) => {
     const existing = document.querySelector(`link[${dataAttribute}]`);
@@ -35,6 +37,7 @@
     loadSharedStylesheet(motionCssUrl, "data-shynetyme-motion");
     loadSharedStylesheet(heroCssUrl, "data-shynetyme-hero");
     loadSharedStylesheet(matrixCssUrl, "data-shynetyme-led-matrix");
+    loadSharedStylesheet(navigationCssUrl, "data-shynetyme-navigation");
   };
 
   const loadSiteLedMatrix = () => {
@@ -101,37 +104,80 @@
   };
 
   const pageLabels = {
-    "build-my-bike.html": "Build",
+    "build-my-bike.html": "Bike Builder",
     "build-my-home.html": "Home Builder",
     "led-catalog.html": "LED Catalog",
     "contact.html": "Request Install"
   };
 
-  const insertHomeBuilderLinks = () => {
+  const directAnchor = (element) => {
+    if (element?.matches("a, button")) return element;
+    return element?.querySelector(":scope > a, :scope > button") || null;
+  };
+
+  const isEffectsNavigationItem = (element) => {
+    const link = directAnchor(element);
+    if (!link) return false;
+    const label = link.textContent.trim().toLowerCase();
+    const href = link.getAttribute("href") || "";
+    return label === "effects" || href.includes("#effects");
+  };
+
+  const isStandaloneBuilderItem = (element) => {
+    if (element?.matches("[data-shynetyme-build-menu]")) return true;
+    const link = directAnchor(element);
+    if (!link) return false;
+    const label = link.textContent.trim().toLowerCase();
+    const href = link.getAttribute("href") || "";
+    return label === "build" || href.includes("build-my-bike") || href.includes("build-my-home");
+  };
+
+  const installBuildDropdown = () => {
     const nav = document.querySelector(".navbar .navbar-nav");
-    if (!nav || [...nav.querySelectorAll("a")].some((item) => item.getAttribute("href")?.includes("build-my-home"))) return;
+    if (!nav) return;
 
-    const link = document.createElement("a");
-    link.className = "nav-link";
-    link.href = homeBuilderUrl;
-    link.textContent = "Home Builder";
-    link.dataset.homeBuilderLink = "true";
+    const originalChildren = [...nav.children];
+    const buildIndexes = originalChildren
+      .map((child, index) => isStandaloneBuilderItem(child) ? index : -1)
+      .filter((index) => index >= 0);
+    const insertionIndex = buildIndexes.length ? Math.min(...buildIndexes) : 0;
 
-    const bikeLink = [...nav.querySelectorAll("a")].find((item) => item.getAttribute("href")?.includes("build-my-bike"));
-    nav.insertBefore(link, bikeLink?.nextSibling || null);
+    originalChildren.forEach((child) => {
+      if (isEffectsNavigationItem(child) || isStandaloneBuilderItem(child)) child.remove();
+    });
+
+    const pageKey = getPageKey();
+    const bikeActive = pageKey === "build-my-bike.html";
+    const homeActive = pageKey === "build-my-home.html";
+    const buildActive = bikeActive || homeActive;
+
+    const dropdown = document.createElement("div");
+    dropdown.className = "nav-item dropdown shynetyme-build-menu";
+    dropdown.dataset.shynetymeBuildMenu = "true";
+    dropdown.innerHTML = `
+      <button class="nav-link dropdown-toggle${buildActive ? " active" : ""}" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open Build menu">
+        Build
+      </button>
+      <ul class="dropdown-menu dropdown-menu-dark" aria-label="Build pages">
+        <li><a class="dropdown-item${bikeActive ? " active" : ""}"${bikeActive ? " aria-current=\"page\"" : ""} href="${bikeBuilderUrl}">Bike Builder</a></li>
+        <li><a class="dropdown-item${homeActive ? " active" : ""}"${homeActive ? " aria-current=\"page\"" : ""} href="${homeBuilderUrl}">Home Builder</a></li>
+      </ul>`;
+
+    const remainingChildren = [...nav.children];
+    nav.insertBefore(dropdown, remainingChildren[insertionIndex] || null);
   };
 
   const insertAboutDekeLinks = () => {
     const nav = document.querySelector(".navbar .navbar-nav");
 
-    if (nav && !nav.querySelector("[data-about-deke-link]")) {
+    if (nav && !nav.querySelector("[data-about-deke-link]") && ![...nav.querySelectorAll("a")].some((item) => item.getAttribute("href")?.includes("aboutmeDeke"))) {
       const link = document.createElement("a");
       link.className = "nav-link";
       link.href = aboutDekeUrl;
       link.textContent = "About Deke";
       link.dataset.aboutDekeLink = "true";
 
-      const contactLink = [...nav.querySelectorAll("a")].find((item) => item.getAttribute("href")?.includes("contact"));
+      const contactLink = [...nav.children].find((item) => directAnchor(item)?.getAttribute("href")?.includes("contact"));
       nav.insertBefore(link, contactLink || null);
     }
 
@@ -164,10 +210,27 @@
     else document.querySelector("main")?.insertAdjacentElement("beforebegin", ticker);
   };
 
+  const bindNavigationFlare = () => {
+    const nav = document.querySelector(".navbar .navbar-nav");
+    if (!nav || nav.dataset.navigationFlareBound === "true") return;
+    nav.dataset.navigationFlareBound = "true";
+
+    nav.addEventListener("click", (event) => {
+      const target = event.target.closest(".nav-link, .dropdown-item");
+      if (!target || !nav.contains(target)) return;
+
+      target.classList.remove("nav-link--flare-click");
+      void target.offsetWidth;
+      target.classList.add("nav-link--flare-click");
+      window.setTimeout(() => target.classList.remove("nav-link--flare-click"), 620);
+    });
+  };
+
   loadSharedStyles();
-  insertHomeBuilderLinks();
+  installBuildDropdown();
   insertAboutDekeLinks();
   insertBreadcrumbTicker();
+  bindNavigationFlare();
   loadSiteLedMatrix();
   loadBikeBuilderUpgrade();
   loadSitewideChuck();
