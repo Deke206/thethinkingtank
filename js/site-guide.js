@@ -4,7 +4,10 @@
   const scriptElement = document.currentScript;
   const scriptUrl = scriptElement?.src ? new URL(scriptElement.src, window.location.href) : null;
   const siteRoot = scriptUrl ? new URL("../", scriptUrl) : new URL("./", window.location.href);
-  const motionCssUrl = new URL("css/site-motion.css?v=20260723-dex-motion-fix", siteRoot).href;
+  const motionCssUrl = new URL("css/site-motion.css?v=20260723-real-chuck-frames", siteRoot).href;
+  const chuckSpriteUrl = new URL("js/chuck-sprite.js?v=20260723-real-chuck-frames", siteRoot).href;
+  const scanAtlasUrl = new URL("assets/brand/chuck-search-map.webp?v=20260723", siteRoot).href;
+  const laptopAtlasUrl = new URL("assets/brand/chuck-search-laptop.webp?v=20260723", siteRoot).href;
   const aboutDekeUrl = new URL("aboutmeDeke/", siteRoot).href;
 
   const loadMotionCompatibility = () => {
@@ -15,6 +18,28 @@
     link.dataset.shynetymeMotion = "true";
     document.head.appendChild(link);
   };
+
+  const loadChuckSprite = () => new Promise((resolve) => {
+    if (window.ShynetymeChuckSprite) {
+      resolve(window.ShynetymeChuckSprite);
+      return;
+    }
+
+    const existing = document.querySelector('script[data-shynetyme-chuck-sprite]');
+    if (existing) {
+      existing.addEventListener("load", () => resolve(window.ShynetymeChuckSprite || null), { once: true });
+      existing.addEventListener("error", () => resolve(null), { once: true });
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = chuckSpriteUrl;
+    script.defer = true;
+    script.dataset.shynetymeChuckSprite = "true";
+    script.addEventListener("load", () => resolve(window.ShynetymeChuckSprite || null), { once: true });
+    script.addEventListener("error", () => resolve(null), { once: true });
+    document.head.appendChild(script);
+  });
 
   const getPageKey = () => {
     const fileName = window.location.pathname.split("/").filter(Boolean).pop() || "index.html";
@@ -102,11 +127,31 @@
   const close = panel?.querySelector(".site-guide-close");
   if (!button) return;
 
+  let chuckAnimation = null;
+  let previousScrollY = window.scrollY;
   let scrollTimer = 0;
+
+  loadChuckSprite().then((spriteApi) => {
+    chuckAnimation = spriteApi?.mount({
+      button,
+      image: button.querySelector("img"),
+      scanUrl: scanAtlasUrl,
+      laptopUrl: laptopAtlasUrl
+    }) || null;
+  });
+
   window.addEventListener("scroll", () => {
+    const currentScrollY = window.scrollY;
+    const mode = currentScrollY < previousScrollY ? "scan" : "laptop";
+    previousScrollY = currentScrollY;
+
     button.classList.add("is-searching");
+    chuckAnimation?.start(mode);
     window.clearTimeout(scrollTimer);
-    scrollTimer = window.setTimeout(() => button.classList.remove("is-searching"), 420);
+    scrollTimer = window.setTimeout(() => {
+      button.classList.remove("is-searching");
+      chuckAnimation?.stop();
+    }, 620);
   }, { passive: true });
 
   if (panel && !panel.querySelector("[data-about-deke-link]")) {

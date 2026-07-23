@@ -4,14 +4,39 @@
   const scriptElement = document.currentScript;
   const scriptUrl = scriptElement?.src ? new URL(scriptElement.src, window.location.href) : null;
   const siteRoot = scriptUrl ? new URL("../", scriptUrl) : new URL("../", window.location.href);
+  const chuckSpriteUrl = new URL("js/chuck-sprite.js?v=20260723-real-chuck-frames", siteRoot).href;
+  const scanAtlasUrl = new URL("assets/brand/chuck-search-map.webp?v=20260723", siteRoot).href;
+  const laptopAtlasUrl = new URL("assets/brand/chuck-search-laptop.webp?v=20260723", siteRoot).href;
 
   if (!document.querySelector('link[data-shynetyme-motion]')) {
     const motionLink = document.createElement("link");
     motionLink.rel = "stylesheet";
-    motionLink.href = new URL("css/site-motion.css?v=20260723-dex-motion-fix", siteRoot).href;
+    motionLink.href = new URL("css/site-motion.css?v=20260723-real-chuck-frames", siteRoot).href;
     motionLink.dataset.shynetymeMotion = "true";
     document.head.appendChild(motionLink);
   }
+
+  const loadChuckSprite = () => new Promise((resolve) => {
+    if (window.ShynetymeChuckSprite) {
+      resolve(window.ShynetymeChuckSprite);
+      return;
+    }
+
+    const existing = document.querySelector('script[data-shynetyme-chuck-sprite]');
+    if (existing) {
+      existing.addEventListener("load", () => resolve(window.ShynetymeChuckSprite || null), { once: true });
+      existing.addEventListener("error", () => resolve(null), { once: true });
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = chuckSpriteUrl;
+    script.defer = true;
+    script.dataset.shynetymeChuckSprite = "true";
+    script.addEventListener("load", () => resolve(window.ShynetymeChuckSprite || null), { once: true });
+    script.addEventListener("error", () => resolve(null), { once: true });
+    document.head.appendChild(script);
+  });
 
   const widget = document.getElementById("dekeChuckWidget");
   const trigger = document.getElementById("dekeChuckTrigger");
@@ -49,10 +74,21 @@
     }
   ];
 
+  let chuckAnimation = null;
   let messageIndex = -1;
+  let previousScrollY = window.scrollY;
   let scrollTimer = 0;
   let hideTimer = 0;
   let revealTimer = 0;
+
+  loadChuckSprite().then((spriteApi) => {
+    chuckAnimation = spriteApi?.mount({
+      button: trigger,
+      image: trigger.querySelector("img"),
+      scanUrl: scanAtlasUrl,
+      laptopUrl: laptopAtlasUrl
+    }) || null;
+  });
 
   function setColor(color) {
     thought.classList.remove(
@@ -99,18 +135,25 @@
   }
 
   function handleScroll() {
+    const currentScrollY = window.scrollY;
+    const mode = currentScrollY < previousScrollY ? "scan" : "laptop";
+    previousScrollY = currentScrollY;
+
     widget.classList.add("is-searching");
+    chuckAnimation?.start(mode);
     hideThought();
     window.clearTimeout(scrollTimer);
 
     scrollTimer = window.setTimeout(() => {
       widget.classList.remove("is-searching");
+      chuckAnimation?.stop();
       showNextMessage();
-    }, 380);
+    }, 620);
   }
 
   trigger.addEventListener("click", () => {
     widget.classList.remove("is-searching");
+    chuckAnimation?.stop();
     showNextMessage();
   });
 
@@ -129,6 +172,7 @@
   revealTimer = window.setTimeout(showNextMessage, 1200);
 
   window.addEventListener("pagehide", () => {
+    chuckAnimation?.stop();
     window.clearTimeout(scrollTimer);
     window.clearTimeout(hideTimer);
     window.clearTimeout(revealTimer);
