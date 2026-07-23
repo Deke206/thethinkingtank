@@ -7,14 +7,20 @@
   const chuckSpriteUrl = new URL("js/chuck-sprite.js?v=20260723-real-chuck-frames", siteRoot).href;
   const scanAtlasUrl = new URL("assets/brand/chuck-search-map.webp?v=20260723", siteRoot).href;
   const laptopAtlasUrl = new URL("assets/brand/chuck-search-laptop.webp?v=20260723", siteRoot).href;
+  const motionCssUrl = new URL("css/site-motion.css?v=20260723-real-chuck-frames", siteRoot).href;
+  const heroCssUrl = new URL("css/site-hero.css?v=20260723-uniform-carousel", siteRoot).href;
 
-  if (!document.querySelector('link[data-shynetyme-motion]')) {
-    const motionLink = document.createElement("link");
-    motionLink.rel = "stylesheet";
-    motionLink.href = new URL("css/site-motion.css?v=20260723-real-chuck-frames", siteRoot).href;
-    motionLink.dataset.shynetymeMotion = "true";
-    document.head.appendChild(motionLink);
-  }
+  const loadSharedStylesheet = (href, dataAttribute) => {
+    if (document.querySelector(`link[${dataAttribute}]`)) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    link.setAttribute(dataAttribute, "true");
+    document.head.appendChild(link);
+  };
+
+  loadSharedStylesheet(motionCssUrl, "data-shynetyme-motion");
+  loadSharedStylesheet(heroCssUrl, "data-shynetyme-hero");
 
   const loadChuckSprite = () => new Promise((resolve) => {
     if (window.ShynetymeChuckSprite) {
