@@ -8,7 +8,7 @@
   const scanAtlasUrl = new URL("assets/brand/chuck-search-map.webp?v=20260723", siteRoot).href;
   const laptopAtlasUrl = new URL("assets/brand/chuck-search-laptop.webp?v=20260723", siteRoot).href;
   const motionCssUrl = new URL("css/site-motion.css?v=20260723-real-chuck-frames", siteRoot).href;
-  const heroCssUrl = new URL("css/site-hero.css?v=20260723-uniform-carousel", siteRoot).href;
+  const heroCssUrl = new URL("css/site-hero.css?v=20260723-uniform-header-v2", siteRoot).href;
 
   const loadSharedStylesheet = (href, dataAttribute) => {
     if (document.querySelector(`link[${dataAttribute}]`)) return;
