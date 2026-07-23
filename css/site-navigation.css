@@ -1,0 +1,131 @@
+/*
+ * Shared navigation dropdown and click-flare treatment.
+ * This file only controls the site-wide navbar.
+ */
+
+.shynetyme-build-menu {
+  position: relative;
+}
+
+.shynetyme-build-menu > .nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  border: 0;
+  background: transparent;
+}
+
+.shynetyme-build-menu > .nav-link.active {
+  color: #fff !important;
+  text-shadow: 0 0 12px rgba(49, 230, 255, .72);
+}
+
+.shynetyme-build-menu .dropdown-menu {
+  min-width: 13.5rem;
+  margin-top: .55rem;
+  padding: .48rem;
+  overflow: hidden;
+  border: 1px solid rgba(49, 230, 255, .46);
+  border-radius: .85rem;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(49, 230, 255, .12), transparent 9rem),
+    linear-gradient(155deg, rgba(6, 21, 47, .99), rgba(18, 12, 48, .99));
+  box-shadow:
+    0 18px 38px rgba(0, 0, 0, .48),
+    0 0 20px rgba(49, 230, 255, .14),
+    inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+
+.shynetyme-build-menu .dropdown-item {
+  position: relative;
+  padding: .72rem .82rem;
+  border-radius: .62rem;
+  color: #dcecff;
+  font-family: var(--heading-font, "Oxanium", "Trebuchet MS", sans-serif);
+  font-weight: 750;
+  letter-spacing: .015em;
+  transition: color .18s ease, background-color .18s ease, transform .18s ease, text-shadow .18s ease;
+}
+
+.shynetyme-build-menu .dropdown-item + .dropdown-item,
+.shynetyme-build-menu li + li .dropdown-item {
+  margin-top: .18rem;
+}
+
+.shynetyme-build-menu .dropdown-item:hover,
+.shynetyme-build-menu .dropdown-item:focus,
+.shynetyme-build-menu .dropdown-item.active {
+  color: #fff;
+  background: linear-gradient(90deg, rgba(49, 230, 255, .2), rgba(155, 131, 255, .24));
+  text-shadow: 0 0 12px rgba(49, 230, 255, .72);
+  transform: translateX(3px);
+}
+
+.shynetyme-build-menu .dropdown-item.active {
+  box-shadow: inset 3px 0 0 var(--cyan, #31e6ff);
+}
+
+.nav-link--flare-click {
+  animation: shynetyme-nav-flare .56s ease-out both;
+}
+
+.nav-link--flare-click::after {
+  animation: shynetyme-nav-line-flare .56s ease-out both !important;
+}
+
+.dropdown-item.nav-link--flare-click {
+  animation: shynetyme-dropdown-flare .56s ease-out both;
+}
+
+@keyframes shynetyme-nav-flare {
+  0% {
+    color: #fff;
+    text-shadow: 0 0 0 rgba(49, 230, 255, 0);
+    filter: brightness(1);
+  }
+  38% {
+    color: #fff;
+    text-shadow:
+      0 0 8px #fff,
+      0 0 18px rgba(49, 230, 255, .95),
+      0 0 28px rgba(155, 131, 255, .72);
+    filter: brightness(1.28);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+@keyframes shynetyme-nav-line-flare {
+  0% { transform: scaleX(0); opacity: .2; }
+  45% { transform: scaleX(1.22); opacity: 1; box-shadow: 0 0 14px var(--cyan, #31e6ff); }
+  100% { transform: scaleX(1); opacity: .85; box-shadow: 0 0 0 transparent; }
+}
+
+@keyframes shynetyme-dropdown-flare {
+  0% { transform: translateX(0); filter: brightness(1); }
+  42% { transform: translateX(5px); filter: brightness(1.3); box-shadow: 0 0 16px rgba(49, 230, 255, .28); }
+  100% { transform: translateX(3px); filter: brightness(1); }
+}
+
+@media (max-width: 991.98px) {
+  .shynetyme-build-menu > .nav-link {
+    width: 100%;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .shynetyme-build-menu .dropdown-menu {
+    margin: .25rem 0 .45rem .55rem;
+    border-radius: .72rem;
+    box-shadow: inset 0 0 18px rgba(49, 230, 255, .06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-link--flare-click,
+  .nav-link--flare-click::after,
+  .dropdown-item.nav-link--flare-click {
+    animation-duration: .72s !important;
+  }
+}
