@@ -4,6 +4,7 @@
   if (window.ShynetymeLedMatrix?.initialized) return;
 
   const EFFECTS = ["chase", "center", "scan", "type", "flag", "stack-right", "wipe", "comet"];
+  const LONG_TEXT_EFFECTS = ["chase", "flag", "comet"];
   const PALETTES = [
     ["#31e6ff", "#48a9ff", "#9b83ff", "#ff5ab9", "#ffc562", "#55e6b5"],
     ["#ff304f", "#ffffff", "#48a9ff", "#ffffff"],
@@ -28,6 +29,11 @@
     const chosen = pick(available.length ? available : items);
     used.add(chosen);
     return chosen;
+  }
+
+  function pickEffect(text, used) {
+    const choices = text.length > 46 ? LONG_TEXT_EFFECTS : EFFECTS;
+    return uniquePick(choices, used);
   }
 
   function pickPalette(mode, used) {
@@ -70,7 +76,7 @@
 
     return {
       top,
-      bottom: headline.length < 54 ? headline : details,
+      bottom: headline || details,
       details
     };
   }
@@ -79,7 +85,9 @@
     const items = [...ticker.querySelectorAll(".breadcrumb-ticker__item")]
       .map((item) => normalizeText(item.textContent))
       .filter(Boolean);
-    return items.length ? items.join("  ✦  ") : normalizeText(document.title.split("|")[0]);
+    const pageTitle = normalizeText(document.title.split("|")[0]);
+    if (items.length === 1 && pageTitle && !items.includes(pageTitle)) items.push(pageTitle);
+    return items.length ? items.join("  ✦  ") : pageTitle;
   }
 
   function createRibbon(position, text) {
@@ -337,8 +345,8 @@
     hero.classList.add("hero--matrix-framed");
     hero.dataset.matrixReady = "true";
 
-    const topMode = uniquePick(EFFECTS, usedEffects);
-    const bottomMode = uniquePick(EFFECTS, usedEffects);
+    const topMode = pickEffect(text.top, usedEffects);
+    const bottomMode = pickEffect(text.bottom, usedEffects);
     const topPalette = pickPalette(topMode, usedPalettes);
     const bottomPalette = pickPalette(bottomMode, usedPalettes);
     mountDisplay(top.canvas, text.top, topMode, topPalette, "hero");
@@ -358,7 +366,7 @@
     rail.appendChild(canvas);
     ticker.classList.add("breadcrumb-ticker--matrix");
     ticker.dataset.matrixReady = "true";
-    const mode = uniquePick(EFFECTS, usedEffects);
+    const mode = pickEffect(text, usedEffects);
     mountDisplay(canvas, text, mode, pickPalette(mode, usedPalettes), "breadcrumb");
   }
 
