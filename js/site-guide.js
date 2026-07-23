@@ -1,69 +1,140 @@
 (() => {
+  "use strict";
+
+  const scriptElement = document.currentScript;
+  const scriptUrl = scriptElement?.src ? new URL(scriptElement.src, window.location.href) : null;
+  const siteRoot = scriptUrl ? new URL("../", scriptUrl) : new URL("./", window.location.href);
+  const motionCssUrl = new URL("css/site-motion.css?v=20260723-dex-motion-fix", siteRoot).href;
+  const aboutDekeUrl = new URL("aboutmeDeke/", siteRoot).href;
+
+  const loadMotionCompatibility = () => {
+    if (document.querySelector('link[data-shynetyme-motion]')) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = motionCssUrl;
+    link.dataset.shynetymeMotion = "true";
+    document.head.appendChild(link);
+  };
+
   const getPageKey = () => {
-    const fileName = window.location.pathname.split('/').filter(Boolean).pop() || 'index.html';
+    const fileName = window.location.pathname.split("/").filter(Boolean).pop() || "index.html";
     return fileName.toLowerCase();
   };
 
   const pageLabels = {
-    'build-my-bike.html': 'Build',
-    'led-catalog.html': 'LED Catalog'
+    "build-my-bike.html": "Build",
+    "led-catalog.html": "LED Catalog",
+    "contact.html": "Request Install"
+  };
+
+  const insertAboutDekeLinks = () => {
+    const nav = document.querySelector(".navbar .navbar-nav");
+    if (nav && !nav.querySelector("[data-about-deke-link]")) {
+      const link = document.createElement("a");
+      link.className = "nav-link";
+      link.href = aboutDekeUrl;
+      link.textContent = "About Deke";
+      link.dataset.aboutDekeLink = "true";
+
+      const contactLink = [...nav.querySelectorAll("a")].find((item) =>
+        item.getAttribute("href")?.includes("contact")
+      );
+      nav.insertBefore(link, contactLink || null);
+    }
+
+    const footerRow = document.querySelector("footer .container");
+    const footerLinks = footerRow?.querySelector("span:last-child");
+    if (footerLinks && !footerLinks.querySelector("[data-about-deke-link]")) {
+      footerLinks.append(document.createTextNode(" · "));
+      const footerLink = document.createElement("a");
+      footerLink.href = aboutDekeUrl;
+      footerLink.textContent = "About Deke";
+      footerLink.dataset.aboutDekeLink = "true";
+      footerLinks.appendChild(footerLink);
+    }
   };
 
   const insertBreadcrumbTicker = () => {
     const pageKey = getPageKey();
-    const isHome = document.body.classList.contains('home-page') || pageKey === 'index.html';
-    if (isHome || document.querySelector('.breadcrumb-ticker')) return;
+    const isHome = document.body.classList.contains("home-page") || pageKey === "index.html";
+    if (isHome || document.querySelector(".breadcrumb-ticker")) return;
 
-    const currentLabel = pageLabels[pageKey] || document.title.split('|')[0].trim() || 'Current Page';
-    const ticker = document.createElement('nav');
-    ticker.className = 'breadcrumb-ticker';
-    ticker.setAttribute('aria-label', 'Breadcrumb');
+    const currentLabel = pageLabels[pageKey] || document.title.split("|")[0].trim() || "Current Page";
+    const ticker = document.createElement("nav");
+    ticker.className = "breadcrumb-ticker";
+    ticker.setAttribute("aria-label", "Breadcrumb");
     ticker.innerHTML = `
       <div class="breadcrumb-ticker__rail">
         <ol class="breadcrumb-ticker__list">
-          <li class="breadcrumb-ticker__item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-ticker__item"><a href="${new URL("index.html", siteRoot).href}">Home</a></li>
           <li class="breadcrumb-ticker__item"><span aria-current="page">${currentLabel}</span></li>
         </ol>
       </div>
     `;
 
-    const banner = document.querySelector('header');
+    const banner = document.querySelector("header");
     if (banner) {
-      banner.insertAdjacentElement('afterend', ticker);
+      banner.insertAdjacentElement("afterend", ticker);
       return;
     }
 
-    document.querySelector('main')?.insertAdjacentElement('beforebegin', ticker);
+    document.querySelector("main")?.insertAdjacentElement("beforebegin", ticker);
   };
 
   const bindNavigationFlare = () => {
-    document.querySelectorAll('.navbar .nav-link').forEach((link) => {
-      link.addEventListener('click', () => {
-        link.classList.remove('nav-link--flare-click');
+    document.querySelectorAll(".navbar .nav-link").forEach((link) => {
+      link.addEventListener("click", () => {
+        link.classList.remove("nav-link--flare-click");
         void link.offsetWidth;
-        link.classList.add('nav-link--flare-click');
-        window.setTimeout(() => link.classList.remove('nav-link--flare-click'), 560);
+        link.classList.add("nav-link--flare-click");
+        window.setTimeout(() => link.classList.remove("nav-link--flare-click"), 560);
       });
     });
   };
 
+  loadMotionCompatibility();
+  insertAboutDekeLinks();
   insertBreadcrumbTicker();
   bindNavigationFlare();
 
-  const button = document.querySelector('.site-guide-button');
-  const panel = document.getElementById('siteGuidePanel');
-  const close = panel?.querySelector('.site-guide-close');
-  if (!button || !panel || !close) return;
+  const button = document.querySelector(".site-guide-button");
+  const panel = document.getElementById("siteGuidePanel");
+  const close = panel?.querySelector(".site-guide-close");
+  if (!button) return;
+
+  let scrollTimer = 0;
+  window.addEventListener("scroll", () => {
+    button.classList.add("is-searching");
+    window.clearTimeout(scrollTimer);
+    scrollTimer = window.setTimeout(() => button.classList.remove("is-searching"), 420);
+  }, { passive: true });
+
+  if (panel && !panel.querySelector("[data-about-deke-link]")) {
+    const aboutLink = document.createElement("a");
+    aboutLink.href = aboutDekeUrl;
+    aboutLink.textContent = "About Deke";
+    aboutLink.dataset.aboutDekeLink = "true";
+    panel.appendChild(aboutLink);
+  }
+
+  if (!panel || !close) return;
 
   const setOpen = (open) => {
     panel.hidden = !open;
-    button.setAttribute('aria-expanded', String(open));
-    if (open) panel.querySelector('a')?.focus();
+    button.setAttribute("aria-expanded", String(open));
+    if (open) panel.querySelector("a")?.focus();
   };
 
-  button.addEventListener('click', () => setOpen(panel.hidden));
-  close.addEventListener('click', () => { setOpen(false); button.focus(); });
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && !panel.hidden) { setOpen(false); button.focus(); }
+  button.addEventListener("click", () => setOpen(panel.hidden));
+  close.addEventListener("click", () => {
+    setOpen(false);
+    button.focus();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !panel.hidden) {
+      setOpen(false);
+      button.focus();
+    }
   });
 })();
