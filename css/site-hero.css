@@ -1,144 +1,181 @@
 /*
- * Shared hero and LED-banner presentation.
- * Loaded across the site so page-specific styles cannot make one header feel
- * unrelated to the others.
+ * One shared hero, LED-banner and breadcrumb alignment system.
+ * Every page follows the same Bootstrap container edge as the navbar brand.
  */
 
-.hero > .container.hero-led-stack,
-.hero > .container > .hero-led-stack {
-  width: min(450px, calc(100vw - 2rem)) !important;
-  max-width: 450px !important;
-  margin-right: auto !important;
-  margin-left: 0 !important;
+:root {
+  --site-hero-banner-width: 450px;
 }
 
-/* About Deke uses the same compact header height and banner typography. */
+/* Match Bootstrap's container width and left/right gutters exactly. */
+.hero > .container.hero-led-stack,
+.breadcrumb-ticker__rail {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-right: auto !important;
+  margin-left: auto !important;
+  padding-right: calc(var(--bs-gutter-x, 1.5rem) * .5) !important;
+  padding-left: calc(var(--bs-gutter-x, 1.5rem) * .5) !important;
+}
+
+/* Pages where the Bootstrap container is also the LED stack. */
+.hero > .container.hero-led-stack {
+  display: grid;
+  justify-items: start;
+  align-content: center;
+  gap: .68rem;
+}
+
+.hero > .container.hero-led-stack > .hero-led-banner {
+  width: min(var(--site-hero-banner-width), 100%);
+}
+
+/* About Deke uses a normal container with the LED stack nested inside it. */
+.hero > .container:not(.hero-led-stack) > .hero-led-stack {
+  width: min(var(--site-hero-banner-width), 100%) !important;
+  max-width: var(--site-hero-banner-width) !important;
+  margin: 0 !important;
+}
+
+/* One slightly taller header height for Home, Build, Catalog, Contact and About. */
+.hero,
 .deke-page .deke-hero {
-  min-height: clamp(310px, 34vw, 390px) !important;
+  min-height: clamp(450px, 43vw, 525px) !important;
+  max-height: none !important;
+  align-items: center !important;
+  padding-top: 1.75rem !important;
+  padding-bottom: 1.75rem !important;
   background-position: center center !important;
 }
 
+.hero .container,
+.deke-page .deke-hero .container {
+  padding-top: .85rem !important;
+  padding-bottom: .85rem !important;
+}
+
+/* Remove the About-only dark overlay so its header reads like the shared hero. */
 .deke-page .deke-hero::after {
   display: none !important;
 }
 
-.deke-page .deke-hero .container {
-  z-index: 2;
+/* Keep identical banner proportions and type on every page. */
+.hero-led-stack {
+  gap: .68rem !important;
 }
 
-.deke-page .deke-hero .hero-led-stack {
-  width: min(450px, calc(100vw - 2rem)) !important;
-  max-width: 450px !important;
+.hero-led-banner {
+  min-height: clamp(3.35rem, 5.4vw, 4.35rem) !important;
 }
 
+.hero-led-banner--headline {
+  min-height: clamp(4rem, 6.5vw, 5.15rem) !important;
+}
+
+.hero-led-banner__message,
 .deke-page .deke-hero .hero-led-banner__message {
   font-size: clamp(1rem, 2.4vw, 1.85rem) !important;
 }
 
+.hero-led-banner--headline .hero-led-banner__message,
 .deke-page .deke-hero .hero-led-banner--headline .hero-led-banner__message {
   font-size: clamp(1.3rem, 3.5vw, 2.65rem) !important;
 }
 
+.hero-led-banner--details .hero-led-banner__message,
 .deke-page .deke-hero .hero-led-banner--details .hero-led-banner__message {
   font-size: clamp(.9rem, 2vw, 1.45rem) !important;
 }
 
-/*
- * Home carousel: keep each full 16:9 scene visible on the right instead of
- * filling the shallow header with a heavily cropped cover image. A darker,
- * blurred copy fills the stage behind it and preserves the cinematic width.
- */
-.home-page .hero {
-  min-height: clamp(430px, 46vw, 560px) !important;
-  max-height: min(72svh, 560px);
-}
-
+/* Revert the experimental blurred/contained carousel treatment. */
 .hero-carousel__scene {
   overflow: hidden;
   background: #030918;
 }
 
 .hero-carousel__scene::before {
-  content: "";
-  position: absolute;
-  inset: -5%;
-  z-index: 0;
-  background-position: center;
-  background-size: cover;
-  filter: blur(18px) brightness(.46) saturate(.92);
-  transform: scale(1.08);
-}
-
-.hero-carousel__scene:nth-child(1)::before {
-  background-image: linear-gradient(90deg, rgba(3,9,24,.96), rgba(3,9,24,.25)), url('../assets/images/hero-scene-work.webp');
-}
-
-.hero-carousel__scene:nth-child(2)::before {
-  background-image: linear-gradient(90deg, rgba(3,9,24,.96), rgba(3,9,24,.25)), url('../assets/images/hero-scene-school.webp');
-}
-
-.hero-carousel__scene:nth-child(3)::before {
-  background-image: linear-gradient(90deg, rgba(3,9,24,.96), rgba(3,9,24,.25)), url('../assets/images/hero-scene-dance.webp');
-}
-
-.hero-carousel__scene:nth-child(4)::before {
-  background-image: linear-gradient(90deg, rgba(3,9,24,.96), rgba(3,9,24,.25)), url('../assets/images/hero-scene-marina.webp');
-}
-
-.hero-carousel__scene:nth-child(5)::before {
-  background-image: linear-gradient(90deg, rgba(3,9,24,.96), rgba(3,9,24,.25)), url('../assets/images/hero-scene-led-ride.webp');
+  content: none !important;
+  display: none !important;
 }
 
 .hero-carousel__scene img {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  padding: clamp(.3rem, .8vw, .7rem) clamp(.3rem, 1vw, 1rem);
-  object-fit: contain !important;
-  object-position: right center !important;
-  filter: saturate(.98) brightness(.9) contrast(1.04) drop-shadow(0 18px 36px rgba(0,0,0,.34));
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  opacity: 1 !important;
+  filter: saturate(.92) brightness(.84) contrast(1.06) !important;
 }
 
 .hero-carousel__scene.is-active img {
-  animation: hero-scene-presence var(--scene-duration, 8000ms) ease-out both !important;
+  animation: hero-scene-drift var(--scene-duration, 8000ms) ease-out both !important;
 }
 
-@keyframes hero-scene-presence {
-  from { transform: scale(.955) translate3d(.7%, 0, 0); }
-  to { transform: scale(1) translate3d(0, 0, 0); }
+/* Breadcrumb text begins on the same vertical line as the navbar brand and banners. */
+.breadcrumb-ticker__rail {
+  padding-top: .62rem !important;
+  padding-bottom: .62rem !important;
+}
+
+@media (min-width: 576px) {
+  .hero > .container.hero-led-stack,
+  .breadcrumb-ticker__rail { max-width: 540px !important; }
+}
+
+@media (min-width: 768px) {
+  .hero > .container.hero-led-stack,
+  .breadcrumb-ticker__rail { max-width: 720px !important; }
+}
+
+@media (min-width: 992px) {
+  .hero > .container.hero-led-stack,
+  .breadcrumb-ticker__rail { max-width: 960px !important; }
+}
+
+@media (min-width: 1200px) {
+  .hero > .container.hero-led-stack,
+  .breadcrumb-ticker__rail { max-width: 1140px !important; }
+}
+
+@media (min-width: 1400px) {
+  .hero > .container.hero-led-stack,
+  .breadcrumb-ticker__rail { max-width: 1320px !important; }
 }
 
 @media (max-width: 991.98px) {
+  .hero,
   .deke-page .deke-hero {
-    min-height: clamp(300px, 56vw, 370px) !important;
-  }
-
-  .home-page .hero {
-    min-height: clamp(420px, 68vw, 540px) !important;
-    max-height: min(74svh, 540px);
+    min-height: clamp(430px, 63vw, 500px) !important;
+    padding-top: 1.45rem !important;
+    padding-bottom: 1.45rem !important;
   }
 
   .hero-carousel__scene img {
     object-position: center center !important;
-    opacity: .9;
   }
 }
 
 @media (max-width: 575.98px) {
+  .hero,
   .deke-page .deke-hero {
-    min-height: 300px !important;
+    min-height: 420px !important;
+    padding-top: 1.15rem !important;
+    padding-bottom: 1.15rem !important;
   }
 
-  .home-page .hero {
-    min-height: clamp(410px, 118vw, 500px) !important;
-    max-height: min(76svh, 500px);
+  .hero > .container.hero-led-stack,
+  .breadcrumb-ticker__rail {
+    padding-right: .75rem !important;
+    padding-left: .75rem !important;
   }
 
-  .hero-carousel__scene img {
-    padding: .25rem;
-    object-position: center center !important;
-    opacity: .82;
+  .hero-led-banner {
+    min-height: 3.25rem !important;
+  }
+
+  .hero-led-banner--headline {
+    min-height: 4rem !important;
   }
 }
 
