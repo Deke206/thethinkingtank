@@ -8,16 +8,20 @@
   const siteRoot = new URL("../", scriptUrl);
 
   const motionCssUrl = new URL("css/site-motion.css?v=20260723-real-chuck-frames", siteRoot).href;
-  const heroCssUrl = new URL("css/site-hero.css?v=20260724-bright-carousel-repair", siteRoot).href;
+  const heroCssUrl = new URL("css/site-hero.css?v=20260724-random-matrix-ribbons", siteRoot).href;
   const chuckCssUrl = new URL("css/about-deke-chuck.css?v=20260724-sitewide-chuck-200", siteRoot).href;
-  const chuckComponentUrl = new URL("js/about-deke-chuck.js?v=20260724-restored-sitewide-chuck", siteRoot).href;
+  const chuckComponentUrl = new URL("js/about-deke-chuck.js?v=20260724-random-matrix-ribbons", siteRoot).href;
   const bikeBuilderUpgradeUrl = new URL("js/bike-builder-upgrade.js?v=20260723-liveview-upgrade", siteRoot).href;
   const bikeBuilderSizeHotfixUrl = new URL("js/bike-builder-size-hotfix.js?v=20260724-primary-only-small-frames", siteRoot).href;
   const aboutDekeUrl = new URL("aboutmeDeke/", siteRoot).href;
   const homeBuilderUrl = new URL("build-my-home.html", siteRoot).href;
 
   const loadSharedStylesheet = (href, dataAttribute) => {
-    if (document.querySelector(`link[${dataAttribute}]`)) return;
+    const existing = document.querySelector(`link[${dataAttribute}]`);
+    if (existing) {
+      if (existing.href !== href) existing.href = href;
+      return;
+    }
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = href;
