@@ -5,7 +5,7 @@
   const scriptUrl = scriptElement?.src ? new URL(scriptElement.src, window.location.href) : null;
   const siteRoot = scriptUrl ? new URL("../", scriptUrl) : new URL("./", window.location.href);
   const motionCssUrl = new URL("css/site-motion.css?v=20260723-real-chuck-frames", siteRoot).href;
-  const heroCssUrl = new URL("css/site-hero.css?v=20260723-uniform-carousel", siteRoot).href;
+  const heroCssUrl = new URL("css/site-hero.css?v=20260723-uniform-header-v2", siteRoot).href;
   const chuckSpriteUrl = new URL("js/chuck-sprite.js?v=20260723-real-chuck-frames", siteRoot).href;
   const scanAtlasUrl = new URL("assets/brand/chuck-search-map.webp?v=20260723", siteRoot).href;
   const laptopAtlasUrl = new URL("assets/brand/chuck-search-laptop.webp?v=20260723", siteRoot).href;
