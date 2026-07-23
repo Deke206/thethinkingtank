@@ -1,6 +1,18 @@
 (() => {
   "use strict";
 
+  const scriptElement = document.currentScript;
+  const scriptUrl = scriptElement?.src ? new URL(scriptElement.src, window.location.href) : null;
+  const siteRoot = scriptUrl ? new URL("../", scriptUrl) : new URL("../", window.location.href);
+
+  if (!document.querySelector('link[data-shynetyme-motion]')) {
+    const motionLink = document.createElement("link");
+    motionLink.rel = "stylesheet";
+    motionLink.href = new URL("css/site-motion.css?v=20260723-dex-motion-fix", siteRoot).href;
+    motionLink.dataset.shynetymeMotion = "true";
+    document.head.appendChild(motionLink);
+  }
+
   const widget = document.getElementById("dekeChuckWidget");
   const trigger = document.getElementById("dekeChuckTrigger");
   const thought = document.getElementById("dekeChuckThought");
@@ -99,11 +111,7 @@
 
   trigger.addEventListener("click", () => {
     widget.classList.remove("is-searching");
-    if (thought.classList.contains("is-visible")) {
-      showNextMessage();
-    } else {
-      showNextMessage();
-    }
+    showNextMessage();
   });
 
   close.addEventListener("click", hideThought);
