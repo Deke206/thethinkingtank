@@ -8,6 +8,7 @@
   const heroCssUrl = new URL("css/site-hero.css?v=20260723-uniform-header-v2", siteRoot).href;
   const chuckSpriteUrl = new URL("js/chuck-sprite.js?v=20260723-real-chuck-frames", siteRoot).href;
   const bikeBuilderUpgradeUrl = new URL("js/bike-builder-upgrade.js?v=20260723-liveview-upgrade", siteRoot).href;
+  const bikeBuilderSizeHotfixUrl = new URL("js/bike-builder-size-hotfix.js?v=20260723-preserve-child-sizes", siteRoot).href;
   const scanAtlasUrl = new URL("assets/brand/chuck-search-map.webp?v=20260723", siteRoot).href;
   const laptopAtlasUrl = new URL("assets/brand/chuck-search-laptop.webp?v=20260723", siteRoot).href;
   const aboutDekeUrl = new URL("aboutmeDeke/", siteRoot).href;
@@ -26,12 +27,27 @@
     loadSharedStylesheet(heroCssUrl, "data-shynetyme-hero");
   };
 
+  const loadBikeBuilderSizeHotfix = () => {
+    if (document.querySelector("script[data-bike-builder-size-hotfix]")) return;
+    const script = document.createElement("script");
+    script.src = bikeBuilderSizeHotfixUrl;
+    script.defer = true;
+    script.dataset.bikeBuilderSizeHotfix = "true";
+    document.body.appendChild(script);
+  };
+
   const loadBikeBuilderUpgrade = () => {
-    if (!document.getElementById("bikeBuilderForm") || document.querySelector("script[data-bike-builder-upgrade]")) return;
+    if (!document.getElementById("bikeBuilderForm")) return;
+    const existing = document.querySelector("script[data-bike-builder-upgrade]");
+    if (existing) {
+      existing.addEventListener("load", loadBikeBuilderSizeHotfix, { once: true });
+      return;
+    }
     const script = document.createElement("script");
     script.src = bikeBuilderUpgradeUrl;
     script.defer = true;
     script.dataset.bikeBuilderUpgrade = "true";
+    script.addEventListener("load", loadBikeBuilderSizeHotfix, { once: true });
     document.body.appendChild(script);
   };
 
