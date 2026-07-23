@@ -4,15 +4,16 @@
   if (window.ShynetymeChuck?.mounted) return;
 
   const scriptElement = document.currentScript;
-  const scriptUrl = scriptElement?.src ? new URL(scriptElement.src, window.location.href) : null;
-  const siteRoot = scriptUrl ? new URL("../", scriptUrl) : new URL("./", window.location.href);
+  const scriptUrl = scriptElement?.src
+    ? new URL(scriptElement.src, window.location.href)
+    : new URL("js/about-deke-chuck.js", window.location.href);
+  const siteRoot = new URL("../", scriptUrl);
+
   const chuckCssUrl = new URL("css/about-deke-chuck.css?v=20260724-sitewide-chuck-200", siteRoot).href;
-  const chuckSpriteUrl = new URL("js/chuck-sprite.js?v=20260723-real-chuck-frames", siteRoot).href;
+  const chuckSpriteUrl = new URL("js/chuck-sprite.js?v=20260724-real-chuck-frames", siteRoot).href;
   const scanAtlasUrl = new URL("assets/brand/chuck-search-map.webp?v=20260723", siteRoot).href;
   const laptopAtlasUrl = new URL("assets/brand/chuck-search-laptop.webp?v=20260723", siteRoot).href;
   const fallbackImageUrl = new URL("assets/brand/pet-chuck-mark.png", siteRoot).href;
-  const motionCssUrl = new URL("css/site-motion.css?v=20260723-real-chuck-frames", siteRoot).href;
-  const heroCssUrl = new URL("css/site-hero.css?v=20260723-uniform-header-v2", siteRoot).href;
 
   const loadStylesheet = (href, dataAttribute) => {
     if (document.querySelector(`link[${dataAttribute}]`)) return;
@@ -23,8 +24,6 @@
     document.head.appendChild(link);
   };
 
-  loadStylesheet(motionCssUrl, "data-shynetyme-motion");
-  loadStylesheet(heroCssUrl, "data-shynetyme-hero");
   loadStylesheet(chuckCssUrl, "data-shynetyme-chuck");
 
   const removeRetiredGuide = () => {
@@ -33,7 +32,10 @@
 
   const ensureWidget = () => {
     const existing = document.getElementById("dekeChuckWidget");
-    if (existing) return existing;
+    if (existing) {
+      removeRetiredGuide();
+      return existing;
+    }
 
     removeRetiredGuide();
 
@@ -144,6 +146,7 @@
     window.clearTimeout(hideTimer);
     thought.classList.remove("is-visible");
     trigger.setAttribute("aria-expanded", "false");
+
     window.setTimeout(() => {
       if (!thought.classList.contains("is-visible")) thought.hidden = true;
     }, 360);
@@ -161,6 +164,7 @@
     action.textContent = message.label;
     action.href = message.href;
     thought.hidden = false;
+
     window.requestAnimationFrame(() => {
       thought.classList.add("is-visible");
       trigger.setAttribute("aria-expanded", "true");
@@ -195,6 +199,7 @@
     chuckAnimation?.stop();
     showNextMessage();
   });
+
   close.addEventListener("click", hideThought);
   window.addEventListener("scroll", handleScroll, { passive: true });
 
@@ -216,5 +221,5 @@
     window.clearTimeout(revealTimer);
   });
 
-  window.ShynetymeChuck = { mounted: true, widget };
+  window.ShynetymeChuck = { mounted: true, widget, showNextMessage, hideThought };
 })();
