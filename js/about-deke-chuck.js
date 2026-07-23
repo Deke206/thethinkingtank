@@ -1,15 +1,15 @@
 (() => {
   "use strict";
 
+  if (window.ShynetymeChuck?.mounted) return;
+
   const scriptElement = document.currentScript;
   const scriptUrl = scriptElement?.src
     ? new URL(scriptElement.src, window.location.href)
     : new URL("js/about-deke-chuck.js", window.location.href);
   const siteRoot = new URL("../", scriptUrl);
 
-  const chuckCssUrl = new URL("css/about-deke-chuck.css?v=20260724-sitewide-chuck-200", siteRoot).href;
-  const heroCssUrl = new URL("css/site-hero.css?v=20260724-random-matrix-ribbons", siteRoot).href;
-  const matrixScriptUrl = new URL("js/site-led-matrix.js?v=20260724-random-matrix-ribbons", siteRoot).href;
+  const chuckCssUrl = new URL("css/about-deke-chuck.css?v=20260724-bottom-only-chuck", siteRoot).href;
   const chuckSpriteUrl = new URL("js/chuck-sprite.js?v=20260724-real-chuck-frames", siteRoot).href;
   const scanAtlasUrl = new URL("assets/brand/chuck-search-map.webp?v=20260723", siteRoot).href;
   const laptopAtlasUrl = new URL("assets/brand/chuck-search-laptop.webp?v=20260723", siteRoot).href;
@@ -21,6 +21,7 @@
       if (existing.href !== href) existing.href = href;
       return;
     }
+
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = href;
@@ -28,29 +29,7 @@
     document.head.appendChild(link);
   };
 
-  const loadLedMatrix = () => {
-    if (window.ShynetymeLedMatrix) {
-      window.ShynetymeLedMatrix.init();
-      return;
-    }
-    const existing = document.querySelector("script[data-shynetyme-led-matrix]");
-    if (existing) {
-      existing.addEventListener("load", () => window.ShynetymeLedMatrix?.init(), { once: true });
-      return;
-    }
-    const script = document.createElement("script");
-    script.src = matrixScriptUrl;
-    script.defer = true;
-    script.dataset.shynetymeLedMatrix = "true";
-    script.addEventListener("load", () => window.ShynetymeLedMatrix?.init(), { once: true });
-    document.head.appendChild(script);
-  };
-
   loadStylesheet(chuckCssUrl, "data-shynetyme-chuck");
-  loadStylesheet(heroCssUrl, "data-shynetyme-hero");
-  loadLedMatrix();
-
-  if (window.ShynetymeChuck?.mounted) return;
 
   const removeRetiredGuide = () => {
     document.querySelectorAll(".site-guide-button, #siteGuidePanel").forEach((element) => element.remove());
@@ -68,7 +47,6 @@
     const widget = document.createElement("div");
     widget.className = "deke-chuck-widget";
     widget.id = "dekeChuckWidget";
-    widget.setAttribute("aria-live", "polite");
     widget.innerHTML = `
       <div class="deke-chuck-thought deke-chuck-thought--yellow" id="dekeChuckThought" role="status" aria-live="polite" hidden>
         <button class="deke-chuck-thought__close" id="dekeChuckClose" type="button" aria-label="Close Chuck's message">×</button>
@@ -79,6 +57,7 @@
         <span class="deke-chuck-search-light" aria-hidden="true"></span>
         <img src="${fallbackImageUrl}" width="118" height="118" alt="Chuck, the ShyneTyme Works robot-cat helper">
       </button>`;
+
     document.body.appendChild(widget);
     return widget;
   };
@@ -145,10 +124,9 @@
 
   let chuckAnimation = null;
   let messageIndex = -1;
-  let previousScrollY = window.scrollY;
-  let scrollTimer = 0;
-  let hideTimer = 0;
-  let revealTimer = 0;
+  let bottomPromptShown = false;
+  let bottomObserver = null;
+  let fallbackScrollHandler = null;
 
   loadChuckSprite().then((spriteApi) => {
     chuckAnimation = spriteApi?.mount({
@@ -157,6 +135,7 @@
       scanUrl: scanAtlasUrl,
       laptopUrl: laptopAtlasUrl
     }) || null;
+    chuckAnimation?.stop();
   });
 
   const setColor = (color) => {
@@ -169,18 +148,12 @@
   };
 
   const hideThought = () => {
-    window.clearTimeout(hideTimer);
     thought.classList.remove("is-visible");
     trigger.setAttribute("aria-expanded", "false");
 
     window.setTimeout(() => {
       if (!thought.classList.contains("is-visible")) thought.hidden = true;
     }, 360);
-  };
-
-  const scheduleHide = () => {
-    window.clearTimeout(hideTimer);
-    hideTimer = window.setTimeout(hideThought, 6800);
   };
 
   const showMessage = (index) => {
@@ -194,7 +167,6 @@
     window.requestAnimationFrame(() => {
       thought.classList.add("is-visible");
       trigger.setAttribute("aria-expanded", "true");
-      scheduleHide();
     });
   };
 
@@ -203,48 +175,41 @@
     showMessage(messageIndex);
   };
 
-  const handleScroll = () => {
-    const currentScrollY = window.scrollY;
-    const mode = currentScrollY < previousScrollY ? "scan" : "laptop";
-    previousScrollY = currentScrollY;
-
-    widget.classList.add("is-searching");
-    chuckAnimation?.start(mode);
-    hideThought();
-    window.clearTimeout(scrollTimer);
-
-    scrollTimer = window.setTimeout(() => {
-      widget.classList.remove("is-searching");
-      chuckAnimation?.stop();
-      showNextMessage();
-    }, 620);
+  const showBottomPromptOnce = () => {
+    if (bottomPromptShown) return;
+    bottomPromptShown = true;
+    showNextMessage();
+    bottomObserver?.disconnect();
+    if (fallbackScrollHandler) window.removeEventListener("scroll", fallbackScrollHandler);
   };
 
-  trigger.addEventListener("click", () => {
-    widget.classList.remove("is-searching");
-    chuckAnimation?.stop();
-    showNextMessage();
-  });
+  const bottomTarget = document.querySelector("footer") || document.querySelector("main > :last-child") || document.body;
 
+  if ("IntersectionObserver" in window) {
+    bottomObserver = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) showBottomPromptOnce();
+    }, { rootMargin: "0px 0px 120px 0px", threshold: 0.08 });
+    bottomObserver.observe(bottomTarget);
+  } else {
+    fallbackScrollHandler = () => {
+      const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 120;
+      if (nearBottom) showBottomPromptOnce();
+    };
+    window.addEventListener("scroll", fallbackScrollHandler, { passive: true });
+    fallbackScrollHandler();
+  }
+
+  trigger.addEventListener("click", showNextMessage);
   close.addEventListener("click", hideThought);
-  window.addEventListener("scroll", handleScroll, { passive: true });
-
-  thought.addEventListener("pointerenter", () => window.clearTimeout(hideTimer));
-  thought.addEventListener("pointerleave", scheduleHide);
-  thought.addEventListener("focusin", () => window.clearTimeout(hideTimer));
-  thought.addEventListener("focusout", scheduleHide);
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") hideThought();
   });
 
-  revealTimer = window.setTimeout(showNextMessage, 1200);
-
   window.addEventListener("pagehide", () => {
     chuckAnimation?.stop();
-    window.clearTimeout(scrollTimer);
-    window.clearTimeout(hideTimer);
-    window.clearTimeout(revealTimer);
+    bottomObserver?.disconnect();
+    if (fallbackScrollHandler) window.removeEventListener("scroll", fallbackScrollHandler);
   });
 
   window.ShynetymeChuck = { mounted: true, widget, showNextMessage, hideThought };
