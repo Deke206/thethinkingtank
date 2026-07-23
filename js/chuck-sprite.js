@@ -2,22 +2,17 @@
   "use strict";
 
   const FRAME_COUNT = 6;
-  const FRAME_INTERVAL_MS = 82;
+  const FRAME_INTERVAL_MS = 74;
   const FRAME_STEP_PERCENT = 100 / (FRAME_COUNT - 1);
   const instances = new WeakMap();
-
-  const preload = (url, onReady) => {
-    const image = new Image();
-    image.decoding = "async";
-    image.onload = onReady;
-    image.src = url;
-    return image;
-  };
 
   const mount = ({ button, image, scanUrl, laptopUrl }) => {
     if (!button || !image || !scanUrl || !laptopUrl) return null;
     if (instances.has(button)) return instances.get(button);
 
+    // Kill the old stiff-image rocking immediately. The atlas is now the only
+    // visible Chuck artwork inside the button.
+    image.style.setProperty("display", "none", "important");
     image.style.setProperty("animation", "none", "important");
     image.style.setProperty("transform", "none", "important");
 
@@ -25,62 +20,45 @@
     sprite.className = "chuck-frame-sprite";
     sprite.setAttribute("aria-hidden", "true");
     Object.assign(sprite.style, {
+      position: "absolute",
+      inset: "0",
       display: "block",
-      width: "92%",
+      width: "100%",
       height: "100%",
-      margin: "0 auto",
-      opacity: "0",
+      opacity: "1",
+      backgroundImage: `url("${scanUrl}")`,
       backgroundRepeat: "no-repeat",
       backgroundSize: "600% 100%",
       backgroundPosition: "0% center",
       filter: "drop-shadow(0 0 9px rgba(49, 230, 255, .82))",
       pointerEvents: "none",
-      transition: "opacity 120ms ease"
+      zIndex: "1"
     });
     image.insertAdjacentElement("afterend", sprite);
 
+    // Warm both atlases without making their load timing control visibility.
+    [scanUrl, laptopUrl].forEach((url) => {
+      const preload = new Image();
+      preload.decoding = "async";
+      preload.src = url;
+    });
+
     const urls = { scan: scanUrl, laptop: laptopUrl };
-    const ready = { scan: false, laptop: false };
     let mode = "scan";
     let frame = 0;
     let running = false;
     let rafId = 0;
     let lastFrameAt = 0;
 
-    const revealSprite = () => {
-      if (!ready.scan && !ready.laptop) return;
-      sprite.style.opacity = "1";
-      image.style.setProperty("display", "none", "important");
-    };
-
-    preload(scanUrl, () => {
-      ready.scan = true;
-      if (!sprite.style.backgroundImage) sprite.style.backgroundImage = `url("${scanUrl}")`;
-      revealSprite();
-    });
-
-    preload(laptopUrl, () => {
-      ready.laptop = true;
-      revealSprite();
-    });
-
     const setFrame = (index) => {
-      frame = index % FRAME_COUNT;
+      frame = ((index % FRAME_COUNT) + FRAME_COUNT) % FRAME_COUNT;
       sprite.style.backgroundPosition = `${frame * FRAME_STEP_PERCENT}% center`;
     };
 
     const setMode = (nextMode) => {
       const requested = nextMode === "laptop" ? "laptop" : "scan";
-      const usable = ready[requested]
-        ? requested
-        : ready.scan
-          ? "scan"
-          : ready.laptop
-            ? "laptop"
-            : requested;
-
-      if (usable === mode && sprite.style.backgroundImage) return;
-      mode = usable;
+      if (requested === mode && sprite.style.backgroundImage) return;
+      mode = requested;
       sprite.style.backgroundImage = `url("${urls[mode]}")`;
       setFrame(0);
     };
@@ -97,6 +75,7 @@
     const api = {
       start(nextMode = "scan") {
         setMode(nextMode);
+        button.classList.add("has-live-chuck-frames");
         if (running) return;
         running = true;
         lastFrameAt = 0;
@@ -105,6 +84,7 @@
       stop() {
         running = false;
         window.cancelAnimationFrame(rafId);
+        button.classList.remove("has-live-chuck-frames");
         setFrame(0);
       },
       setMode
