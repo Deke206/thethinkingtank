@@ -137,10 +137,10 @@
     if (!nav) return;
 
     const originalChildren = [...nav.children];
-    const buildIndexes = originalChildren
-      .map((child, index) => isStandaloneBuilderItem(child) ? index : -1)
-      .filter((index) => index >= 0);
-    const insertionIndex = buildIndexes.length ? Math.min(...buildIndexes) : 0;
+    const firstBuildIndex = originalChildren.findIndex(isStandaloneBuilderItem);
+    const followingKeptItem = firstBuildIndex >= 0
+      ? originalChildren.slice(firstBuildIndex + 1).find((child) => !isEffectsNavigationItem(child) && !isStandaloneBuilderItem(child))
+      : originalChildren.find((child) => !isEffectsNavigationItem(child));
 
     originalChildren.forEach((child) => {
       if (isEffectsNavigationItem(child) || isStandaloneBuilderItem(child)) child.remove();
@@ -163,14 +163,18 @@
         <li><a class="dropdown-item${homeActive ? " active" : ""}"${homeActive ? " aria-current=\"page\"" : ""} href="${homeBuilderUrl}">Home Builder</a></li>
       </ul>`;
 
-    const remainingChildren = [...nav.children];
-    nav.insertBefore(dropdown, remainingChildren[insertionIndex] || null);
+    nav.insertBefore(dropdown, followingKeptItem?.isConnected ? followingKeptItem : null);
   };
 
   const insertAboutDekeLinks = () => {
     const nav = document.querySelector(".navbar .navbar-nav");
+    const hasAboutLink = nav && [...nav.querySelectorAll("a")].some((item) => {
+      const label = item.textContent.trim().toLowerCase();
+      const href = item.getAttribute("href") || "";
+      return label === "about deke" || href.toLowerCase().includes("aboutmedeke");
+    });
 
-    if (nav && !nav.querySelector("[data-about-deke-link]") && ![...nav.querySelectorAll("a")].some((item) => item.getAttribute("href")?.includes("aboutmeDeke"))) {
+    if (nav && !hasAboutLink) {
       const link = document.createElement("a");
       link.className = "nav-link";
       link.href = aboutDekeUrl;
@@ -184,7 +188,7 @@
     const footerRow = document.querySelector("footer .container");
     const footerLinks = footerRow?.querySelector("span:last-child");
 
-    if (footerLinks && !footerLinks.querySelector("[data-about-deke-link]")) {
+    if (footerLinks && !footerLinks.querySelector("[data-about-deke-link]") && ![...footerLinks.querySelectorAll("a")].some((item) => item.textContent.trim().toLowerCase() === "about deke")) {
       footerLinks.append(document.createTextNode(" · "));
       const footerLink = document.createElement("a");
       footerLink.href = aboutDekeUrl;
