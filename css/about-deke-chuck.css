@@ -1,4 +1,4 @@
-/* About Deke: animated Chuck helper with rotating thought balloons. */
+/* Shared animated Chuck helper used throughout ShyneTyme.Works. */
 .deke-chuck-widget {
   position: fixed;
   right: clamp(.65rem, 2vw, 1.15rem);
@@ -33,7 +33,7 @@
   transition: transform .2s ease, box-shadow .2s ease;
 }
 
-/* The rotating ring now sits IN FRONT of the sprite and masks its hard outer edges. */
+/* Front ring and inner rim conceal the rectangular sprite boundary. */
 .deke-chuck-trigger::before {
   content: "";
   position: absolute;
@@ -49,12 +49,10 @@
     0 0 0 3px rgba(4,0,13,.92),
     0 0 14px rgba(49,230,255,.48),
     inset 0 0 10px rgba(0,0,0,.92);
-  filter: none;
   pointer-events: none;
   animation: deke-chuck-orbit 5s linear infinite;
 }
 
-/* A dark inner rim covers the last visible square corners while Chuck keeps animating. */
 .deke-chuck-trigger::after {
   content: "";
   position: absolute;
@@ -82,7 +80,6 @@
   animation: none;
 }
 
-/* The live six-frame sprite keeps its animation, but its hard rectangular edges fade away. */
 .deke-chuck-trigger .chuck-frame-sprite {
   position: absolute !important;
   inset: 5px 7px 4px !important;
@@ -111,10 +108,6 @@
 
 .deke-chuck-trigger:active {
   transform: translateY(3px) scale(.99);
-  box-shadow:
-    0 2px 0 #351054,
-    0 8px 17px rgba(0,0,0,.45),
-    0 0 22px rgba(49,230,255,.44);
 }
 
 .deke-chuck-trigger:focus-visible {
@@ -130,7 +123,7 @@
   width: 34px;
   height: 34px;
   opacity: 0;
-  border: 2px solid var(--cyan);
+  border: 2px solid var(--cyan, #31e6ff);
   border-radius: 50%;
   background: rgba(3,9,24,.9);
   box-shadow: 0 0 14px rgba(49,230,255,.8), inset 0 0 10px rgba(49,230,255,.32);
@@ -146,7 +139,7 @@
   width: 15px;
   height: 4px;
   border-radius: 999px;
-  background: var(--cyan);
+  background: var(--cyan, #31e6ff);
   box-shadow: 0 0 8px rgba(49,230,255,.8);
   transform: rotate(47deg);
 }
@@ -156,7 +149,6 @@
   transform: translate(0, 0) scale(1);
 }
 
-/* Never fall back to rocking the old square image. */
 .deke-chuck-widget.is-searching .deke-chuck-trigger img {
   transform: none !important;
   animation: none !important;
@@ -166,17 +158,24 @@
   animation-duration: 1.25s;
 }
 
+/* All three colored thought clouds share the same exact 200px size. */
 .deke-chuck-thought {
-  --thought-bg-1: #fff1a6;
-  --thought-bg-2: #ffc95c;
+  --thought-bg-1: #fff3a8;
   --thought-ink: #2b1a00;
-  --thought-glow: rgba(255,197,98,.42);
+  --thought-glow: rgba(255,197,98,.48);
   position: absolute;
   right: 104px;
   bottom: 116px;
   z-index: 9;
-  width: min(340px, calc(100vw - 160px));
-  padding: 1.15rem 1.2rem 1.05rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  max-width: calc(100vw - 150px);
+  min-height: 164px;
+  padding: 2rem 1rem 1.1rem;
   border: 3px solid rgba(255,255,255,.82);
   border-radius: 42% 48% 43% 47% / 38% 42% 46% 44%;
   color: var(--thought-ink);
@@ -185,6 +184,7 @@
     0 18px 38px rgba(0,0,0,.38),
     0 0 26px var(--thought-glow),
     inset 0 1px 0 rgba(255,255,255,.62);
+  text-align: center;
   opacity: 0;
   transform: translate(22px, 18px) scale(.25) rotate(5deg);
   transform-origin: right bottom;
@@ -202,7 +202,6 @@
   box-shadow: 0 0 12px var(--thought-glow);
 }
 
-/* The thought dots lead from the cloud toward Chuck's nearest ear. */
 .deke-chuck-thought::before {
   right: -19px;
   bottom: -9px;
@@ -228,70 +227,70 @@
 
 .deke-chuck-thought--yellow {
   --thought-bg-1: #fff3a8;
-  --thought-bg-2: #ffcb5f;
   --thought-ink: #2b1a00;
   --thought-glow: rgba(255,197,98,.48);
 }
 
 .deke-chuck-thought--pink {
   --thought-bg-1: #ffc0e7;
-  --thought-bg-2: #ff78bf;
   --thought-ink: #321027;
   --thought-glow: rgba(255,90,185,.45);
 }
 
 .deke-chuck-thought--blue {
   --thought-bg-1: #d5f7ff;
-  --thought-bg-2: #8ddfff;
   --thought-ink: #062238;
   --thought-glow: rgba(49,230,255,.42);
 }
 
 .deke-chuck-thought__close {
   position: absolute;
-  top: .5rem;
-  right: .75rem;
-  width: 30px;
-  height: 30px;
+  top: .58rem;
+  right: 50%;
+  width: 28px;
+  height: 28px;
   padding: 0;
   border: 0;
   border-radius: 50%;
   color: var(--thought-ink);
-  background: rgba(255,255,255,.38);
-  font-size: 1.3rem;
+  background: rgba(255,255,255,.4);
+  font-size: 1.2rem;
   font-weight: 900;
   line-height: 1;
   cursor: pointer;
+  transform: translateX(50%);
 }
 
 .deke-chuck-thought__text {
-  margin: 0 1.75rem .75rem .2rem;
+  width: 100%;
+  margin: 0 0 .75rem;
   color: var(--thought-ink);
-  font-family: var(--heading-font);
-  font-size: clamp(.92rem, 2vw, 1.05rem);
+  font-family: var(--heading-font, "Oxanium", system-ui, sans-serif);
+  font-size: .92rem;
   font-weight: 800;
-  line-height: 1.35;
+  line-height: 1.32;
   text-align: center;
   text-wrap: balance;
 }
 
 .deke-chuck-thought__action {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: fit-content;
-  min-height: 40px;
+  min-height: 38px;
   margin: 0 auto;
-  padding: .52rem .82rem;
+  padding: .48rem .78rem;
   border: 1px solid rgba(255,255,255,.42);
   border-radius: .7rem;
   color: #fff;
   background: #06152f;
   box-shadow: 0 4px 0 rgba(0,0,0,.28), 0 0 13px rgba(6,21,47,.22);
-  font-family: var(--heading-font);
-  font-size: .84rem;
+  font-family: var(--heading-font, "Oxanium", system-ui, sans-serif);
+  font-size: .8rem;
   font-weight: 800;
   letter-spacing: .02em;
+  line-height: 1.1;
+  text-align: center;
   text-decoration: none;
   cursor: pointer;
   transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
@@ -345,8 +344,10 @@
   .deke-chuck-thought {
     right: 82px;
     bottom: 92px;
-    width: min(280px, calc(100vw - 126px));
-    padding: 1rem;
+    width: 200px;
+    max-width: calc(100vw - 112px);
+    min-height: 156px;
+    padding: 1.9rem .85rem 1rem;
   }
 
   .deke-chuck-search-light {
