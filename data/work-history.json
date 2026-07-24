@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T03:55:08.861Z",
-  "commitCount": 157,
+  "generatedAt": "2026-07-24T03:55:23.265Z",
+  "commitCount": 158,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -788,6 +788,11 @@
       "sha": "46bff39fc1c1f736e22cf1ee25237852cac521c1",
       "date": "2026-07-24T03:54:58Z",
       "message": "Add canonical shared Chuck component with bottom-only thoughts"
+    },
+    {
+      "sha": "a9aee8dee93107fbd3e014da036ed55e41595cdd",
+      "date": "2026-07-24T03:55:12Z",
+      "message": "Retire About-specific Chuck implementation in favor of shared component"
     }
   ]
 }
