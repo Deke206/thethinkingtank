@@ -10,7 +10,7 @@
   const siteRoot = new URL("../", scriptUrl);
 
   const chuckCssUrl = new URL("css/site-chuck.css?v=20260724-cloud-guidance", siteRoot).href;
-  const cloudCssUrl = new URL("css/site-chuck-cloud.css?v=20260725-single-layer-v1", siteRoot).href;
+  const cloudCssUrl = new URL("css/site-chuck-cloud.css?v=20260725-neon-sprites-v1", siteRoot).href;
   const chuckSpriteUrl = new URL("js/chuck-sprite.js", siteRoot).href;
   const scanAtlasUrl = new URL("assets/brand/chuck-search-map.webp", siteRoot).href;
   const laptopAtlasUrl = new URL("assets/brand/chuck-search-laptop.webp", siteRoot).href;
@@ -98,7 +98,6 @@
   widget.dataset.chuckMounted = "true";
 
   const welcomeMessage = {
-    color: "cyan",
     text: "Welcome to\nShyneTyme.Works!\nRead about Deke\nbelow.",
     label: "Deke",
     href: aboutDekeUrl
@@ -106,31 +105,30 @@
 
   const rotatingMessages = [
     {
-      color: "pink",
       text: "Need help?\nTickle Chuck.\nI'll point\nthe way.",
       label: "Next",
       href: "#chuck-next"
     },
     {
-      color: "violet",
       text: "Need Shyne?\nTry the LED\nBike Factory.",
       label: "LED\nBike Sim",
       href: bikeBuilderUrl
     },
     {
-      color: "amber",
       text: "Need another\nspot?\nTickle Chuck\nagain.",
       label: "Next",
       href: "#chuck-next"
     }
   ];
 
+  const CLOUD_THEMES = ["cyan", "pink", "amber"];
   const MESSAGE_VISIBLE_MS = 10000;
   const AFTER_SCROLL_DELAY_MS = 15000;
   const SCROLL_STOP_MS = 240;
 
   let chuckAnimation = null;
   let messageIndex = -1;
+  let previousTheme = "";
   let previousScrollY = window.scrollY;
   let scrollStopTimer = 0;
   let delayedThoughtTimer = 0;
@@ -147,7 +145,14 @@
     chuckAnimation?.stop();
   });
 
-  const setColor = (color) => {
+  const nextCloudTheme = () => {
+    const choices = CLOUD_THEMES.filter((theme) => theme !== previousTheme);
+    const theme = choices[Math.floor(Math.random() * choices.length)];
+    previousTheme = theme;
+    return theme;
+  };
+
+  const setTheme = (theme) => {
     thought.classList.remove(
       "deke-chuck-thought--yellow",
       "deke-chuck-thought--green",
@@ -157,7 +162,7 @@
       "deke-chuck-thought--violet",
       "deke-chuck-thought--amber"
     );
-    thought.classList.add(`deke-chuck-thought--${color}`);
+    thought.classList.add(`deke-chuck-thought--${theme}`);
   };
 
   const hideThought = () => {
@@ -179,11 +184,9 @@
     window.clearTimeout(hideTimer);
     widget.classList.remove("is-searching");
     chuckAnimation?.stop();
-    setColor(message.color);
+    setTheme(nextCloudTheme());
     text.textContent = message.text;
-    text.style.whiteSpace = "pre-line";
     action.textContent = message.label;
-    action.style.whiteSpace = "pre-line";
     action.href = message.href;
     thought.hidden = false;
     materializeThought();
