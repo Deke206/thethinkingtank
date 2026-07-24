@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T10:19:06.630Z",
-  "commitCount": 183,
+  "generatedAt": "2026-07-24T10:20:05.912Z",
+  "commitCount": 184,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -918,6 +918,11 @@
       "sha": "0dcabd2c03ae491087ed2a82448c08497c874f16",
       "date": "2026-07-24T10:18:54Z",
       "message": "Keep hero carousel rotation without picture animation"
+    },
+    {
+      "sha": "b4b10ce49c5394ec0d75b14a78658c6a616406f5",
+      "date": "2026-07-24T10:19:49Z",
+      "message": "Restore four original hero images and remove legacy banner markup"
     }
   ]
 }
