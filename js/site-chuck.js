@@ -10,7 +10,7 @@
   const siteRoot = new URL("../", scriptUrl);
 
   const chuckCssUrl = new URL("css/site-chuck.css?v=20260724-cloud-guidance", siteRoot).href;
-  const cloudCssUrl = new URL("css/site-chuck-cloud.css?v=20260724-mobile-tight-v1", siteRoot).href;
+  const cloudCssUrl = new URL("css/site-chuck-cloud.css?v=20260724-stacked-copy-v1", siteRoot).href;
   const chuckSpriteUrl = new URL("js/chuck-sprite.js", siteRoot).href;
   const scanAtlasUrl = new URL("assets/brand/chuck-search-map.webp", siteRoot).href;
   const laptopAtlasUrl = new URL("assets/brand/chuck-search-laptop.webp", siteRoot).href;
@@ -99,7 +99,7 @@
 
   const welcomeMessage = {
     color: "cyan",
-    text: "Hi and welcome to ShyneTyme.Works!\nIf you're here to read about Deke, click the button below.",
+    text: "Welcome to\nShyneTyme.Works!\nRead about Deke\nbelow.",
     label: "Deke",
     href: aboutDekeUrl
   };
@@ -107,20 +107,20 @@
   const rotatingMessages = [
     {
       color: "pink",
-      text: "Thank you for checking me out!\nIf I can help, just tickle Chuck—that's me. I may blurt out the directions you seek!",
-      label: "Tickle Chuck",
+      text: "Need help?\nTickle Chuck.\nI'll point\nthe way.",
+      label: "Next",
       href: "#chuck-next"
     },
     {
       color: "violet",
-      text: "Hey, are you fancy? You must need some Shyne in yo life!\nHow about checking out the ShyneTyme LED Bike Factory?",
-      label: "LED Bike Sim",
+      text: "Need Shyne?\nTry the LED\nBike Factory.",
+      label: "LED\nBike Sim",
       href: bikeBuilderUrl
     },
     {
       color: "amber",
-      text: "Need another direction? Tickle Chuck again and I'll point you toward another part of ShyneTyme.Works.",
-      label: "Tickle Chuck",
+      text: "Need another\nspot?\nTickle Chuck\nagain.",
+      label: "Next",
       href: "#chuck-next"
     }
   ];
@@ -183,6 +183,7 @@
     text.textContent = message.text;
     text.style.whiteSpace = "pre-line";
     action.textContent = message.label;
+    action.style.whiteSpace = "pre-line";
     action.href = message.href;
     thought.hidden = false;
     materializeThought();
