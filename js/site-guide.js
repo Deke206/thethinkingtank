@@ -74,10 +74,10 @@
 
     nav.innerHTML = `
       <div class="nav-item dropdown shynetyme-build-menu" data-shynetyme-build-menu="true">
-        <button class="nav-link dropdown-toggle${bikeActive || homeActive ? " active" : ""}" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open Build menu">Build</button>
-        <ul class="dropdown-menu dropdown-menu-dark" aria-label="Build pages">
-          <li><a class="dropdown-item${bikeActive ? " active" : ""}"${bikeActive ? " aria-current=\"page\"" : ""} href="${bikeBuilderUrl}">Bike Builder</a></li>
-          <li><a class="dropdown-item${homeActive ? " active" : ""}"${homeActive ? " aria-current=\"page\"" : ""} href="${homeBuilderUrl}">Home Builder</a></li>
+        <button class="nav-link dropdown-toggle${bikeActive || homeActive ? " active" : ""}" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open Sim menu">Sim</button>
+        <ul class="dropdown-menu dropdown-menu-dark" aria-label="LED simulator pages">
+          <li><a class="dropdown-item${bikeActive ? " active" : ""}"${bikeActive ? " aria-current=\"page\"" : ""} href="${bikeBuilderUrl}">LED SIM BIKE</a></li>
+          <li><a class="dropdown-item${homeActive ? " active" : ""}"${homeActive ? " aria-current=\"page\"" : ""} href="${homeBuilderUrl}">LED SIM HOME</a></li>
         </ul>
       </div>
       <a class="nav-link${catalogActive ? " active" : ""}"${catalogActive ? " aria-current=\"page\"" : ""} href="${catalogUrl}">LED Catalog</a>
