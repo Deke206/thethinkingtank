@@ -1,0 +1,686 @@
+name: Normalize shared site shell
+
+on:
+  push:
+    paths:
+      - '.github/workflows/normalize-shared-site-shell.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Make shared components canonical
+        run: |
+          cat > css/site-hero.css <<'EOF'
+          /* Canonical site-wide header and four-image carousel styling. */
+          :root {
+            --site-hero-height: clamp(540px, 52vw, 620px);
+          }
+
+          .hero {
+            position: relative;
+            isolation: isolate;
+            display: flex;
+            align-items: center;
+            min-height: var(--site-hero-height) !important;
+            max-height: min(78svh, 620px) !important;
+            padding: 0 !important;
+            overflow: hidden;
+            color: #fff;
+            background: #030918 url('../assets/images/hero-scene-work.webp') center center / cover no-repeat !important;
+          }
+
+          .hero::before,
+          .hero::after {
+            content: none !important;
+            display: none !important;
+            background: none !important;
+          }
+
+          .hero-carousel {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+          }
+
+          .hero-carousel__scene {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            visibility: hidden;
+            background: #030918;
+            transition: none !important;
+          }
+
+          .hero-carousel__scene.is-active {
+            opacity: 1;
+            visibility: visible;
+          }
+
+          .hero-carousel__scene img,
+          .hero-carousel__scene.is-active img {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+            padding: 0 !important;
+            object-fit: cover !important;
+            object-position: center center !important;
+            opacity: 1 !important;
+            filter: none !important;
+            animation: none !important;
+            transform: none !important;
+          }
+
+          .hero-carousel__sparkle {
+            display: none !important;
+          }
+
+          @media (max-width: 991.98px) {
+            :root { --site-hero-height: clamp(510px, 75vw, 580px); }
+            .hero { max-height: min(80svh, 580px) !important; }
+          }
+
+          @media (max-width: 575.98px) {
+            :root { --site-hero-height: 500px; }
+            .hero { max-height: min(82svh, 500px) !important; }
+          }
+          EOF
+
+          cat > css/site-navigation.css <<'EOF'
+          /* Canonical site-wide navigation styling. */
+          .navbar {
+            background: rgba(3, 9, 24, .92) !important;
+            border-bottom: 1px solid rgba(49, 230, 255, .26);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .32), 0 0 24px rgba(49, 230, 255, .07);
+            backdrop-filter: blur(14px);
+          }
+
+          .brand-lockup {
+            display: inline-flex;
+            align-items: center;
+            gap: .48rem;
+            letter-spacing: .02em;
+            text-transform: uppercase;
+          }
+
+          .brand-lockup img { filter: drop-shadow(0 0 7px rgba(49, 230, 255, .8)); }
+          .brand-lockup em { color: var(--cyan); font-style: normal; text-shadow: 0 0 11px rgba(49, 230, 255, .72); }
+
+          .navbar .nav-link {
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            border-radius: .72rem;
+            color: #d9e8fb;
+            font-family: var(--heading-font);
+            font-weight: 650;
+            transition: color .18s ease, text-shadow .18s ease, filter .18s ease, transform .18s ease;
+          }
+
+          .navbar .nav-link::after {
+            content: "";
+            position: absolute;
+            right: .5rem;
+            bottom: .2rem;
+            left: .5rem;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cyan), var(--violet));
+            transform: scaleX(0);
+            transition: transform .2s ease;
+          }
+
+          .navbar .nav-link::before {
+            content: "";
+            position: absolute;
+            inset: -.4rem -.65rem;
+            z-index: -1;
+            opacity: 0;
+            border-radius: inherit;
+            background:
+              radial-gradient(circle at 22% 50%, rgba(49, 230, 255, .75), transparent 34%),
+              radial-gradient(circle at 78% 50%, rgba(255, 90, 185, .72), transparent 34%),
+              linear-gradient(90deg, rgba(49, 230, 255, .18), rgba(155, 131, 255, .2), rgba(255, 90, 185, .18));
+            filter: blur(.4px) saturate(1.35);
+            transform: scaleX(.2) translateY(8px);
+            transition: opacity .18s ease, transform .18s ease;
+          }
+
+          .navbar .nav-link:hover,
+          .navbar .nav-link:focus-visible,
+          .navbar .nav-link.active,
+          .navbar .nav-link.nav-link--flare-click {
+            color: #fff !important;
+            text-shadow: 0 0 5px #fff, 0 0 13px rgba(49, 230, 255, .9), 0 0 24px rgba(255, 90, 185, .66);
+            filter: saturate(1.22) brightness(1.12);
+            transform: translateY(-1px);
+          }
+
+          .navbar .nav-link:hover::before,
+          .navbar .nav-link:focus-visible::before,
+          .navbar .nav-link.active::before,
+          .navbar .nav-link.nav-link--flare-click::before {
+            opacity: 1;
+            transform: scaleX(1) translateY(0);
+          }
+
+          .navbar .nav-link:hover::after,
+          .navbar .nav-link:focus-visible::after,
+          .navbar .nav-link.active::after { transform: scaleX(1); }
+
+          .navbar-toggler {
+            border-color: rgba(49, 230, 255, .55);
+            box-shadow: 0 5px 0 rgba(0, 83, 111, .75), 0 0 14px rgba(49, 230, 255, .2);
+          }
+          .navbar-toggler:focus { box-shadow: 0 0 0 .2rem rgba(49, 230, 255, .28); }
+
+          .shynetyme-build-menu { position: relative; }
+          .shynetyme-build-menu > .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            border: 0;
+            background: transparent;
+          }
+
+          .shynetyme-build-menu .dropdown-menu {
+            min-width: 13.5rem;
+            margin-top: .55rem;
+            padding: .48rem;
+            overflow: hidden;
+            border: 1px solid rgba(49, 230, 255, .46);
+            border-radius: .85rem;
+            background: radial-gradient(circle at 15% 10%, rgba(49, 230, 255, .12), transparent 9rem), linear-gradient(155deg, rgba(6, 21, 47, .99), rgba(18, 12, 48, .99));
+            box-shadow: 0 18px 38px rgba(0, 0, 0, .48), 0 0 20px rgba(49, 230, 255, .14), inset 0 1px 0 rgba(255, 255, 255, .08);
+          }
+
+          .shynetyme-build-menu .dropdown-item {
+            position: relative;
+            padding: .72rem .82rem;
+            border-radius: .62rem;
+            color: #dcecff;
+            font-family: var(--heading-font);
+            font-weight: 750;
+            letter-spacing: .015em;
+            transition: color .18s ease, background-color .18s ease, transform .18s ease, text-shadow .18s ease;
+          }
+
+          .shynetyme-build-menu li + li .dropdown-item { margin-top: .18rem; }
+          .shynetyme-build-menu .dropdown-item:hover,
+          .shynetyme-build-menu .dropdown-item:focus,
+          .shynetyme-build-menu .dropdown-item.active {
+            color: #fff;
+            background: linear-gradient(90deg, rgba(49, 230, 255, .2), rgba(155, 131, 255, .24));
+            text-shadow: 0 0 12px rgba(49, 230, 255, .72);
+            transform: translateX(3px);
+          }
+          .shynetyme-build-menu .dropdown-item.active { box-shadow: inset 3px 0 0 var(--cyan); }
+
+          .nav-link--flare-click { animation: shynetyme-nav-flare .56s ease-out both; }
+          .nav-link--flare-click::after { animation: shynetyme-nav-line-flare .56s ease-out both !important; }
+          .dropdown-item.nav-link--flare-click { animation: shynetyme-dropdown-flare .56s ease-out both; }
+
+          @keyframes shynetyme-nav-flare {
+            0% { color: #fff; text-shadow: 0 0 0 rgba(49, 230, 255, 0); filter: brightness(1); }
+            38% { color: #fff; text-shadow: 0 0 8px #fff, 0 0 18px rgba(49, 230, 255, .95), 0 0 28px rgba(155, 131, 255, .72); filter: brightness(1.28); }
+            100% { filter: brightness(1); }
+          }
+          @keyframes shynetyme-nav-line-flare {
+            0% { transform: scaleX(0); opacity: .2; }
+            45% { transform: scaleX(1.22); opacity: 1; box-shadow: 0 0 14px var(--cyan); }
+            100% { transform: scaleX(1); opacity: .85; box-shadow: 0 0 0 transparent; }
+          }
+          @keyframes shynetyme-dropdown-flare {
+            0% { transform: translateX(0); filter: brightness(1); }
+            42% { transform: translateX(5px); filter: brightness(1.3); box-shadow: 0 0 16px rgba(49, 230, 255, .28); }
+            100% { transform: translateX(3px); filter: brightness(1); }
+          }
+
+          @media (max-width: 991.98px) {
+            .navbar-collapse { padding: .7rem 0 1rem; }
+            .navbar .nav-link { padding: .68rem .5rem; }
+            .shynetyme-build-menu > .nav-link { width: 100%; justify-content: space-between; text-align: left; }
+            .shynetyme-build-menu .dropdown-menu { margin: .25rem 0 .45rem .55rem; border-radius: .72rem; box-shadow: inset 0 0 18px rgba(49, 230, 255, .06); }
+          }
+          EOF
+
+          cat > css/site-led-matrix.css <<'EOF'
+          /* Canonical site-wide LED matrix and breadcrumb styling. */
+          :root {
+            --site-matrix-ribbon-height: clamp(78px, 7.5vw, 94px);
+            --site-matrix-breadcrumb-height: clamp(62px, 6.5vw, 76px);
+          }
+
+          .site-matrix-ribbon {
+            position: absolute;
+            right: 0;
+            left: 0;
+            z-index: 5;
+            height: var(--site-matrix-ribbon-height);
+            overflow: hidden;
+            contain: layout paint;
+            isolation: isolate;
+            background-color: #020611;
+            background-image:
+              radial-gradient(circle, rgba(49, 230, 255, .08) 0 1px, transparent 1.45px),
+              radial-gradient(circle, rgba(255, 90, 185, .055) 0 1px, transparent 1.4px),
+              linear-gradient(180deg, rgba(2, 6, 17, .97), rgba(6, 21, 47, .95));
+            background-position: 0 0, 4px 4px, 0 0;
+            background-size: 9px 9px, 11px 11px, auto;
+            border-top: 2px solid rgba(49, 230, 255, .72);
+            border-bottom: 2px solid rgba(255, 90, 185, .62);
+            box-shadow: 0 0 22px rgba(49, 230, 255, .14), 0 0 30px rgba(255, 90, 185, .09), inset 0 1px 0 rgba(255, 255, 255, .08);
+          }
+
+          .site-matrix-ribbon::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            background: repeating-linear-gradient(0deg, rgba(255,255,255,.026) 0 1px, transparent 1px 4px), linear-gradient(90deg, rgba(2,6,17,.68), transparent 7%, transparent 93%, rgba(2,6,17,.68));
+          }
+          .site-matrix-ribbon--top { top: 0; }
+          .site-matrix-ribbon--bottom { bottom: 0; }
+
+          .site-matrix-canvas {
+            position: relative;
+            z-index: 1;
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            image-rendering: pixelated;
+            filter: saturate(1.18) drop-shadow(0 0 4px rgba(49, 230, 255, .3));
+          }
+
+          .breadcrumb-ticker {
+            position: relative;
+            z-index: 3;
+            min-height: var(--site-matrix-breadcrumb-height);
+            overflow: hidden;
+            color: #f7fdff;
+            contain: layout paint;
+            background-color: #020611;
+            background-image:
+              radial-gradient(circle, rgba(49, 230, 255, .07) 0 1px, transparent 1.4px),
+              radial-gradient(circle, rgba(155, 131, 255, .055) 0 1px, transparent 1.4px),
+              linear-gradient(180deg, rgba(2, 6, 17, .98), rgba(6, 21, 47, .97));
+            background-position: 0 0, 5px 5px, 0 0;
+            background-size: 9px 9px, 12px 12px, auto;
+            border-top: 2px solid rgba(49, 230, 255, .62);
+            border-bottom: 2px solid rgba(255, 90, 185, .5);
+          }
+
+          .breadcrumb-ticker__rail {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            max-width: 1140px;
+            height: var(--site-matrix-breadcrumb-height);
+            margin: 0 auto;
+            padding: 0 1rem;
+          }
+
+          .breadcrumb-ticker__list {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: .42rem;
+            margin: 0;
+            padding: .62rem 0;
+            list-style: none;
+            font-family: var(--heading-font);
+            font-size: clamp(.82rem, 1.55vw, 1rem);
+            font-weight: 800;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+          }
+          .breadcrumb-ticker__item { display: inline-flex; align-items: center; gap: .42rem; min-width: 0; }
+          .breadcrumb-ticker__item + .breadcrumb-ticker__item::before { content: "›"; color: #ffe45e; }
+          .breadcrumb-ticker a { color: var(--cyan); text-decoration: none; }
+          .breadcrumb-ticker a:hover, .breadcrumb-ticker a:focus-visible { color: #fff; }
+          .breadcrumb-ticker [aria-current="page"] { color: #fff; }
+
+          .breadcrumb-ticker--matrix .breadcrumb-ticker__list {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            margin: -1px !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+            clip: rect(0 0 0 0) !important;
+            clip-path: inset(50%) !important;
+            white-space: nowrap !important;
+          }
+          .site-matrix-canvas--breadcrumb { width: 100%; height: 100%; }
+
+          @media (max-width: 575.98px) {
+            :root { --site-matrix-ribbon-height: 68px; --site-matrix-breadcrumb-height: 60px; }
+            .breadcrumb-ticker__rail { padding-right: .75rem; padding-left: .75rem; }
+          }
+          EOF
+
+          cat > js/hero-carousel.js <<'EOF'
+          (() => {
+            "use strict";
+
+            if (window.ShynetymeHeroCarousel?.initialized) {
+              window.ShynetymeHeroCarousel.init();
+              return;
+            }
+
+            const scriptUrl = document.currentScript?.src
+              ? new URL(document.currentScript.src, window.location.href)
+              : new URL("js/hero-carousel.js", window.location.href);
+            const siteRoot = new URL("../", scriptUrl);
+            const fallbackUrl = new URL("assets/images/shynetyme-works-hero.webp", siteRoot).href;
+            const slides = [
+              ["hero-scene-work.webp", "After-work homecoming"],
+              ["hero-scene-school.webp", "School-day homecoming"],
+              ["hero-scene-dance.webp", "Neighborhood dance break"],
+              ["hero-scene-marina.webp", "Marina homecoming"]
+            ];
+            const timers = new Set();
+
+            const buildCarousel = (hero) => {
+              hero.querySelectorAll(":scope > .hero-carousel, :scope > .home-builder-hero__scene").forEach((node) => node.remove());
+
+              const carousel = document.createElement("div");
+              carousel.className = "hero-carousel";
+              carousel.id = "heroCarousel";
+              carousel.setAttribute("role", "region");
+              carousel.setAttribute("aria-roledescription", "carousel");
+              carousel.setAttribute("aria-label", "ShyneTyme community scenes");
+
+              slides.forEach(([fileName, label], index) => {
+                const scene = document.createElement("div");
+                scene.className = `hero-carousel__scene${index === 0 ? " is-active" : ""}`;
+                scene.setAttribute("role", "group");
+                scene.setAttribute("aria-roledescription", "slide");
+                scene.setAttribute("aria-label", `${index + 1} of ${slides.length}: ${label}`);
+                scene.setAttribute("aria-hidden", String(index !== 0));
+
+                const image = document.createElement("img");
+                image.src = new URL(`assets/images/${fileName}`, siteRoot).href;
+                image.width = 1600;
+                image.height = 900;
+                image.alt = "";
+                if (index === 0) image.fetchPriority = "high";
+                else image.loading = "lazy";
+                image.addEventListener("error", () => {
+                  if (image.dataset.heroFallback === "true") return;
+                  image.dataset.heroFallback = "true";
+                  image.src = fallbackUrl;
+                });
+
+                scene.appendChild(image);
+                carousel.appendChild(scene);
+              });
+
+              hero.prepend(carousel);
+              return carousel;
+            };
+
+            const startCarousel = (hero) => {
+              if (hero.dataset.siteCarouselReady === "true") return;
+              hero.dataset.siteCarouselReady = "true";
+              const carousel = buildCarousel(hero);
+              const scenes = [...carousel.querySelectorAll(".hero-carousel__scene")];
+              let current = 0;
+              let timer = 0;
+
+              const schedule = () => {
+                window.clearTimeout(timer);
+                timers.delete(timer);
+                if (document.hidden) return;
+                timer = window.setTimeout(() => show(current + 1), 5500);
+                timers.add(timer);
+              };
+
+              const show = (index) => {
+                current = (index + scenes.length) % scenes.length;
+                scenes.forEach((scene, sceneIndex) => {
+                  const active = sceneIndex === current;
+                  scene.classList.toggle("is-active", active);
+                  scene.setAttribute("aria-hidden", String(!active));
+                });
+                schedule();
+              };
+
+              document.addEventListener("visibilitychange", schedule);
+              schedule();
+            };
+
+            const init = () => {
+              if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", init, { once: true });
+                return;
+              }
+              document.querySelectorAll("header.hero").forEach(startCarousel);
+            };
+
+            window.addEventListener("pagehide", () => {
+              timers.forEach((timer) => window.clearTimeout(timer));
+              timers.clear();
+            });
+            window.ShynetymeHeroCarousel = { initialized: true, init };
+            init();
+          })();
+          EOF
+
+          cat > js/site-guide.js <<'EOF'
+          (() => {
+            "use strict";
+
+            if (window.ShynetymeSiteGuide?.initialized) return;
+            window.ShynetymeSiteGuide = { initialized: true };
+
+            const scriptUrl = document.currentScript?.src
+              ? new URL(document.currentScript.src, window.location.href)
+              : new URL("js/site-guide.js", window.location.href);
+            const siteRoot = new URL("../", scriptUrl);
+
+            const sharedStyles = [
+              ["css/site-motion.css", "data-shynetyme-motion"],
+              ["css/site-navigation.css", "data-shynetyme-navigation"],
+              ["css/site-hero.css", "data-shynetyme-hero"],
+              ["css/site-led-matrix.css", "data-shynetyme-led-matrix"],
+              ["css/site-chuck.css", "data-shynetyme-site-chuck"]
+            ];
+
+            const loadStyle = ([path, attribute]) => {
+              if (document.querySelector(`link[${attribute}]`)) return;
+              const link = document.createElement("link");
+              link.rel = "stylesheet";
+              link.href = new URL(path, siteRoot).href;
+              link.setAttribute(attribute, "true");
+              document.head.appendChild(link);
+            };
+
+            const loadScript = (path, attribute, globalName) => new Promise((resolve) => {
+              const globalObject = window[globalName];
+              if (globalObject) {
+                globalObject.init?.();
+                resolve(globalObject);
+                return;
+              }
+
+              const existing = document.querySelector(`script[${attribute}]`);
+              if (existing) {
+                existing.addEventListener("load", () => resolve(window[globalName] || null), { once: true });
+                return;
+              }
+
+              const script = document.createElement("script");
+              script.src = new URL(path, siteRoot).href;
+              script.defer = true;
+              script.setAttribute(attribute, "true");
+              script.addEventListener("load", () => resolve(window[globalName] || null), { once: true });
+              document.head.appendChild(script);
+            });
+
+            const getPageKey = () => (window.location.pathname.split("/").filter(Boolean).pop() || "index.html").toLowerCase();
+            const bikeBuilderUrl = new URL("build-my-bike.html", siteRoot).href;
+            const homeBuilderUrl = new URL("build-my-home.html", siteRoot).href;
+            const aboutDekeUrl = new URL("aboutme.html", siteRoot).href;
+            const directAnchor = (element) => element?.matches("a, button") ? element : element?.querySelector(":scope > a, :scope > button");
+
+            const installBuildDropdown = () => {
+              const nav = document.querySelector(".navbar .navbar-nav");
+              if (!nav) return;
+              const children = [...nav.children];
+              const isEffects = (item) => {
+                const link = directAnchor(item);
+                return link && (link.textContent.trim().toLowerCase() === "effects" || (link.getAttribute("href") || "").includes("#effects"));
+              };
+              const isBuild = (item) => {
+                if (item.matches?.("[data-shynetyme-build-menu]")) return true;
+                const link = directAnchor(item);
+                const href = link?.getAttribute("href") || "";
+                return link && (link.textContent.trim().toLowerCase() === "build" || href.includes("build-my-bike") || href.includes("build-my-home"));
+              };
+              const firstBuild = children.findIndex(isBuild);
+              const following = firstBuild >= 0 ? children.slice(firstBuild + 1).find((item) => !isEffects(item) && !isBuild(item)) : children.find((item) => !isEffects(item));
+              children.forEach((item) => { if (isEffects(item) || isBuild(item)) item.remove(); });
+
+              const page = getPageKey();
+              const bikeActive = page === "build-my-bike.html";
+              const homeActive = page === "build-my-home.html";
+              const dropdown = document.createElement("div");
+              dropdown.className = "nav-item dropdown shynetyme-build-menu";
+              dropdown.dataset.shynetymeBuildMenu = "true";
+              dropdown.innerHTML = `<button class="nav-link dropdown-toggle${bikeActive || homeActive ? " active" : ""}" type="button" data-bs-toggle="dropdown" aria-expanded="false">Build</button><ul class="dropdown-menu dropdown-menu-dark"><li><a class="dropdown-item${bikeActive ? " active" : ""}" href="${bikeBuilderUrl}">Bike Builder</a></li><li><a class="dropdown-item${homeActive ? " active" : ""}" href="${homeBuilderUrl}">Home Builder</a></li></ul>`;
+              nav.insertBefore(dropdown, following?.isConnected ? following : null);
+            };
+
+            const insertAboutLink = () => {
+              const nav = document.querySelector(".navbar .navbar-nav");
+              if (!nav) return;
+              const exists = [...nav.querySelectorAll("a")].some((link) => link.textContent.trim().toLowerCase() === "about deke" || (link.getAttribute("href") || "").includes("aboutme.html"));
+              if (exists) return;
+              const link = document.createElement("a");
+              link.className = "nav-link";
+              link.href = aboutDekeUrl;
+              link.textContent = "About Deke";
+              const contact = [...nav.children].find((item) => (directAnchor(item)?.getAttribute("href") || "").includes("contact"));
+              nav.insertBefore(link, contact || null);
+            };
+
+            const bindNavigationFlare = () => {
+              const nav = document.querySelector(".navbar .navbar-nav");
+              if (!nav || nav.dataset.navigationFlareBound === "true") return;
+              nav.dataset.navigationFlareBound = "true";
+              nav.addEventListener("click", (event) => {
+                const target = event.target.closest(".nav-link, .dropdown-item");
+                if (!target || !nav.contains(target)) return;
+                target.classList.remove("nav-link--flare-click");
+                void target.offsetWidth;
+                target.classList.add("nav-link--flare-click");
+                window.setTimeout(() => target.classList.remove("nav-link--flare-click"), 620);
+              });
+            };
+
+            const loadBikeBuilder = () => {
+              if (!document.getElementById("bikeBuilderForm")) return;
+              loadScript("js/bike-builder-upgrade.js", "data-bike-builder-upgrade", "ShynetymeBikeBuilderRenderer")
+                .finally(() => loadScript("js/bike-builder-size-hotfix.js", "data-bike-builder-size-hotfix", "ShynetymeBikeBuilderSizeHotfix"));
+            };
+
+            sharedStyles.forEach(loadStyle);
+            installBuildDropdown();
+            insertAboutLink();
+            bindNavigationFlare();
+            loadScript("js/hero-carousel.js", "data-shynetyme-hero-carousel", "ShynetymeHeroCarousel")
+              .finally(() => loadScript("js/site-led-matrix.js", "data-shynetyme-led-matrix-script", "ShynetymeLedMatrix"));
+            loadBikeBuilder();
+            loadScript("js/site-chuck.js", "data-shynetyme-site-chuck-script", "ShynetymeChuck");
+          })();
+          EOF
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          site = Path('css/site.css')
+          css = site.read_text(encoding='utf-8')
+          css = re.sub(r'\n\.navbar \{.*?(?=\n\.hero \{)', '\n', css, count=1, flags=re.S)
+          css = re.sub(r'\n\.hero \{.*?(?=\n/\* All buttons share)', '\n', css, count=1, flags=re.S)
+          css = re.sub(r'\n/\* Shared hero LED scrolling banners \*/.*?(?=\n/\* Shared LED breadcrumb ticker \*/)', '\n', css, count=1, flags=re.S)
+          css = re.sub(r'\n/\* Shared LED breadcrumb ticker \*/.*?(?=\n/\* Contact page request form)', '\n', css, count=1, flags=re.S)
+          for pattern in [
+              r'\n\s*\.hero \{[^{}]*\}',
+              r'\n\s*\.hero::before \{[^{}]*\}',
+              r'\n\s*\.hero \.container \{[^{}]*\}',
+              r'\n\s*\.hero-carousel__scene img \{[^{}]*\}',
+              r'\n\s*\.navbar-collapse \{[^{}]*\}',
+              r'\n\s*\.nav-link \{[^{}]*\}'
+          ]:
+              css = re.sub(pattern, '', css)
+          site.write_text(css.strip() + '\n', encoding='utf-8')
+
+          about = Path('css/about-deke.css')
+          text = about.read_text(encoding='utf-8')
+          text = re.sub(r'\n\.deke-hero \{.*?(?=\n\.deke-main \{)', '\n', text, count=1, flags=re.S)
+          text = re.sub(r'\n\s*\.deke-hero \{[^{}]*\}', '', text)
+          about.write_text(text.strip() + '\n', encoding='utf-8')
+
+          home = Path('css/home-builder.css')
+          text = home.read_text(encoding='utf-8')
+          text = re.sub(r'\n\.home-builder-hero \{.*?(?=\n\.home-builder-container)', '\n', text, count=1, flags=re.S)
+          text = re.sub(r'\.home-builder-hero__house\{[^{}]*\}', '', text)
+          text = re.sub(r'\.home-builder-hero__gazebo\{[^{}]*\}', '', text)
+          home.write_text(text.strip() + '\n', encoding='utf-8')
+
+          shared_links = '''  <link rel="stylesheet" href="css/site-navigation.css" data-shynetyme-navigation="true">\n  <link rel="stylesheet" href="css/site-hero.css" data-shynetyme-hero="true">\n  <link rel="stylesheet" href="css/site-led-matrix.css" data-shynetyme-led-matrix="true">\n  <link rel="stylesheet" href="css/site-chuck.css" data-shynetyme-site-chuck="true">\n'''
+
+          header_re = re.compile(r'<header\b[^>]*class=["\'][^"\']*\bhero\b[^"\']*["\'][^>]*>.*?</header>', re.I | re.S)
+          hidden_re = re.compile(r'<div\b[^>]*class=["\'][^"\']*\bvisually-hidden\b[^"\']*["\'][^>]*>.*?</div>', re.I | re.S)
+
+          for path in sorted(Path('.').glob('*.html')):
+              html = path.read_text(encoding='utf-8')
+              if not header_re.search(html):
+                  continue
+
+              html = re.sub(r'\s*<link\b[^>]*href=["\']css/(?:site-navigation|site-hero|site-led-matrix|site-chuck)\.css(?:\?[^"\']*)?["\'][^>]*>', '', html, flags=re.I)
+              html = html.replace('</head>', shared_links + '</head>')
+
+              def replace_header(match):
+                  old = match.group(0)
+                  hidden = hidden_re.search(old)
+                  hidden_block = hidden.group(0) if hidden else '<div class="visually-hidden"><p>ShyneTyme Works</p><h1>Custom programmable LED lighting.</h1><p>Creative lighting for mobile and home projects.</p></div>'
+                  identifier = ' id="top"' if path.name == 'index.html' else ''
+                  return f'<header{identifier} class="hero py-5" data-site-hero>\n    {hidden_block}\n  </header>'
+
+              html = header_re.sub(replace_header, html, count=1)
+              html = re.sub(r'\s*<script\b[^>]*src=["\']js/hero-carousel\.js(?:\?[^"\']*)?["\'][^>]*></script>', '', html, flags=re.I)
+              html = re.sub(r'<script\b[^>]*src=["\']js/site-guide\.js(?:\?[^"\']*)?["\'][^>]*></script>', '<script src="js/site-guide.js"></script>', html, flags=re.I)
+              html = re.sub(r'\s*<button\b[^>]*class=["\'][^"\']*\bsite-guide-button\b[^"\']*["\'][^>]*>.*?</button>', '', html, flags=re.I | re.S)
+              html = re.sub(r'\s*<aside\b[^>]*class=["\'][^"\']*\bsite-guide-panel\b[^"\']*["\'][^>]*>.*?</aside>', '', html, flags=re.I | re.S)
+              path.write_text(html.strip() + '\n', encoding='utf-8')
+
+          chuck_js = Path('js/site-chuck.js')
+          text = chuck_js.read_text(encoding='utf-8')
+          text = re.sub(r'\?v=[^"\']+', '', text)
+          chuck_js.write_text(text, encoding='utf-8')
+
+          chuck_css = Path('css/site-chuck.css')
+          text = chuck_css.read_text(encoding='utf-8')
+          text = re.sub(r'\?v=[^)"\']+', '', text)
+          chuck_css.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Commit normalized shared shell
+        run: |
+          rm .github/workflows/normalize-shared-site-shell.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Normalize shared navigation header matrix and Chuck systems'
+          git push
