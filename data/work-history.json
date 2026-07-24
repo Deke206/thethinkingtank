@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T05:58:18.138Z",
-  "commitCount": 167,
+  "generatedAt": "2026-07-24T05:59:43.717Z",
+  "commitCount": 168,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -838,6 +838,11 @@
       "sha": "329b89bdc5610ba14e1b2fcf7dd36739b9db0914",
       "date": "2026-07-24T05:58:05Z",
       "message": "Move About Deke page to the website root"
+    },
+    {
+      "sha": "39c2921fc5d57147750d8118eacb0c0b029e3674",
+      "date": "2026-07-24T05:59:28Z",
+      "message": "Consolidate newest-first work history renderer"
     }
   ]
 }
