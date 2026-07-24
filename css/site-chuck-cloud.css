@@ -1,0 +1,9 @@
+/* Shared sitewide Chuck cloud animation overrides. */
+.deke-chuck-thought {
+  right: 82px;
+  bottom: 92px;
+  width: min(410px, calc(100vw - 96px));
+  padding: 20% 16% 31% !important;
+  gap: .7rem !important;
+  transform-origin: 86% 88%;
+}
