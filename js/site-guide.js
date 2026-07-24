@@ -15,7 +15,7 @@
     ["css/site-hero.css", "data-shynetyme-hero"],
     ["css/site-led-matrix.css?v=20260724-short-matrix", "data-shynetyme-led-matrix"],
     ["css/site-chuck.css?v=20260724-cloud-guidance", "data-shynetyme-site-chuck"],
-    ["css/site-chuck-cloud.css?v=20260724-mobile-tight-v2", "data-shynetyme-site-chuck-cloud"]
+    ["css/site-chuck-cloud.css?v=20260724-layer-debug-v1", "data-shynetyme-site-chuck-cloud"]
   ];
 
   const loadStyle = ([path, attribute]) => {
