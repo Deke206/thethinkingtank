@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T22:20:38.034Z",
-  "commitCount": 232,
+  "generatedAt": "2026-07-24T22:22:45.561Z",
+  "commitCount": 233,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1163,6 +1163,11 @@
       "sha": "d53c2de48f2fc9bff151244eed122f2f9817c18f",
       "date": "2026-07-24T22:20:26Z",
       "message": "Add amber Chuck cloud animation asset"
+    },
+    {
+      "sha": "94b96de030ce6e7d1272035d616c2246dd6c125c",
+      "date": "2026-07-24T22:22:30Z",
+      "message": "Replace old Chuck cloud with neon sprite animations"
     }
   ]
 }
