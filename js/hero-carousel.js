@@ -22,11 +22,8 @@
     const image = scene.querySelector("img");
     if (!image) return;
 
-    // The scene label already describes the slide. Keeping the image decorative
-    // prevents filename/alt text from appearing if a file goes missing.
     image.alt = "";
     image.addEventListener("error", () => repairImage(image));
-
     if (image.complete && image.naturalWidth === 0) repairImage(image);
   });
 
@@ -36,10 +33,9 @@
   let currentScene = 0;
   let timer = 0;
 
-  carousel.style.setProperty("--scene-duration", `${sceneDuration}ms`);
-
   const scheduleNextScene = () => {
     window.clearTimeout(timer);
+    if (document.hidden) return;
     timer = window.setTimeout(() => showScene(currentScene + 1), sceneDuration);
   };
 
@@ -55,6 +51,7 @@
     scheduleNextScene();
   };
 
-  showScene(0);
+  document.addEventListener("visibilitychange", scheduleNextScene);
   window.addEventListener("pagehide", () => window.clearTimeout(timer));
+  showScene(0);
 })();
