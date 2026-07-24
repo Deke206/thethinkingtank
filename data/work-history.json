@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T06:05:43.127Z",
-  "commitCount": 173,
+  "generatedAt": "2026-07-24T06:06:21.437Z",
+  "commitCount": 175,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -868,6 +868,16 @@
       "sha": "0f3b98fa951a1794b9ec690fb4aa75ddc3cc8307",
       "date": "2026-07-24T06:05:29Z",
       "message": "Load cleaned shared Chuck stylesheet"
+    },
+    {
+      "sha": "220fa86dc8834b3f0d5fd55f2fe1a28dca6ac231",
+      "date": "2026-07-24T06:05:56Z",
+      "message": "Remove old nested About Deke page"
+    },
+    {
+      "sha": "eca7b07e4bb01d930aa0fdda7af90b29b11b11a1",
+      "date": "2026-07-24T06:06:04Z",
+      "message": "Remove obsolete About-specific Chuck compatibility script"
     }
   ]
 }
