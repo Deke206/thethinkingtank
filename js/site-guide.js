@@ -7,17 +7,17 @@
     : new URL("js/site-guide.js", window.location.href);
   const siteRoot = new URL("../", scriptUrl);
 
-  const motionCssUrl = new URL("css/site-motion.css?v=20260723-real-chuck-frames", siteRoot).href;
+  const motionCssUrl = new URL("css/site-motion.css?v=20260724-root-about-cleanup", siteRoot).href;
   const heroCssUrl = new URL("css/site-hero.css?v=20260724-clean-shared-hero", siteRoot).href;
   const matrixCssUrl = new URL("css/site-led-matrix.css?v=20260724-performance-cleanup", siteRoot).href;
   const navigationCssUrl = new URL("css/site-navigation.css?v=20260724-build-dropdown-flare", siteRoot).href;
   const matrixScriptUrl = new URL("js/site-led-matrix.js?v=20260724-performance-cleanup", siteRoot).href;
-  const chuckComponentUrl = new URL("js/site-chuck.js?v=20260724-shared-chuck-v3", siteRoot).href;
+  const chuckComponentUrl = new URL("js/site-chuck.js?v=20260724-root-about-cleanup", siteRoot).href;
   const bikeBuilderUpgradeUrl = new URL("js/bike-builder-upgrade.js?v=20260723-liveview-upgrade", siteRoot).href;
   const bikeBuilderSizeHotfixUrl = new URL("js/bike-builder-size-hotfix.js?v=20260724-primary-only-small-frames", siteRoot).href;
   const bikeBuilderUrl = new URL("build-my-bike.html", siteRoot).href;
   const homeBuilderUrl = new URL("build-my-home.html", siteRoot).href;
-  const aboutDekeUrl = new URL("aboutmeDeke/", siteRoot).href;
+  const aboutDekeUrl = new URL("aboutme.html", siteRoot).href;
 
   const loadSharedStylesheet = (href, dataAttribute) => {
     const existing = document.querySelector(`link[${dataAttribute}]`);
@@ -61,7 +61,7 @@
   };
 
   const loadSitewideChuck = () => {
-    if (window.ShynetymeChuck?.mounted || document.querySelector("script[data-shynetyme-chuck-component], script[data-shynetyme-site-chuck]")) return;
+    if (window.ShynetymeChuck?.mounted || document.querySelector("script[data-shynetyme-site-chuck]")) return;
 
     const script = document.createElement("script");
     script.src = chuckComponentUrl;
@@ -104,6 +104,7 @@
   };
 
   const pageLabels = {
+    "aboutme.html": "About Deke",
     "build-my-bike.html": "Bike Builder",
     "build-my-home.html": "Home Builder",
     "led-catalog.html": "LED Catalog",
@@ -170,8 +171,8 @@
     const nav = document.querySelector(".navbar .navbar-nav");
     const hasAboutLink = nav && [...nav.querySelectorAll("a")].some((item) => {
       const label = item.textContent.trim().toLowerCase();
-      const href = item.getAttribute("href") || "";
-      return label === "about deke" || href.toLowerCase().includes("aboutmedeke");
+      const href = (item.getAttribute("href") || "").toLowerCase();
+      return label === "about deke" || href.includes("aboutme.html");
     });
 
     if (nav && !hasAboutLink) {
