@@ -15,7 +15,7 @@
     ["css/site-hero.css", "data-shynetyme-hero"],
     ["css/site-led-matrix.css?v=20260724-short-matrix", "data-shynetyme-led-matrix"],
     ["css/site-chuck.css?v=20260724-cloud-guidance", "data-shynetyme-site-chuck"],
-    ["css/site-chuck-cloud.css?v=20260725-single-layer-v1", "data-shynetyme-site-chuck-cloud"]
+    ["css/site-chuck-cloud.css?v=20260725-neon-sprites-v1", "data-shynetyme-site-chuck-cloud"]
   ];
 
   const loadStyle = ([path, attribute]) => {
@@ -111,5 +111,5 @@
   loadScript("js/hero-carousel.js", "data-shynetyme-hero-carousel", "ShynetymeHeroCarousel")
     .finally(() => loadScript("js/site-led-matrix.js", "data-shynetyme-led-matrix-script", "ShynetymeLedMatrix"));
   loadBikeBuilder();
-  loadScript("js/site-chuck.js?v=20260725-single-layer-v1", "data-shynetyme-site-chuck-script", "ShynetymeChuck");
+  loadScript("js/site-chuck.js?v=20260725-neon-sprites-v1", "data-shynetyme-site-chuck-script", "ShynetymeChuck");
 })();
