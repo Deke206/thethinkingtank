@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T12:08:38.651Z",
-  "commitCount": 197,
+  "generatedAt": "2026-07-24T12:23:38.340Z",
+  "commitCount": 198,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -988,6 +988,11 @@
       "sha": "caa927a4e9463a9621240504c0219a479b5c86d7",
       "date": "2026-07-24T12:08:26Z",
       "message": "Bust cache for shorter LED matrix banners"
+    },
+    {
+      "sha": "3b46f0319aac90c2b0ec0a968f79497292043f15",
+      "date": "2026-07-24T12:23:24Z",
+      "message": "Add wave-reveal effect to shared LED matrix"
     }
   ]
 }
