@@ -1,10 +1,10 @@
 /*
  * Canonical site-wide Chuck stylesheet.
- * The two imports preserve the current shared artwork while this entrypoint
- * neutralizes legacy .deke-page overrides left in site-motion.css.
+ * Shared base artwork and refinements are loaded first; the rules below
+ * neutralize legacy .deke-page overrides left in site-motion.css.
  */
-@import url("./about-deke-chuck.css?v=20260724-exact-thought-cloud-v1");
-@import url("./chuck-refinements.css?v=20260724-tail-idle-v1");
+@import url("./site-chuck-base.css?v=20260724-shared-chuck-v3");
+@import url("./site-chuck-refinements.css?v=20260724-shared-chuck-v3");
 
 body.deke-page .deke-chuck-trigger {
   overflow: visible;
