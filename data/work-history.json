@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T03:56:32.853Z",
-  "commitCount": 159,
+  "generatedAt": "2026-07-24T03:58:00.357Z",
+  "commitCount": 160,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -798,6 +798,11 @@
       "sha": "6acfe550b46b63ec1946fa9ed26288437e5b9a66",
       "date": "2026-07-24T03:56:17Z",
       "message": "Load canonical shared Chuck component sitewide"
+    },
+    {
+      "sha": "797f78f0b1d3bfe6f5e59b97b864043c9ded36f1",
+      "date": "2026-07-24T03:57:43Z",
+      "message": "Compact work history and use shared Chuck on About Deke"
     }
   ]
 }
