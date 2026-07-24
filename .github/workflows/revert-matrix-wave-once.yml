@@ -1,0 +1,98 @@
+name: Revert matrix wave once
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/revert-matrix-wave-once.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  revert-wave:
+    if: ${{ github.event.head_commit.message != 'Revert LED matrix wave effect but keep spacing' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Revert wave effect while preserving spacing and height
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('js/site-led-matrix.js')
+          text = path.read_text()
+
+          text = text.replace(
+              'const EFFECTS = ["wave", "comet", "scan", "type", "center", "stack-right", "wipe", "chase"];',
+              'const EFFECTS = ["chase", "center", "scan", "type", "flag", "stack-right", "wipe", "comet"];'
+          )
+          text = text.replace(
+              'const LONG_TEXT_EFFECTS = ["wave", "comet", "chase"];',
+              'const LONG_TEXT_EFFECTS = ["chase", "flag", "comet"];'
+          )
+
+          text = re.sub(
+              r'function pickEffect\(text, used\) \{\n    const choices = text\.length > 46 \? LONG_TEXT_EFFECTS : EFFECTS;\n    if \(!used\.has\("wave"\)\) \{\n      used\.add\("wave"\);\n      return "wave";\n    \}\n    return uniquePick\(choices, used\);\n  \}',
+              'function pickEffect(text, used) {\n    const choices = text.length > 46 ? LONG_TEXT_EFFECTS : EFFECTS;\n    return uniquePick(choices, used);\n  }',
+              text
+          )
+
+          text = re.sub(
+              r'const preferred = mode === "wave"\n      \? PALETTES\[0\]\n      : mode === "flag"\n        \? PALETTES\[1\]\n        : mode === "wipe"\n          \? PALETTES\[2\]\n          : mode === "stack-right" && Math\.random\(\) > 0\.5\n            \? PALETTES\[3\]\n            : null;',
+              'const preferred = mode === "flag"\n      ? PALETTES[1]\n      : mode === "wipe"\n        ? PALETTES[2]\n        : mode === "stack-right" && Math.random() > 0.5\n          ? PALETTES[3]\n          : null;',
+              text
+          )
+
+          text = re.sub(
+              r'\n    drawWaveBackground\(waveX, width, direction, elapsed\) \{.*?\n    \}\n\n    drawChase',
+              '\n    drawChase',
+              text,
+              flags=re.S
+          )
+
+          text = re.sub(
+              r'\n    drawWave\(elapsed\) \{.*?\n    \}\n\n    render',
+              '\n\n    render',
+              text,
+              flags=re.S
+          )
+
+          text = text.replace('      if (this.mode === "wave") this.drawWave(elapsed);\n', '')
+
+          text = text.replace(
+              '''      const topMode = "wave";
+      const bottomMode = "wave";
+      usedEffects.add("wave");
+      mountDisplay(top.canvas, text.top, topMode, pickPalette(topMode, usedPalettes), "hero");
+      mountDisplay(bottom.canvas, text.bottom, bottomMode, pickPalette(bottomMode, usedPalettes), "hero");''',
+              '''      const topMode = pickEffect(text.top, usedEffects);
+      const bottomMode = pickEffect(text.bottom, usedEffects);
+      mountDisplay(top.canvas, text.top, topMode, pickPalette(topMode, usedPalettes), "hero");
+      mountDisplay(bottom.canvas, text.bottom, bottomMode, pickPalette(bottomMode, usedPalettes), "hero");'''
+          )
+
+          text = text.replace(
+              '''      this.context.globalAlpha = clamp(alpha);
+      this.context.fillStyle = color;
+      this.context.fillRect(x, y, dot, dot);''',
+              '''      this.context.fillStyle = color;
+      this.context.globalAlpha = clamp(alpha * 0.34);
+      this.context.fillRect(x - dot * 0.28, y - dot * 0.28, dot * 1.56, dot * 1.56);
+      this.context.globalAlpha = clamp(alpha * 1.22);
+      this.context.fillRect(x, y, dot, dot);'''
+          )
+
+          path.write_text(text)
+          PY
+          node --check js/site-led-matrix.js
+      - name: Remove one-time workflow
+        run: rm .github/workflows/revert-matrix-wave-once.yml
+      - name: Commit cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add js/site-led-matrix.js .github/workflows/revert-matrix-wave-once.yml
+          git commit -m "Revert LED matrix wave effect but keep spacing"
+          git push
