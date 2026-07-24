@@ -1,3 +1,3 @@
 /* Canonical site-wide Chuck stylesheet. */
-@import url("./site-chuck-base.css?v=20260724-root-cleanup");
-@import url("./site-chuck-refinements.css?v=20260724-root-cleanup");
+@import url("./site-chuck-base.css");
+@import url("./site-chuck-refinements.css");

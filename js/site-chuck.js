@@ -9,10 +9,10 @@
     : new URL("js/site-chuck.js", window.location.href);
   const siteRoot = new URL("../", scriptUrl);
 
-  const chuckCssUrl = new URL("css/site-chuck.css?v=20260724-root-about-cleanup", siteRoot).href;
-  const chuckSpriteUrl = new URL("js/chuck-sprite.js?v=20260724-real-chuck-frames", siteRoot).href;
-  const scanAtlasUrl = new URL("assets/brand/chuck-search-map.webp?v=20260723", siteRoot).href;
-  const laptopAtlasUrl = new URL("assets/brand/chuck-search-laptop.webp?v=20260723", siteRoot).href;
+  const chuckCssUrl = new URL("css/site-chuck.css", siteRoot).href;
+  const chuckSpriteUrl = new URL("js/chuck-sprite.js", siteRoot).href;
+  const scanAtlasUrl = new URL("assets/brand/chuck-search-map.webp", siteRoot).href;
+  const laptopAtlasUrl = new URL("assets/brand/chuck-search-laptop.webp", siteRoot).href;
   const fallbackImageUrl = new URL("assets/brand/pet-chuck-mark.png", siteRoot).href;
 
   const loadStylesheet = () => {

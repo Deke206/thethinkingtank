@@ -6,26 +6,6 @@
     #030918;
 }
 
-.deke-hero {
-  min-height: clamp(520px, 64vw, 720px);
-  background-position: center 58%;
-}
-
-.deke-hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background:
-    linear-gradient(90deg, rgba(3, 9, 24, .94) 0%, rgba(3, 9, 24, .74) 38%, rgba(3, 9, 24, .2) 72%),
-    repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 5px);
-}
-
-.deke-hero .container { z-index: 2; }
-.deke-hero .hero-led-stack { max-width: 720px; }
-.deke-hero .hero-led-banner__message { font-size: clamp(.95rem, 2.15vw, 1.55rem); }
-.deke-hero .hero-led-banner--headline .hero-led-banner__message { font-size: clamp(1.25rem, 3.25vw, 2.4rem); }
 
 .deke-main {
   position: relative;
@@ -295,7 +275,6 @@
 @media (max-width: 991.98px) {
   .deke-story-grid { grid-template-columns: 1fr; }
   .deke-services { grid-template-columns: 1fr; }
-  .deke-hero { min-height: 620px; }
 }
 
 @media (max-width: 767.98px) {
@@ -304,7 +283,6 @@
 }
 
 @media (max-width: 575.98px) {
-  .deke-hero { min-height: 590px; }
   .deke-alert,
   .deke-card,
   .deke-support { border-radius: 1rem; }

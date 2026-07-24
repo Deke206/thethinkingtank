@@ -1,92 +1,53 @@
-/*
- * Shared hero and breadcrumb alignment.
- * LED matrix visuals live in css/site-led-matrix.css.
- */
-
+/* Canonical site-wide header and four-image carousel styling. */
 :root {
-  --site-hero-banner-width: 450px;
   --site-hero-height: clamp(540px, 52vw, 620px);
 }
 
-/* Match the Bootstrap container edge used by the navbar brand. */
-.hero > .container.hero-led-stack,
-.breadcrumb-ticker__rail {
-  width: 100% !important;
-  max-width: 100% !important;
-  margin-right: auto !important;
-  margin-left: auto !important;
-  padding-right: calc(var(--bs-gutter-x, 1.5rem) * .5) !important;
-  padding-left: calc(var(--bs-gutter-x, 1.5rem) * .5) !important;
-}
-
-.hero > .container.hero-led-stack {
-  display: grid;
-  justify-items: start;
-  align-content: center;
-  gap: .68rem;
-}
-
-.hero > .container.hero-led-stack > .hero-led-banner {
-  width: min(var(--site-hero-banner-width), 100%);
-}
-
-.hero > .container:not(.hero-led-stack) > .hero-led-stack {
-  width: min(var(--site-hero-banner-width), 100%) !important;
-  max-width: var(--site-hero-banner-width) !important;
-  margin: 0 !important;
-}
-
-.hero-led-stack { gap: .68rem !important; }
-.hero-led-banner { min-height: clamp(3.35rem, 5.4vw, 4.35rem) !important; }
-.hero-led-banner--headline { min-height: clamp(4rem, 6.5vw, 5.15rem) !important; }
-.hero-led-banner__message,
-.deke-page .deke-hero .hero-led-banner__message { font-size: clamp(1rem, 2.4vw, 1.85rem) !important; }
-.hero-led-banner--headline .hero-led-banner__message,
-.deke-page .deke-hero .hero-led-banner--headline .hero-led-banner__message { font-size: clamp(1.3rem, 3.5vw, 2.65rem) !important; }
-.hero-led-banner--details .hero-led-banner__message,
-.deke-page .deke-hero .hero-led-banner--details .hero-led-banner__message { font-size: clamp(.9rem, 2vw, 1.45rem) !important; }
-
-/* One generous image area across the site without filling the entire screen. */
-.hero,
-.deke-page .deke-hero {
+.hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
   min-height: var(--site-hero-height) !important;
   max-height: min(78svh, 620px) !important;
-  align-items: center !important;
   padding: 0 !important;
-  background-position: center center !important;
+  overflow: hidden;
+  color: #fff;
+  background: #030918 url('../assets/images/hero-scene-work.webp') center center / cover no-repeat !important;
 }
 
-.hero .container,
-.deke-page .deke-hero .container {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-}
-
-/* Keep the page photography bright and present. */
 .hero::before,
-.deke-page .deke-hero::after {
+.hero::after {
   content: none !important;
   display: none !important;
   background: none !important;
 }
 
-.hero-carousel__scene {
+.hero-carousel {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-carousel__scene {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
   background: #030918;
   transition: none !important;
 }
 
 .hero-carousel__scene.is-active {
-  transition: none !important;
-}
-
-.hero-carousel__scene::before {
-  content: none !important;
-  display: none !important;
+  opacity: 1;
+  visibility: visible;
 }
 
 .hero-carousel__scene img,
 .hero-carousel__scene.is-active img {
+  display: block;
   width: 100% !important;
   height: 100% !important;
   padding: 0 !important;
@@ -98,64 +59,16 @@
   transform: none !important;
 }
 
-/* No stars, shimmer, pan, zoom or picture overlays. Only the carousel changes slides. */
 .hero-carousel__sparkle {
   display: none !important;
-  opacity: 0 !important;
-  animation: none !important;
-  background: none !important;
-}
-
-.breadcrumb-ticker__rail {
-  padding-top: .62rem !important;
-  padding-bottom: .62rem !important;
-}
-
-@media (min-width: 576px) {
-  .hero > .container.hero-led-stack,
-  .breadcrumb-ticker__rail { max-width: 540px !important; }
-}
-
-@media (min-width: 768px) {
-  .hero > .container.hero-led-stack,
-  .breadcrumb-ticker__rail { max-width: 720px !important; }
-}
-
-@media (min-width: 992px) {
-  .hero > .container.hero-led-stack,
-  .breadcrumb-ticker__rail { max-width: 960px !important; }
-}
-
-@media (min-width: 1200px) {
-  .hero > .container.hero-led-stack,
-  .breadcrumb-ticker__rail { max-width: 1140px !important; }
-}
-
-@media (min-width: 1400px) {
-  .hero > .container.hero-led-stack,
-  .breadcrumb-ticker__rail { max-width: 1320px !important; }
 }
 
 @media (max-width: 991.98px) {
   :root { --site-hero-height: clamp(510px, 75vw, 580px); }
-
-  .hero,
-  .deke-page .deke-hero {
-    max-height: min(80svh, 580px) !important;
-  }
+  .hero { max-height: min(80svh, 580px) !important; }
 }
 
 @media (max-width: 575.98px) {
   :root { --site-hero-height: 500px; }
-
-  .hero,
-  .deke-page .deke-hero {
-    max-height: min(82svh, 500px) !important;
-  }
-
-  .hero > .container.hero-led-stack,
-  .breadcrumb-ticker__rail {
-    padding-right: .75rem !important;
-    padding-left: .75rem !important;
-  }
+  .hero { max-height: min(82svh, 500px) !important; }
 }
