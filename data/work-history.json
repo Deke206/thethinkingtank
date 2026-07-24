@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T06:06:39.949Z",
-  "commitCount": 176,
+  "generatedAt": "2026-07-24T06:07:25.466Z",
+  "commitCount": 179,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -883,6 +883,21 @@
       "sha": "60ab124b306adc2cd8442fe09e8f2715c8aee1df",
       "date": "2026-07-24T06:06:25Z",
       "message": "Remove obsolete About-named Chuck stylesheet"
+    },
+    {
+      "sha": "56988b919e46e6c137e56007220ae6fe4c6a9378",
+      "date": "2026-07-24T06:06:44Z",
+      "message": "Remove obsolete duplicate Chuck refinements"
+    },
+    {
+      "sha": "4f9a638ce6ecfe41a084e2586beba479130d2113",
+      "date": "2026-07-24T06:06:57Z",
+      "message": "Remove merged work history viewport patch"
+    },
+    {
+      "sha": "a558e7368bfda33fb48fa70971cdac125beb2ea2",
+      "date": "2026-07-24T06:07:07Z",
+      "message": "Remove merged newest-first history patch"
     }
   ]
 }
