@@ -1,7 +1,7 @@
 /* Canonical site-wide LED matrix and breadcrumb styling. */
 :root {
-  --site-matrix-ribbon-height: clamp(78px, 7.5vw, 94px);
-  --site-matrix-breadcrumb-height: clamp(62px, 6.5vw, 76px);
+  --site-matrix-ribbon-height: clamp(50px, 4.8vw, 62px);
+  --site-matrix-breadcrumb-height: clamp(42px, 4.2vw, 52px);
 }
 
 .site-matrix-ribbon {
@@ -19,10 +19,10 @@
     radial-gradient(circle, rgba(255, 90, 185, .055) 0 1px, transparent 1.4px),
     linear-gradient(180deg, rgba(2, 6, 17, .97), rgba(6, 21, 47, .95));
   background-position: 0 0, 4px 4px, 0 0;
-  background-size: 9px 9px, 11px 11px, auto;
+  background-size: 8px 8px, 10px 10px, auto;
   border-top: 2px solid rgba(49, 230, 255, .72);
   border-bottom: 2px solid rgba(255, 90, 185, .62);
-  box-shadow: 0 0 22px rgba(49, 230, 255, .14), 0 0 30px rgba(255, 90, 185, .09), inset 0 1px 0 rgba(255, 255, 255, .08);
+  box-shadow: 0 0 18px rgba(49, 230, 255, .13), 0 0 24px rgba(255, 90, 185, .08), inset 0 1px 0 rgba(255, 255, 255, .08);
 }
 
 .site-matrix-ribbon::before {
@@ -60,9 +60,9 @@
     radial-gradient(circle, rgba(155, 131, 255, .055) 0 1px, transparent 1.4px),
     linear-gradient(180deg, rgba(2, 6, 17, .98), rgba(6, 21, 47, .97));
   background-position: 0 0, 5px 5px, 0 0;
-  background-size: 9px 9px, 12px 12px, auto;
-  border-top: 2px solid rgba(49, 230, 255, .62);
-  border-bottom: 2px solid rgba(255, 90, 185, .5);
+  background-size: 8px 8px, 11px 11px, auto;
+  border-top: 1px solid rgba(49, 230, 255, .62);
+  border-bottom: 1px solid rgba(255, 90, 185, .5);
 }
 
 .breadcrumb-ticker__rail {
@@ -81,10 +81,10 @@
   align-items: center;
   gap: .42rem;
   margin: 0;
-  padding: .62rem 0;
+  padding: .42rem 0;
   list-style: none;
   font-family: var(--heading-font);
-  font-size: clamp(.82rem, 1.55vw, 1rem);
+  font-size: clamp(.76rem, 1.35vw, .92rem);
   font-weight: 800;
   letter-spacing: .08em;
   text-transform: uppercase;
@@ -109,6 +109,6 @@
 .site-matrix-canvas--breadcrumb { width: 100%; height: 100%; }
 
 @media (max-width: 575.98px) {
-  :root { --site-matrix-ribbon-height: 68px; --site-matrix-breadcrumb-height: 60px; }
+  :root { --site-matrix-ribbon-height: 46px; --site-matrix-breadcrumb-height: 40px; }
   .breadcrumb-ticker__rail { padding-right: .75rem; padding-left: .75rem; }
 }
