@@ -1,0 +1,58 @@
+name: Normalize static navigation
+
+on:
+  push:
+    paths:
+      - '.github/workflows/normalize-static-navigation.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use identical navigation markup on every page
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          pattern = re.compile(r'<div class="navbar-nav ms-auto">.*?</div>', re.S)
+
+          for path in sorted(Path('.').glob('*.html')):
+              html = path.read_text(encoding='utf-8')
+              if not pattern.search(html):
+                  continue
+
+              page = path.name
+              bike = page == 'build-my-bike.html'
+              home = page == 'build-my-home.html'
+              catalog = page == 'led-catalog.html'
+              about = page == 'aboutme.html'
+              contact = page == 'contact.html'
+
+              nav = f'''<div class="navbar-nav ms-auto">
+          <div class="nav-item dropdown shynetyme-build-menu" data-shynetyme-build-menu="true">
+            <button class="nav-link dropdown-toggle{' active' if bike or home else ''}" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open Build menu">Build</button>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-label="Build pages">
+              <li><a class="dropdown-item{' active' if bike else ''}"{' aria-current="page"' if bike else ''} href="build-my-bike.html">Bike Builder</a></li>
+              <li><a class="dropdown-item{' active' if home else ''}"{' aria-current="page"' if home else ''} href="build-my-home.html">Home Builder</a></li>
+            </ul>
+          </div>
+          <a class="nav-link{' active' if catalog else ''}"{' aria-current="page"' if catalog else ''} href="led-catalog.html">LED Catalog</a>
+          <a class="nav-link{' active' if about else ''}"{' aria-current="page"' if about else ''} href="aboutme.html">About Deke</a>
+          <a class="nav-link{' active' if contact else ''}"{' aria-current="page"' if contact else ''} href="contact.html">Request Install</a>
+        </div>'''
+
+              path.write_text(pattern.sub(nav, html, count=1), encoding='utf-8')
+          PY
+      - name: Commit navigation normalization
+        run: |
+          rm .github/workflows/normalize-static-navigation.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Use one shared navigation structure on every page'
+          git push
