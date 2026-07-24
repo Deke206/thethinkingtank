@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T11:20:04.641Z",
-  "commitCount": 190,
+  "generatedAt": "2026-07-24T11:20:36.240Z",
+  "commitCount": 191,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -953,6 +953,11 @@
       "sha": "6447bb9cb32343d7ad29b9f3bb9fcd43a44585d8",
       "date": "2026-07-24T11:19:52Z",
       "message": "Make shared navigation order identical on every page"
+    },
+    {
+      "sha": "a4205505e09516bb8eb14003a47011b9fd3cb7c3",
+      "date": "2026-07-24T11:20:22Z",
+      "message": "Add one-time static navigation normalization"
     }
   ]
 }
