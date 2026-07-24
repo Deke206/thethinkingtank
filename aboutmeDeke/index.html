@@ -24,6 +24,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../css/site.css?v=20260722-shared-banner-system">
   <link rel="stylesheet" href="../css/about-deke.css?v=20260722-about-deke-work-focus">
+  <link rel="stylesheet" href="../css/work-history.css?v=20260724-live">
 </head>
 <body class="deke-page">
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
@@ -93,6 +94,38 @@
         <h1 class="section-title mt-2" id="rightNow">Uber delivery was my last job. I am working toward something more stable.</h1>
         <p class="lead">Before the pandemic, I worked around Airbnb and property operations. When that work disappeared, I shifted into Uber deliveries and kept doing it for nearly five years.</p>
         <p>The app helped me survive, but the income became too unpredictable. The platform controls the rates and access to the work, while I still carry the repair costs, batteries, transportation and physical wear. I am not trying to avoid work—I am trying to replace unstable app income with direct customers and useful paid projects.</p>
+      </section>
+
+      <section class="work-history mb-4" id="workHistory" data-work-history data-repository="Deke206/thethinkingtank" data-branch="main" aria-labelledby="workHistoryTitle">
+        <div class="work-history__intro">
+          <p class="section-kicker">What I am building now</p>
+          <h2 class="section-title" id="workHistoryTitle">This website is also the work record.</h2>
+          <p class="work-history__explanation">Below is the website’s public edit history arranged from the first available commit to the newest. It shows the work as it happened—new pages, experiments, repairs, design changes, builders, LED effects and the mistakes that had to be corrected.</p>
+          <span class="work-history__readonly">Display only · no repository controls</span>
+        </div>
+
+        <div class="work-history__stats" role="list" aria-label="Website work-history summary">
+          <div class="work-history__stat" role="listitem">
+            <span class="work-history__stat-label">Website edits</span>
+            <strong class="work-history__stat-value" data-work-history-total>Loading</strong>
+          </div>
+          <div class="work-history__stat" role="listitem">
+            <span class="work-history__stat-label">Active build days</span>
+            <strong class="work-history__stat-value" data-work-history-days>Loading</strong>
+          </div>
+          <div class="work-history__stat" role="listitem">
+            <span class="work-history__stat-label">First recorded edit</span>
+            <strong class="work-history__stat-value" data-work-history-first>Loading</strong>
+          </div>
+          <div class="work-history__stat" role="listitem">
+            <span class="work-history__stat-label">Latest recorded edit</span>
+            <strong class="work-history__stat-value" data-work-history-latest>Loading</strong>
+          </div>
+        </div>
+
+        <p class="work-history__status" data-work-history-status role="status" aria-live="polite">Preparing the read-only website history…</p>
+        <ol class="work-history__timeline" data-work-history-timeline aria-label="Website edits from oldest to newest"></ol>
+        <noscript><p class="work-history__empty">JavaScript is required to display the read-only history timeline.</p></noscript>
       </section>
 
       <div class="deke-story-grid mb-4">
@@ -185,6 +218,7 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="../js/site-guide.js?v=20260724-performance-cleanup"></script>
+  <script src="../js/work-history.js?v=20260724-live"></script>
+  <script src="../js/site-guide.js?v=20260724-work-history"></script>
 </body>
 </html>
