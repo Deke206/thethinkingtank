@@ -10,6 +10,7 @@
   const siteRoot = new URL("../", scriptUrl);
 
   const chuckCssUrl = new URL("css/about-deke-chuck.css?v=20260724-exact-thought-cloud-v1", siteRoot).href;
+  const chuckRefinementCssUrl = new URL("css/chuck-refinements.css?v=20260724-tail-idle-v1", siteRoot).href;
   const chuckSpriteUrl = new URL("js/chuck-sprite.js?v=20260724-real-chuck-frames", siteRoot).href;
   const scanAtlasUrl = new URL("assets/brand/chuck-search-map.webp?v=20260723", siteRoot).href;
   const laptopAtlasUrl = new URL("assets/brand/chuck-search-laptop.webp?v=20260723", siteRoot).href;
@@ -30,6 +31,7 @@
   };
 
   loadStylesheet(chuckCssUrl, "data-shynetyme-chuck");
+  loadStylesheet(chuckRefinementCssUrl, "data-shynetyme-chuck-refinements");
 
   const removeRetiredGuide = () => {
     document.querySelectorAll(".site-guide-button, #siteGuidePanel").forEach((element) => element.remove());
@@ -171,6 +173,8 @@
 
   const showMessage = (message) => {
     window.clearTimeout(hideTimer);
+    widget.classList.remove("is-searching");
+    chuckAnimation?.stop();
     setColor(message.color);
     text.textContent = message.text;
     action.textContent = message.label;
