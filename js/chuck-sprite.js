@@ -10,9 +10,8 @@
     if (!button || !image || !scanUrl || !laptopUrl) return null;
     if (instances.has(button)) return instances.get(button);
 
-    // Kill the old stiff-image rocking immediately. The atlas is now the only
-    // visible Chuck artwork inside the button.
-    image.style.setProperty("display", "none", "important");
+    image.classList.add("chuck-idle-image");
+    image.style.setProperty("display", "block", "important");
     image.style.setProperty("animation", "none", "important");
     image.style.setProperty("transform", "none", "important");
 
@@ -25,18 +24,18 @@
       display: "block",
       width: "100%",
       height: "100%",
-      opacity: "1",
+      opacity: "0",
       backgroundImage: `url("${scanUrl}")`,
       backgroundRepeat: "no-repeat",
       backgroundSize: "600% 100%",
       backgroundPosition: "0% center",
       filter: "drop-shadow(0 0 9px rgba(49, 230, 255, .82))",
       pointerEvents: "none",
-      zIndex: "1"
+      zIndex: "1",
+      transition: "opacity .12s ease"
     });
     image.insertAdjacentElement("afterend", sprite);
 
-    // Warm both atlases without making their load timing control visibility.
     [scanUrl, laptopUrl].forEach((url) => {
       const preload = new Image();
       preload.decoding = "async";
@@ -63,6 +62,17 @@
       setFrame(0);
     };
 
+    const showIdle = () => {
+      sprite.style.opacity = "0";
+      image.style.setProperty("display", "block", "important");
+      image.style.setProperty("opacity", "1", "important");
+    };
+
+    const showResearch = () => {
+      image.style.setProperty("display", "none", "important");
+      sprite.style.opacity = "1";
+    };
+
     const tick = (now) => {
       if (!running) return;
       if (!lastFrameAt || now - lastFrameAt >= FRAME_INTERVAL_MS) {
@@ -75,6 +85,7 @@
     const api = {
       start(nextMode = "scan") {
         setMode(nextMode);
+        showResearch();
         button.classList.add("has-live-chuck-frames");
         if (running) return;
         running = true;
@@ -86,10 +97,12 @@
         window.cancelAnimationFrame(rafId);
         button.classList.remove("has-live-chuck-frames");
         setFrame(0);
+        showIdle();
       },
       setMode
     };
 
+    showIdle();
     instances.set(button, api);
     return api;
   };
