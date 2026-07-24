@@ -3,8 +3,8 @@
 
   if (window.ShynetymeLedMatrix?.initialized) return;
 
-  const EFFECTS = ["chase", "center", "scan", "type", "flag", "stack-right", "wipe", "comet"];
-  const LONG_TEXT_EFFECTS = ["chase", "flag", "comet"];
+  const EFFECTS = ["wave", "comet", "scan", "type", "center", "stack-right", "wipe", "chase"];
+  const LONG_TEXT_EFFECTS = ["wave", "comet", "chase"];
   const PALETTES = [
     ["#31e6ff", "#48a9ff", "#9b83ff", "#ff5ab9", "#ffc562", "#55e6b5"],
     ["#ff304f", "#ffffff", "#48a9ff", "#ffffff"],
@@ -35,17 +35,23 @@
 
   function pickEffect(text, used) {
     const choices = text.length > 46 ? LONG_TEXT_EFFECTS : EFFECTS;
+    if (!used.has("wave")) {
+      used.add("wave");
+      return "wave";
+    }
     return uniquePick(choices, used);
   }
 
   function pickPalette(mode, used) {
-    const preferred = mode === "flag"
-      ? PALETTES[1]
-      : mode === "wipe"
-        ? PALETTES[2]
-        : mode === "stack-right" && Math.random() > 0.5
-          ? PALETTES[3]
-          : null;
+    const preferred = mode === "wave"
+      ? PALETTES[0]
+      : mode === "flag"
+        ? PALETTES[1]
+        : mode === "wipe"
+          ? PALETTES[2]
+          : mode === "stack-right" && Math.random() > 0.5
+            ? PALETTES[3]
+            : null;
 
     if (preferred && !used.has(preferred)) {
       used.add(preferred);
@@ -105,6 +111,34 @@
     return { ribbon, canvas };
   }
 
+  function measureTrackedText(context, text, fontSize) {
+    const letterGap = Math.max(1.25, fontSize * 0.12);
+    const wordGap = Math.max(5, fontSize * 0.46);
+    const separatorGap = Math.max(5, fontSize * 0.38);
+    return [...text].reduce((width, character, index) => {
+      if (character === " ") return width + wordGap;
+      if (character === "✦") return width + context.measureText(character).width + separatorGap;
+      return width + context.measureText(character).width + (index ? letterGap : 0);
+    }, 0);
+  }
+
+  function drawTrackedText(context, text, x, y, fontSize) {
+    const letterGap = Math.max(1.25, fontSize * 0.12);
+    const wordGap = Math.max(5, fontSize * 0.46);
+    const separatorGap = Math.max(5, fontSize * 0.38);
+    let cursor = x;
+
+    [...text].forEach((character) => {
+      if (character === " ") {
+        cursor += wordGap;
+        return;
+      }
+
+      context.fillText(character, cursor, y);
+      cursor += context.measureText(character).width + (character === "✦" ? separatorGap : letterGap);
+    });
+  }
+
   function buildMask(text, rows, columns, mode) {
     const scratch = document.createElement("canvas");
     const context = scratch.getContext("2d", { willReadFrequently: true });
@@ -114,12 +148,12 @@
     const scrolling = mode === "chase" || mode === "flag" || mode === "comet";
 
     context.font = `900 ${fontSize}px Oxanium, Trebuchet MS, sans-serif`;
-    let measured = context.measureText(text).width + 8;
+    let measured = measureTrackedText(context, text, fontSize) + 8;
 
     if (!scrolling && measured > columns - 4) {
       fontSize = Math.max(7, Math.floor(fontSize * ((columns - 4) / measured)));
       context.font = `900 ${fontSize}px Oxanium, Trebuchet MS, sans-serif`;
-      measured = context.measureText(text).width + 8;
+      measured = measureTrackedText(context, text, fontSize) + 8;
     }
 
     scratch.width = Math.max(1, Math.ceil(measured));
@@ -129,7 +163,7 @@
     context.fillStyle = "#fff";
     context.textAlign = "left";
     context.textBaseline = "middle";
-    context.fillText(text, 4, rows / 2 + 0.5);
+    drawTrackedText(context, text, 4, rows / 2 + 0.5, fontSize);
 
     const pixels = context.getImageData(0, 0, scratch.width, scratch.height).data;
     const points = [];
@@ -208,8 +242,8 @@
       this.width = bounds.width;
       this.height = bounds.height;
       this.rows = this.role === "breadcrumb"
-        ? (this.width < 560 ? 9 : 11)
-        : (this.width < 560 ? 11 : 14);
+        ? (this.width < 560 ? 8 : 10)
+        : (this.width < 560 ? 9 : 11);
       this.cellHeight = this.height / this.rows;
       this.columns = Math.max(38, Math.floor(this.width / this.cellHeight));
       this.cellWidth = this.width / this.columns;
@@ -228,13 +262,31 @@
       if (!this.context || gridX < -2 || gridX > this.columns + 2 || gridY < -2 || gridY > this.rows + 2) return;
 
       const size = Math.min(this.cellWidth, this.cellHeight);
-      const dot = Math.max(1.4, size * 0.5 * sizeBoost);
+      const dot = Math.max(1.25, size * 0.44 * sizeBoost);
       const x = (gridX + 0.5) * this.cellWidth - dot / 2;
       const y = (gridY + 0.5) * this.cellHeight - dot / 2;
 
       this.context.globalAlpha = clamp(alpha);
       this.context.fillStyle = color;
       this.context.fillRect(x, y, dot, dot);
+    }
+
+    drawWaveBackground(waveX, width, direction, elapsed) {
+      if (!this.context) return;
+      const left = waveX - width;
+      const right = waveX + width;
+
+      for (let column = Math.floor(left); column <= Math.ceil(right); column += 1) {
+        const distance = Math.abs(column - waveX) / width;
+        const power = clamp(1 - distance);
+        if (!power) continue;
+
+        const x = column * this.cellWidth;
+        const colorShift = direction > 0 ? column : this.columns - column;
+        this.context.globalAlpha = power * 0.22;
+        this.context.fillStyle = this.colorAt(colorShift * 0.38 + elapsed * 0.0025);
+        this.context.fillRect(x, 0, this.cellWidth * 1.4, this.height);
+      }
     }
 
     drawChase(elapsed, flagMode = false) {
@@ -264,7 +316,7 @@
         this.drawLed(
           originX + point.x,
           point.y,
-          this.colorAt(distance * 0.17 + elapsed * 0.003),
+          this.colorAt(distance * 0.17),
           point.alpha * fade,
           1 + edge * 0.15
         );
@@ -277,7 +329,7 @@
 
       this.mask.points.forEach((point) => {
         const power = clamp(1 - Math.abs(point.x - scan) / 7);
-        const color = power > 0.68 ? "#ffffff" : this.colorAt(point.x * 0.14 + elapsed * 0.003);
+        const color = power > 0.68 ? "#ffffff" : this.colorAt(point.x * 0.14);
         this.drawLed(originX + point.x, point.y, color, point.alpha * (0.4 + power * 0.6), 1 + power * 0.18);
       });
     }
@@ -334,7 +386,7 @@
         this.drawLed(
           originX + point.x,
           point.y,
-          active > 0.65 ? "#ffffff" : this.colorAt(point.x * 0.12 + elapsed * 0.002),
+          active > 0.65 ? "#ffffff" : this.colorAt(point.x * 0.12),
           point.alpha * (base + active * 0.25),
           1 + active * 0.12
         );
@@ -348,8 +400,46 @@
 
       this.mask.points.forEach((point) => {
         const power = clamp(1 - Math.abs(point.x - comet) / 10);
-        const color = power > 0.66 ? "#ffffff" : this.colorAt(point.x * 0.17 + elapsed * 0.004);
+        const color = power > 0.66 ? "#ffffff" : this.colorAt(point.x * 0.17);
         this.drawLed(originX + point.x, point.y, color, point.alpha * (0.66 + power * 0.34), 1 + power * 0.16);
+      });
+    }
+
+    drawWave(elapsed) {
+      const originX = (this.columns - this.mask.width) / 2;
+      const cycle = (elapsed * speedFactor) % 7200;
+      const forwardEnd = 3300;
+      const crashEnd = 4050;
+      const span = this.mask.width + 28;
+      const forward = cycle < crashEnd;
+      const progress = cycle < forwardEnd
+        ? clamp(cycle / forwardEnd)
+        : cycle < crashEnd
+          ? 1
+          : 1 - clamp((cycle - crashEnd) / (7200 - crashEnd));
+      const wave = -14 + span * progress;
+      const waveWidth = this.role === "breadcrumb" ? 10 : 12;
+      const hold = cycle > forwardEnd && cycle < crashEnd;
+      const fade = cycle < 6600 ? 1 : clamp((7200 - cycle) / 600);
+
+      this.drawWaveBackground(originX + wave, waveWidth, forward ? 1 : -1, elapsed);
+
+      this.mask.points.forEach((point) => {
+        const passed = forward ? point.x <= wave : point.x >= wave;
+        const crest = clamp(1 - Math.abs(point.x - wave) / waveWidth);
+        const baseAlpha = passed || hold ? 0.94 : 0.08;
+        const letterBand = Math.floor(point.x / 5);
+        const solidColor = this.colorAt(letterBand);
+        const color = crest > 0.72 ? "#ffffff" : solidColor;
+        const nudge = Math.sin((point.y + elapsed * 0.006) + point.x * 0.12) * crest * 0.45;
+
+        this.drawLed(
+          originX + point.x,
+          point.y + nudge,
+          color,
+          point.alpha * Math.max(baseAlpha, crest) * fade,
+          1 + crest * 0.2
+        );
       });
     }
 
@@ -361,6 +451,7 @@
       this.context.save();
       this.context.globalCompositeOperation = "lighter";
 
+      if (this.mode === "wave") this.drawWave(elapsed);
       if (this.mode === "chase") this.drawChase(elapsed, false);
       if (this.mode === "flag") this.drawChase(elapsed, true);
       if (this.mode === "center") this.drawCenter(elapsed);
@@ -397,8 +488,9 @@
     hero.classList.add("hero--matrix-framed");
     hero.dataset.matrixReady = "true";
 
-    const topMode = pickEffect(text.top, usedEffects);
-    const bottomMode = pickEffect(text.bottom, usedEffects);
+    const topMode = "wave";
+    const bottomMode = "wave";
+    usedEffects.add("wave");
     mountDisplay(top.canvas, text.top, topMode, pickPalette(topMode, usedPalettes), "hero");
     mountDisplay(bottom.canvas, text.bottom, bottomMode, pickPalette(bottomMode, usedPalettes), "hero");
   }
