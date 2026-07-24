@@ -5,6 +5,30 @@
  * loaded last and preserves the important visual demonstrations at gentler speeds.
  */
 
+:root {
+  --bike-sim-stage-height: clamp(360px, 56vh, 500px);
+  --home-sim-stage-height: clamp(380px, 60vh, 520px);
+}
+
+/*
+ * Shared simulator viewport sizing. The owning Bike and Home CSS files still
+ * control their artwork and layout; this shared layer keeps both live previews
+ * inside the visitor's actual screen instead of relying on oversized fixed heights.
+ */
+.builder-page .bike-stage,
+.builder-page .bike-stage svg {
+  min-height: 0 !important;
+  height: var(--bike-sim-stage-height) !important;
+  max-height: var(--bike-sim-stage-height) !important;
+}
+
+.home-builder-page .home-stage,
+.home-builder-page .home-stage svg {
+  min-height: 0 !important;
+  height: var(--home-sim-stage-height) !important;
+  max-height: var(--home-sim-stage-height) !important;
+}
+
 .site-guide-button {
   isolation: isolate;
   overflow: visible;
@@ -194,9 +218,56 @@
   }
 }
 
+@media (max-width: 1199.98px) {
+  :root {
+    --bike-sim-stage-height: clamp(340px, 53vh, 460px);
+    --home-sim-stage-height: clamp(360px, 56vh, 480px);
+  }
+}
+
+@media (max-width: 991.98px) {
+  :root {
+    --bike-sim-stage-height: clamp(320px, 50vh, 420px);
+    --home-sim-stage-height: clamp(340px, 53vh, 440px);
+  }
+}
+
+@media (max-width: 767.98px) {
+  :root {
+    --bike-sim-stage-height: clamp(290px, 72vw, 370px);
+    --home-sim-stage-height: clamp(300px, 75vw, 390px);
+  }
+}
+
 @media (max-width: 575.98px) {
+  :root {
+    --bike-sim-stage-height: clamp(255px, 76vw, 320px);
+    --home-sim-stage-height: clamp(270px, 80vw, 340px);
+  }
+
   .site-guide-button {
     width: 82px;
     height: 82px;
+  }
+}
+
+@media (max-width: 390px) {
+  :root {
+    --bike-sim-stage-height: clamp(240px, 74vw, 290px);
+    --home-sim-stage-height: clamp(250px, 78vw, 310px);
+  }
+}
+
+@media (max-height: 700px) and (min-width: 768px) {
+  :root {
+    --bike-sim-stage-height: clamp(300px, 49vh, 370px);
+    --home-sim-stage-height: clamp(320px, 52vh, 390px);
+  }
+}
+
+@media (max-height: 560px) and (min-width: 768px) {
+  :root {
+    --bike-sim-stage-height: clamp(270px, 46vh, 320px);
+    --home-sim-stage-height: clamp(285px, 49vh, 340px);
   }
 }
