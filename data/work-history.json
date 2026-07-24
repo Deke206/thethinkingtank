@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T03:28:30.055Z",
-  "commitCount": 153,
+  "generatedAt": "2026-07-24T03:53:22.854Z",
+  "commitCount": 154,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -768,6 +768,11 @@
       "sha": "3a9b692782a742788b9d341c58e257ed04bc3e2d",
       "date": "2026-07-24T03:28:19Z",
       "message": "Publish read-only website work history on About Deke page"
+    },
+    {
+      "sha": "950e700645e700fd453a4595a6d07d0d18921ba8",
+      "date": "2026-07-24T03:53:10Z",
+      "message": "Make About work history compact and scrollable"
     }
   ]
 }
