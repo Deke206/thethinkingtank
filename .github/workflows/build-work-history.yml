@@ -1,0 +1,50 @@
+name: Build read-only work history
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - data/work-history.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: shynetyme-work-history
+  cancel-in-progress: true
+
+jobs:
+  build-history:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out website
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Generate public history snapshot
+        run: node scripts/build-work-history.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORK_HISTORY_REPOSITORY: Deke206/thethinkingtank
+          WORK_HISTORY_BRANCH: main
+
+      - name: Save refreshed snapshot
+        run: |
+          if git diff --quiet -- data/work-history.json; then
+            echo "History snapshot is already current."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/work-history.json
+          git commit -m "chore(history): refresh read-only website timeline [skip ci]"
+          git push
