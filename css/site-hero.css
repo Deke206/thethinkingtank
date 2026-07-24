@@ -73,6 +73,11 @@
 .hero-carousel__scene {
   overflow: hidden;
   background: #030918;
+  transition: none !important;
+}
+
+.hero-carousel__scene.is-active {
+  transition: none !important;
 }
 
 .hero-carousel__scene::before {
@@ -80,7 +85,8 @@
   display: none !important;
 }
 
-.hero-carousel__scene img {
+.hero-carousel__scene img,
+.hero-carousel__scene.is-active img {
   width: 100% !important;
   height: 100% !important;
   padding: 0 !important;
@@ -88,10 +94,16 @@
   object-position: center center !important;
   opacity: 1 !important;
   filter: none !important;
+  animation: none !important;
+  transform: none !important;
 }
 
-.hero-carousel__scene.is-active img {
-  animation: hero-scene-drift var(--scene-duration, 8000ms) ease-out both !important;
+/* No stars, shimmer, pan, zoom or picture overlays. Only the carousel changes slides. */
+.hero-carousel__sparkle {
+  display: none !important;
+  opacity: 0 !important;
+  animation: none !important;
+  background: none !important;
 }
 
 .breadcrumb-ticker__rail {
@@ -145,12 +157,5 @@
   .breadcrumb-ticker__rail {
     padding-right: .75rem !important;
     padding-left: .75rem !important;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-carousel__scene.is-active img {
-    animation: none !important;
-    transform: none !important;
   }
 }
