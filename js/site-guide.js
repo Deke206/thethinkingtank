@@ -13,7 +13,7 @@
     ["css/site-motion.css", "data-shynetyme-motion"],
     ["css/site-navigation.css", "data-shynetyme-navigation"],
     ["css/site-hero.css", "data-shynetyme-hero"],
-    ["css/site-led-matrix.css", "data-shynetyme-led-matrix"],
+    ["css/site-led-matrix.css?v=20260724-short-matrix", "data-shynetyme-led-matrix"],
     ["css/site-chuck.css", "data-shynetyme-site-chuck"]
   ];
 
