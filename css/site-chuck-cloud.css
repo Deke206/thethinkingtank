@@ -8,8 +8,8 @@
   bottom: 92px;
   width: min(410px, calc(100vw - 96px));
   aspect-ratio: 1 / 1;
-  padding: 20% 16% 31% !important;
-  gap: .7rem !important;
+  padding: 18% 14% 29% !important;
+  gap: .38rem !important;
   transform: translate(20px, 22px) scale(.08);
   transform-origin: 86% 88%;
   filter: drop-shadow(0 18px 28px rgba(0, 0, 0, .32));
@@ -35,23 +35,27 @@
 }
 
 .deke-chuck-thought__text {
-  max-width: 100%;
+  max-width: 82%;
   margin: 0;
-  font-size: clamp(.76rem, 1.7vw, .94rem) !important;
-  line-height: 1.22 !important;
-  overflow-wrap: normal;
+  font-size: clamp(.58rem, 1.22vw, .74rem) !important;
+  line-height: 1.08 !important;
+  overflow-wrap: break-word;
   word-break: normal;
   text-wrap: balance;
 }
 
 .deke-chuck-thought__action {
-  min-width: 118px;
-  min-height: 38px;
-  padding: .5rem .82rem;
+  min-width: 88px;
+  max-width: 130px;
+  min-height: 28px;
+  padding: .24rem .42rem;
   color: var(--thought-button-ink);
   background: var(--thought-button-bg);
   border-color: rgba(0, 0, 0, .28);
-  font-size: .79rem;
+  font-size: .58rem !important;
+  line-height: 1.02 !important;
+  white-space: normal;
+  text-align: center;
 }
 
 .deke-chuck-thought--cyan {
@@ -103,20 +107,23 @@
     right: 58px;
     bottom: 78px;
     width: min(340px, calc(100vw - 76px));
-    padding: 20% 15% 31% !important;
-    gap: .52rem !important;
+    padding: 18% 13% 29% !important;
+    gap: .28rem !important;
   }
 
   .deke-chuck-thought__text {
-    font-size: clamp(.68rem, 3vw, .82rem) !important;
-    line-height: 1.18 !important;
+    max-width: 80%;
+    font-size: clamp(.54rem, 2.45vw, .66rem) !important;
+    line-height: 1.04 !important;
   }
 
   .deke-chuck-thought__action {
-    min-width: 106px;
-    min-height: 35px;
-    padding: .44rem .68rem;
-    font-size: .72rem;
+    min-width: 78px;
+    max-width: 118px;
+    min-height: 25px;
+    padding: .2rem .34rem;
+    font-size: .52rem !important;
+    line-height: 1 !important;
   }
 }
 
