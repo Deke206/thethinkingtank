@@ -1,59 +1,52 @@
-/* Stable Chuck thought cloud: clean cloud shape, contained text, readable button. */
+/* Simple Chuck thought cloud: image-like cloud layer, two bubbles, transparent text area. */
 .deke-chuck-thought {
   --thought-fill: var(--cyan, #31e6ff);
   --thought-ink: #061b3d;
   --thought-button-bg: var(--pink, #ff5ab9);
   --thought-button-ink: #ffffff;
-  right: 82px;
-  bottom: 96px;
-  width: min(390px, calc(100vw - 92px));
-  min-height: 238px;
-  padding: 44px 48px 50px !important;
+  right: 78px;
+  bottom: 92px;
+  width: 330px;
+  height: 205px;
+  padding: 0 !important;
   box-sizing: border-box;
-  display: flex !important;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: .72rem !important;
-  color: var(--thought-ink) !important;
-  background:
-    radial-gradient(circle at 21% 42%, var(--thought-fill) 0 27%, transparent 28%),
-    radial-gradient(circle at 37% 24%, var(--thought-fill) 0 31%, transparent 32%),
-    radial-gradient(circle at 59% 22%, var(--thought-fill) 0 32%, transparent 33%),
-    radial-gradient(circle at 78% 42%, var(--thought-fill) 0 28%, transparent 29%),
-    radial-gradient(circle at 50% 58%, var(--thought-fill) 0 47%, transparent 48%);
-  border: 4px solid #092653;
-  border-radius: 48% 52% 46% 54% / 55% 47% 53% 45%;
-  box-shadow: 0 18px 30px rgba(0, 0, 0, .34);
-  transform: translate(18px, 20px) scale(.08);
-  transform-origin: 88% 94%;
-  overflow: visible !important;
-}
-
-.deke-chuck-thought::before,
-.deke-chuck-thought::after {
-  content: "" !important;
-  position: absolute;
   display: block !important;
-  background: var(--thought-fill);
-  border: 4px solid #092653;
-  border-radius: 999px;
-  transform: none !important;
-  pointer-events: none;
+  color: var(--thought-ink) !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+  transform: translate(18px, 20px) scale(.08);
+  transform-origin: 92% 104%;
 }
 
 .deke-chuck-thought::before {
-  right: 28px;
-  bottom: -25px;
-  width: 38px;
-  height: 38px;
+  content: "" !important;
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: block !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 330 205'%3E%3Cpath d='M72 154c-30 0-54-22-54-50 0-25 19-46 45-50C75 28 103 12 134 18c15-13 36-20 60-15 26 5 46 24 51 48 32 3 57 26 57 54 0 31-29 55-65 55H72z' fill='currentColor' stroke='%23092653' stroke-width='7' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  color: var(--thought-fill);
+  pointer-events: none;
 }
 
 .deke-chuck-thought::after {
-  right: -8px;
-  bottom: -50px;
-  width: 22px;
-  height: 22px;
+  content: "" !important;
+  position: absolute;
+  z-index: 1;
+  right: 12px;
+  bottom: -42px;
+  width: 76px;
+  height: 52px;
+  display: block !important;
+  background:
+    radial-gradient(circle at 78% 78%, var(--thought-fill) 0 12px, #092653 13px 16px, transparent 17px),
+    radial-gradient(circle at 38% 38%, var(--thought-fill) 0 18px, #092653 19px 23px, transparent 24px);
+  pointer-events: none;
 }
 
 .deke-chuck-thought.is-visible {
@@ -64,40 +57,50 @@
   animation: chuck-cloud-grow .55s cubic-bezier(.18, .9, .28, 1.08) both;
 }
 
-.deke-chuck-thought.is-materializing::before,
-.deke-chuck-thought.is-materializing::after {
-  animation: none !important;
+.deke-chuck-thought__close {
+  z-index: 4;
+  top: 26px !important;
+  right: 34px !important;
 }
 
 .deke-chuck-thought__text {
-  position: relative;
+  position: absolute;
   z-index: 2;
-  width: 100%;
-  max-width: 275px;
+  left: 50px;
+  top: 52px;
+  width: 230px;
+  height: 82px;
   margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
   color: var(--thought-ink) !important;
-  font-size: clamp(.82rem, 1.62vw, 1rem) !important;
+  font-size: 12px !important;
   font-weight: 800;
   line-height: 1.18 !important;
   text-align: center;
+  overflow: hidden;
   overflow-wrap: break-word;
   word-break: normal;
   text-wrap: balance;
 }
 
 .deke-chuck-thought__action {
-  position: relative;
+  position: absolute;
   z-index: 2;
-  min-width: 136px;
-  max-width: 235px;
-  min-height: 40px;
-  padding: .54rem .9rem;
+  left: 50%;
+  bottom: 43px;
+  transform: translateX(-50%);
+  min-width: 120px;
+  max-width: 190px;
+  min-height: 34px;
+  padding: 7px 14px;
   box-sizing: border-box;
   color: var(--thought-button-ink) !important;
   background: var(--thought-button-bg) !important;
   border: 3px solid #092653 !important;
   border-radius: 999px;
-  font-size: clamp(.8rem, 1.35vw, .94rem) !important;
+  font-size: 12px !important;
   font-weight: 900;
   line-height: 1.08;
   text-align: center;
@@ -105,12 +108,6 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-}
-
-.deke-chuck-thought__close {
-  z-index: 3;
-  top: 24px !important;
-  right: 34px !important;
 }
 
 .deke-chuck-thought--cyan {
@@ -150,44 +147,38 @@
 
 @media (max-width: 575.98px) {
   .deke-chuck-thought {
-    right: 62px;
-    bottom: 86px;
-    width: min(330px, calc(100vw - 78px));
-    min-height: 215px;
-    padding: 38px 36px 44px !important;
-    gap: .55rem !important;
+    right: 56px;
+    bottom: 82px;
+    width: 292px;
+    height: 182px;
   }
 
   .deke-chuck-thought__text {
-    max-width: 228px;
-    font-size: clamp(.72rem, 3.1vw, .86rem) !important;
-    line-height: 1.15 !important;
+    left: 44px;
+    top: 45px;
+    width: 204px;
+    height: 74px;
+    font-size: 11px !important;
   }
 
   .deke-chuck-thought__action {
-    min-width: 120px;
-    min-height: 36px;
-    padding: .46rem .72rem;
-    font-size: clamp(.7rem, 2.9vw, .8rem) !important;
+    bottom: 36px;
+    min-width: 108px;
+    min-height: 31px;
+    padding: 6px 12px;
+    font-size: 11px !important;
   }
 
   .deke-chuck-thought__close {
-    top: 18px !important;
-    right: 26px !important;
-  }
-
-  .deke-chuck-thought::before {
-    right: 24px;
-    bottom: -22px;
-    width: 32px;
-    height: 32px;
+    top: 22px !important;
+    right: 30px !important;
   }
 
   .deke-chuck-thought::after {
-    right: -2px;
-    bottom: -42px;
-    width: 18px;
-    height: 18px;
+    right: 10px;
+    bottom: -38px;
+    transform: scale(.86);
+    transform-origin: top right;
   }
 }
 
