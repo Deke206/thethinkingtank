@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T06:02:36.254Z",
-  "commitCount": 170,
+  "generatedAt": "2026-07-24T06:03:23.306Z",
+  "commitCount": 171,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -853,6 +853,11 @@
       "sha": "e5417465e05b88be4c76d5b69a0b716e063fba4b",
       "date": "2026-07-24T06:02:20Z",
       "message": "Remove About-page forcing from shared Chuck styles"
+    },
+    {
+      "sha": "d207398da0cb1e06f6725635f89c162e6516473b",
+      "date": "2026-07-24T06:03:09Z",
+      "message": "Remove legacy About-only Chuck overrides"
     }
   ]
 }
