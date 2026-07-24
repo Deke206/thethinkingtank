@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T11:20:36.240Z",
-  "commitCount": 191,
+  "generatedAt": "2026-07-24T11:22:30.516Z",
+  "commitCount": 192,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -958,6 +958,11 @@
       "sha": "a4205505e09516bb8eb14003a47011b9fd3cb7c3",
       "date": "2026-07-24T11:20:22Z",
       "message": "Add one-time static navigation normalization"
+    },
+    {
+      "sha": "36940e2540b73cc3bd161fe8897e319fe97f0322",
+      "date": "2026-07-24T11:22:16Z",
+      "message": "Make static navigation cleanup resilient to history refreshes"
     }
   ]
 }
