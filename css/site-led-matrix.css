@@ -1,7 +1,7 @@
 /* Canonical site-wide LED matrix and breadcrumb styling. */
 :root {
-  --site-matrix-ribbon-height: clamp(50px, 4.8vw, 62px);
-  --site-matrix-breadcrumb-height: clamp(42px, 4.2vw, 52px);
+  --site-matrix-ribbon-height: clamp(46px, 4.4vw, 58px);
+  --site-matrix-breadcrumb-height: clamp(38px, 3.8vw, 48px);
 }
 
 .site-matrix-ribbon {
@@ -15,9 +15,9 @@
   isolation: isolate;
   background-color: #020611;
   background-image:
-    radial-gradient(circle, rgba(49, 230, 255, .08) 0 1px, transparent 1.45px),
-    radial-gradient(circle, rgba(255, 90, 185, .055) 0 1px, transparent 1.4px),
-    linear-gradient(180deg, rgba(2, 6, 17, .97), rgba(6, 21, 47, .95));
+    radial-gradient(circle, rgba(49, 230, 255, .065) 0 1px, transparent 1.45px),
+    radial-gradient(circle, rgba(255, 90, 185, .04) 0 1px, transparent 1.4px),
+    linear-gradient(180deg, rgba(2, 6, 17, .98), rgba(6, 21, 47, .96));
   background-position: 0 0, 4px 4px, 0 0;
   background-size: 8px 8px, 10px 10px, auto;
   border-top: 2px solid rgba(49, 230, 255, .72);
@@ -29,10 +29,13 @@
   content: "";
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 0;
   pointer-events: none;
-  background: repeating-linear-gradient(0deg, rgba(255,255,255,.026) 0 1px, transparent 1px 4px), linear-gradient(90deg, rgba(2,6,17,.68), transparent 7%, transparent 93%, rgba(2,6,17,.68));
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.016) 0 1px, transparent 1px 4px),
+    linear-gradient(90deg, rgba(2,6,17,.54), transparent 7%, transparent 93%, rgba(2,6,17,.54));
 }
+
 .site-matrix-ribbon--top { top: 0; }
 .site-matrix-ribbon--bottom { bottom: 0; }
 
@@ -42,9 +45,14 @@
   display: block;
   width: 100%;
   height: 100%;
+  opacity: 1;
   background: transparent;
   image-rendering: pixelated;
-  filter: saturate(1.18) drop-shadow(0 0 4px rgba(49, 230, 255, .3));
+  filter:
+    brightness(1.28)
+    saturate(1.12)
+    contrast(1.08)
+    drop-shadow(0 0 4px rgba(49, 230, 255, .42));
 }
 
 .breadcrumb-ticker {
@@ -56,9 +64,9 @@
   contain: layout paint;
   background-color: #020611;
   background-image:
-    radial-gradient(circle, rgba(49, 230, 255, .07) 0 1px, transparent 1.4px),
-    radial-gradient(circle, rgba(155, 131, 255, .055) 0 1px, transparent 1.4px),
-    linear-gradient(180deg, rgba(2, 6, 17, .98), rgba(6, 21, 47, .97));
+    radial-gradient(circle, rgba(49, 230, 255, .055) 0 1px, transparent 1.4px),
+    radial-gradient(circle, rgba(155, 131, 255, .04) 0 1px, transparent 1.4px),
+    linear-gradient(180deg, rgba(2, 6, 17, .99), rgba(6, 21, 47, .98));
   background-position: 0 0, 5px 5px, 0 0;
   background-size: 8px 8px, 11px 11px, auto;
   border-top: 1px solid rgba(49, 230, 255, .62);
@@ -81,14 +89,15 @@
   align-items: center;
   gap: .42rem;
   margin: 0;
-  padding: .42rem 0;
+  padding: .36rem 0;
   list-style: none;
   font-family: var(--heading-font);
-  font-size: clamp(.76rem, 1.35vw, .92rem);
+  font-size: clamp(.72rem, 1.2vw, .88rem);
   font-weight: 800;
-  letter-spacing: .08em;
+  letter-spacing: .07em;
   text-transform: uppercase;
 }
+
 .breadcrumb-ticker__item { display: inline-flex; align-items: center; gap: .42rem; min-width: 0; }
 .breadcrumb-ticker__item + .breadcrumb-ticker__item::before { content: "›"; color: #ffe45e; }
 .breadcrumb-ticker a { color: var(--cyan); text-decoration: none; }
@@ -106,9 +115,53 @@
   clip-path: inset(50%) !important;
   white-space: nowrap !important;
 }
+
 .site-matrix-canvas--breadcrumb { width: 100%; height: 100%; }
 
+@media (max-width: 1199.98px) {
+  :root {
+    --site-matrix-ribbon-height: 48px;
+    --site-matrix-breadcrumb-height: 40px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  :root {
+    --site-matrix-ribbon-height: 42px;
+    --site-matrix-breadcrumb-height: 36px;
+  }
+
+  .breadcrumb-ticker__rail {
+    padding-right: .75rem;
+    padding-left: .75rem;
+  }
+}
+
 @media (max-width: 575.98px) {
-  :root { --site-matrix-ribbon-height: 46px; --site-matrix-breadcrumb-height: 40px; }
-  .breadcrumb-ticker__rail { padding-right: .75rem; padding-left: .75rem; }
+  :root {
+    --site-matrix-ribbon-height: 38px;
+    --site-matrix-breadcrumb-height: 34px;
+  }
+
+  .site-matrix-canvas {
+    filter:
+      brightness(1.34)
+      saturate(1.08)
+      contrast(1.1)
+      drop-shadow(0 0 3px rgba(49, 230, 255, .4));
+  }
+}
+
+@media (max-width: 390px) {
+  :root {
+    --site-matrix-ribbon-height: 34px;
+    --site-matrix-breadcrumb-height: 30px;
+  }
+}
+
+@media (max-height: 700px) and (min-width: 768px) {
+  :root {
+    --site-matrix-ribbon-height: 42px;
+    --site-matrix-breadcrumb-height: 34px;
+  }
 }
