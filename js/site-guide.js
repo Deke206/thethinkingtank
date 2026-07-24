@@ -8,19 +8,25 @@
     ? new URL(document.currentScript.src, window.location.href)
     : new URL("js/site-guide.js", window.location.href);
   const siteRoot = new URL("../", scriptUrl);
+  const sharedRevision = scriptUrl.searchParams.get("v") || "shared-ui-1";
+  const withRevision = (path) => {
+    const url = new URL(path, siteRoot);
+    url.searchParams.set("v", sharedRevision);
+    return url.href;
+  };
 
   const sharedStyles = [
     ["css/site-motion.css", "data-shynetyme-motion"],
     ["css/site-navigation.css", "data-shynetyme-navigation"],
     ["css/site-hero.css", "data-shynetyme-hero"],
-    ["css/site-led-matrix.css?v=20260724-short-matrix", "data-shynetyme-led-matrix"],
-    ["css/site-chuck.css?v=20260724-cloud-guidance", "data-shynetyme-site-chuck"],
-    ["css/site-chuck-cloud.css?v=20260725-neon-position-v2", "data-shynetyme-site-chuck-cloud"]
+    ["css/site-led-matrix.css", "data-shynetyme-led-matrix"],
+    ["css/site-chuck.css", "data-shynetyme-site-chuck"],
+    ["css/site-chuck-cloud.css", "data-shynetyme-site-chuck-cloud"]
   ];
 
   const loadStyle = ([path, attribute]) => {
     const existing = document.querySelector(`link[${attribute}]`);
-    const href = new URL(path, siteRoot).href;
+    const href = withRevision(path);
     if (existing) {
       if (existing.href !== href) existing.href = href;
       return;
@@ -47,7 +53,7 @@
     }
 
     const script = document.createElement("script");
-    script.src = new URL(path, siteRoot).href;
+    script.src = withRevision(path);
     script.defer = true;
     script.setAttribute(attribute, "true");
     script.addEventListener("load", () => resolve(window[globalName] || null), { once: true });
@@ -111,5 +117,5 @@
   loadScript("js/hero-carousel.js", "data-shynetyme-hero-carousel", "ShynetymeHeroCarousel")
     .finally(() => loadScript("js/site-led-matrix.js", "data-shynetyme-led-matrix-script", "ShynetymeLedMatrix"));
   loadBikeBuilder();
-  loadScript("js/site-chuck.js?v=20260725-neon-position-v2", "data-shynetyme-site-chuck-script", "ShynetymeChuck");
+  loadScript("js/site-chuck.js", "data-shynetyme-site-chuck-script", "ShynetymeChuck");
 })();
