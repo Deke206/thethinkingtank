@@ -9,7 +9,7 @@
     : new URL("js/about-deke-chuck.js", window.location.href);
   const siteRoot = new URL("../", scriptUrl);
 
-  const chuckCssUrl = new URL("css/about-deke-chuck.css?v=20260724-bottom-only-chuck", siteRoot).href;
+  const chuckCssUrl = new URL("css/about-deke-chuck.css?v=20260724-exact-thought-cloud-v1", siteRoot).href;
   const chuckSpriteUrl = new URL("js/chuck-sprite.js?v=20260724-real-chuck-frames", siteRoot).href;
   const scanAtlasUrl = new URL("assets/brand/chuck-search-map.webp?v=20260723", siteRoot).href;
   const laptopAtlasUrl = new URL("assets/brand/chuck-search-laptop.webp?v=20260723", siteRoot).href;
@@ -50,8 +50,8 @@
     widget.innerHTML = `
       <div class="deke-chuck-thought deke-chuck-thought--yellow" id="dekeChuckThought" role="status" aria-live="polite" hidden>
         <button class="deke-chuck-thought__close" id="dekeChuckClose" type="button" aria-label="Close Chuck's message">×</button>
-        <p class="deke-chuck-thought__text" id="dekeChuckText">A little generator gas keeps Deke's PC powered and the work moving.</p>
-        <a class="deke-chuck-thought__action" id="dekeChuckAction" href="https://cash.app/$westsidels310" target="_blank" rel="noopener">Cash App</a>
+        <p class="deke-chuck-thought__text" id="dekeChuckText"></p>
+        <a class="deke-chuck-thought__action" id="dekeChuckAction" href="#" target="_blank" rel="noopener"></a>
       </div>
       <button class="deke-chuck-trigger" id="dekeChuckTrigger" type="button" aria-expanded="false" aria-controls="dekeChuckThought" aria-label="Show Chuck's next thought">
         <span class="deke-chuck-search-light" aria-hidden="true"></span>
@@ -110,23 +110,30 @@
     },
     {
       color: "blue",
-      text: "Have a paid project, referral or useful lead for Deke?",
+      text: "Have a paid project, referral, or useful lead for Deke?",
       label: "Message Me",
       href: "https://wa.me/13109452378?text=I%20saw%20ShyneTyme.Works%20and%20may%20have%20a%20project%20or%20lead%20for%20you."
     },
     {
-      color: "yellow",
-      text: "No project today? A quick hello or smile message still helps.",
+      color: "green",
+      text: "No project today? A quick hello still helps keep the momentum alive.",
       label: "Say Hi",
       href: "https://wa.me/13109452378?text=Hi%20Deke%20%E2%80%94%20I%20saw%20ShyneTyme.Works.%20Keep%20going!%20%F0%9F%99%82"
     }
   ];
 
+  const MESSAGE_VISIBLE_MS = 10000;
+  const BOTTOM_MESSAGE_INTERVAL_MS = 20000;
+  const SCROLL_STOP_MS = 220;
+
   let chuckAnimation = null;
   let messageIndex = -1;
-  let bottomPromptShown = false;
-  let bottomObserver = null;
-  let fallbackScrollHandler = null;
+  let previousScrollY = window.scrollY;
+  let scrollStopTimer = 0;
+  let hideTimer = 0;
+  let initialTimer = 0;
+  let bottomCycleTimer = 0;
+  let initialMessagePending = true;
 
   loadChuckSprite().then((spriteApi) => {
     chuckAnimation = spriteApi?.mount({
@@ -138,16 +145,22 @@
     chuckAnimation?.stop();
   });
 
+  const isAtBottom = () => (
+    window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 8
+  );
+
   const setColor = (color) => {
     thought.classList.remove(
       "deke-chuck-thought--yellow",
       "deke-chuck-thought--pink",
-      "deke-chuck-thought--blue"
+      "deke-chuck-thought--blue",
+      "deke-chuck-thought--green"
     );
     thought.classList.add(`deke-chuck-thought--${color}`);
   };
 
   const hideThought = () => {
+    window.clearTimeout(hideTimer);
     thought.classList.remove("is-visible");
     trigger.setAttribute("aria-expanded", "false");
 
@@ -156,8 +169,8 @@
     }, 360);
   };
 
-  const showMessage = (index) => {
-    const message = messages[index];
+  const showMessage = (message) => {
+    window.clearTimeout(hideTimer);
     setColor(message.color);
     text.textContent = message.text;
     action.textContent = message.label;
@@ -168,49 +181,108 @@
       thought.classList.add("is-visible");
       trigger.setAttribute("aria-expanded", "true");
     });
+
+    hideTimer = window.setTimeout(hideThought, MESSAGE_VISIBLE_MS);
   };
 
   const showNextMessage = () => {
     messageIndex = (messageIndex + 1) % messages.length;
-    showMessage(messageIndex);
+    showMessage(messages[messageIndex]);
   };
 
-  const showBottomPromptOnce = () => {
-    if (bottomPromptShown) return;
-    bottomPromptShown = true;
+  const clearBottomCycle = () => {
+    window.clearTimeout(bottomCycleTimer);
+    bottomCycleTimer = 0;
+  };
+
+  const scheduleNextBottomMessage = () => {
+    clearBottomCycle();
+    if (!isAtBottom()) return;
+
+    bottomCycleTimer = window.setTimeout(() => {
+      if (!isAtBottom()) return;
+      showNextMessage();
+      scheduleNextBottomMessage();
+    }, BOTTOM_MESSAGE_INTERVAL_MS);
+  };
+
+  const startBottomCycle = (showImmediately = true) => {
+    clearBottomCycle();
+    if (!isAtBottom()) return;
+
+    if (showImmediately) showNextMessage();
+    scheduleNextBottomMessage();
+  };
+
+  const cancelInitialMessage = () => {
+    initialMessagePending = false;
+    window.clearTimeout(initialTimer);
+  };
+
+  const handleScroll = () => {
+    cancelInitialMessage();
+    clearBottomCycle();
+    hideThought();
+
+    const currentScrollY = window.scrollY;
+    const mode = currentScrollY < previousScrollY ? "scan" : "laptop";
+    previousScrollY = currentScrollY;
+
+    widget.classList.add("is-searching");
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      chuckAnimation?.start(mode);
+    }
+
+    window.clearTimeout(scrollStopTimer);
+    scrollStopTimer = window.setTimeout(() => {
+      widget.classList.remove("is-searching");
+      chuckAnimation?.stop();
+
+      // No thought appears when ordinary scrolling stops. Bottom is the only exception.
+      if (isAtBottom()) startBottomCycle(true);
+    }, SCROLL_STOP_MS);
+  };
+
+  trigger.addEventListener("click", () => {
+    cancelInitialMessage();
+    widget.classList.remove("is-searching");
+    chuckAnimation?.stop();
     showNextMessage();
-    bottomObserver?.disconnect();
-    if (fallbackScrollHandler) window.removeEventListener("scroll", fallbackScrollHandler);
-  };
+    if (isAtBottom()) scheduleNextBottomMessage();
+  });
 
-  const bottomTarget = document.querySelector("footer") || document.querySelector("main > :last-child") || document.body;
+  close.addEventListener("click", () => {
+    hideThought();
+    if (isAtBottom()) scheduleNextBottomMessage();
+  });
 
-  if ("IntersectionObserver" in window) {
-    bottomObserver = new IntersectionObserver((entries) => {
-      if (entries.some((entry) => entry.isIntersecting)) showBottomPromptOnce();
-    }, { rootMargin: "0px 0px 120px 0px", threshold: 0.08 });
-    bottomObserver.observe(bottomTarget);
-  } else {
-    fallbackScrollHandler = () => {
-      const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 120;
-      if (nearBottom) showBottomPromptOnce();
-    };
-    window.addEventListener("scroll", fallbackScrollHandler, { passive: true });
-    fallbackScrollHandler();
-  }
-
-  trigger.addEventListener("click", showNextMessage);
-  close.addEventListener("click", hideThought);
+  window.addEventListener("scroll", handleScroll, { passive: true });
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") hideThought();
   });
 
+  // One page-load thought only. It fades away after ten seconds.
+  initialTimer = window.setTimeout(() => {
+    if (!initialMessagePending) return;
+    initialMessagePending = false;
+    showNextMessage();
+    if (isAtBottom()) scheduleNextBottomMessage();
+  }, 650);
+
   window.addEventListener("pagehide", () => {
     chuckAnimation?.stop();
-    bottomObserver?.disconnect();
-    if (fallbackScrollHandler) window.removeEventListener("scroll", fallbackScrollHandler);
+    window.clearTimeout(scrollStopTimer);
+    window.clearTimeout(hideTimer);
+    window.clearTimeout(initialTimer);
+    clearBottomCycle();
   });
 
-  window.ShynetymeChuck = { mounted: true, widget, showNextMessage, hideThought };
+  window.ShynetymeChuck = {
+    mounted: true,
+    widget,
+    showNextMessage,
+    hideThought,
+    startBottomCycle
+  };
 })();
