@@ -51,48 +51,32 @@
   const getPageKey = () => (window.location.pathname.split("/").filter(Boolean).pop() || "index.html").toLowerCase();
   const bikeBuilderUrl = new URL("build-my-bike.html", siteRoot).href;
   const homeBuilderUrl = new URL("build-my-home.html", siteRoot).href;
+  const catalogUrl = new URL("led-catalog.html", siteRoot).href;
   const aboutDekeUrl = new URL("aboutme.html", siteRoot).href;
-  const directAnchor = (element) => element?.matches("a, button") ? element : element?.querySelector(":scope > a, :scope > button");
+  const contactUrl = new URL("contact.html", siteRoot).href;
 
-  const installBuildDropdown = () => {
+  const installNavigation = () => {
     const nav = document.querySelector(".navbar .navbar-nav");
     if (!nav) return;
-    const children = [...nav.children];
-    const isEffects = (item) => {
-      const link = directAnchor(item);
-      return link && (link.textContent.trim().toLowerCase() === "effects" || (link.getAttribute("href") || "").includes("#effects"));
-    };
-    const isBuild = (item) => {
-      if (item.matches?.("[data-shynetyme-build-menu]")) return true;
-      const link = directAnchor(item);
-      const href = link?.getAttribute("href") || "";
-      return link && (link.textContent.trim().toLowerCase() === "build" || href.includes("build-my-bike") || href.includes("build-my-home"));
-    };
-    const firstBuild = children.findIndex(isBuild);
-    const following = firstBuild >= 0 ? children.slice(firstBuild + 1).find((item) => !isEffects(item) && !isBuild(item)) : children.find((item) => !isEffects(item));
-    children.forEach((item) => { if (isEffects(item) || isBuild(item)) item.remove(); });
 
     const page = getPageKey();
     const bikeActive = page === "build-my-bike.html";
     const homeActive = page === "build-my-home.html";
-    const dropdown = document.createElement("div");
-    dropdown.className = "nav-item dropdown shynetyme-build-menu";
-    dropdown.dataset.shynetymeBuildMenu = "true";
-    dropdown.innerHTML = `<button class="nav-link dropdown-toggle${bikeActive || homeActive ? " active" : ""}" type="button" data-bs-toggle="dropdown" aria-expanded="false">Build</button><ul class="dropdown-menu dropdown-menu-dark"><li><a class="dropdown-item${bikeActive ? " active" : ""}" href="${bikeBuilderUrl}">Bike Builder</a></li><li><a class="dropdown-item${homeActive ? " active" : ""}" href="${homeBuilderUrl}">Home Builder</a></li></ul>`;
-    nav.insertBefore(dropdown, following?.isConnected ? following : null);
-  };
+    const catalogActive = page === "led-catalog.html";
+    const aboutActive = page === "aboutme.html";
+    const contactActive = page === "contact.html";
 
-  const insertAboutLink = () => {
-    const nav = document.querySelector(".navbar .navbar-nav");
-    if (!nav) return;
-    const exists = [...nav.querySelectorAll("a")].some((link) => link.textContent.trim().toLowerCase() === "about deke" || (link.getAttribute("href") || "").includes("aboutme.html"));
-    if (exists) return;
-    const link = document.createElement("a");
-    link.className = "nav-link";
-    link.href = aboutDekeUrl;
-    link.textContent = "About Deke";
-    const contact = [...nav.children].find((item) => (directAnchor(item)?.getAttribute("href") || "").includes("contact"));
-    nav.insertBefore(link, contact || null);
+    nav.innerHTML = `
+      <div class="nav-item dropdown shynetyme-build-menu" data-shynetyme-build-menu="true">
+        <button class="nav-link dropdown-toggle${bikeActive || homeActive ? " active" : ""}" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open Build menu">Build</button>
+        <ul class="dropdown-menu dropdown-menu-dark" aria-label="Build pages">
+          <li><a class="dropdown-item${bikeActive ? " active" : ""}"${bikeActive ? " aria-current=\"page\"" : ""} href="${bikeBuilderUrl}">Bike Builder</a></li>
+          <li><a class="dropdown-item${homeActive ? " active" : ""}"${homeActive ? " aria-current=\"page\"" : ""} href="${homeBuilderUrl}">Home Builder</a></li>
+        </ul>
+      </div>
+      <a class="nav-link${catalogActive ? " active" : ""}"${catalogActive ? " aria-current=\"page\"" : ""} href="${catalogUrl}">LED Catalog</a>
+      <a class="nav-link${aboutActive ? " active" : ""}"${aboutActive ? " aria-current=\"page\"" : ""} href="${aboutDekeUrl}">About Deke</a>
+      <a class="nav-link${contactActive ? " active" : ""}"${contactActive ? " aria-current=\"page\"" : ""} href="${contactUrl}">Request Install</a>`;
   };
 
   const bindNavigationFlare = () => {
@@ -116,8 +100,7 @@
   };
 
   sharedStyles.forEach(loadStyle);
-  installBuildDropdown();
-  insertAboutLink();
+  installNavigation();
   bindNavigationFlare();
   loadScript("js/hero-carousel.js", "data-shynetyme-hero-carousel", "ShynetymeHeroCarousel")
     .finally(() => loadScript("js/site-led-matrix.js", "data-shynetyme-led-matrix-script", "ShynetymeLedMatrix"));
