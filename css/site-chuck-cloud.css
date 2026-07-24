@@ -1,61 +1,69 @@
-/* Sitewide animated thought-cloud presentation for Chuck. */
+/* Sitewide animated thought-cloud presentation for Chuck.
+   This file only overrides the existing Chuck cloud styles. */
 .deke-chuck-thought {
   --thought-fill: var(--cyan, #31e6ff);
   --thought-ink: #03111f;
   --thought-button-bg: var(--pink, #ff5ab9);
   --thought-button-ink: #fff;
-  right: 82px;
-  bottom: 92px;
-  width: min(410px, calc(100vw - 96px));
-  aspect-ratio: 1 / 1;
-  padding: 18% 14% 29% !important;
-  gap: .38rem !important;
-  transform: translate(20px, 22px) scale(.08);
-  transform-origin: 86% 88%;
-  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, .32));
+  right: 82px !important;
+  bottom: 92px !important;
+  width: min(390px, calc(100vw - 96px)) !important;
+  aspect-ratio: 1 / 1 !important;
+  padding: 18% 14% 30% !important;
+  gap: .24rem !important;
+  transform-origin: 86% 88% !important;
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, .32)) !important;
 }
 
 .deke-chuck-thought::before,
 .deke-chuck-thought::after {
-  transform: scaleX(-1);
-  transform-origin: center;
+  transform: scaleX(-1) !important;
+  transform-origin: center !important;
 }
 
 .deke-chuck-thought.is-visible {
-  transform: translate(0, 0) scale(1);
+  transform: translate(0, 0) scale(1) !important;
 }
 
 .deke-chuck-thought.is-materializing {
-  animation: chuck-cloud-grow .82s cubic-bezier(.18, .9, .28, 1.16) both;
+  animation: chuck-cloud-grow .82s cubic-bezier(.18, .9, .28, 1.16) both !important;
 }
 
 .deke-chuck-thought.is-materializing::before,
 .deke-chuck-thought.is-materializing::after {
-  animation: chuck-cloud-fill .82s ease-out both;
+  animation: chuck-cloud-fill .82s ease-out both !important;
 }
 
 .deke-chuck-thought__text {
-  max-width: 82%;
-  margin: 0;
-  font-size: clamp(.58rem, 1.22vw, .74rem) !important;
-  line-height: 1.08 !important;
-  overflow-wrap: break-word;
-  word-break: normal;
-  text-wrap: balance;
+  width: auto !important;
+  max-width: 74% !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  color: var(--thought-ink) !important;
+  font-size: clamp(.52rem, 1.18vw, .68rem) !important;
+  font-weight: 800 !important;
+  line-height: 1.02 !important;
+  letter-spacing: -.015em !important;
+  text-align: center !important;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+  text-wrap: balance !important;
 }
 
 .deke-chuck-thought__action {
-  min-width: 88px;
-  max-width: 130px;
-  min-height: 28px;
-  padding: .24rem .42rem;
-  color: var(--thought-button-ink);
-  background: var(--thought-button-bg);
-  border-color: rgba(0, 0, 0, .28);
-  font-size: .58rem !important;
-  line-height: 1.02 !important;
-  white-space: normal;
-  text-align: center;
+  min-width: 72px !important;
+  max-width: 108px !important;
+  min-height: 24px !important;
+  margin: 0 auto !important;
+  padding: .16rem .28rem !important;
+  color: var(--thought-button-ink) !important;
+  background: var(--thought-button-bg) !important;
+  border-color: rgba(0, 0, 0, .28) !important;
+  font-size: .48rem !important;
+  font-weight: 800 !important;
+  line-height: .92 !important;
+  white-space: pre-line !important;
+  text-align: center !important;
 }
 
 .deke-chuck-thought--cyan {
@@ -104,54 +112,58 @@
 
 @media (max-width: 575.98px) {
   .deke-chuck-thought {
-    right: 44px;
-    bottom: 66px;
-    width: min(300px, calc(100vw - 96px));
-    padding: 16% 12% 28% !important;
-    gap: .18rem !important;
+    right: 48px !important;
+    bottom: 68px !important;
+    width: min(292px, calc(100vw - 96px)) !important;
+    padding: 15% 11% 29% !important;
+    gap: .1rem !important;
+  }
+
+  .deke-chuck-thought__close {
+    width: 22px !important;
+    height: 22px !important;
+    font-size: .82rem !important;
   }
 
   .deke-chuck-thought__text {
-    max-width: 74%;
-    font-size: clamp(.46rem, 2.05vw, .56rem) !important;
-    line-height: .98 !important;
-    letter-spacing: -.01em;
+    max-width: 68% !important;
+    font-size: clamp(.42rem, 1.92vw, .52rem) !important;
+    line-height: .92 !important;
+    letter-spacing: -.02em !important;
   }
 
   .deke-chuck-thought__action {
-    min-width: 66px;
-    max-width: 96px;
-    min-height: 22px;
-    padding: .14rem .24rem;
-    font-size: .44rem !important;
-    line-height: .92 !important;
-    white-space: normal;
-    text-align: center;
+    min-width: 58px !important;
+    max-width: 82px !important;
+    min-height: 18px !important;
+    padding: .1rem .18rem !important;
+    font-size: .36rem !important;
+    line-height: .86 !important;
   }
 }
 
 @media (max-width: 390px) {
   .deke-chuck-thought {
-    right: 42px;
-    bottom: 64px;
-    width: min(282px, calc(100vw - 94px));
-    padding: 15% 11% 28% !important;
-    gap: .14rem !important;
+    right: 44px !important;
+    bottom: 64px !important;
+    width: min(274px, calc(100vw - 94px)) !important;
+    padding: 14% 10% 29% !important;
+    gap: .08rem !important;
   }
 
   .deke-chuck-thought__text {
-    max-width: 72%;
-    font-size: .46rem !important;
-    line-height: .96 !important;
+    max-width: 66% !important;
+    font-size: .4rem !important;
+    line-height: .9 !important;
   }
 
   .deke-chuck-thought__action {
-    min-width: 62px;
-    max-width: 88px;
-    min-height: 20px;
-    padding: .12rem .22rem;
-    font-size: .4rem !important;
-    line-height: .9 !important;
+    min-width: 54px !important;
+    max-width: 76px !important;
+    min-height: 17px !important;
+    padding: .08rem .16rem !important;
+    font-size: .34rem !important;
+    line-height: .84 !important;
   }
 }
 
