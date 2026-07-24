@@ -9,23 +9,26 @@
     : new URL("js/site-chuck.js", window.location.href);
   const siteRoot = new URL("../", scriptUrl);
 
-  const chuckCssUrl = new URL("css/site-chuck.css", siteRoot).href;
+  const chuckCssUrl = new URL("css/site-chuck.css?v=20260724-cloud-guidance", siteRoot).href;
+  const cloudCssUrl = new URL("css/site-chuck-cloud.css?v=20260724-cloud-guidance", siteRoot).href;
   const chuckSpriteUrl = new URL("js/chuck-sprite.js", siteRoot).href;
   const scanAtlasUrl = new URL("assets/brand/chuck-search-map.webp", siteRoot).href;
   const laptopAtlasUrl = new URL("assets/brand/chuck-search-laptop.webp", siteRoot).href;
   const fallbackImageUrl = new URL("assets/brand/pet-chuck-mark.png", siteRoot).href;
+  const aboutDekeUrl = new URL("aboutme.html", siteRoot).href;
+  const bikeBuilderUrl = new URL("build-my-bike.html", siteRoot).href;
 
-  const loadStylesheet = () => {
-    const existing = document.querySelector("link[data-shynetyme-site-chuck]");
+  const loadStylesheet = (href, attribute) => {
+    const existing = document.querySelector(`link[${attribute}]`);
     if (existing) {
-      if (existing.href !== chuckCssUrl) existing.href = chuckCssUrl;
+      if (existing.href !== href) existing.href = href;
       return;
     }
 
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = chuckCssUrl;
-    link.dataset.shynetymeSiteChuck = "true";
+    link.href = href;
+    link.setAttribute(attribute, "true");
     document.head.appendChild(link);
   };
 
@@ -45,12 +48,12 @@
     widget.className = "deke-chuck-widget";
     widget.id = "dekeChuckWidget";
     widget.innerHTML = `
-      <div class="deke-chuck-thought deke-chuck-thought--yellow" id="dekeChuckThought" role="status" aria-live="polite" hidden>
+      <div class="deke-chuck-thought deke-chuck-thought--cyan" id="dekeChuckThought" role="status" aria-live="polite" hidden>
         <button class="deke-chuck-thought__close" id="dekeChuckClose" type="button" aria-label="Close Chuck's message">×</button>
         <p class="deke-chuck-thought__text" id="dekeChuckText"></p>
-        <a class="deke-chuck-thought__action" id="dekeChuckAction" href="#" target="_blank" rel="noopener"></a>
+        <a class="deke-chuck-thought__action" id="dekeChuckAction" href="#"></a>
       </div>
-      <button class="deke-chuck-trigger" id="dekeChuckTrigger" type="button" aria-expanded="false" aria-controls="dekeChuckThought" aria-label="Show Chuck's next thought">
+      <button class="deke-chuck-trigger" id="dekeChuckTrigger" type="button" aria-expanded="false" aria-controls="dekeChuckThought" aria-label="Tickle Chuck for another thought">
         <span class="deke-chuck-search-light" aria-hidden="true"></span>
         <img src="${fallbackImageUrl}" width="118" height="118" alt="Chuck, the ShyneTyme Works robot-cat helper">
       </button>`;
@@ -80,7 +83,8 @@
     document.head.appendChild(script);
   });
 
-  loadStylesheet();
+  loadStylesheet(chuckCssUrl, "data-shynetyme-site-chuck");
+  loadStylesheet(cloudCssUrl, "data-shynetyme-site-chuck-cloud");
 
   const widget = ensureWidget();
   const trigger = widget.querySelector("#dekeChuckTrigger");
@@ -93,43 +97,45 @@
   if (widget.dataset.chuckMounted === "true") return;
   widget.dataset.chuckMounted = "true";
 
-  const messages = [
-    {
-      color: "yellow",
-      text: "A little generator gas keeps Deke's PC powered and the work moving.",
-      label: "Cash App",
-      href: "https://cash.app/$westsidels310"
-    },
+  const welcomeMessage = {
+    color: "cyan",
+    text: "Hi and welcome to ShyneTyme.Works!\nIf you're here to read about Deke, click the button below.",
+    label: "Deke",
+    href: aboutDekeUrl
+  };
+
+  const rotatingMessages = [
     {
       color: "pink",
-      text: "Prefer Venmo? Every bit helps keep another work session going.",
-      label: "Venmo",
-      href: "https://venmo.com/u/westlistingservices"
+      text: "Thank you for checking me out!\nIf I can help, just tickle Chuck—that's me. I may blurt out the directions you seek!",
+      label: "Tickle Chuck",
+      href: "#chuck-next"
     },
     {
-      color: "blue",
-      text: "Have a paid project, referral, or useful lead for Deke?",
-      label: "Message Me",
-      href: "https://wa.me/13109452378?text=I%20saw%20ShyneTyme.Works%20and%20may%20have%20a%20project%20or%20lead%20for%20you."
+      color: "violet",
+      text: "Hey, are you fancy? You must need some Shyne in yo life!\nHow about checking out the ShyneTyme LED Bike Factory?",
+      label: "LED Bike Sim",
+      href: bikeBuilderUrl
     },
     {
-      color: "green",
-      text: "No project today? A quick hello still helps keep the momentum alive.",
-      label: "Say Hi",
-      href: "https://wa.me/13109452378?text=Hi%20Deke%20%E2%80%94%20I%20saw%20ShyneTyme.Works.%20Keep%20going!%20%F0%9F%99%82"
+      color: "amber",
+      text: "Need another direction? Tickle Chuck again and I'll point you toward another part of ShyneTyme.Works.",
+      label: "Tickle Chuck",
+      href: "#chuck-next"
     }
   ];
 
   const MESSAGE_VISIBLE_MS = 10000;
-  const SCROLL_STOP_MS = 220;
+  const AFTER_SCROLL_DELAY_MS = 15000;
+  const SCROLL_STOP_MS = 240;
+
   let chuckAnimation = null;
   let messageIndex = -1;
   let previousScrollY = window.scrollY;
   let scrollStopTimer = 0;
+  let delayedThoughtTimer = 0;
   let hideTimer = 0;
-  let footerVisible = false;
-  let bottomThoughtShown = false;
-  let footerObserver = null;
+  let welcomeTimer = 0;
 
   loadChuckSprite().then((spriteApi) => {
     chuckAnimation = spriteApi?.mount({
@@ -144,20 +150,29 @@
   const setColor = (color) => {
     thought.classList.remove(
       "deke-chuck-thought--yellow",
-      "deke-chuck-thought--pink",
+      "deke-chuck-thought--green",
       "deke-chuck-thought--blue",
-      "deke-chuck-thought--green"
+      "deke-chuck-thought--cyan",
+      "deke-chuck-thought--pink",
+      "deke-chuck-thought--violet",
+      "deke-chuck-thought--amber"
     );
     thought.classList.add(`deke-chuck-thought--${color}`);
   };
 
   const hideThought = () => {
     window.clearTimeout(hideTimer);
-    thought.classList.remove("is-visible");
+    thought.classList.remove("is-visible", "is-materializing");
     trigger.setAttribute("aria-expanded", "false");
     window.setTimeout(() => {
       if (!thought.classList.contains("is-visible")) thought.hidden = true;
-    }, 360);
+    }, 380);
+  };
+
+  const materializeThought = () => {
+    thought.classList.remove("is-materializing");
+    void thought.offsetWidth;
+    thought.classList.add("is-materializing");
   };
 
   const showMessage = (message) => {
@@ -166,29 +181,40 @@
     chuckAnimation?.stop();
     setColor(message.color);
     text.textContent = message.text;
+    text.style.whiteSpace = "pre-line";
     action.textContent = message.label;
     action.href = message.href;
     thought.hidden = false;
+    materializeThought();
+
     window.requestAnimationFrame(() => {
       thought.classList.add("is-visible");
       trigger.setAttribute("aria-expanded", "true");
     });
+
     hideTimer = window.setTimeout(hideThought, MESSAGE_VISIBLE_MS);
   };
 
   const showNextMessage = () => {
-    messageIndex = (messageIndex + 1) % messages.length;
-    showMessage(messages[messageIndex]);
+    messageIndex = (messageIndex + 1) % rotatingMessages.length;
+    showMessage(rotatingMessages[messageIndex]);
   };
 
-  const showBottomThoughtOnce = () => {
-    if (!footerVisible || bottomThoughtShown) return;
-    bottomThoughtShown = true;
-    showNextMessage();
+  const cancelDelayedThought = () => {
+    window.clearTimeout(delayedThoughtTimer);
+    delayedThoughtTimer = 0;
+  };
+
+  const scheduleAfterScrollThought = () => {
+    cancelDelayedThought();
+    delayedThoughtTimer = window.setTimeout(showNextMessage, AFTER_SCROLL_DELAY_MS);
   };
 
   const handleScroll = () => {
+    window.clearTimeout(welcomeTimer);
+    cancelDelayedThought();
     hideThought();
+
     const currentScrollY = window.scrollY;
     const mode = currentScrollY < previousScrollY ? "scan" : "laptop";
     previousScrollY = currentScrollY;
@@ -202,25 +228,22 @@
     scrollStopTimer = window.setTimeout(() => {
       widget.classList.remove("is-searching");
       chuckAnimation?.stop();
-      showBottomThoughtOnce();
+      scheduleAfterScrollThought();
     }, SCROLL_STOP_MS);
   };
 
-  const footer = document.querySelector("footer");
-  if (footer && "IntersectionObserver" in window) {
-    footerObserver = new IntersectionObserver((entries) => {
-      footerVisible = entries.some((entry) => entry.isIntersecting);
-      if (footerVisible) showBottomThoughtOnce();
-    }, { threshold: .16 });
-    footerObserver.observe(footer);
-  } else {
-    footerVisible = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 8;
-  }
-
   trigger.addEventListener("click", () => {
+    cancelDelayedThought();
     widget.classList.remove("is-searching");
     chuckAnimation?.stop();
     showNextMessage();
+  });
+
+  action.addEventListener("click", (event) => {
+    if (action.getAttribute("href") === "#chuck-next") {
+      event.preventDefault();
+      showNextMessage();
+    }
   });
 
   close.addEventListener("click", hideThought);
@@ -229,11 +252,14 @@
     if (event.key === "Escape") hideThought();
   });
 
+  welcomeTimer = window.setTimeout(() => showMessage(welcomeMessage), 650);
+
   window.addEventListener("pagehide", () => {
     chuckAnimation?.stop();
-    footerObserver?.disconnect();
     window.clearTimeout(scrollStopTimer);
+    window.clearTimeout(delayedThoughtTimer);
     window.clearTimeout(hideTimer);
+    window.clearTimeout(welcomeTimer);
   }, { once: true });
 
   window.ShynetymeChuck = {
@@ -241,6 +267,6 @@
     widget,
     showNextMessage,
     hideThought,
-    showBottomThoughtOnce
+    showWelcome: () => showMessage(welcomeMessage)
   };
 })();
