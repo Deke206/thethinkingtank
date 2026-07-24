@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T13:22:57.260Z",
-  "commitCount": 209,
+  "generatedAt": "2026-07-24T13:23:43.926Z",
+  "commitCount": 210,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1048,6 +1048,11 @@
       "sha": "9596eb140fe844cdb69b9eefe9967109b279ad72",
       "date": "2026-07-24T13:22:39Z",
       "message": "Rename shared build navigation to simulator labels"
+    },
+    {
+      "sha": "8ef1624580eec6cd42d7886129dc86d0506ddc8c",
+      "date": "2026-07-24T13:23:31Z",
+      "message": "Clean About Deke page copy and sim labels"
     }
   ]
 }
