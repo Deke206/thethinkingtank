@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T06:07:25.466Z",
-  "commitCount": 179,
+  "generatedAt": "2026-07-24T06:08:48.974Z",
+  "commitCount": 180,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -898,6 +898,11 @@
       "sha": "a558e7368bfda33fb48fa70971cdac125beb2ea2",
       "date": "2026-07-24T06:07:07Z",
       "message": "Remove merged newest-first history patch"
+    },
+    {
+      "sha": "e447204ed3660d284ad66f359c7b25a80c64c2ba",
+      "date": "2026-07-24T06:08:35Z",
+      "message": "Point homepage directly to root About page"
     }
   ]
 }
