@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T03:59:38.250Z",
-  "commitCount": 161,
+  "generatedAt": "2026-07-24T04:00:25.469Z",
+  "commitCount": 162,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -808,6 +808,11 @@
       "sha": "a59304f8d2dbb19670d09c07d6e8532c054f79c1",
       "date": "2026-07-24T03:59:11Z",
       "message": "Copy current Chuck styles into shared site files"
+    },
+    {
+      "sha": "055fd80938f9821a412c7090ec2db3b170db5264",
+      "date": "2026-07-24T04:00:11Z",
+      "message": "Use only shared Chuck style files from canonical entrypoint"
     }
   ]
 }
