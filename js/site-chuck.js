@@ -10,7 +10,7 @@
   const siteRoot = new URL("../", scriptUrl);
 
   const chuckCssUrl = new URL("css/site-chuck.css?v=20260724-cloud-guidance", siteRoot).href;
-  const cloudCssUrl = new URL("css/site-chuck-cloud.css?v=20260725-neon-sprites-v1", siteRoot).href;
+  const cloudCssUrl = new URL("css/site-chuck-cloud.css?v=20260725-neon-position-v2", siteRoot).href;
   const chuckSpriteUrl = new URL("js/chuck-sprite.js", siteRoot).href;
   const scanAtlasUrl = new URL("assets/brand/chuck-search-map.webp", siteRoot).href;
   const laptopAtlasUrl = new URL("assets/brand/chuck-search-laptop.webp", siteRoot).href;
@@ -98,8 +98,8 @@
   widget.dataset.chuckMounted = "true";
 
   const welcomeMessage = {
-    text: "Welcome to\nShyneTyme.Works!\nRead about Deke\nbelow.",
-    label: "Deke",
+    text: "Hi!\nYou must be looking\nfor About Deke.",
+    label: "About Deke",
     href: aboutDekeUrl
   };
 
@@ -122,6 +122,7 @@
   ];
 
   const CLOUD_THEMES = ["cyan", "pink", "amber"];
+  const WELCOME_VISIBLE_MS = 6000;
   const MESSAGE_VISIBLE_MS = 10000;
   const AFTER_SCROLL_DELAY_MS = 15000;
   const SCROLL_STOP_MS = 240;
@@ -180,7 +181,7 @@
     thought.classList.add("is-materializing");
   };
 
-  const showMessage = (message) => {
+  const showMessage = (message, visibleMs = MESSAGE_VISIBLE_MS) => {
     window.clearTimeout(hideTimer);
     widget.classList.remove("is-searching");
     chuckAnimation?.stop();
@@ -196,7 +197,7 @@
       trigger.setAttribute("aria-expanded", "true");
     });
 
-    hideTimer = window.setTimeout(hideThought, MESSAGE_VISIBLE_MS);
+    hideTimer = window.setTimeout(hideThought, visibleMs);
   };
 
   const showNextMessage = () => {
@@ -256,7 +257,7 @@
     if (event.key === "Escape") hideThought();
   });
 
-  welcomeTimer = window.setTimeout(() => showMessage(welcomeMessage), 650);
+  welcomeTimer = window.setTimeout(() => showMessage(welcomeMessage, WELCOME_VISIBLE_MS), 650);
 
   window.addEventListener("pagehide", () => {
     chuckAnimation?.stop();
@@ -271,6 +272,6 @@
     widget,
     showNextMessage,
     hideThought,
-    showWelcome: () => showMessage(welcomeMessage)
+    showWelcome: () => showMessage(welcomeMessage, WELCOME_VISIBLE_MS)
   };
 })();
