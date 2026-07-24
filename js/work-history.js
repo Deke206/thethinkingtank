@@ -4,6 +4,12 @@
   const root = document.querySelector("[data-work-history]");
   if (!root) return;
 
+  const scriptElement = document.currentScript;
+  const scriptUrl = scriptElement?.src
+    ? new URL(scriptElement.src, window.location.href)
+    : new URL("js/work-history.js", window.location.href);
+  const siteRoot = new URL("../", scriptUrl);
+
   const repository = root.dataset.repository || "Deke206/thethinkingtank";
   const branch = root.dataset.branch || "main";
   const timeline = root.querySelector("[data-work-history-timeline]");
@@ -16,7 +22,7 @@
   if (!timeline || !status || !totalValue || !activeDaysValue || !firstValue || !latestValue) return;
 
   const TIME_ZONE = "America/Los_Angeles";
-  const CACHE_KEY = `shynetyme-work-history:${repository}:${branch}:v2`;
+  const CACHE_KEY = `shynetyme-work-history:${repository}:${branch}:v3`;
   const CACHE_TTL = 15 * 60 * 1000;
   const MAX_PAGES = 20;
 
@@ -122,8 +128,8 @@
   };
 
   const fetchStaticHistory = async () => {
-    const url = new URL("../data/work-history.json", window.location.href);
-    url.searchParams.set("v", "20260724-live");
+    const url = new URL("data/work-history.json", siteRoot);
+    url.searchParams.set("v", "20260724-root-cleanup");
     const response = await fetch(url, { cache: "no-store" });
     if (!response.ok) throw new Error("Static history is not generated yet.");
     const data = await response.json();
@@ -168,7 +174,7 @@
     commits.forEach((commit) => {
       if (!unique.has(commit.sha)) unique.set(commit.sha, commit);
     });
-    return [...unique.values()].sort((a, b) => new Date(a.date) - new Date(b.date));
+    return [...unique.values()];
   };
 
   const buildEntry = (commit) => {
@@ -211,7 +217,7 @@
     const commits = rawCommits
       .map(normalizeCommit)
       .filter(shouldDisplay)
-      .sort((a, b) => new Date(a.date) - new Date(b.date));
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
 
     timeline.replaceChildren();
     if (!commits.length) {
@@ -257,12 +263,15 @@
       fragment.appendChild(dayItem);
     });
 
+    const oldest = commits[commits.length - 1];
+    const newest = commits[0];
     timeline.appendChild(fragment);
+    timeline.scrollTop = 0;
     totalValue.textContent = commits.length.toLocaleString("en-US");
     activeDaysValue.textContent = groups.size.toLocaleString("en-US");
-    firstValue.textContent = shortDateFormatter.format(new Date(commits[0].date));
-    latestValue.textContent = shortDateFormatter.format(new Date(commits[commits.length - 1].date));
-    setStatus(`${sourceLabel} · displayed oldest to newest · ${commits.length.toLocaleString("en-US")} read-only edits`);
+    firstValue.textContent = shortDateFormatter.format(new Date(oldest.date));
+    latestValue.textContent = shortDateFormatter.format(new Date(newest.date));
+    setStatus(`${sourceLabel} · displayed newest to oldest · ${commits.length.toLocaleString("en-US")} read-only edits`);
   };
 
   const load = async () => {
@@ -272,7 +281,7 @@
       return;
     }
 
-    setStatus("Loading the public website history from its first available commit…");
+    setStatus("Loading the newest public website edits…");
 
     try {
       const staticCommits = await fetchStaticHistory();
