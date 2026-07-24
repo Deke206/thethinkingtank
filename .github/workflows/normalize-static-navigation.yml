@@ -33,17 +33,29 @@ jobs:
               about = page == 'aboutme.html'
               contact = page == 'contact.html'
 
+              build_class = ' active' if bike or home else ''
+              bike_class = ' active' if bike else ''
+              home_class = ' active' if home else ''
+              catalog_class = ' active' if catalog else ''
+              about_class = ' active' if about else ''
+              contact_class = ' active' if contact else ''
+              bike_current = ' aria-current="page"' if bike else ''
+              home_current = ' aria-current="page"' if home else ''
+              catalog_current = ' aria-current="page"' if catalog else ''
+              about_current = ' aria-current="page"' if about else ''
+              contact_current = ' aria-current="page"' if contact else ''
+
               nav = f'''<div class="navbar-nav ms-auto">
           <div class="nav-item dropdown shynetyme-build-menu" data-shynetyme-build-menu="true">
-            <button class="nav-link dropdown-toggle{' active' if bike or home else ''}" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open Build menu">Build</button>
+            <button class="nav-link dropdown-toggle{build_class}" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open Build menu">Build</button>
             <ul class="dropdown-menu dropdown-menu-dark" aria-label="Build pages">
-              <li><a class="dropdown-item{' active' if bike else ''}"{' aria-current="page"' if bike else ''} href="build-my-bike.html">Bike Builder</a></li>
-              <li><a class="dropdown-item{' active' if home else ''}"{' aria-current="page"' if home else ''} href="build-my-home.html">Home Builder</a></li>
+              <li><a class="dropdown-item{bike_class}"{bike_current} href="build-my-bike.html">Bike Builder</a></li>
+              <li><a class="dropdown-item{home_class}"{home_current} href="build-my-home.html">Home Builder</a></li>
             </ul>
           </div>
-          <a class="nav-link{' active' if catalog else ''}"{' aria-current="page"' if catalog else ''} href="led-catalog.html">LED Catalog</a>
-          <a class="nav-link{' active' if about else ''}"{' aria-current="page"' if about else ''} href="aboutme.html">About Deke</a>
-          <a class="nav-link{' active' if contact else ''}"{' aria-current="page"' if contact else ''} href="contact.html">Request Install</a>
+          <a class="nav-link{catalog_class}"{catalog_current} href="led-catalog.html">LED Catalog</a>
+          <a class="nav-link{about_class}"{about_current} href="aboutme.html">About Deke</a>
+          <a class="nav-link{contact_class}"{contact_current} href="contact.html">Request Install</a>
         </div>'''
 
               path.write_text(pattern.sub(nav, html, count=1), encoding='utf-8')
@@ -55,4 +67,11 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
           git commit -m 'Use one shared navigation structure on every page'
-          git push
+          for attempt in 1 2 3 4; do
+            git pull --rebase origin main
+            if git push; then
+              exit 0
+            fi
+            sleep 3
+          done
+          exit 1
