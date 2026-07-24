@@ -14,14 +14,20 @@
     ["css/site-navigation.css", "data-shynetyme-navigation"],
     ["css/site-hero.css", "data-shynetyme-hero"],
     ["css/site-led-matrix.css?v=20260724-short-matrix", "data-shynetyme-led-matrix"],
-    ["css/site-chuck.css", "data-shynetyme-site-chuck"]
+    ["css/site-chuck.css?v=20260724-cloud-guidance", "data-shynetyme-site-chuck"],
+    ["css/site-chuck-cloud.css?v=20260724-cloud-guidance", "data-shynetyme-site-chuck-cloud"]
   ];
 
   const loadStyle = ([path, attribute]) => {
-    if (document.querySelector(`link[${attribute}]`)) return;
+    const existing = document.querySelector(`link[${attribute}]`);
+    const href = new URL(path, siteRoot).href;
+    if (existing) {
+      if (existing.href !== href) existing.href = href;
+      return;
+    }
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = new URL(path, siteRoot).href;
+    link.href = href;
     link.setAttribute(attribute, "true");
     document.head.appendChild(link);
   };
@@ -105,5 +111,5 @@
   loadScript("js/hero-carousel.js", "data-shynetyme-hero-carousel", "ShynetymeHeroCarousel")
     .finally(() => loadScript("js/site-led-matrix.js", "data-shynetyme-led-matrix-script", "ShynetymeLedMatrix"));
   loadBikeBuilder();
-  loadScript("js/site-chuck.js", "data-shynetyme-site-chuck-script", "ShynetymeChuck");
+  loadScript("js/site-chuck.js?v=20260724-cloud-guidance", "data-shynetyme-site-chuck-script", "ShynetymeChuck");
 })();
