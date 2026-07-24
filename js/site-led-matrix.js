@@ -3,8 +3,8 @@
 
   if (window.ShynetymeLedMatrix?.initialized) return;
 
-  const EFFECTS = ["wave", "comet", "scan", "type", "center", "stack-right", "wipe", "chase"];
-  const LONG_TEXT_EFFECTS = ["wave", "comet", "chase"];
+  const EFFECTS = ["chase", "center", "scan", "type", "flag", "stack-right", "wipe", "comet"];
+  const LONG_TEXT_EFFECTS = ["chase", "flag", "comet"];
   const PALETTES = [
     ["#31e6ff", "#48a9ff", "#9b83ff", "#ff5ab9", "#ffc562", "#55e6b5"],
     ["#ff304f", "#ffffff", "#48a9ff", "#ffffff"],
@@ -35,23 +35,17 @@
 
   function pickEffect(text, used) {
     const choices = text.length > 46 ? LONG_TEXT_EFFECTS : EFFECTS;
-    if (!used.has("wave")) {
-      used.add("wave");
-      return "wave";
-    }
     return uniquePick(choices, used);
   }
 
   function pickPalette(mode, used) {
-    const preferred = mode === "wave"
-      ? PALETTES[0]
-      : mode === "flag"
-        ? PALETTES[1]
-        : mode === "wipe"
-          ? PALETTES[2]
-          : mode === "stack-right" && Math.random() > 0.5
-            ? PALETTES[3]
-            : null;
+    const preferred = mode === "flag"
+      ? PALETTES[1]
+      : mode === "wipe"
+        ? PALETTES[2]
+        : mode === "stack-right" && Math.random() > 0.5
+          ? PALETTES[3]
+          : null;
 
     if (preferred && !used.has(preferred)) {
       used.add(preferred);
@@ -115,6 +109,7 @@
     const letterGap = Math.max(1.25, fontSize * 0.12);
     const wordGap = Math.max(5, fontSize * 0.46);
     const separatorGap = Math.max(5, fontSize * 0.38);
+
     return [...text].reduce((width, character, index) => {
       if (character === " ") return width + wordGap;
       if (character === "✦") return width + context.measureText(character).width + separatorGap;
@@ -218,7 +213,7 @@
       this.width = 1;
       this.height = 1;
       this.pixelRatio = 1;
-      this.rows = this.role === "breadcrumb" ? 11 : 14;
+      this.rows = this.role === "breadcrumb" ? 10 : 11;
       this.columns = 72;
       this.cellWidth = 8;
       this.cellHeight = 8;
@@ -266,27 +261,11 @@
       const x = (gridX + 0.5) * this.cellWidth - dot / 2;
       const y = (gridY + 0.5) * this.cellHeight - dot / 2;
 
-      this.context.globalAlpha = clamp(alpha);
       this.context.fillStyle = color;
+      this.context.globalAlpha = clamp(alpha * 0.34);
+      this.context.fillRect(x - dot * 0.28, y - dot * 0.28, dot * 1.56, dot * 1.56);
+      this.context.globalAlpha = clamp(alpha * 1.22);
       this.context.fillRect(x, y, dot, dot);
-    }
-
-    drawWaveBackground(waveX, width, direction, elapsed) {
-      if (!this.context) return;
-      const left = waveX - width;
-      const right = waveX + width;
-
-      for (let column = Math.floor(left); column <= Math.ceil(right); column += 1) {
-        const distance = Math.abs(column - waveX) / width;
-        const power = clamp(1 - distance);
-        if (!power) continue;
-
-        const x = column * this.cellWidth;
-        const colorShift = direction > 0 ? column : this.columns - column;
-        this.context.globalAlpha = power * 0.22;
-        this.context.fillStyle = this.colorAt(colorShift * 0.38 + elapsed * 0.0025);
-        this.context.fillRect(x, 0, this.cellWidth * 1.4, this.height);
-      }
     }
 
     drawChase(elapsed, flagMode = false) {
@@ -297,7 +276,7 @@
         const color = flagMode
           ? this.palette[Math.abs(Math.floor((point.x + elapsed * 0.011) / 7)) % this.palette.length]
           : this.colorAt(point.x * 0.18 + point.y * 0.08 + elapsed * 0.0055);
-        this.drawLed(originX + point.x, point.y, color, point.alpha, 1.05);
+        this.drawLed(originX + point.x, point.y, color, point.alpha, 1.09);
       });
     }
 
@@ -313,13 +292,7 @@
         const distance = Math.abs(point.x - center);
         if (distance > allowed) return;
         const edge = clamp(1 - Math.abs(distance - allowed) / 4);
-        this.drawLed(
-          originX + point.x,
-          point.y,
-          this.colorAt(distance * 0.17),
-          point.alpha * fade,
-          1 + edge * 0.15
-        );
+        this.drawLed(originX + point.x, point.y, this.colorAt(distance * 0.17), point.alpha * fade, 1 + edge * 0.17);
       });
     }
 
@@ -330,7 +303,7 @@
       this.mask.points.forEach((point) => {
         const power = clamp(1 - Math.abs(point.x - scan) / 7);
         const color = power > 0.68 ? "#ffffff" : this.colorAt(point.x * 0.14);
-        this.drawLed(originX + point.x, point.y, color, point.alpha * (0.4 + power * 0.6), 1 + power * 0.18);
+        this.drawLed(originX + point.x, point.y, color, point.alpha * (0.48 + power * 0.62), 1 + power * 0.2);
       });
     }
 
@@ -349,7 +322,7 @@
           point.y,
           cursor > 0.7 ? "#ffffff" : this.colorAt(point.x * 0.19 + point.y * 0.08),
           point.alpha * fade,
-          1 + cursor * 0.14
+          1 + cursor * 0.16
         );
       });
     }
@@ -365,13 +338,7 @@
         if (point.x < threshold) return;
         const arrival = clamp(1 - Math.abs(point.x - threshold) / 5);
         const nudge = arrival * (((point.x + point.y) % 2) ? 0.45 : -0.45);
-        this.drawLed(
-          originX + point.x,
-          point.y + nudge,
-          this.colorAt((this.mask.width - point.x) * 0.2),
-          point.alpha * fade,
-          1 + arrival * 0.12
-        );
+        this.drawLed(originX + point.x, point.y + nudge, this.colorAt((this.mask.width - point.x) * 0.2), point.alpha * fade, 1 + arrival * 0.14);
       });
     }
 
@@ -382,14 +349,8 @@
 
       this.mask.points.forEach((point) => {
         const active = clamp(1 - Math.abs(point.x - wave) / 13);
-        const base = point.x < wave ? 0.92 : 0.18;
-        this.drawLed(
-          originX + point.x,
-          point.y,
-          active > 0.65 ? "#ffffff" : this.colorAt(point.x * 0.12),
-          point.alpha * (base + active * 0.25),
-          1 + active * 0.12
-        );
+        const base = point.x < wave ? 0.96 : 0.22;
+        this.drawLed(originX + point.x, point.y, active > 0.65 ? "#ffffff" : this.colorAt(point.x * 0.12), point.alpha * (base + active * 0.28), 1 + active * 0.14);
       });
     }
 
@@ -401,45 +362,7 @@
       this.mask.points.forEach((point) => {
         const power = clamp(1 - Math.abs(point.x - comet) / 10);
         const color = power > 0.66 ? "#ffffff" : this.colorAt(point.x * 0.17);
-        this.drawLed(originX + point.x, point.y, color, point.alpha * (0.66 + power * 0.34), 1 + power * 0.16);
-      });
-    }
-
-    drawWave(elapsed) {
-      const originX = (this.columns - this.mask.width) / 2;
-      const cycle = (elapsed * speedFactor) % 7200;
-      const forwardEnd = 3300;
-      const crashEnd = 4050;
-      const span = this.mask.width + 28;
-      const forward = cycle < crashEnd;
-      const progress = cycle < forwardEnd
-        ? clamp(cycle / forwardEnd)
-        : cycle < crashEnd
-          ? 1
-          : 1 - clamp((cycle - crashEnd) / (7200 - crashEnd));
-      const wave = -14 + span * progress;
-      const waveWidth = this.role === "breadcrumb" ? 10 : 12;
-      const hold = cycle > forwardEnd && cycle < crashEnd;
-      const fade = cycle < 6600 ? 1 : clamp((7200 - cycle) / 600);
-
-      this.drawWaveBackground(originX + wave, waveWidth, forward ? 1 : -1, elapsed);
-
-      this.mask.points.forEach((point) => {
-        const passed = forward ? point.x <= wave : point.x >= wave;
-        const crest = clamp(1 - Math.abs(point.x - wave) / waveWidth);
-        const baseAlpha = passed || hold ? 0.94 : 0.08;
-        const letterBand = Math.floor(point.x / 5);
-        const solidColor = this.colorAt(letterBand);
-        const color = crest > 0.72 ? "#ffffff" : solidColor;
-        const nudge = Math.sin((point.y + elapsed * 0.006) + point.x * 0.12) * crest * 0.45;
-
-        this.drawLed(
-          originX + point.x,
-          point.y + nudge,
-          color,
-          point.alpha * Math.max(baseAlpha, crest) * fade,
-          1 + crest * 0.2
-        );
+        this.drawLed(originX + point.x, point.y, color, point.alpha * (0.72 + power * 0.36), 1 + power * 0.18);
       });
     }
 
@@ -451,7 +374,6 @@
       this.context.save();
       this.context.globalCompositeOperation = "lighter";
 
-      if (this.mode === "wave") this.drawWave(elapsed);
       if (this.mode === "chase") this.drawChase(elapsed, false);
       if (this.mode === "flag") this.drawChase(elapsed, true);
       if (this.mode === "center") this.drawCenter(elapsed);
@@ -488,9 +410,8 @@
     hero.classList.add("hero--matrix-framed");
     hero.dataset.matrixReady = "true";
 
-    const topMode = "wave";
-    const bottomMode = "wave";
-    usedEffects.add("wave");
+    const topMode = pickEffect(text.top, usedEffects);
+    const bottomMode = pickEffect(text.bottom, usedEffects);
     mountDisplay(top.canvas, text.top, topMode, pickPalette(topMode, usedPalettes), "hero");
     mountDisplay(bottom.canvas, text.bottom, bottomMode, pickPalette(bottomMode, usedPalettes), "hero");
   }
