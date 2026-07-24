@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T03:53:39.648Z",
-  "commitCount": 155,
+  "generatedAt": "2026-07-24T03:54:13.070Z",
+  "commitCount": 156,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -778,6 +778,11 @@
       "sha": "d36c424fc8ab2488c9f6e34e82ed2159602b8484",
       "date": "2026-07-24T03:53:25Z",
       "message": "Show newest About work history entries first"
+    },
+    {
+      "sha": "f6909cb05e82a5a7f97713b9ee810e0f805f3509",
+      "date": "2026-07-24T03:54:00Z",
+      "message": "Add canonical shared Chuck stylesheet and neutralize About overrides"
     }
   ]
 }
