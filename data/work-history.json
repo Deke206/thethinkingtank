@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T06:02:13.905Z",
-  "commitCount": 169,
+  "generatedAt": "2026-07-24T06:02:36.254Z",
+  "commitCount": 170,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -848,6 +848,11 @@
       "sha": "280fcbe351e9e53f6c62f3676aba2aa670714d5b",
       "date": "2026-07-24T06:02:02Z",
       "message": "Consolidate compact work history viewport styles"
+    },
+    {
+      "sha": "e5417465e05b88be4c76d5b69a0b716e063fba4b",
+      "date": "2026-07-24T06:02:20Z",
+      "message": "Remove About-page forcing from shared Chuck styles"
     }
   ]
 }
