@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T21:07:37.724Z",
-  "commitCount": 221,
+  "generatedAt": "2026-07-24T21:12:59.371Z",
+  "commitCount": 222,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1108,6 +1108,11 @@
       "sha": "10e025b342f378358e7feb54ced59f2717052c52",
       "date": "2026-07-24T21:07:24Z",
       "message": "Tighten Chuck cloud CSS overrides"
+    },
+    {
+      "sha": "109c69eae295255ec080dbfc89a039f99c0f9b7a",
+      "date": "2026-07-24T21:12:44Z",
+      "message": "Add Chuck cloud layer debug outlines"
     }
   ]
 }
