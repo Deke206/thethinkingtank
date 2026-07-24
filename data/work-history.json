@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T06:08:48.974Z",
-  "commitCount": 180,
+  "generatedAt": "2026-07-24T09:52:35.075Z",
+  "commitCount": 181,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -903,6 +903,11 @@
       "sha": "e447204ed3660d284ad66f359c7b25a80c64c2ba",
       "date": "2026-07-24T06:08:35Z",
       "message": "Point homepage directly to root About page"
+    },
+    {
+      "sha": "005e57cd04c8bd6346e6bc7e9cc355ca69206c78",
+      "date": "2026-07-24T09:52:18Z",
+      "message": "Update aboutme.html"
     }
   ]
 }
