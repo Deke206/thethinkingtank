@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T03:53:22.854Z",
-  "commitCount": 154,
+  "generatedAt": "2026-07-24T03:53:39.648Z",
+  "commitCount": 155,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -773,6 +773,11 @@
       "sha": "950e700645e700fd453a4595a6d07d0d18921ba8",
       "date": "2026-07-24T03:53:10Z",
       "message": "Make About work history compact and scrollable"
+    },
+    {
+      "sha": "d36c424fc8ab2488c9f6e34e82ed2159602b8484",
+      "date": "2026-07-24T03:53:25Z",
+      "message": "Show newest About work history entries first"
     }
   ]
 }
