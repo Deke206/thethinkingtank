@@ -12,7 +12,7 @@
   const matrixCssUrl = new URL("css/site-led-matrix.css?v=20260724-performance-cleanup", siteRoot).href;
   const navigationCssUrl = new URL("css/site-navigation.css?v=20260724-build-dropdown-flare", siteRoot).href;
   const matrixScriptUrl = new URL("js/site-led-matrix.js?v=20260724-performance-cleanup", siteRoot).href;
-  const chuckComponentUrl = new URL("js/about-deke-chuck.js?v=20260724-bottom-only-chuck", siteRoot).href;
+  const chuckComponentUrl = new URL("js/about-deke-chuck.js?v=20260724-exact-thought-cloud-v1", siteRoot).href;
   const bikeBuilderUpgradeUrl = new URL("js/bike-builder-upgrade.js?v=20260723-liveview-upgrade", siteRoot).href;
   const bikeBuilderSizeHotfixUrl = new URL("js/bike-builder-size-hotfix.js?v=20260724-primary-only-small-frames", siteRoot).href;
   const bikeBuilderUrl = new URL("build-my-bike.html", siteRoot).href;
