@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T09:52:35.075Z",
-  "commitCount": 181,
+  "generatedAt": "2026-07-24T10:18:47.491Z",
+  "commitCount": 182,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -908,6 +908,11 @@
       "sha": "005e57cd04c8bd6346e6bc7e9cc355ca69206c78",
       "date": "2026-07-24T09:52:18Z",
       "message": "Update aboutme.html"
+    },
+    {
+      "sha": "dc9af62d0e4bf24e123c3a05fc732129d55ce531",
+      "date": "2026-07-24T10:18:35Z",
+      "message": "Keep hero carousel images still and remove sparkle effects"
     }
   ]
 }
