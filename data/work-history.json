@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T04:03:52.277Z",
-  "commitCount": 164,
+  "generatedAt": "2026-07-24T04:04:51.156Z",
+  "commitCount": 165,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -823,6 +823,11 @@
       "sha": "618dbf35ed94492ef07ad8195f64d407c7154abc",
       "date": "2026-07-24T04:03:37Z",
       "message": "Point legacy Chuck shim to latest shared component"
+    },
+    {
+      "sha": "aada9977ea2aeff9c8ccb3b1a123845418dff141",
+      "date": "2026-07-24T04:04:40Z",
+      "message": "Point site loader to latest canonical Chuck entrypoint"
     }
   ]
 }
