@@ -3,15 +3,15 @@
 .deke-chuck-thought {
   --cloud-art: url("../assets/brand/chuck-cloud-cyan.svg?v=20260725-neon-v1");
   --cloud-glow: rgba(49, 230, 255, .48);
-  --thought-ink: #03111f;
+  --thought-ink: #fff;
   --thought-button-bg: var(--pink, #ff5ab9);
   --thought-button-ink: #fff;
-  right: 78px !important;
-  bottom: 92px !important;
-  width: min(360px, calc(100vw - 92px)) !important;
+  right: 44px !important;
+  bottom: 112px !important;
+  width: min(330px, calc(100vw - 92px)) !important;
   aspect-ratio: 1 / 1 !important;
-  padding: 20% 17% 27% 13% !important;
-  gap: .38rem !important;
+  padding: 24% 19% 23% 11% !important;
+  gap: .34rem !important;
   overflow: visible !important;
   background: transparent !important;
   outline: 0 !important;
@@ -19,7 +19,7 @@
   transform-origin: 88% 90% !important;
 }
 
-/* One finished transparent sprite. No mask, filler, duplicate outline or flipped copy. */
+/* One finished transparent sprite. No mask, filler or duplicate outline. */
 .deke-chuck-thought::before {
   content: "" !important;
   position: absolute !important;
@@ -33,6 +33,7 @@
   -webkit-mask: none !important;
   mask: none !important;
   outline: 0 !important;
+  opacity: .84 !important;
   transform: none !important;
   filter:
     drop-shadow(0 0 12px var(--cloud-glow))
@@ -60,18 +61,21 @@
 }
 
 .deke-chuck-thought__close {
-  top: 16% !important;
-  right: 23% !important;
-  width: 26px !important;
-  height: 26px !important;
+  top: 17% !important;
+  right: 22% !important;
+  width: 25px !important;
+  height: 25px !important;
   outline: 0 !important;
-  background: rgba(255, 255, 255, .82) !important;
+  color: #fff !important;
+  background: rgba(3, 9, 24, .68) !important;
 }
 
-/* The text area stays completely transparent. */
+/* The text area stays completely transparent and sits above the translucent art. */
 .deke-chuck-thought__text {
+  position: relative !important;
+  z-index: 2 !important;
   width: auto !important;
-  max-width: 70% !important;
+  max-width: 72% !important;
   margin: 0 auto !important;
   padding: 0 !important;
   color: var(--thought-ink) !important;
@@ -79,17 +83,21 @@
   border: 0 !important;
   outline: 0 !important;
   box-shadow: none !important;
-  font-size: clamp(.78rem, 1.8vw, .96rem) !important;
+  font-size: clamp(.78rem, 1.8vw, .94rem) !important;
   font-weight: 800 !important;
   line-height: 1.08 !important;
   letter-spacing: 0 !important;
   text-align: center !important;
+  white-space: pre-line !important;
   overflow-wrap: break-word !important;
   word-break: normal !important;
   text-wrap: balance !important;
+  text-shadow: 0 2px 3px rgba(3, 9, 24, .95), 0 0 8px rgba(3, 9, 24, .78) !important;
 }
 
 .deke-chuck-thought__action {
+  position: relative !important;
+  z-index: 2 !important;
   min-width: 88px !important;
   max-width: 128px !important;
   min-height: 30px !important;
@@ -110,7 +118,7 @@
 .deke-chuck-thought--cyan {
   --cloud-art: url("../assets/brand/chuck-cloud-cyan.svg?v=20260725-neon-v1");
   --cloud-glow: rgba(49, 230, 255, .52);
-  --thought-ink: #03111f;
+  --thought-ink: #fff;
   --thought-button-bg: var(--pink, #ff5ab9);
   --thought-button-ink: #fff;
 }
@@ -118,7 +126,7 @@
 .deke-chuck-thought--pink {
   --cloud-art: url("../assets/brand/chuck-cloud-pink.svg?v=20260725-neon-v1");
   --cloud-glow: rgba(255, 90, 185, .48);
-  --thought-ink: #250516;
+  --thought-ink: #fff;
   --thought-button-bg: var(--cyan, #31e6ff);
   --thought-button-ink: #03111f;
 }
@@ -127,7 +135,7 @@
 .deke-chuck-thought--violet {
   --cloud-art: url("../assets/brand/chuck-cloud-amber.svg?v=20260725-neon-v1");
   --cloud-glow: rgba(255, 197, 98, .48);
-  --thought-ink: #271600;
+  --thought-ink: #fff;
   --thought-button-bg: var(--violet, #9b83ff);
   --thought-button-ink: #fff;
 }
@@ -144,57 +152,57 @@
 
 @media (max-width: 575.98px) {
   .deke-chuck-thought {
-    right: 50px !important;
-    bottom: 70px !important;
-    width: min(310px, calc(100vw - 78px)) !important;
-    padding: 19% 16% 27% 12% !important;
-    gap: .3rem !important;
+    right: 38px !important;
+    bottom: 100px !important;
+    width: min(280px, calc(100vw - 76px)) !important;
+    padding: 24% 19% 23% 11% !important;
+    gap: .27rem !important;
   }
 
   .deke-chuck-thought__close {
-    top: 15% !important;
-    right: 22% !important;
-    width: 24px !important;
-    height: 24px !important;
-    font-size: .9rem !important;
+    top: 16% !important;
+    right: 21% !important;
+    width: 23px !important;
+    height: 23px !important;
+    font-size: .88rem !important;
   }
 
   .deke-chuck-thought__text {
-    max-width: 70% !important;
-    font-size: clamp(.72rem, 3.25vw, .84rem) !important;
+    max-width: 72% !important;
+    font-size: clamp(.7rem, 3.2vw, .82rem) !important;
     line-height: 1.07 !important;
   }
 
   .deke-chuck-thought__action {
-    min-width: 78px !important;
-    max-width: 112px !important;
-    min-height: 27px !important;
-    padding: .22rem .36rem !important;
-    font-size: .62rem !important;
+    min-width: 76px !important;
+    max-width: 110px !important;
+    min-height: 26px !important;
+    padding: .21rem .35rem !important;
+    font-size: .61rem !important;
   }
 }
 
 @media (max-width: 390px) {
   .deke-chuck-thought {
-    right: 44px !important;
-    bottom: 66px !important;
-    width: min(292px, calc(100vw - 72px)) !important;
-    padding: 19% 16% 27% 12% !important;
-    gap: .26rem !important;
+    right: 34px !important;
+    bottom: 96px !important;
+    width: min(266px, calc(100vw - 68px)) !important;
+    padding: 24% 19% 23% 11% !important;
+    gap: .24rem !important;
   }
 
   .deke-chuck-thought__text {
-    max-width: 69% !important;
-    font-size: .72rem !important;
+    max-width: 71% !important;
+    font-size: .69rem !important;
     line-height: 1.06 !important;
   }
 
   .deke-chuck-thought__action {
-    min-width: 74px !important;
-    max-width: 106px !important;
-    min-height: 25px !important;
-    padding: .2rem .32rem !important;
-    font-size: .58rem !important;
+    min-width: 72px !important;
+    max-width: 102px !important;
+    min-height: 24px !important;
+    padding: .18rem .3rem !important;
+    font-size: .56rem !important;
   }
 }
 
