@@ -26,15 +26,6 @@
     .map(([value, label]) => `<option value="${value}" ${value === selected ? "selected" : ""}>${label}</option>`)
     .join("");
 
-  const addStyles = () => {
-    if (document.querySelector("link[data-bike-builder-upgrade]")) return;
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = "css/bike-builder-upgrade.css?v=20260723-liveview-v2";
-    link.dataset.bikeBuilderUpgrade = "true";
-    document.head.appendChild(link);
-  };
-
   const insertControls = () => {
     document.getElementById("frontViewPanel")?.remove();
     document.getElementById("previewViewButtons")?.remove();
@@ -250,7 +241,6 @@
     return false;
   };
 
-  addStyles();
   insertControls();
 
   form.addEventListener("change", (event) => {

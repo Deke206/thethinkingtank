@@ -606,3 +606,246 @@
   .bike-stage svg { height: 330px; }
   .builder-form .accordion-body { padding: .9rem; }
 }
+
+/* Consolidated live-view upgrade rules from former css/bike-builder-upgrade.css. */
+/* Build My Bike live-view upgrade: selectable bicycle bodies, automatic rear-safety view and equipment layers. */
+.builder-shell {
+  display: grid;
+  grid-template-columns: minmax(285px, .7fr) minmax(520px, 1.3fr);
+  gap: 1.2rem;
+  align-items: start;
+}
+
+.builder-form {
+  min-width: 0;
+  max-width: 455px;
+}
+
+.builder-form .accordion-button {
+  padding: .78rem .9rem;
+  font-size: .93rem;
+}
+
+.builder-form .accordion-body {
+  padding: .85rem .95rem;
+}
+
+.builder-form .question-row {
+  padding: .72rem 0;
+}
+
+.builder-form .form-select {
+  padding: .38rem 2rem .38rem .65rem;
+  border-radius: .65rem;
+  font-size: .9rem;
+}
+
+.builder-form .yes-no {
+  gap: .35rem;
+}
+
+.builder-form .btn {
+  padding: .34rem .68rem;
+  border-radius: 999px;
+  font-size: .82rem;
+  line-height: 1.15;
+}
+
+.builder-form .yes-no .btn {
+  min-width: 56px;
+}
+
+.summary-box,
+.preview-card {
+  border: 1px solid rgba(49, 230, 255, .38) !important;
+  box-shadow:
+    0 .9rem 2.4rem rgba(0, 0, 0, .38),
+    0 0 24px rgba(49, 230, 255, .1) !important;
+}
+
+.preview-card {
+  min-width: 0;
+}
+
+.bike-stage,
+.bike-stage svg {
+  min-height: 560px;
+  height: 560px;
+}
+
+/* Defensive cleanup for the superseded manual view controls. */
+#frontViewPanel,
+#previewViewButtons,
+.preview-view-buttons {
+  display: none !important;
+}
+
+#mainBikeGroup[hidden],
+#kidBikeGroup[hidden],
+#rearViewPanel[hidden],
+#appControlIcons[hidden] {
+  display: none !important;
+}
+
+.equipment-options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .55rem;
+}
+
+.equipment-option {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  min-height: 42px;
+  padding: .55rem .62rem;
+  border: 1px solid rgba(138, 220, 255, .22);
+  border-radius: .7rem;
+  color: #eef8ff;
+  background: rgba(7, 23, 44, .9);
+  font-size: .84rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.equipment-option:hover {
+  border-color: #68d8ff;
+  box-shadow: 0 0 0 3px rgba(49, 230, 255, .12);
+}
+
+.equipment-option input {
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+  accent-color: #0b7ca0;
+}
+
+.equipment-layer {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity .25s ease, stroke .25s ease, fill .25s ease, filter .25s ease;
+  stroke: #2d333b;
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: rgba(255, 255, 255, .88);
+}
+
+.equipment-layer.equipment-off {
+  opacity: 0;
+  pointer-events: none;
+  filter: none;
+}
+
+.equipment-layer.equipment-on {
+  opacity: 1;
+  stroke: #20c997;
+  fill: rgba(32, 201, 151, .2);
+  filter: drop-shadow(0 0 5px rgba(32, 201, 151, .82));
+}
+
+.equipment-layer.equipment-on text {
+  fill: #fff;
+  stroke: none;
+  filter: drop-shadow(0 0 4px rgba(0, 0, 0, .85));
+}
+
+#headlightSvg.equipment-on {
+  stroke: #fff7b2;
+  fill: #fffde8;
+  filter: drop-shadow(0 0 5px #fff) drop-shadow(0 0 14px rgba(255, 235, 104, .95));
+}
+
+#underglowSvg.equipment-on {
+  fill: none;
+  stroke: url(#rgbGradient);
+  animation: underglowPulse 1.4s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 7px rgba(0, 220, 255, .95)) drop-shadow(0 0 13px rgba(255, 0, 140, .72));
+}
+
+#ledSignSvg.equipment-on,
+#rearLedSignView.equipment-on {
+  stroke: #31e6ff;
+  fill: rgba(5, 12, 28, .94);
+  filter: drop-shadow(0 0 8px rgba(49, 230, 255, .85));
+}
+
+#batteryBoxSvg.equipment-on,
+#controllerBoxSvg.equipment-on {
+  stroke: #31e6ff;
+  fill: rgba(6, 21, 47, .9);
+}
+
+#cargoTrailerSvg.equipment-on circle {
+  fill: #fff;
+  stroke: #25282d;
+}
+
+.flag-pole.zone-on,
+.flag-pole.zone-off {
+  animation: none;
+  filter: none;
+  stroke-dasharray: none;
+}
+
+.flag-pole .flag-pole-light {
+  fill: none !important;
+  stroke-dasharray: none !important;
+}
+
+.flag-solid-red .flag-pole-light {
+  stroke: #dc3545 !important;
+  filter: drop-shadow(0 0 8px rgba(220, 53, 69, .95));
+}
+
+.flag-flash-red .flag-pole-light {
+  stroke: #dc3545 !important;
+  animation: flagCautionFlash .82s steps(1, end) infinite;
+}
+
+.flag-flash-orange .flag-pole-light {
+  stroke: var(--builder-orange) !important;
+  animation: flagCautionFlash .82s steps(1, end) infinite;
+}
+
+@keyframes underglowPulse {
+  from { opacity: .64; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 991.98px) {
+  .builder-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .builder-form {
+    max-width: none;
+  }
+
+  .preview-card {
+    position: relative;
+    top: auto;
+  }
+
+  .bike-stage,
+  .bike-stage svg {
+    min-height: 500px;
+    height: 500px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .equipment-options-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1400px) {
+  .builder-shell {
+    grid-template-columns: minmax(320px, .64fr) minmax(680px, 1.36fr);
+  }
+
+  .builder-form {
+    max-width: 470px;
+  }
+}
