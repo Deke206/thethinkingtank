@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T10:18:47.491Z",
-  "commitCount": 182,
+  "generatedAt": "2026-07-24T10:19:06.630Z",
+  "commitCount": 183,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -913,6 +913,11 @@
       "sha": "dc9af62d0e4bf24e123c3a05fc732129d55ce531",
       "date": "2026-07-24T10:18:35Z",
       "message": "Keep hero carousel images still and remove sparkle effects"
+    },
+    {
+      "sha": "0dcabd2c03ae491087ed2a82448c08497c874f16",
+      "date": "2026-07-24T10:18:54Z",
+      "message": "Keep hero carousel rotation without picture animation"
     }
   ]
 }
