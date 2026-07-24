@@ -7,7 +7,7 @@
   const scriptUrl = scriptElement?.src
     ? new URL(scriptElement.src, window.location.href)
     : new URL("js/about-deke-chuck.js", window.location.href);
-  const sharedUrl = new URL("site-chuck.js?v=20260724-shared-chuck-v2", scriptUrl).href;
+  const sharedUrl = new URL("site-chuck.js?v=20260724-shared-chuck-v3", scriptUrl).href;
 
   const existing = document.querySelector("script[data-shynetyme-site-chuck]");
   if (existing) return;
