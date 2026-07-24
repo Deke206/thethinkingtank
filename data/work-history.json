@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T10:21:06.810Z",
-  "commitCount": 185,
+  "generatedAt": "2026-07-24T11:20:04.641Z",
+  "commitCount": 190,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -928,6 +928,31 @@
       "sha": "92f533597258f6b70d7fed5da8bb54a42c3c17a6",
       "date": "2026-07-24T10:20:54Z",
       "message": "Load still-image hero stylesheet across the site"
+    },
+    {
+      "sha": "056a027b758ddb1e663527f84220b2a6357907fd",
+      "date": "2026-07-24T10:22:42Z",
+      "message": "Add one-time legacy hero banner cleanup"
+    },
+    {
+      "sha": "6acbeb2e2c12dd229eeb2b8f21baae73f1db1b63",
+      "date": "2026-07-24T10:22:51Z",
+      "message": "Remove retired hero banner markup sitewide"
+    },
+    {
+      "sha": "469284d2333210fd061ccf5c4b6968bac72ff6c1",
+      "date": "2026-07-24T11:16:18Z",
+      "message": "Add one-time shared site shell normalization"
+    },
+    {
+      "sha": "464d02af0481057b8180571ffab9309b052aebdd",
+      "date": "2026-07-24T11:16:26Z",
+      "message": "Normalize shared navigation header matrix and Chuck systems"
+    },
+    {
+      "sha": "6447bb9cb32343d7ad29b9f3bb9fcd43a44585d8",
+      "date": "2026-07-24T11:19:52Z",
+      "message": "Make shared navigation order identical on every page"
     }
   ]
 }
