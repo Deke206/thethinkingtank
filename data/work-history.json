@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-24T06:03:23.306Z",
-  "commitCount": 171,
+  "generatedAt": "2026-07-24T06:04:35.507Z",
+  "commitCount": 172,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -858,6 +858,11 @@
       "sha": "d207398da0cb1e06f6725635f89c162e6516473b",
       "date": "2026-07-24T06:03:09Z",
       "message": "Remove legacy About-only Chuck overrides"
+    },
+    {
+      "sha": "a8efd996c40241a5878fd80dad0624a76718b7de",
+      "date": "2026-07-24T06:04:20Z",
+      "message": "Link the shared site to root About Deke page"
     }
   ]
 }
