@@ -10,8 +10,8 @@
   const siteRoot = new URL("../", scriptUrl);
 
   const chuckCssUrl = new URL("css/site-chuck.css?v=20260724-cloud-guidance", siteRoot).href;
-  const cloudCssUrl = new URL("css/site-chuck-cloud.css?v=20260725-neon-position-v2", siteRoot).href;
-  const chuckSpriteUrl = new URL("js/chuck-sprite.js", siteRoot).href;
+  const cloudCssUrl = new URL("css/site-chuck-cloud.css?v=20260725-mobile-smaller-v3", siteRoot).href;
+  const chuckSpriteUrl = new URL("js/chuck-sprite.js?v=20260725-phone-scroll-v2", siteRoot).href;
   const scanAtlasUrl = new URL("assets/brand/chuck-search-map.webp", siteRoot).href;
   const laptopAtlasUrl = new URL("assets/brand/chuck-search-laptop.webp", siteRoot).href;
   const fallbackImageUrl = new URL("assets/brand/pet-chuck-mark.png", siteRoot).href;
@@ -125,12 +125,13 @@
   const WELCOME_VISIBLE_MS = 6000;
   const MESSAGE_VISIBLE_MS = 10000;
   const AFTER_SCROLL_DELAY_MS = 15000;
-  const SCROLL_STOP_MS = 240;
+  const SCROLL_STOP_MS = 650;
 
   let chuckAnimation = null;
   let messageIndex = -1;
   let previousTheme = "";
   let previousScrollY = window.scrollY;
+  let pendingScrollMode = "";
   let scrollStopTimer = 0;
   let delayedThoughtTimer = 0;
   let hideTimer = 0;
@@ -143,7 +144,12 @@
       scanUrl: scanAtlasUrl,
       laptopUrl: laptopAtlasUrl
     }) || null;
-    chuckAnimation?.stop();
+
+    if (widget.classList.contains("is-searching")) {
+      chuckAnimation?.start(pendingScrollMode || "scan");
+    } else {
+      chuckAnimation?.stop();
+    }
   });
 
   const nextCloudTheme = () => {
@@ -184,6 +190,7 @@
   const showMessage = (message, visibleMs = MESSAGE_VISIBLE_MS) => {
     window.clearTimeout(hideTimer);
     widget.classList.remove("is-searching");
+    pendingScrollMode = "";
     chuckAnimation?.stop();
     setTheme(nextCloudTheme());
     text.textContent = message.text;
@@ -223,15 +230,14 @@
     const currentScrollY = window.scrollY;
     const mode = currentScrollY < previousScrollY ? "scan" : "laptop";
     previousScrollY = currentScrollY;
+    pendingScrollMode = mode;
     widget.classList.add("is-searching");
-
-    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      chuckAnimation?.start(mode);
-    }
+    chuckAnimation?.start(mode);
 
     window.clearTimeout(scrollStopTimer);
     scrollStopTimer = window.setTimeout(() => {
       widget.classList.remove("is-searching");
+      pendingScrollMode = "";
       chuckAnimation?.stop();
       scheduleAfterScrollThought();
     }, SCROLL_STOP_MS);
@@ -240,6 +246,7 @@
   trigger.addEventListener("click", () => {
     cancelDelayedThought();
     widget.classList.remove("is-searching");
+    pendingScrollMode = "";
     chuckAnimation?.stop();
     showNextMessage();
   });
