@@ -8,7 +8,7 @@
   const siteRoot = new URL("../", scriptUrl);
 
   const motionCssUrl = new URL("css/site-motion.css?v=20260724-root-about-cleanup", siteRoot).href;
-  const heroCssUrl = new URL("css/site-hero.css?v=20260724-clean-shared-hero", siteRoot).href;
+  const heroCssUrl = new URL("css/site-hero.css?v=20260724-still-four-image-carousel", siteRoot).href;
   const matrixCssUrl = new URL("css/site-led-matrix.css?v=20260724-performance-cleanup", siteRoot).href;
   const navigationCssUrl = new URL("css/site-navigation.css?v=20260724-build-dropdown-flare", siteRoot).href;
   const matrixScriptUrl = new URL("js/site-led-matrix.js?v=20260724-performance-cleanup", siteRoot).href;
