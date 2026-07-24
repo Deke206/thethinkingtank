@@ -12,7 +12,7 @@
   const matrixCssUrl = new URL("css/site-led-matrix.css?v=20260724-performance-cleanup", siteRoot).href;
   const navigationCssUrl = new URL("css/site-navigation.css?v=20260724-build-dropdown-flare", siteRoot).href;
   const matrixScriptUrl = new URL("js/site-led-matrix.js?v=20260724-performance-cleanup", siteRoot).href;
-  const chuckComponentUrl = new URL("js/about-deke-chuck.js?v=20260724-exact-thought-cloud-v1", siteRoot).href;
+  const chuckComponentUrl = new URL("js/site-chuck.js?v=20260724-shared-chuck-v2", siteRoot).href;
   const bikeBuilderUpgradeUrl = new URL("js/bike-builder-upgrade.js?v=20260723-liveview-upgrade", siteRoot).href;
   const bikeBuilderSizeHotfixUrl = new URL("js/bike-builder-size-hotfix.js?v=20260724-primary-only-small-frames", siteRoot).href;
   const bikeBuilderUrl = new URL("build-my-bike.html", siteRoot).href;
@@ -61,12 +61,12 @@
   };
 
   const loadSitewideChuck = () => {
-    if (window.ShynetymeChuck?.mounted || document.querySelector("script[data-shynetyme-chuck-component]")) return;
+    if (window.ShynetymeChuck?.mounted || document.querySelector("script[data-shynetyme-chuck-component], script[data-shynetyme-site-chuck]")) return;
 
     const script = document.createElement("script");
     script.src = chuckComponentUrl;
     script.defer = true;
-    script.dataset.shynetymeChuckComponent = "true";
+    script.dataset.shynetymeSiteChuck = "true";
     document.body.appendChild(script);
   };
 
