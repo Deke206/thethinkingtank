@@ -1,4 +1,4 @@
-# One-time cleanup trigger.
+# Merge-triggered one-time cleanup.
 name: Clean shared page subheader
 
 on:
