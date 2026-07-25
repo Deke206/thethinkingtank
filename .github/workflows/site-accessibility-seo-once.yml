@@ -1,0 +1,351 @@
+name: Site accessibility and SEO pass
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/site-accessibility-seo-once.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Update public pages, sitemap and robots
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from html import escape
+          import datetime
+          import json
+          import re
+          import subprocess
+
+          BASE = "https://shynetyme.works"
+          RELEASE = "shared-ui-2"
+          ANALYTICS = '''<!-- Google tag (gtag.js) -->
+          <script async src="https://www.googletagmanager.com/gtag/js?id=G-0NJPG6XB5N"></script>
+          <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-0NJPG6XB5N');
+          </script>'''
+
+          PAGE_SEO = {
+              "index.html": (
+                  "Custom LED Installations Los Angeles | ShyneTyme Works",
+                  "Custom addressable LED installations, WLED planning, bicycle lighting, LED banners and creative programmable lighting in West Los Angeles."
+              ),
+              "build-my-bike.html": (
+                  "LED Bike Simulator & Custom Bike Lighting Planner | ShyneTyme Works",
+                  "Use the ShyneTyme Works LED Bike Simulator to plan bicycle lighting zones, safety signals, accessories, controls and budget."
+              ),
+              "build-my-home.html": (
+                  "LED Home Simulator & Exterior Lighting Planner | ShyneTyme Works",
+                  "Plan roofline, garage, patio, gazebo, pathway, garden and exterior architectural lighting with the ShyneTyme Works LED Home Simulator."
+              ),
+              "led-catalog.html": (
+                  "Addressable LED Product Catalog | ShyneTyme Works",
+                  "Browse addressable LED strips, matrices, controllers, power supplies and installation components for custom programmable lighting projects."
+              ),
+              "led-banner-magic.html": (
+                  "LED Banner Effects and Animation Ideas | ShyneTyme Works",
+                  "Explore programmable LED banner text, animation and display-effect ideas for mobile, business and creative lighting projects."
+              ),
+              "contact.html": (
+                  "Request a Custom LED Installation in Los Angeles | ShyneTyme Works",
+                  "Contact ShyneTyme Works for custom bicycle, vehicle, home, marina, banner and programmable LED installation planning in Los Angeles."
+              ),
+              "aboutme.html": (
+                  "About Deke Alexander | ShyneTyme Works",
+                  "Meet Dedric “Deke” Alexander and view the practical web, LED, electronics, automotive, listing and small-business experience behind ShyneTyme Works."
+              ),
+          }
+
+          ALT_MAP = {
+              "hero-scene-work.webp": "LED installation planning and technical work by ShyneTyme Works",
+              "hero-scene-school.webp": "Technical learning and computer work for ShyneTyme Works",
+              "hero-scene-dance.webp": "Colorful programmable LED dance and entertainment scene",
+              "hero-scene-marina.webp": "Programmable LED lighting displayed at a marina",
+              "shynetyme-works-hero.webp": "ShyneTyme Works programmable LED lighting showcase",
+              "bike-planner-street.webp": "Street scene used behind the interactive LED bicycle simulator",
+              "pet-chuck-mark.png": "Chuck, the ShyneTyme Works LED helper",
+              "chuck-search-map.webp": "Chuck searching a map for lighting ideas",
+              "chuck-search-laptop.webp": "Chuck researching lighting ideas on a laptop",
+              "favicon-32.png": "ShyneTyme Works logo",
+              "apple-touch-icon.png": "ShyneTyme Works logo",
+          }
+
+          def public_html_files():
+              files = set(Path('.').glob('*.html'))
+              for path in Path('.').glob('*/index.html'):
+                  if path.parts[0] not in {'.github', 'docs', 'node_modules', 'test', 'tests', 'examples'}:
+                      files.add(path)
+              return sorted(files)
+
+          def canonical_for(path):
+              rel = path.as_posix().lstrip('./')
+              if rel == 'index.html':
+                  return BASE + '/'
+              if rel.endswith('/index.html'):
+                  return BASE + '/' + rel[:-10]
+              return BASE + '/' + rel
+
+          def extract(pattern, text, default=''):
+              match = re.search(pattern, text, flags=re.I | re.S)
+              return re.sub(r'\s+', ' ', match.group(1)).strip() if match else default
+
+          def set_title(text, title):
+              if re.search(r'<title\b[^>]*>.*?</title>', text, flags=re.I | re.S):
+                  return re.sub(r'<title\b[^>]*>.*?</title>', f'<title>{escape(title)}</title>', text, count=1, flags=re.I | re.S)
+              return text.replace('</head>', f'  <title>{escape(title)}</title>\n</head>', 1)
+
+          def set_meta(text, key, value, property_meta=False):
+              attr = 'property' if property_meta else 'name'
+              pattern = rf'<meta\b(?=[^>]*\b{attr}=["\']{re.escape(key)}["\'])[^>]*>'
+              tag = f'<meta {attr}="{key}" content="{escape(value, quote=True)}">'
+              if re.search(pattern, text, flags=re.I):
+                  return re.sub(pattern, tag, text, count=1, flags=re.I)
+              return text.replace('</head>', f'  {tag}\n</head>', 1)
+
+          def set_link(text, rel, href, extra=''):
+              pattern = rf'<link\b(?=[^>]*\brel=["\']{re.escape(rel)}["\'])'
+              if rel == 'alternate' and extra:
+                  hreflang = re.search(r'hreflang="([^"]+)"', extra)
+                  if hreflang:
+                      pattern = rf'<link\b(?=[^>]*\brel=["\']alternate["\'])(?=[^>]*\bhreflang=["\']{re.escape(hreflang.group(1))}["\'])[^>]*>'
+                  else:
+                      pattern += r'[^>]*>'
+              else:
+                  pattern += r'[^>]*>'
+              tag = f'<link rel="{rel}" href="{escape(href, quote=True)}"{(" " + extra) if extra else ""}>'
+              if re.search(pattern, text, flags=re.I):
+                  return re.sub(pattern, tag, text, count=1, flags=re.I)
+              return text.replace('</head>', f'  {tag}\n</head>', 1)
+
+          def generated_alt(src):
+              filename = src.split('?')[0].split('#')[0].rstrip('/').split('/')[-1].lower()
+              if filename in ALT_MAP:
+                  return ALT_MAP[filename]
+              stem = re.sub(r'\.[a-z0-9]+$', '', filename)
+              cleaned = re.sub(r'[-_]+', ' ', stem).strip()
+              if 'chuck' in cleaned:
+                  return 'Chuck, the ShyneTyme Works LED helper'
+              if 'bike' in cleaned and 'led' in cleaned:
+                  return 'Custom programmable LED bicycle lighting preview'
+              if 'led' in cleaned:
+                  return cleaned.title() + ' lighting image'
+              if 'logo' in cleaned or 'brand' in cleaned or 'favicon' in cleaned:
+                  return 'ShyneTyme Works logo'
+              return (cleaned.title() if cleaned else 'ShyneTyme Works') + ' image'
+
+          def add_missing_alt(text):
+              def repl(match):
+                  tag = match.group(0)
+                  if re.search(r'\balt\s*=', tag, flags=re.I):
+                      return tag
+                  src = extract(r'\bsrc=["\']([^"\']+)', tag)
+                  alt = generated_alt(src)
+                  return re.sub(r'\s*/?>$', lambda end: f' alt="{escape(alt, quote=True)}"{end.group(0)}', tag)
+              return re.sub(r'<img\b[^>]*>', repl, text, flags=re.I)
+
+          def add_accessibility_landmarks(text):
+              if 'class="skip-link"' not in text:
+                  text = re.sub(r'(<body\b[^>]*>)', r'\1\n  <a class="skip-link" href="#main-content">Skip to main content</a>', text, count=1, flags=re.I)
+
+              def main_repl(match):
+                  tag = match.group(0)
+                  if not re.search(r'\bid\s*=', tag, flags=re.I):
+                      tag = tag[:-1] + ' id="main-content">'
+                  if not re.search(r'\btabindex\s*=', tag, flags=re.I):
+                      tag = tag[:-1] + ' tabindex="-1">'
+                  return tag
+              text = re.sub(r'<main\b[^>]*>', main_repl, text, count=1, flags=re.I)
+
+              def nav_repl(match):
+                  tag = match.group(0)
+                  if re.search(r'\baria-label\s*=', tag, flags=re.I):
+                      return tag
+                  return tag[:-1] + ' aria-label="Primary navigation">'
+              text = re.sub(r'<nav\b(?=[^>]*\bnavbar\b)[^>]*>', nav_repl, text, count=1, flags=re.I)
+
+              def footer_repl(match):
+                  tag = match.group(0)
+                  if re.search(r'\baria-label\s*=', tag, flags=re.I):
+                      return tag
+                  return tag[:-1] + ' aria-label="Site footer">'
+              text = re.sub(r'<footer\b[^>]*>', footer_repl, text, count=1, flags=re.I)
+              return text
+
+          def normalize_shared_assets(text):
+              shared_css = ('site-navigation.css', 'site-hero.css', 'site-led-matrix.css', 'site-chuck.css', 'site-motion.css')
+              for filename in shared_css:
+                  text = re.sub(rf'(href=["\'](?:\.\./)*css/{re.escape(filename)})(?:\?[^"\']*)?(["\'])', rf'\1?v={RELEASE}\2', text, flags=re.I)
+              text = re.sub(r'(src=["\'](?:\.\./)*js/site-guide\.js)(?:\?[^"\']*)?(["\'])', rf'\1?v={RELEASE}\2', text, flags=re.I)
+              if 'js/site-guide.js' not in text:
+                  text = text.replace('</body>', f'  <script src="js/site-guide.js?v={RELEASE}"></script>\n</body>', 1)
+              return text
+
+          def schema_for(page_type, title, description, canonical):
+              graph = [
+                  {
+                      "@type": "Organization",
+                      "@id": BASE + "/#organization",
+                      "name": "ShyneTyme Works",
+                      "url": BASE + "/",
+                      "logo": BASE + "/assets/brand/apple-touch-icon.png",
+                      "email": "westsidelistingservices@gmail.com",
+                      "telephone": "+1-310-945-2378",
+                      "areaServed": "Los Angeles, California",
+                      "sameAs": [
+                          "https://www.facebook.com/ShyneTymeWorks",
+                          "https://www.instagram.com/shynetymeworks/"
+                      ]
+                  },
+                  {
+                      "@type": "WebSite",
+                      "@id": BASE + "/#website",
+                      "url": BASE + "/",
+                      "name": "ShyneTyme Works",
+                      "publisher": {"@id": BASE + "/#organization"},
+                      "inLanguage": "en-US"
+                  },
+                  {
+                      "@type": page_type,
+                      "@id": canonical + "#webpage",
+                      "url": canonical,
+                      "name": title,
+                      "description": description,
+                      "isPartOf": {"@id": BASE + "/#website"},
+                      "about": {"@id": BASE + "/#organization"},
+                      "inLanguage": "en-US"
+                  }
+              ]
+              return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, indent=2)
+
+          pages = []
+          for path in public_html_files():
+              text = path.read_text(encoding='utf-8')
+              lower_name = path.name.lower()
+              rel = path.as_posix().lstrip('./')
+              canonical = canonical_for(path)
+
+              text = re.sub(r'<html\b[^>]*>', '<html lang="en">', text, count=1, flags=re.I)
+              if 'G-0NJPG6XB5N' not in text:
+                  text = re.sub(r'<head\b[^>]*>', lambda m: m.group(0) + '\n' + ANALYTICS, text, count=1, flags=re.I)
+
+              existing_title = extract(r'<title\b[^>]*>(.*?)</title>', text, 'ShyneTyme Works')
+              existing_description = extract(r'<meta\b(?=[^>]*\bname=["\']description["\'])[^>]*\bcontent=["\']([^"\']*)', text, '')
+              seo_title, seo_description = PAGE_SEO.get(rel, (existing_title, existing_description or 'ShyneTyme Works programmable LED lighting, installation planning and creative technical services.'))
+              text = set_title(text, seo_title)
+              text = set_meta(text, 'description', seo_description)
+              text = set_meta(text, 'robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')
+              text = set_meta(text, 'author', 'Dedric “Deke” Alexander')
+              text = set_meta(text, 'color-scheme', 'dark light')
+              text = set_link(text, 'canonical', canonical)
+              text = set_link(text, 'alternate', canonical, 'hreflang="en"')
+              text = set_link(text, 'alternate', canonical, 'hreflang="x-default"')
+
+              og_image = extract(r'<meta\b(?=[^>]*\bproperty=["\']og:image["\'])[^>]*\bcontent=["\']([^"\']*)', text, BASE + '/assets/images/shynetyme-works-hero.webp')
+              text = set_meta(text, 'og:type', 'website', True)
+              text = set_meta(text, 'og:site_name', 'ShyneTyme Works', True)
+              text = set_meta(text, 'og:locale', 'en_US', True)
+              text = set_meta(text, 'og:title', seo_title, True)
+              text = set_meta(text, 'og:description', seo_description, True)
+              text = set_meta(text, 'og:url', canonical, True)
+              text = set_meta(text, 'og:image', og_image, True)
+              text = set_meta(text, 'og:image:alt', 'ShyneTyme Works programmable LED lighting showcase', True)
+              text = set_meta(text, 'twitter:card', 'summary_large_image')
+              text = set_meta(text, 'twitter:title', seo_title)
+              text = set_meta(text, 'twitter:description', seo_description)
+              text = set_meta(text, 'twitter:image', og_image)
+              text = set_meta(text, 'twitter:image:alt', 'ShyneTyme Works programmable LED lighting showcase')
+
+              page_type = 'WebPage'
+              if rel == 'aboutme.html': page_type = 'AboutPage'
+              elif rel == 'contact.html': page_type = 'ContactPage'
+              elif rel == 'led-catalog.html': page_type = 'CollectionPage'
+              elif rel == 'index.html': page_type = 'WebPage'
+
+              text = re.sub(r'\s*<script\b[^>]*id=["\']shynetyme-seo-schema["\'][^>]*>.*?</script>', '', text, flags=re.I | re.S)
+              schema = schema_for(page_type, seo_title, seo_description, canonical)
+              text = text.replace('</head>', f'  <script type="application/ld+json" id="shynetyme-seo-schema">\n{schema}\n  </script>\n</head>', 1)
+
+              text = add_missing_alt(text)
+              text = add_accessibility_landmarks(text)
+              text = normalize_shared_assets(text)
+
+              if lower_name == '404.html':
+                  text = set_meta(text, 'robots', 'noindex, follow')
+              else:
+                  pages.append((path, canonical, seo_title, og_image))
+
+              path.write_text(text.rstrip() + '\n', encoding='utf-8')
+
+          today = datetime.date.today().isoformat()
+          lines = [
+              '<?xml version="1.0" encoding="UTF-8"?>',
+              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">'
+          ]
+          priorities = {
+              'index.html': '1.0',
+              'build-my-bike.html': '0.9',
+              'build-my-home.html': '0.9',
+              'led-catalog.html': '0.8',
+              'contact.html': '0.8',
+              'aboutme.html': '0.7',
+              'led-banner-magic.html': '0.7'
+          }
+          for path, canonical, title, image in sorted(pages, key=lambda item: item[1]):
+              try:
+                  lastmod = subprocess.check_output(['git', 'log', '-1', '--format=%cs', '--', path.as_posix()], text=True).strip() or today
+              except Exception:
+                  lastmod = today
+              rel = path.as_posix().lstrip('./')
+              lines.extend([
+                  '  <url>',
+                  f'    <loc>{escape(canonical)}</loc>',
+                  f'    <lastmod>{lastmod}</lastmod>',
+                  '    <changefreq>weekly</changefreq>',
+                  f'    <priority>{priorities.get(rel, "0.6")}</priority>',
+                  '    <image:image>',
+                  f'      <image:loc>{escape(image)}</image:loc>',
+                  f'      <image:title>{escape(title)}</image:title>',
+                  '    </image:image>',
+                  '  </url>'
+              ])
+          lines.append('</urlset>')
+          Path('sitemap.xml').write_text('\n'.join(lines) + '\n', encoding='utf-8')
+
+          robots = '''User-agent: *
+          Allow: /
+          Disallow: /.github/
+          Disallow: /docs/
+
+          Sitemap: https://shynetyme.works/sitemap.xml
+          '''
+          Path('robots.txt').write_text(robots, encoding='utf-8')
+          PY
+
+      - name: Commit completed audit and remove this workflow
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/site-accessibility-seo-once.yml
+          git add -A
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "Apply site-wide accessibility analytics and SEO"
+          git push
