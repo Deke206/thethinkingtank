@@ -32,33 +32,20 @@ jobs:
           import re
 
           RELEASE = "shared-ui-3"
-          PUBLIC_PAGES = [
-              Path("index.html"),
-              Path("aboutme.html"),
-              Path("build-my-bike.html"),
-              Path("build-my-home.html"),
-              Path("contact.html"),
-              Path("led-banner-magic.html"),
-              Path("led-catalog.html"),
-          ]
+          PAGE_LABELS = {
+              "index.html": "Home",
+              "aboutme.html": "About Deke",
+              "build-my-bike.html": "LED Sim Bike",
+              "build-my-home.html": "LED Sim Home",
+              "contact.html": "Request Install",
+              "led-banner-magic.html": "LED Banner Magic",
+              "led-catalog.html": "LED Catalog",
+          }
 
-          # LED matrix JavaScript owns only the two hero ribbons.
           matrix_path = Path("js/site-led-matrix.js")
           matrix = matrix_path.read_text(encoding="utf-8")
-          matrix = re.sub(
-              r"\n  function collectBreadcrumbText\(ticker\) \{.*?\n  \}\n",
-              "\n",
-              matrix,
-              count=1,
-              flags=re.S,
-          )
-          matrix = re.sub(
-              r"\n  function transformBreadcrumb\(usedEffects, usedPalettes\) \{.*?\n  \}\n",
-              "\n",
-              matrix,
-              count=1,
-              flags=re.S,
-          )
+          matrix = re.sub(r"\n  function collectBreadcrumbText\(ticker\) \{.*?\n  \}\n", "\n", matrix, count=1, flags=re.S)
+          matrix = re.sub(r"\n  function transformBreadcrumb\(usedEffects, usedPalettes\) \{.*?\n  \}\n", "\n", matrix, count=1, flags=re.S)
           matrix = matrix.replace("    transformBreadcrumb(usedEffects, usedPalettes);\n", "")
           matrix = matrix.replace("      this.role = options.role;\n", "")
           matrix = matrix.replace('      this.rows = this.role === "breadcrumb" ? 10 : 11;\n', "      this.rows = 11;\n")
@@ -86,26 +73,27 @@ jobs:
           )
           matrix_path.write_text(matrix, encoding="utf-8")
 
-          # Navigation CSS owns navigation only; remove the temporary breadcrumb patch.
           navigation_path = Path("css/site-navigation.css")
           navigation = navigation_path.read_text(encoding="utf-8")
-          patch_start = navigation.find("/* Shared body breadcrumb ribbon:")
-          if patch_start != -1:
-              patch_end = navigation.find("@media (prefers-reduced-motion: reduce)", patch_start)
-              if patch_end == -1:
-                  raise RuntimeError("Could not find the end of the temporary breadcrumb CSS")
-              navigation = navigation[:patch_start].rstrip() + "\n\n" + navigation[patch_end:]
+          start = navigation.find("/* Shared body breadcrumb ribbon:")
+          if start != -1:
+              end = navigation.find("@media (prefers-reduced-motion: reduce)", start)
+              if end == -1:
+                  raise RuntimeError("Could not locate the end of the temporary breadcrumb CSS")
+              navigation = navigation[:start].rstrip() + "\n\n" + navigation[end:]
           navigation_path.write_text(navigation, encoding="utf-8")
 
-          # Base CSS owns the one shared page-subheader presentation.
           site_path = Path("css/site.css")
           site = site_path.read_text(encoding="utf-8")
-          marker = "/* Shared page subheader: centered text and one animated bottom rule. */"
-          old_marker = "/* Shared page subheader: one centered row with one animated bottom rule. */"
-          for existing_marker in (marker, old_marker):
-              if existing_marker in site:
-                  site = site[:site.index(existing_marker)].rstrip() + "\n"
+          markers = (
+              "/* Shared page subheader: centered text and one animated bottom rule. */",
+              "/* Shared page subheader: one centered row with one animated bottom rule. */",
+          )
+          for marker in markers:
+              if marker in site:
+                  site = site[:site.index(marker)].rstrip() + "\n"
 
+          canonical_marker = markers[0]
           site += r'''
 
 /* Shared page subheader: centered text and one animated bottom rule. */
@@ -121,9 +109,7 @@ jobs:
 #page-subheader::after {
   content: "";
   position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: auto 0 0;
   height: 3px;
   background: linear-gradient(90deg, var(--coral), #ff8a00, var(--amber), var(--pink), var(--violet), var(--cyan), var(--coral));
   background-size: 300% 100%;
@@ -148,10 +134,7 @@ jobs:
   margin: 0;
   padding: 0;
   list-style: none;
-  font-family: var(--heading-font);
-  font-size: clamp(1rem, 1.2vw, 1.125rem);
-  font-weight: 800;
-  line-height: 1.2;
+  font: 800 clamp(1rem, 1.2vw, 1.125rem)/1.2 var(--heading-font);
   letter-spacing: .07em;
   text-align: center;
   text-transform: uppercase;
@@ -180,8 +163,7 @@ jobs:
 }
 
 #page-subheader-text a { text-decoration: none; }
-#page-subheader-text a:hover,
-#page-subheader-text a:focus-visible { filter: brightness(1.2); }
+#page-subheader-text a:is(:hover, :focus-visible) { filter: brightness(1.2); }
 
 @media (max-width: 575.98px) {
   #page-subheader,
@@ -196,25 +178,42 @@ jobs:
 '''
           site_path.write_text(site, encoding="utf-8")
 
-          # Give every public page the same explicit shared IDs.
-          for page in PUBLIC_PAGES:
+          for filename, label in PAGE_LABELS.items():
+              page = Path(filename)
               text = page.read_text(encoding="utf-8")
               text = text.replace("breadcrumb-ticker breadcrumb-ticker--matrix", "breadcrumb-ticker")
-              text = text.replace(
-                  '<nav class="breadcrumb-ticker"',
-                  '<nav id="page-subheader" class="breadcrumb-ticker"',
-              )
+
+              if '<nav class="breadcrumb-ticker"' in text:
+                  text = text.replace(
+                      '<nav class="breadcrumb-ticker"',
+                      '<nav id="page-subheader" class="breadcrumb-ticker"',
+                      1,
+                  )
+              elif 'id="page-subheader"' not in text:
+                  current = "" if filename == "index.html" else f'<li class="breadcrumb-ticker__item"><span aria-current="page">{label}</span></li>'
+                  home = '<li class="breadcrumb-ticker__item"><span aria-current="page">Home</span></li>' if filename == "index.html" else '<li class="breadcrumb-ticker__item"><a href="index.html">Home</a></li>'
+                  subheader = (
+                      '\n\n  <nav id="page-subheader" class="breadcrumb-ticker" aria-label="Breadcrumb">\n'
+                      '    <div id="page-subheader-row" class="breadcrumb-ticker__rail">\n'
+                      '      <ol id="page-subheader-text" class="breadcrumb-ticker__list">\n'
+                      f'        {home}\n'
+                      + (f'        {current}\n' if current else '')
+                      + '      </ol>\n'
+                      '    </div>\n'
+                      '  </nav>'
+                  )
+                  text = text.replace("</header>", "</header>" + subheader, 1)
+
               text = text.replace(
                   '<div class="breadcrumb-ticker__rail">',
                   '<div id="page-subheader-row" class="breadcrumb-ticker__rail">',
+                  1,
               )
               text = text.replace(
                   '<ol class="breadcrumb-ticker__list">',
                   '<ol id="page-subheader-text" class="breadcrumb-ticker__list">',
+                  1,
               )
-              text = re.sub(r'(<nav\b[^>]*\bid="page-subheader"[^>]*?)\s+id="page-subheader"', r'\1', text)
-              text = re.sub(r'(<div\b[^>]*\bid="page-subheader-row"[^>]*?)\s+id="page-subheader-row"', r'\1', text)
-              text = re.sub(r'(<ol\b[^>]*\bid="page-subheader-text"[^>]*?)\s+id="page-subheader-text"', r'\1', text)
               text = re.sub(r'css/site\.css(?:\?[^"\']*)?', f'css/site.css?v={RELEASE}', text)
               text = re.sub(r'js/site-guide\.js(?:\?[^"\']*)?', f'js/site-guide.js?v={RELEASE}', text)
               text = re.sub(
@@ -233,9 +232,14 @@ jobs:
           )
           guide_path.write_text(guide, encoding="utf-8")
 
-          # Remove the unused temporary workflow and restore this trusted workflow.
+          Path("robots.txt").write_text(
+              "User-agent: *\nAllow: /\nDisallow: /.github/\nDisallow: /docs/\n\nSitemap: https://shynetyme.works/sitemap.xml\n",
+              encoding="utf-8",
+          )
           Path(".github/workflows/clean-page-subheader-once.yml").unlink(missing_ok=True)
-          Path(".github/workflows/build-work-history.yml").write_text('''name: Build read-only work history
+
+          token_expression = "$" + "{{ secrets.GITHUB_TOKEN }}"
+          original_workflow = f'''name: Build read-only work history
 
 on:
   push:
@@ -269,7 +273,7 @@ jobs:
       - name: Generate public history snapshot
         run: node scripts/build-work-history.mjs
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: {token_expression}
           WORK_HISTORY_REPOSITORY: Deke206/thethinkingtank
           WORK_HISTORY_BRANCH: main
 
@@ -285,24 +289,25 @@ jobs:
           git add data/work-history.json
           git commit -m "chore(history): refresh read-only website timeline [skip ci]"
           git push
-''', encoding="utf-8")
+'''
+          Path(".github/workflows/build-work-history.yml").write_text(original_workflow, encoding="utf-8")
 
           checks = {
               "breadcrumb renderer removed": "transformBreadcrumb" not in matrix,
               "breadcrumb collector removed": "collectBreadcrumbText" not in matrix,
               "breadcrumb role removed": '"breadcrumb"' not in matrix,
-              "navigation patch removed": "Shared body breadcrumb ribbon" not in navigation,
-              "base subheader present": marker in site,
+              "temporary navigation CSS removed": "Shared body breadcrumb ribbon" not in navigation,
+              "canonical base CSS present": canonical_marker in site,
           }
           failed = [name for name, passed in checks.items() if not passed]
           if failed:
               raise RuntimeError("Cleanup checks failed: " + ", ".join(failed))
 
-          for page in PUBLIC_PAGES:
-              text = page.read_text(encoding="utf-8")
+          for filename in PAGE_LABELS:
+              text = Path(filename).read_text(encoding="utf-8")
               for required in ('id="page-subheader"', 'id="page-subheader-row"', 'id="page-subheader-text"'):
                   if required not in text:
-                      raise RuntimeError(f"{page}: missing {required}")
+                      raise RuntimeError(f"{filename}: missing {required}")
           PY
 
       - name: Save cleaned shared subheader
@@ -310,6 +315,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add css/site.css css/site-navigation.css js/site-led-matrix.js js/site-guide.js *.html .github/workflows/build-work-history.yml .github/workflows/clean-page-subheader-once.yml
+          git add -A
           git commit -m "Clean and centralize shared page subheader"
           git push
