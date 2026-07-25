@@ -8,7 +8,7 @@
     ? new URL(document.currentScript.src, window.location.href)
     : new URL("js/site-guide.js", window.location.href);
   const siteRoot = new URL("../", scriptUrl);
-  const sharedRevision = scriptUrl.searchParams.get("v") || "shared-ui-1";
+  const sharedRevision = scriptUrl.searchParams.get("v") || "shared-ui-2";
   const withRevision = (path) => {
     const url = new URL(path, siteRoot);
     url.searchParams.set("v", sharedRevision);
@@ -67,9 +67,27 @@
   const aboutDekeUrl = new URL("aboutme.html", siteRoot).href;
   const contactUrl = new URL("contact.html", siteRoot).href;
 
+  const getPageUrl = () => {
+    const canonical = document.querySelector('link[rel="canonical"]')?.href;
+    const url = new URL(canonical || window.location.href);
+    url.hash = "";
+    return url;
+  };
+
+  const getSpanishTranslationUrl = () => {
+    const url = new URL("https://translate.google.com/translate");
+    url.searchParams.set("sl", "auto");
+    url.searchParams.set("tl", "es");
+    url.searchParams.set("u", getPageUrl().href);
+    return url.href;
+  };
+
   const installNavigation = () => {
     const nav = document.querySelector(".navbar .navbar-nav");
     if (!nav) return;
+
+    const navbar = nav.closest("nav");
+    if (navbar && !navbar.hasAttribute("aria-label")) navbar.setAttribute("aria-label", "Primary navigation");
 
     const page = getPageKey();
     const bikeActive = page === "build-my-bike.html";
@@ -88,7 +106,14 @@
       </div>
       <a class="nav-link${catalogActive ? " active" : ""}"${catalogActive ? " aria-current=\"page\"" : ""} href="${catalogUrl}">LED Catalog</a>
       <a class="nav-link${aboutActive ? " active" : ""}"${aboutActive ? " aria-current=\"page\"" : ""} href="${aboutDekeUrl}">About Deke</a>
-      <a class="nav-link${contactActive ? " active" : ""}"${contactActive ? " aria-current=\"page\"" : ""} href="${contactUrl}">Request Install</a>`;
+      <a class="nav-link${contactActive ? " active" : ""}"${contactActive ? " aria-current=\"page\"" : ""} href="${contactUrl}">Request Install</a>
+      <div class="nav-item dropdown shynetyme-language-menu" data-shynetyme-language-menu="true">
+        <button class="nav-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Change language">Language</button>
+        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-label="Choose page language">
+          <li><a class="dropdown-item active" aria-current="page" href="${getPageUrl().href}" hreflang="en" lang="en">English</a></li>
+          <li><a class="dropdown-item" href="${getSpanishTranslationUrl()}" hreflang="es" lang="es" rel="nofollow">Español</a></li>
+        </ul>
+      </div>`;
   };
 
   const bindNavigationFlare = () => {
@@ -111,6 +136,7 @@
       .finally(() => loadScript("js/bike-builder-size-hotfix.js", "data-bike-builder-size-hotfix", "ShynetymeBikeBuilderSizeHotfix"));
   };
 
+  document.documentElement.lang = document.documentElement.lang || "en";
   sharedStyles.forEach(loadStyle);
   installNavigation();
   bindNavigationFlare();
