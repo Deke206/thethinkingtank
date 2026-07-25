@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-25T22:12:29.736Z",
-  "commitCount": 267,
+  "generatedAt": "2026-07-25T22:21:05.210Z",
+  "commitCount": 269,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1338,6 +1338,16 @@
       "sha": "a088ce207fe891ae84edc16fd6c044db9a8328c1",
       "date": "2026-07-25T22:12:16Z",
       "message": "Trigger clean shared page subheader pass"
+    },
+    {
+      "sha": "d433f4136d71a89de70f3a2710f4fdc77b0e0f30",
+      "date": "2026-07-25T22:20:00Z",
+      "message": "Prepare merge-triggered subheader cleanup"
+    },
+    {
+      "sha": "3aab5e9f005131e6c38969563150565941b4d2c0",
+      "date": "2026-07-25T22:20:52Z",
+      "message": "Trigger shared page subheader cleanup"
     }
   ]
 }
