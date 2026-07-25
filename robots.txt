@@ -1,4 +1,3 @@
-# Temporary trigger for the corrected trusted cleanup run.
 User-agent: *
 Allow: /
 Disallow: /.github/

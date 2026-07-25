@@ -82,15 +82,6 @@
     };
   }
 
-  function collectBreadcrumbText(ticker) {
-    const items = [...ticker.querySelectorAll(".breadcrumb-ticker__item")]
-      .map((item) => normalizeText(item.textContent))
-      .filter(Boolean);
-    const pageTitle = normalizeText(document.title.split("|")[0]);
-
-    if (items.length === 1 && pageTitle && !items.includes(pageTitle)) items.push(pageTitle);
-    return items.length ? items.join("  ✦  ") : pageTitle;
-  }
 
   function createRibbon(position, text) {
     const ribbon = document.createElement("div");
@@ -208,12 +199,11 @@
       this.text = normalizeText(options.text);
       this.mode = options.mode;
       this.palette = options.palette;
-      this.role = options.role;
       this.startedAt = performance.now() - Math.random() * 1400;
       this.width = 1;
       this.height = 1;
       this.pixelRatio = 1;
-      this.rows = this.role === "breadcrumb" ? 10 : 11;
+      this.rows = 11;
       this.columns = 72;
       this.cellWidth = 8;
       this.cellHeight = 8;
@@ -236,9 +226,7 @@
       this.pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
       this.width = bounds.width;
       this.height = bounds.height;
-      this.rows = this.role === "breadcrumb"
-        ? (this.width < 560 ? 8 : 10)
-        : (this.width < 560 ? 9 : 11);
+      this.rows = this.width < 560 ? 9 : 11;
       this.cellHeight = this.height / this.rows;
       this.columns = Math.max(38, Math.floor(this.width / this.cellHeight));
       this.cellWidth = this.width / this.columns;
@@ -392,9 +380,9 @@
     }
   }
 
-  function mountDisplay(canvas, text, mode, palette, role) {
+  function mountDisplay(canvas, text, mode, palette) {
     if (!canvas || !text) return;
-    const display = new MatrixDisplay(canvas, { text, mode, palette, role });
+    const display = new MatrixDisplay(canvas, { text, mode, palette });
     displays.push(display);
   }
 
@@ -412,29 +400,10 @@
 
     const topMode = pickEffect(text.top, usedEffects);
     const bottomMode = pickEffect(text.bottom, usedEffects);
-    mountDisplay(top.canvas, text.top, topMode, pickPalette(topMode, usedPalettes), "hero");
-    mountDisplay(bottom.canvas, text.bottom, bottomMode, pickPalette(bottomMode, usedPalettes), "hero");
+    mountDisplay(top.canvas, text.top, topMode, pickPalette(topMode, usedPalettes));
+    mountDisplay(bottom.canvas, text.bottom, bottomMode, pickPalette(bottomMode, usedPalettes));
   }
 
-  function transformBreadcrumb(usedEffects, usedPalettes) {
-    const ticker = document.querySelector(".breadcrumb-ticker");
-    if (!ticker || ticker.dataset.matrixReady === "true") return;
-
-    const rail = ticker.querySelector(".breadcrumb-ticker__rail");
-    if (!rail) return;
-
-    const text = collectBreadcrumbText(ticker);
-    const canvas = document.createElement("canvas");
-    canvas.className = "site-matrix-canvas site-matrix-canvas--breadcrumb";
-    canvas.dataset.matrixText = text;
-    canvas.setAttribute("aria-hidden", "true");
-    rail.appendChild(canvas);
-    ticker.classList.add("breadcrumb-ticker--matrix");
-    ticker.dataset.matrixReady = "true";
-
-    const mode = pickEffect(text, usedEffects);
-    mountDisplay(canvas, text, mode, pickPalette(mode, usedPalettes), "breadcrumb");
-  }
 
   function render(now) {
     frameRequest = 0;
@@ -458,7 +427,6 @@
     const usedPalettes = new Set();
 
     if (!document.body.classList.contains("led-magic-page")) transformHero(usedEffects, usedPalettes);
-    transformBreadcrumb(usedEffects, usedPalettes);
     updateLoop();
   }
 
