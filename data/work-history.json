@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-25T05:48:12.439Z",
-  "commitCount": 257,
+  "generatedAt": "2026-07-25T05:49:05.783Z",
+  "commitCount": 258,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1288,6 +1288,11 @@
       "sha": "0b2d24908557be7bfffdba4905a3c10a657d57c2",
       "date": "2026-07-25T05:47:57Z",
       "message": "Add shared accessible language navigation"
+    },
+    {
+      "sha": "d6af5c23951449e16b761e1b6f8bccb08ef6aab2",
+      "date": "2026-07-25T05:48:54Z",
+      "message": "Add shared skip-link and language menu styling"
     }
   ]
 }
