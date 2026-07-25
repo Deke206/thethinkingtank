@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-25T22:21:05.210Z",
-  "commitCount": 269,
+  "generatedAt": "2026-07-25T22:31:49.464Z",
+  "commitCount": 274,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1348,6 +1348,31 @@
       "sha": "3aab5e9f005131e6c38969563150565941b4d2c0",
       "date": "2026-07-25T22:20:52Z",
       "message": "Trigger shared page subheader cleanup"
+    },
+    {
+      "sha": "edb00ab35216c6d4d241a539dbfcf62a5d1ca8f0",
+      "date": "2026-07-25T22:24:35Z",
+      "message": "Run trusted one-time subheader cleanup"
+    },
+    {
+      "sha": "52f9f5f420d0273f5dfc785b1d4d79c5254f2ed3",
+      "date": "2026-07-25T22:26:29Z",
+      "message": "Trigger trusted subheader cleanup run"
+    },
+    {
+      "sha": "c3e119b5433654a4ac2d2ae2bef1f657bb075b07",
+      "date": "2026-07-25T22:29:28Z",
+      "message": "Correct trusted subheader cleanup pass"
+    },
+    {
+      "sha": "be3ad2af2d956b9a1ccd4d02ebd730a736a9b63c",
+      "date": "2026-07-25T22:29:54Z",
+      "message": "Trigger corrected trusted subheader cleanup"
+    },
+    {
+      "sha": "7a7227e0110313cd383239b3068b6589e61dbf1a",
+      "date": "2026-07-25T22:31:33Z",
+      "message": "Restore trusted work history workflow"
     }
   ]
 }
