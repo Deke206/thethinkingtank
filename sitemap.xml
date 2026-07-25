@@ -1,13 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://shynetyme.works/</loc>
+    <lastmod>2026-07-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://shynetyme.works/assets/images/shynetyme-works-hero.webp</image:loc>
+      <image:title>Custom LED Installations Los Angeles | ShyneTyme Works</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://shynetyme.works/aboutme.html</loc>
+    <lastmod>2026-07-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://shynetyme.works/assets/images/shynetyme-works-hero.webp</image:loc>
+      <image:title>About Deke Alexander | ShyneTyme Works</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://shynetyme.works/build-my-bike.html</loc>
+    <lastmod>2026-07-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://shynetyme.works/assets/images/shynetyme-works-hero.webp</image:loc>
+      <image:title>LED Bike Simulator &amp; Custom Bike Lighting Planner | ShyneTyme Works</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://shynetyme.works/build-my-home.html</loc>
+    <lastmod>2026-07-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://shynetyme.works/assets/images/shynetyme-works-hero.webp</image:loc>
+      <image:title>LED Home Simulator &amp; Exterior Lighting Planner | ShyneTyme Works</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://shynetyme.works/contact.html</loc>
+    <lastmod>2026-07-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://shynetyme.works/assets/images/shynetyme-works-hero.webp</image:loc>
+      <image:title>Request a Custom LED Installation in Los Angeles | ShyneTyme Works</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://shynetyme.works/led-banner-magic.html</loc>
+    <lastmod>2026-07-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://shynetyme.works/assets/images/shynetyme-works-hero.webp</image:loc>
+      <image:title>LED Banner Effects and Animation Ideas | ShyneTyme Works</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://shynetyme.works/led-catalog.html</loc>
+    <lastmod>2026-07-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://shynetyme.works/assets/images/shynetyme-works-hero.webp</image:loc>
+      <image:title>Addressable LED Product Catalog | ShyneTyme Works</image:title>
+    </image:image>
   </url>
 </urlset>

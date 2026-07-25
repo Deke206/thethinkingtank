@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /.github/
+Disallow: /docs/
 
 Sitemap: https://shynetyme.works/sitemap.xml
