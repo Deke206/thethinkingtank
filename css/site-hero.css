@@ -1,26 +1,25 @@
 /* Canonical site-wide header and four-image carousel styling. */
 :root {
-  --site-hero-height: clamp(540px, 52vw, 620px);
+  --site-hero-height: clamp(280px, 36vw, 460px);
 }
 
 .hero {
   position: relative;
   isolation: isolate;
-  display: flex;
-  align-items: center;
-  min-height: var(--site-hero-height) !important;
-  max-height: min(78svh, 620px) !important;
+  height: var(--site-hero-height) !important;
+  min-height: 0 !important;
+  max-height: min(58svh, 460px) !important;
   padding: 0 !important;
   overflow: hidden;
   color: #fff;
-  background: #030918 url('../assets/images/hero-scene-work.webp') center center / cover no-repeat !important;
+  background: #030918 url('../assets/images/hero-scene-work.webp') center / contain no-repeat !important;
+  border-bottom: 1px solid rgba(49, 230, 255, .22);
 }
 
 .hero::before,
 .hero::after {
   content: none !important;
   display: none !important;
-  background: none !important;
 }
 
 .hero-carousel {
@@ -51,24 +50,26 @@
   width: 100% !important;
   height: 100% !important;
   padding: 0 !important;
-  object-fit: cover !important;
-  object-position: center center !important;
+  object-fit: contain !important;
+  object-position: center !important;
   opacity: 1 !important;
   filter: none !important;
   animation: none !important;
   transform: none !important;
 }
 
-.hero-carousel__sparkle {
-  display: none !important;
-}
+.hero-carousel__sparkle { display: none !important; }
 
 @media (max-width: 991.98px) {
-  :root { --site-hero-height: clamp(510px, 75vw, 580px); }
-  .hero { max-height: min(80svh, 580px) !important; }
+  :root { --site-hero-height: clamp(250px, 54vw, 380px); }
+  .hero { max-height: min(52svh, 380px) !important; }
 }
 
 @media (max-width: 575.98px) {
-  :root { --site-hero-height: 500px; }
-  .hero { max-height: min(82svh, 500px) !important; }
+  :root { --site-hero-height: clamp(220px, 56vw, 300px); }
+  .hero { max-height: min(44svh, 300px) !important; }
+}
+
+@media (max-height: 700px) and (min-width: 768px) {
+  :root { --site-hero-height: min(42svh, 330px); }
 }

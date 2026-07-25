@@ -8,7 +8,7 @@
     ? new URL(document.currentScript.src, window.location.href)
     : new URL("js/site-guide.js", window.location.href);
   const siteRoot = new URL("../", scriptUrl);
-  const sharedRevision = scriptUrl.searchParams.get("v") || "shared-ui-5";
+  const sharedRevision = scriptUrl.searchParams.get("v") || "shared-ui-6";
   const withRevision = (path) => {
     const url = new URL(path, siteRoot);
     url.searchParams.set("v", sharedRevision);
@@ -19,7 +19,6 @@
     ["css/site-motion.css", "data-shynetyme-motion"],
     ["css/site-navigation.css", "data-shynetyme-navigation"],
     ["css/site-hero.css", "data-shynetyme-hero"],
-    ["css/site-led-matrix.css", "data-shynetyme-led-matrix"],
     ["css/site-chuck.css", "data-shynetyme-site-chuck"],
     ["css/site-chuck-cloud.css", "data-shynetyme-site-chuck-cloud"]
   ];
@@ -140,8 +139,7 @@
   sharedStyles.forEach(loadStyle);
   installNavigation();
   bindNavigationFlare();
-  loadScript("js/hero-carousel.js", "data-shynetyme-hero-carousel", "ShynetymeHeroCarousel")
-    .finally(() => loadScript("js/site-led-matrix.js", "data-shynetyme-led-matrix-script", "ShynetymeLedMatrix"));
+  loadScript("js/hero-carousel.js", "data-shynetyme-hero-carousel", "ShynetymeHeroCarousel");
   loadBikeBuilder();
   loadScript("js/site-chuck.js", "data-shynetyme-site-chuck-script", "ShynetymeChuck");
 })();
