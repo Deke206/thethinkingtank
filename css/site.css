@@ -575,13 +575,13 @@ footer a { color: var(--ice); }
   text-transform: uppercase;
 }
 
-#page-subheader-text .breadcrumb-ticker__item {
+#page-subheader-text .page-subheader-item {
   display: inline-flex;
   align-items: center;
   gap: .45rem;
 }
 
-#page-subheader-text .breadcrumb-ticker__item + .breadcrumb-ticker__item::before {
+#page-subheader-text .page-subheader-item + .page-subheader-item::before {
   content: "›";
   color: var(--amber);
   text-shadow: 0 0 8px rgba(255, 197, 98, .7);
