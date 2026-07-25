@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-25T21:49:39.073Z",
-  "commitCount": 263,
+  "generatedAt": "2026-07-25T21:51:07.191Z",
+  "commitCount": 265,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1318,6 +1318,16 @@
       "sha": "6899ebbbc8641e4cc02eb793c1179fac336013f4",
       "date": "2026-07-25T21:49:27Z",
       "message": "Keep matrix CSS limited to hero ribbons"
+    },
+    {
+      "sha": "fbed802de8a187d1569dd1043526d1ce05cebfde",
+      "date": "2026-07-25T21:50:35Z",
+      "message": "Restore centered text breadcrumb ribbon"
+    },
+    {
+      "sha": "0e29ee9db86ab69bd2d07e921e25c394f414136e",
+      "date": "2026-07-25T21:50:50Z",
+      "message": "Remove unused breadcrumb restoration workflow"
     }
   ]
 }
