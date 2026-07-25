@@ -1,28 +1,59 @@
-/* Canonical site-wide full-width panoramic carousel. */
+/* Canonical site-wide hero carousel and inner LED edge strip. */
 :root {
-  --site-hero-height: clamp(300px, 32vw, 420px);
+  --hero-led-a: #31e6ff;
+  --hero-led-b: #9b83ff;
+  --hero-led-speed: 5.8s;
+  --hero-led-direction: normal;
 }
+
+html.site-led-palette--hot { --hero-led-a: #ff304f; --hero-led-b: #ffe45e; }
+html.site-led-palette--sunset { --hero-led-a: #ff8a00; --hero-led-b: #ffc562; }
+html.site-led-palette--electric { --hero-led-a: #48a9ff; --hero-led-b: #ff5ab9; }
+html.site-led-palette--violet { --hero-led-a: #9b83ff; --hero-led-b: #31e6ff; }
+html.site-led-mode--reverse { --hero-led-direction: reverse; --hero-led-speed: 6.4s; }
+html.site-led-mode--stack { --hero-led-speed: 7.2s; }
 
 .hero {
   position: relative;
   isolation: isolate;
+  z-index: 0;
   display: block;
   width: 100%;
-  height: var(--site-hero-height) !important;
+  aspect-ratio: 16 / 9;
+  height: auto !important;
   min-height: 0 !important;
   max-height: none !important;
+  margin: 0 !important;
   padding: 0 !important;
   overflow: hidden;
   color: #fff;
-  background: #030918 url('../assets/images/hero-scene-work.webp') center center / cover no-repeat !important;
-  border-bottom: 1px solid rgba(49, 230, 255, .22);
+  background: #030918 url('../assets/images/hero-scene-work.webp') center / cover no-repeat !important;
 }
 
-.hero::before,
-.hero::after {
-  content: none !important;
-  display: none !important;
+.navbar + .hero { margin-top: 0 !important; }
+.hero + #page-subheader { position: relative; z-index: 2; }
+
+.hero::before {
+  content: "" !important;
+  position: absolute;
+  inset: 5px;
+  z-index: 4;
+  display: block !important;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 2px 2px, var(--hero-led-a) 0 1.45px, transparent 1.8px) 0 0 / 16px 4px repeat-x,
+    radial-gradient(circle at 2px 2px, var(--hero-led-b) 0 1.45px, transparent 1.8px) 8px 0 / 16px 4px repeat-x,
+    radial-gradient(circle at 2px 2px, var(--hero-led-b) 0 1.45px, transparent 1.8px) 0 100% / 16px 4px repeat-x,
+    radial-gradient(circle at 2px 2px, var(--hero-led-a) 0 1.45px, transparent 1.8px) 8px 100% / 16px 4px repeat-x,
+    radial-gradient(circle at 2px 2px, var(--hero-led-a) 0 1.45px, transparent 1.8px) 0 0 / 4px 16px repeat-y,
+    radial-gradient(circle at 2px 2px, var(--hero-led-b) 0 1.45px, transparent 1.8px) 0 8px / 4px 16px repeat-y,
+    radial-gradient(circle at 2px 2px, var(--hero-led-b) 0 1.45px, transparent 1.8px) 100% 0 / 4px 16px repeat-y,
+    radial-gradient(circle at 2px 2px, var(--hero-led-a) 0 1.45px, transparent 1.8px) 100% 8px / 4px 16px repeat-y;
+  filter: drop-shadow(0 0 3px var(--hero-led-a));
+  animation: hero-led-edge-chase var(--hero-led-speed) linear infinite var(--hero-led-direction);
 }
+
+.hero::after { content: none !important; display: none !important; }
 
 .hero-carousel {
   position: absolute;
@@ -37,22 +68,21 @@
 .hero-carousel__scene {
   position: absolute;
   inset: 0;
+  overflow: hidden;
   opacity: 0;
   visibility: hidden;
   background: #030918;
   transition: none !important;
 }
 
-.hero-carousel__scene.is-active {
-  opacity: 1;
-  visibility: visible;
-}
+.hero-carousel__scene.is-active { opacity: 1; visibility: visible; }
 
 .hero-carousel__scene img,
 .hero-carousel__scene.is-active img {
   display: block;
   width: 100% !important;
   height: 100% !important;
+  margin: 0 !important;
   padding: 0 !important;
   object-fit: cover !important;
   object-position: center center !important;
@@ -64,14 +94,36 @@
 
 .hero-carousel__sparkle { display: none !important; }
 
+@keyframes hero-led-edge-chase {
+  from {
+    background-position: 0 0, 8px 0, 0 100%, 8px 100%, 0 0, 0 8px, 100% 0, 100% 8px;
+  }
+  to {
+    background-position: 96px 0, 104px 0, -96px 100%, -88px 100%, 0 96px, 0 104px, 100% -96px, 100% -88px;
+  }
+}
+
+html.site-led-mode--stack .hero::before { animation-timing-function: steps(16, end); }
+html.site-led-mode--pulse .hero::before { animation-name: hero-led-edge-chase, hero-led-soft-pulse; animation-duration: var(--hero-led-speed), 2.8s; }
+
+@keyframes hero-led-soft-pulse { 0%, 100% { opacity: .68; } 50% { opacity: 1; } }
+
 @media (max-width: 991.98px) {
-  :root { --site-hero-height: clamp(270px, 46vw, 360px); }
+  .hero {
+    aspect-ratio: auto;
+    height: clamp(270px, 46vw, 360px) !important;
+  }
 }
 
 @media (max-width: 575.98px) {
-  :root { --site-hero-height: clamp(230px, 60vw, 290px); }
+  .hero { height: clamp(230px, 60vw, 290px) !important; }
+  .hero::before { inset: 4px; }
 }
 
-@media (max-height: 700px) and (min-width: 768px) {
-  :root { --site-hero-height: min(44svh, 340px); }
+@media (max-height: 700px) and (min-width: 768px) and (max-width: 991.98px) {
+  .hero { height: min(44svh, 340px) !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero::before { animation: none !important; opacity: .82; }
 }

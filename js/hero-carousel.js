@@ -18,6 +18,26 @@
     ["hero-scene-marina.webp", "Marina homecoming"]
   ];
   const timers = new Set();
+  const framePalettes = ["hot", "sunset", "electric", "violet"];
+  const frameModes = ["chase", "reverse", "stack", "pulse"];
+
+  const installLedFrameTheme = () => {
+    const root = document.documentElement;
+    if (root.dataset.siteLedFrameReady === "true") return;
+    root.dataset.siteLedFrameReady = "true";
+    const randomIndex = (length) => {
+      if (window.crypto?.getRandomValues) {
+        const value = new Uint32Array(1);
+        window.crypto.getRandomValues(value);
+        return value[0] % length;
+      }
+      return Math.floor(Math.random() * length);
+    };
+    root.classList.add(
+      `site-led-palette--${framePalettes[randomIndex(framePalettes.length)]}`,
+      `site-led-mode--${frameModes[randomIndex(frameModes.length)]}`
+    );
+  };
 
   const buildCarousel = (hero) => {
     hero.querySelectorAll(":scope > .hero-carousel, :scope > .home-builder-hero__scene").forEach((node) => node.remove());
@@ -93,6 +113,7 @@
       document.addEventListener("DOMContentLoaded", init, { once: true });
       return;
     }
+    installLedFrameTheme();
     document.querySelectorAll("header.hero").forEach(startCarousel);
   };
 
