@@ -1,7 +1,7 @@
 /* Chuck thought cloud: three finished neon sprite animations.
-   The cloud artwork already contains its fill and outline. */
+   The cloud artwork already contains its fill, outline and contour LED effect. */
 .deke-chuck-thought {
-  --cloud-art: url("../assets/brand/chuck-cloud-cyan.svg?v=20260725-neon-v1");
+  --cloud-art: url("../assets/brand/chuck-cloud-cyan.svg?v=20260725-site-led-v1");
   --cloud-glow: rgba(49, 230, 255, .48);
   --thought-ink: #fff;
   --thought-button-bg: var(--pink, #ff5ab9);
@@ -116,7 +116,7 @@
 }
 
 .deke-chuck-thought--cyan {
-  --cloud-art: url("../assets/brand/chuck-cloud-cyan.svg?v=20260725-neon-v1");
+  --cloud-art: url("../assets/brand/chuck-cloud-cyan.svg?v=20260725-site-led-v1");
   --cloud-glow: rgba(49, 230, 255, .52);
   --thought-ink: #fff;
   --thought-button-bg: var(--pink, #ff5ab9);
@@ -124,7 +124,7 @@
 }
 
 .deke-chuck-thought--pink {
-  --cloud-art: url("../assets/brand/chuck-cloud-pink.svg?v=20260725-neon-v1");
+  --cloud-art: url("../assets/brand/chuck-cloud-pink.svg?v=20260725-site-led-v1");
   --cloud-glow: rgba(255, 90, 185, .48);
   --thought-ink: #fff;
   --thought-button-bg: var(--cyan, #31e6ff);
@@ -133,7 +133,7 @@
 
 .deke-chuck-thought--amber,
 .deke-chuck-thought--violet {
-  --cloud-art: url("../assets/brand/chuck-cloud-amber.svg?v=20260725-neon-v1");
+  --cloud-art: url("../assets/brand/chuck-cloud-amber.svg?v=20260725-site-led-v1");
   --cloud-glow: rgba(255, 197, 98, .48);
   --thought-ink: #fff;
   --thought-button-bg: var(--violet, #9b83ff);
