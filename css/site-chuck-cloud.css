@@ -6,8 +6,8 @@
   --thought-ink: #fff;
   --thought-button-bg: var(--pink, #ff5ab9);
   --thought-button-ink: #fff;
-  right: 40px !important;
-  bottom: 108px !important;
+  right: 72px !important;
+  bottom: 76px !important;
   width: min(300px, calc(100vw - 104px)) !important;
   aspect-ratio: 1 / 1 !important;
   padding: 24% 19% 23% 11% !important;
@@ -152,8 +152,8 @@
 
 @media (max-width: 575.98px) {
   .deke-chuck-thought {
-    right: 30px !important;
-    bottom: 92px !important;
+    right: 62px !important;
+    bottom: 60px !important;
     width: min(246px, calc(100vw - 96px)) !important;
     padding: 24% 19% 23% 11% !important;
     gap: .24rem !important;
@@ -184,8 +184,8 @@
 
 @media (max-width: 390px) {
   .deke-chuck-thought {
-    right: 28px !important;
-    bottom: 90px !important;
+    right: 60px !important;
+    bottom: 58px !important;
     width: min(232px, calc(100vw - 88px)) !important;
     padding: 24% 19% 23% 11% !important;
     gap: .22rem !important;
