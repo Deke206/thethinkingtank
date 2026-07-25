@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-25T22:31:49.464Z",
-  "commitCount": 274,
+  "generatedAt": "2026-07-25T22:38:10.298Z",
+  "commitCount": 277,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1373,6 +1373,21 @@
       "sha": "7a7227e0110313cd383239b3068b6589e61dbf1a",
       "date": "2026-07-25T22:31:33Z",
       "message": "Restore trusted work history workflow"
+    },
+    {
+      "sha": "7b368b9fe2a4f37414cec4730d9d6646e2120079",
+      "date": "2026-07-25T22:35:19Z",
+      "message": "Run one-time shared subheader cleanup"
+    },
+    {
+      "sha": "c4ad3a4a45591549461c57d3aa020ce0ebe3156b",
+      "date": "2026-07-25T22:35:31Z",
+      "message": "Clean and centralize shared page subheader"
+    },
+    {
+      "sha": "e4d5a70526002ff34acd851135c65d03b8c32d77",
+      "date": "2026-07-25T22:37:58Z",
+      "message": "Remove final obsolete breadcrumb navigation rules"
     }
   ]
 }
