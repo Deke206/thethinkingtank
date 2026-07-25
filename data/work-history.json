@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-25T05:49:05.783Z",
-  "commitCount": 258,
+  "generatedAt": "2026-07-25T21:42:06.797Z",
+  "commitCount": 261,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1293,6 +1293,21 @@
       "sha": "d6af5c23951449e16b761e1b6f8bccb08ef6aab2",
       "date": "2026-07-25T05:48:54Z",
       "message": "Add shared skip-link and language menu styling"
+    },
+    {
+      "sha": "c15bc82483f544244433bf015dcb8dc2d1f5020b",
+      "date": "2026-07-25T05:51:33Z",
+      "message": "Run site-wide accessibility and SEO pass"
+    },
+    {
+      "sha": "4752c48f8589da8f9306833a8be294e8f4774c47",
+      "date": "2026-07-25T05:51:42Z",
+      "message": "Apply site-wide accessibility analytics and SEO"
+    },
+    {
+      "sha": "c5cd61a5648c680156783f1024bb1e25692a2a2a",
+      "date": "2026-07-25T21:41:54Z",
+      "message": "Run shared breadcrumb ribbon restoration"
     }
   ]
 }
