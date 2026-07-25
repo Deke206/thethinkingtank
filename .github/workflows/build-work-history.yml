@@ -24,6 +24,243 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Clean and centralize the shared page subheader
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          RELEASE = "shared-ui-3"
+          PUBLIC_PAGES = [
+              Path("index.html"),
+              Path("aboutme.html"),
+              Path("build-my-bike.html"),
+              Path("build-my-home.html"),
+              Path("contact.html"),
+              Path("led-banner-magic.html"),
+              Path("led-catalog.html"),
+          ]
+
+          # LED matrix JavaScript owns only the two hero ribbons.
+          matrix_path = Path("js/site-led-matrix.js")
+          matrix = matrix_path.read_text(encoding="utf-8")
+          matrix = re.sub(
+              r"\n  function collectBreadcrumbText\(ticker\) \{.*?\n  \}\n",
+              "\n",
+              matrix,
+              count=1,
+              flags=re.S,
+          )
+          matrix = re.sub(
+              r"\n  function transformBreadcrumb\(usedEffects, usedPalettes\) \{.*?\n  \}\n",
+              "\n",
+              matrix,
+              count=1,
+              flags=re.S,
+          )
+          matrix = matrix.replace("    transformBreadcrumb(usedEffects, usedPalettes);\n", "")
+          matrix = matrix.replace("      this.role = options.role;\n", "")
+          matrix = matrix.replace('      this.rows = this.role === "breadcrumb" ? 10 : 11;\n', "      this.rows = 11;\n")
+          matrix = re.sub(
+              r'      this\.rows = this\.role === "breadcrumb"\n        \? \(this\.width < 560 \? 8 : 10\)\n        : \(this\.width < 560 \? 9 : 11\);',
+              "      this.rows = this.width < 560 ? 9 : 11;",
+              matrix,
+              count=1,
+          )
+          matrix = matrix.replace(
+              "  function mountDisplay(canvas, text, mode, palette, role) {\n"
+              "    if (!canvas || !text) return;\n"
+              "    const display = new MatrixDisplay(canvas, { text, mode, palette, role });",
+              "  function mountDisplay(canvas, text, mode, palette) {\n"
+              "    if (!canvas || !text) return;\n"
+              "    const display = new MatrixDisplay(canvas, { text, mode, palette });",
+          )
+          matrix = matrix.replace(
+              '    mountDisplay(top.canvas, text.top, topMode, pickPalette(topMode, usedPalettes), "hero");',
+              "    mountDisplay(top.canvas, text.top, topMode, pickPalette(topMode, usedPalettes));",
+          )
+          matrix = matrix.replace(
+              '    mountDisplay(bottom.canvas, text.bottom, bottomMode, pickPalette(bottomMode, usedPalettes), "hero");',
+              "    mountDisplay(bottom.canvas, text.bottom, bottomMode, pickPalette(bottomMode, usedPalettes));",
+          )
+          matrix_path.write_text(matrix, encoding="utf-8")
+
+          # Navigation CSS owns navigation only; remove the temporary breadcrumb patch.
+          navigation_path = Path("css/site-navigation.css")
+          navigation = navigation_path.read_text(encoding="utf-8")
+          patch_start = navigation.find("/* Shared body breadcrumb ribbon:")
+          if patch_start != -1:
+              patch_end = navigation.find("@media (prefers-reduced-motion: reduce)", patch_start)
+              if patch_end == -1:
+                  raise RuntimeError("Could not find the end of the temporary breadcrumb CSS")
+              navigation = navigation[:patch_start].rstrip() + "\n\n" + navigation[patch_end:]
+          navigation_path.write_text(navigation, encoding="utf-8")
+
+          # Base CSS owns the one shared page-subheader presentation.
+          site_path = Path("css/site.css")
+          site = site_path.read_text(encoding="utf-8")
+          marker = "/* Shared page subheader: centered text and one animated bottom rule. */"
+          old_marker = "/* Shared page subheader: one centered row with one animated bottom rule. */"
+          for existing_marker in (marker, old_marker):
+              if existing_marker in site:
+                  site = site[:site.index(existing_marker)].rstrip() + "\n"
+
+          site += r'''
+
+/* Shared page subheader: centered text and one animated bottom rule. */
+#page-subheader {
+  position: relative;
+  display: grid;
+  min-height: 3.15rem;
+  place-items: center;
+  overflow: hidden;
+  background: linear-gradient(90deg, #020611, #0b1c3a 50%, #120b2a, #020611);
+}
+
+#page-subheader::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--coral), #ff8a00, var(--amber), var(--pink), var(--violet), var(--cyan), var(--coral));
+  background-size: 300% 100%;
+  animation: contact-border-flow 6s linear infinite;
+}
+
+#page-subheader-row {
+  display: flex;
+  width: min(100%, 1140px);
+  min-height: 3.15rem;
+  align-items: center;
+  justify-content: center;
+  padding: .65rem 1rem .75rem;
+}
+
+#page-subheader-text {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--heading-font);
+  font-size: clamp(1rem, 1.2vw, 1.125rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: .07em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+#page-subheader-text .breadcrumb-ticker__item {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+}
+
+#page-subheader-text .breadcrumb-ticker__item + .breadcrumb-ticker__item::before {
+  content: "›";
+  color: var(--amber);
+  text-shadow: 0 0 8px rgba(255, 197, 98, .7);
+}
+
+#page-subheader-text a,
+#page-subheader-text [aria-current="page"] {
+  color: #fff3d2;
+  background: linear-gradient(180deg, #fff, #fff2bd 34%, #ffc562 58%, #ff7c82 78%, #ff9bd2);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 7px rgba(255, 138, 0, .38), 0 0 13px rgba(255, 90, 185, .28);
+}
+
+#page-subheader-text a { text-decoration: none; }
+#page-subheader-text a:hover,
+#page-subheader-text a:focus-visible { filter: brightness(1.2); }
+
+@media (max-width: 575.98px) {
+  #page-subheader,
+  #page-subheader-row { min-height: 3rem; }
+  #page-subheader-row { padding: .58rem .75rem .68rem; }
+  #page-subheader-text { font-size: .95rem; letter-spacing: .045em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #page-subheader::after { animation: none; }
+}
+'''
+          site_path.write_text(site, encoding="utf-8")
+
+          # Give every public page the same explicit shared IDs.
+          for page in PUBLIC_PAGES:
+              text = page.read_text(encoding="utf-8")
+              text = text.replace("breadcrumb-ticker breadcrumb-ticker--matrix", "breadcrumb-ticker")
+              text = text.replace(
+                  '<nav class="breadcrumb-ticker"',
+                  '<nav id="page-subheader" class="breadcrumb-ticker"',
+              )
+              text = text.replace(
+                  '<div class="breadcrumb-ticker__rail">',
+                  '<div id="page-subheader-row" class="breadcrumb-ticker__rail">',
+              )
+              text = text.replace(
+                  '<ol class="breadcrumb-ticker__list">',
+                  '<ol id="page-subheader-text" class="breadcrumb-ticker__list">',
+              )
+              text = re.sub(r'(<nav\b[^>]*\bid="page-subheader"[^>]*?)\s+id="page-subheader"', r'\1', text)
+              text = re.sub(r'(<div\b[^>]*\bid="page-subheader-row"[^>]*?)\s+id="page-subheader-row"', r'\1', text)
+              text = re.sub(r'(<ol\b[^>]*\bid="page-subheader-text"[^>]*?)\s+id="page-subheader-text"', r'\1', text)
+              text = re.sub(r'css/site\.css(?:\?[^"\']*)?', f'css/site.css?v={RELEASE}', text)
+              text = re.sub(r'js/site-guide\.js(?:\?[^"\']*)?', f'js/site-guide.js?v={RELEASE}', text)
+              text = re.sub(
+                  r'((?:css/site-(?:navigation|hero|led-matrix|chuck|motion)\.css)\?v=)shared-ui-\d+',
+                  rf'\g<1>{RELEASE}',
+                  text,
+              )
+              page.write_text(text, encoding="utf-8")
+
+          guide_path = Path("js/site-guide.js")
+          guide = guide_path.read_text(encoding="utf-8")
+          guide = re.sub(
+              r'const sharedRevision = scriptUrl\.searchParams\.get\("v"\) \|\| "[^"]+";',
+              f'const sharedRevision = scriptUrl.searchParams.get("v") || "{RELEASE}";',
+              guide,
+          )
+          guide_path.write_text(guide, encoding="utf-8")
+
+          # Remove the unused temporary workflow and restore this trusted workflow.
+          Path(".github/workflows/clean-page-subheader-once.yml").unlink(missing_ok=True)
+          Path(".github/workflows/build-work-history.yml").write_text('''name: Build read-only work history
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - data/work-history.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: shynetyme-work-history
+  cancel-in-progress: true
+
+jobs:
+  build-history:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out website
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
@@ -47,4 +284,32 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/work-history.json
           git commit -m "chore(history): refresh read-only website timeline [skip ci]"
+          git push
+''', encoding="utf-8")
+
+          checks = {
+              "breadcrumb renderer removed": "transformBreadcrumb" not in matrix,
+              "breadcrumb collector removed": "collectBreadcrumbText" not in matrix,
+              "breadcrumb role removed": '"breadcrumb"' not in matrix,
+              "navigation patch removed": "Shared body breadcrumb ribbon" not in navigation,
+              "base subheader present": marker in site,
+          }
+          failed = [name for name, passed in checks.items() if not passed]
+          if failed:
+              raise RuntimeError("Cleanup checks failed: " + ", ".join(failed))
+
+          for page in PUBLIC_PAGES:
+              text = page.read_text(encoding="utf-8")
+              for required in ('id="page-subheader"', 'id="page-subheader-row"', 'id="page-subheader-text"'):
+                  if required not in text:
+                      raise RuntimeError(f"{page}: missing {required}")
+          PY
+
+      - name: Save cleaned shared subheader
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add css/site.css css/site-navigation.css js/site-led-matrix.js js/site-guide.js *.html .github/workflows/build-work-history.yml .github/workflows/clean-page-subheader-once.yml
+          git commit -m "Clean and centralize shared page subheader"
           git push
