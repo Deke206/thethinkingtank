@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-25T21:43:37.644Z",
-  "commitCount": 262,
+  "generatedAt": "2026-07-25T21:49:39.073Z",
+  "commitCount": 263,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1313,6 +1313,11 @@
       "sha": "5cfc6ca9bfdfd16122a4bb6c024b655553dc361e",
       "date": "2026-07-25T21:43:22Z",
       "message": "Trigger breadcrumb ribbon restoration"
+    },
+    {
+      "sha": "6899ebbbc8641e4cc02eb793c1179fac336013f4",
+      "date": "2026-07-25T21:49:27Z",
+      "message": "Keep matrix CSS limited to hero ribbons"
     }
   ]
 }
