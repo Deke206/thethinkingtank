@@ -1,18 +1,20 @@
-/* Canonical site-wide header and four-image carousel styling. */
+/* Canonical site-wide full-width panoramic carousel. */
 :root {
-  --site-hero-height: clamp(280px, 36vw, 460px);
+  --site-hero-height: clamp(300px, 32vw, 420px);
 }
 
 .hero {
   position: relative;
   isolation: isolate;
+  display: block;
+  width: 100%;
   height: var(--site-hero-height) !important;
   min-height: 0 !important;
-  max-height: min(58svh, 460px) !important;
+  max-height: none !important;
   padding: 0 !important;
   overflow: hidden;
   color: #fff;
-  background: #030918 url('../assets/images/hero-scene-work.webp') center / contain no-repeat !important;
+  background: #030918 url('../assets/images/hero-scene-work.webp') center center / cover no-repeat !important;
   border-bottom: 1px solid rgba(49, 230, 255, .22);
 }
 
@@ -26,6 +28,8 @@
   position: absolute;
   inset: 0;
   z-index: 0;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   pointer-events: none;
 }
@@ -50,8 +54,8 @@
   width: 100% !important;
   height: 100% !important;
   padding: 0 !important;
-  object-fit: contain !important;
-  object-position: center !important;
+  object-fit: cover !important;
+  object-position: center center !important;
   opacity: 1 !important;
   filter: none !important;
   animation: none !important;
@@ -61,15 +65,13 @@
 .hero-carousel__sparkle { display: none !important; }
 
 @media (max-width: 991.98px) {
-  :root { --site-hero-height: clamp(250px, 54vw, 380px); }
-  .hero { max-height: min(52svh, 380px) !important; }
+  :root { --site-hero-height: clamp(270px, 46vw, 360px); }
 }
 
 @media (max-width: 575.98px) {
-  :root { --site-hero-height: clamp(220px, 56vw, 300px); }
-  .hero { max-height: min(44svh, 300px) !important; }
+  :root { --site-hero-height: clamp(230px, 60vw, 290px); }
 }
 
 @media (max-height: 700px) and (min-width: 768px) {
-  :root { --site-hero-height: min(42svh, 330px); }
+  :root { --site-hero-height: min(44svh, 340px); }
 }

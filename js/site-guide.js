@@ -8,7 +8,7 @@
     ? new URL(document.currentScript.src, window.location.href)
     : new URL("js/site-guide.js", window.location.href);
   const siteRoot = new URL("../", scriptUrl);
-  const sharedRevision = scriptUrl.searchParams.get("v") || "shared-ui-6";
+  const sharedRevision = scriptUrl.searchParams.get("v") || "shared-ui-7";
   const withRevision = (path) => {
     const url = new URL(path, siteRoot);
     url.searchParams.set("v", sharedRevision);
