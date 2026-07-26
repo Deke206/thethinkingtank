@@ -65,7 +65,7 @@
   const catalogUrl = new URL("led-catalog.html", siteRoot).href;
   const aboutDekeUrl = new URL("aboutme.html", siteRoot).href;
   const contactUrl = new URL("contact.html", siteRoot).href;
-  const brandMarkup = 'ShyneTyme<span class="brand-dot" aria-hidden="true">.</span><em>Works</em>';
+  const brandMarkup = 'ShyneTyme <span class="brand-dot" aria-hidden="true">.</span><em>Works</em>';
 
   const getPageUrl = () => {
     const canonical = document.querySelector('link[rel="canonical"]')?.href;
