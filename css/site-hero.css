@@ -10,7 +10,7 @@
 .site-banner .carousel,
 .site-banner .carousel-inner,
 .site-banner .carousel-item {
-  height: clamp(350px, 40vw, 550px);
+  height: clamp(400px, 40vw, 550px);
 }
 
 .site-banner-image {
