@@ -48,17 +48,13 @@
 
 .brand-lockup img { filter: drop-shadow(0 0 7px rgba(49, 230, 255, .8)); }
 .brand-lockup span {
-  position: relative;
   display: inline-flex;
   align-items: baseline;
   white-space: nowrap;
-  padding-bottom: .42em;
 }
 .brand-lockup em { color: var(--cyan); font-style: normal; text-shadow: 0 0 11px rgba(49, 230, 255, .72); }
 .brand-dot {
-  position: absolute;
-  left: 50%;
-  bottom: -.12em;
+  position: relative;
   display: inline-block;
   width: .34em;
   height: .34em;
@@ -71,7 +67,7 @@
     0 0 7px rgba(255, 255, 255, .95),
     0 0 13px rgba(49, 230, 255, .9),
     0 0 22px rgba(255, 90, 185, .7);
-  transform: translateX(-50%) scale(1);
+  transform: translateY(.12em) scale(1);
   animation: shynetyme-brand-dot-twinkle 1.7s ease-in-out infinite;
 }
 .brand-dot::before,
@@ -220,7 +216,7 @@
 @keyframes shynetyme-brand-dot-twinkle {
   0%, 100% {
     opacity: .76;
-    transform: translateX(-50%) translateY(0) scale(.84) rotate(0deg);
+    transform: translateY(.12em) scale(.84) rotate(0deg);
     box-shadow:
       0 0 5px rgba(255, 255, 255, .7),
       0 0 10px rgba(49, 230, 255, .62),
@@ -228,7 +224,7 @@
   }
   38% {
     opacity: 1;
-    transform: translateX(-50%) translateY(-.04em) scale(1.22) rotate(12deg);
+    transform: translateY(.08em) scale(1.22) rotate(12deg);
     box-shadow:
       0 0 8px #fff,
       0 0 18px rgba(49, 230, 255, .98),
@@ -236,11 +232,11 @@
   }
   54% {
     opacity: .9;
-    transform: translateX(-50%) translateY(.01em) scale(.94) rotate(-8deg);
+    transform: translateY(.13em) scale(.94) rotate(-8deg);
   }
   72% {
     opacity: 1;
-    transform: translateX(-50%) translateY(-.02em) scale(1.12) rotate(8deg);
+    transform: translateY(.1em) scale(1.12) rotate(8deg);
   }
 }
 @keyframes shynetyme-nav-flare {
@@ -269,7 +265,7 @@
     animation: none !important;
     transition: none !important;
   }
-  .brand-dot { opacity: 1; transform: translateX(-50%) scale(1); }
+  .brand-dot { opacity: 1; transform: translateY(.12em) scale(1); }
 }
 
 @media (max-width: 991.98px) {
