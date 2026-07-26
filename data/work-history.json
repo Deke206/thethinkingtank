@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-26T04:37:55.847Z",
-  "commitCount": 296,
+  "generatedAt": "2026-07-26T05:32:52.785Z",
+  "commitCount": 297,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1483,6 +1483,11 @@
       "sha": "f378042c9547fbe5c9b82822cd9941480f19db3a",
       "date": "2026-07-26T04:37:40Z",
       "message": "Update site-hero.css"
+    },
+    {
+      "sha": "56f39dede24d982489d203610dc6da4bcb5c6a98",
+      "date": "2026-07-26T05:32:37Z",
+      "message": "Fix index navigation links"
     }
   ]
 }
