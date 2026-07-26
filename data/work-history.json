@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-26T19:38:48.487Z",
-  "commitCount": 309,
+  "generatedAt": "2026-07-26T19:45:45.572Z",
+  "commitCount": 310,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1548,6 +1548,11 @@
       "sha": "053fb987c6dfa078fdfadc28f3cc9ab906499a8f",
       "date": "2026-07-26T19:38:32Z",
       "message": "Keep twinkling period inline in navigation brand"
+    },
+    {
+      "sha": "3691431f7f0d1af4b719db54c80055b2d432c416",
+      "date": "2026-07-26T19:45:31Z",
+      "message": "Revert navigation brand to plain ShyneTyme.Works"
     }
   ]
 }
