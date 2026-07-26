@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0NJPG6XB5N"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-0NJPG6XB5N');
+  </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LED EXPO | ShyneTyme Works</title>
+  <meta name="description" content="The ShyneTyme Works LED EXPO presents videos, project photographs and build notes from custom programmable LED projects.">
+  <meta name="theme-color" content="#06152f">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Dedric “Deke” Alexander">
+  <meta name="color-scheme" content="dark light">
+  <link rel="canonical" href="https://shynetyme.works/ledexpo/">
+  <link rel="alternate" href="https://shynetyme.works/ledexpo/" hreflang="en">
+  <link rel="alternate" href="https://shynetyme.works/ledexpo/" hreflang="x-default">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ShyneTyme Works">
+  <meta property="og:title" content="LED EXPO | ShyneTyme Works">
+  <meta property="og:description" content="Videos, project photographs and build notes from ShyneTyme Works programmable LED projects.">
+  <meta property="og:url" content="https://shynetyme.works/ledexpo/">
+  <meta property="og:image" content="https://shynetyme.works/assets/images/shynetyme-works-hero.webp">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="LED EXPO | ShyneTyme Works">
+  <meta name="twitter:description" content="Videos, project photographs and build notes from ShyneTyme Works programmable LED projects.">
+  <meta name="twitter:image" content="https://shynetyme.works/assets/images/shynetyme-works-hero.webp">
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/brand/favicon-32.png">
+  <link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oxanium:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/site.css?v=shared-ui-9">
+  <link rel="stylesheet" href="../css/site-navigation.css?v=shared-ui-9" data-shynetyme-navigation="true">
+  <link rel="stylesheet" href="../css/site-chuck.css?v=shared-ui-9" data-shynetyme-site-chuck="true">
+  <style>
+    .ledexpo-page {
+      background:
+        radial-gradient(circle at 15% 10%, rgba(49, 230, 255, .11), transparent 28rem),
+        radial-gradient(circle at 88% 18%, rgba(255, 90, 185, .09), transparent 30rem),
+        #030918;
+      color: #eaf4ff;
+      min-height: 100vh;
+    }
+
+    .ledexpo-hero {
+      padding: clamp(3.5rem, 7vw, 6.5rem) 0 3rem;
+      border-bottom: 1px solid rgba(49, 230, 255, .22);
+      background:
+        linear-gradient(135deg, rgba(6, 21, 47, .94), rgba(18, 12, 48, .88)),
+        repeating-linear-gradient(90deg, transparent 0 42px, rgba(49, 230, 255, .035) 43px 44px);
+    }
+
+    .ledexpo-eyebrow {
+      margin: 0 0 .7rem;
+      color: var(--cyan, #31e6ff);
+      font-family: var(--heading-font, "Oxanium", sans-serif);
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .ledexpo-title {
+      margin: 0;
+      font-family: var(--heading-font, "Oxanium", sans-serif);
+      font-weight: 800;
+      letter-spacing: .025em;
+      text-shadow: 0 0 20px rgba(49, 230, 255, .28);
+    }
+
+    .ledexpo-intro {
+      max-width: 54rem;
+      margin-top: 1rem;
+      color: #c9d9eb;
+      font-size: 1.08rem;
+    }
+
+    .ledexpo-section {
+      padding: 4rem 0;
+    }
+
+    .ledexpo-section + .ledexpo-section {
+      border-top: 1px solid rgba(49, 230, 255, .16);
+    }
+
+    .ledexpo-panel {
+      border: 1px solid rgba(49, 230, 255, .34);
+      border-radius: 1rem;
+      background: linear-gradient(150deg, rgba(8, 27, 55, .92), rgba(13, 12, 38, .94));
+      box-shadow: 0 18px 42px rgba(0, 0, 0, .34), inset 0 1px 0 rgba(255, 255, 255, .06);
+    }
+
+    .ledexpo-video-shell {
+      overflow: hidden;
+    }
+
+    .ledexpo-video-frame {
+      display: grid;
+      min-height: clamp(240px, 48vw, 620px);
+      place-items: center;
+      border-bottom: 1px solid rgba(49, 230, 255, .24);
+      background:
+        radial-gradient(circle at center, rgba(49, 230, 255, .12), transparent 38%),
+        linear-gradient(135deg, #06152f, #130d31);
+    }
+
+    #ledexpo-feature-video {
+      display: block;
+      width: 100%;
+      max-height: 72vh;
+      background: #000;
+    }
+
+    .ledexpo-media-placeholder {
+      padding: 2rem;
+      color: #a9bdd3;
+      font-family: var(--heading-font, "Oxanium", sans-serif);
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .ledexpo-video-copy {
+      padding: 1.35rem 1.5rem 1.55rem;
+    }
+
+    .ledexpo-gallery-list {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .ledexpo-gallery-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr);
+      overflow: hidden;
+    }
+
+    .ledexpo-image-frame {
+      position: relative;
+      display: grid;
+      min-height: 330px;
+      place-items: center;
+      overflow: hidden;
+      border-right: 1px solid rgba(49, 230, 255, .24);
+      background:
+        linear-gradient(45deg, rgba(49, 230, 255, .04) 25%, transparent 25% 75%, rgba(155, 131, 255, .05) 75%),
+        linear-gradient(-45deg, rgba(49, 230, 255, .04) 25%, transparent 25% 75%, rgba(155, 131, 255, .05) 75%),
+        #07152c;
+      background-size: 42px 42px;
+    }
+
+    .ledexpo-image-frame img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 330px;
+      object-fit: cover;
+    }
+
+    .ledexpo-image-date {
+      position: absolute;
+      right: .8rem;
+      bottom: .7rem;
+      z-index: 2;
+      padding: .35rem .55rem;
+      border: 1px solid rgba(255, 255, 255, .2);
+      border-radius: .45rem;
+      color: #fff;
+      background: rgba(3, 9, 24, .82);
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      backdrop-filter: blur(8px);
+    }
+
+    .ledexpo-image-description {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .ledexpo-image-description h3 {
+      margin-bottom: .7rem;
+      color: var(--cyan, #31e6ff);
+      font-family: var(--heading-font, "Oxanium", sans-serif);
+      font-weight: 750;
+    }
+
+    .ledexpo-image-description p {
+      margin-bottom: 0;
+      color: #c7d6e7;
+    }
+
+    .ledexpo-id-note {
+      margin-top: .85rem;
+      color: #8ea5bd;
+      font-size: .8rem;
+    }
+
+    @media (max-width: 767.98px) {
+      .ledexpo-gallery-item {
+        grid-template-columns: 1fr;
+      }
+
+      .ledexpo-image-frame {
+        min-height: 250px;
+        border-right: 0;
+        border-bottom: 1px solid rgba(49, 230, 255, .24);
+      }
+
+      .ledexpo-image-frame img {
+        min-height: 250px;
+      }
+    }
+  </style>
+  <script type="application/ld+json" id="ledexpo-seo-schema">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "LED EXPO | ShyneTyme Works",
+    "url": "https://shynetyme.works/ledexpo/",
+    "description": "Videos, photographs and notes from custom programmable LED projects by ShyneTyme Works.",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "ShyneTyme Works",
+      "url": "https://shynetyme.works/"
+    }
+  }
+  </script>
+</head>
+<body class="ledexpo-page">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top" aria-label="Primary navigation">
+    <div class="container">
+      <a class="navbar-brand fw-bold brand-lockup" href="../index.html"><img src="../assets/brand/favicon-32.png" width="34" height="34" alt=""> <span>ShyneTyme.<em>Works</em></span></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link" href="../build-my-bike.html">Sim</a>
+          <a class="nav-link" href="../led-catalog.html">LED Catalog</a>
+          <a class="nav-link active" aria-current="page" href="./">LED EXPO</a>
+          <a class="nav-link" href="../aboutme.html">About Deke</a>
+          <a class="nav-link" href="../contact.html">Contact</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header id="ledexpo-header" class="ledexpo-hero">
+    <div class="container">
+      <p class="ledexpo-eyebrow">ShyneTyme Works Media Showcase</p>
+      <h1 class="ledexpo-title display-3">LED EXPO</h1>
+      <p class="ledexpo-intro">A growing collection of ShyneTyme Works videos, build photographs and project notes. The media slots are ready now; the final video and images can be imported later without rebuilding the page.</p>
+    </div>
+  </header>
+
+  <nav id="page-subheader" aria-label="Breadcrumb">
+    <div id="page-subheader-row">
+      <ol id="page-subheader-text">
+        <li class="page-subheader-item"><a href="../index.html">Home</a></li>
+        <li class="page-subheader-item"><span aria-current="page">LED EXPO</span></li>
+      </ol>
+    </div>
+  </nav>
+
+  <main id="main-content" tabindex="-1">
+    <section id="ledexpo-video-section" class="ledexpo-section" aria-labelledby="ledexpo-video-heading">
+      <div class="container">
+        <p class="ledexpo-eyebrow">Featured motion</p>
+        <h2 id="ledexpo-video-heading" class="section-title mb-4">LED EXPO Video</h2>
+
+        <div id="ledexpo-video-shell" class="ledexpo-panel ledexpo-video-shell">
+          <div id="ledexpo-video-frame" class="ledexpo-video-frame">
+            <video id="ledexpo-feature-video" controls preload="metadata" hidden aria-describedby="ledexpo-video-description"></video>
+            <div id="ledexpo-video-placeholder" class="ledexpo-media-placeholder" data-media-status="empty">
+              Video area ready for import
+            </div>
+          </div>
+          <div id="ledexpo-video-description" class="ledexpo-video-copy">
+            <h3 class="h4">Featured video description</h3>
+            <p class="mb-0">Example text: This area will describe the featured LED EXPO video, including the project shown, lighting hardware, controller setup, animation style and anything important happening in the footage.</p>
+            <p class="ledexpo-id-note mb-0">Video IDs: ledexpo-feature-video · ledexpo-video-placeholder · ledexpo-video-description</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ledexpo-gallery-section" class="ledexpo-section" aria-labelledby="ledexpo-gallery-heading">
+      <div class="container">
+        <p class="ledexpo-eyebrow">Project photographs</p>
+        <h2 id="ledexpo-gallery-heading" class="section-title mb-2">LED EXPO Gallery</h2>
+        <p class="mb-4 text-light-emphasis">Image dates are designed to appear in the lower-right corner only when usable date information is available. If an imported image has no date information, its date tag can remain hidden.</p>
+
+        <div id="ledexpo-gallery-list" class="ledexpo-gallery-list">
+          <article id="ledexpo-gallery-item-01" class="ledexpo-panel ledexpo-gallery-item">
+            <div id="ledexpo-image-frame-01" class="ledexpo-image-frame">
+              <img id="ledexpo-image-01" src="" alt="" hidden>
+              <div id="ledexpo-image-placeholder-01" class="ledexpo-media-placeholder" data-media-status="empty">Image 01 area</div>
+              <time id="ledexpo-image-date-01" class="ledexpo-image-date" datetime="" hidden></time>
+            </div>
+            <div id="ledexpo-image-description-01" class="ledexpo-image-description">
+              <h3>Project image 01</h3>
+              <p>Example text: Describe what the viewer is seeing, where the LEDs are installed, the colors or effects being demonstrated, and what made this particular build useful or different.</p>
+              <p class="ledexpo-id-note">IDs: ledexpo-image-01 · ledexpo-image-date-01 · ledexpo-image-description-01</p>
+            </div>
+          </article>
+
+          <article id="ledexpo-gallery-item-02" class="ledexpo-panel ledexpo-gallery-item">
+            <div id="ledexpo-image-frame-02" class="ledexpo-image-frame">
+              <img id="ledexpo-image-02" src="" alt="" hidden>
+              <div id="ledexpo-image-placeholder-02" class="ledexpo-media-placeholder" data-media-status="empty">Image 02 area</div>
+              <time id="ledexpo-image-date-02" class="ledexpo-image-date" datetime="" hidden></time>
+            </div>
+            <div id="ledexpo-image-description-02" class="ledexpo-image-description">
+              <h3>Project image 02</h3>
+              <p>Example text: Use this description for the project’s purpose, equipment, installation challenges, power source, controls and the visual result shown in the photograph.</p>
+              <p class="ledexpo-id-note">IDs: ledexpo-image-02 · ledexpo-image-date-02 · ledexpo-image-description-02</p>
+            </div>
+          </article>
+
+          <article id="ledexpo-gallery-item-03" class="ledexpo-panel ledexpo-gallery-item">
+            <div id="ledexpo-image-frame-03" class="ledexpo-image-frame">
+              <img id="ledexpo-image-03" src="" alt="" hidden>
+              <div id="ledexpo-image-placeholder-03" class="ledexpo-media-placeholder" data-media-status="empty">Image 03 area</div>
+              <time id="ledexpo-image-date-03" class="ledexpo-image-date" datetime="" hidden></time>
+            </div>
+            <div id="ledexpo-image-description-03" class="ledexpo-image-description">
+              <h3>Project image 03</h3>
+              <p>Example text: Add the story behind this image, what was changed or repaired, which LED zones are visible and any detail that helps a possible customer understand the work.</p>
+              <p class="ledexpo-id-note">IDs: ledexpo-image-03 · ledexpo-image-date-03 · ledexpo-image-description-03</p>
+            </div>
+          </article>
+
+          <article id="ledexpo-gallery-item-04" class="ledexpo-panel ledexpo-gallery-item">
+            <div id="ledexpo-image-frame-04" class="ledexpo-image-frame">
+              <img id="ledexpo-image-04" src="" alt="" hidden>
+              <div id="ledexpo-image-placeholder-04" class="ledexpo-media-placeholder" data-media-status="empty">Image 04 area</div>
+              <time id="ledexpo-image-date-04" class="ledexpo-image-date" datetime="" hidden></time>
+            </div>
+            <div id="ledexpo-image-description-04" class="ledexpo-image-description">
+              <h3>Project image 04</h3>
+              <p>Example text: Explain the finished effect, the practical or safety benefit, and the technical choices that went into creating the lighting shown here.</p>
+              <p class="ledexpo-id-note">IDs: ledexpo-image-04 · ledexpo-image-date-04 · ledexpo-image-description-04</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="py-4 border-top" aria-label="Site footer">
+    <div class="container small d-flex flex-wrap justify-content-between gap-2">
+      <span>Copyright © 2026 DeacStudio. All rights reserved.</span>
+      <span><a href="../index.html">Home</a> · <a href="./">LED EXPO</a> · <a href="../aboutme.html">About Deke</a> · <a href="../contact.html">Contact</a></span>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/site-guide.js?v=shared-ui-9"></script>
+</body>
+</html>
