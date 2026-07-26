@@ -68,8 +68,10 @@
       background: linear-gradient(150deg, rgba(8, 27, 55, .92), rgba(13, 12, 38, .94));
       box-shadow: 0 18px 42px rgba(0, 0, 0, .34), inset 0 1px 0 rgba(255, 255, 255, .06);
     }
-    .ledexpo-video-list,
-    .ledexpo-gallery-list { display: grid; gap: 1.5rem; }
+    .ledexpo-video-player {
+      width: 100%;
+      margin: 0;
+    }
     .ledexpo-video-frame {
       position: relative;
       width: 100%;
@@ -83,6 +85,35 @@
       height: 100%;
       border: 0;
       background: #000;
+    }
+    .ledexpo-video-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .75rem;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid rgba(49, 230, 255, .2);
+      background: rgba(3, 9, 24, .56);
+    }
+    .ledexpo-video-choice {
+      padding: .68rem 1rem;
+      border: 1px solid rgba(49, 230, 255, .38);
+      border-radius: .7rem;
+      color: #dcecff;
+      background: rgba(6, 21, 47, .9);
+      font-family: var(--heading-font, "Oxanium", sans-serif);
+      font-weight: 750;
+      letter-spacing: .025em;
+      cursor: pointer;
+    }
+    .ledexpo-video-choice:hover,
+    .ledexpo-video-choice:focus-visible,
+    .ledexpo-video-choice[aria-pressed="true"] {
+      color: #fff;
+      border-color: var(--cyan, #31e6ff);
+      background: rgba(20, 48, 82, .96);
+    }
+    .ledexpo-video-choice[aria-pressed="true"] {
+      box-shadow: inset 0 -3px 0 var(--cyan, #31e6ff);
     }
     .ledexpo-video-copy { padding: 1.35rem 1.5rem 1.55rem; }
     .ledexpo-video-copy h3 {
@@ -98,6 +129,7 @@
       letter-spacing: .04em;
       text-transform: uppercase;
     }
+    .ledexpo-gallery-list { display: grid; gap: 1.5rem; }
     .ledexpo-gallery-item {
       display: grid;
       grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr);
@@ -148,10 +180,9 @@
       font-weight: 750;
     }
     .ledexpo-image-description p { margin-bottom: 0; color: #c7d6e7; }
-    @media (min-width: 1100px) {
-      .ledexpo-video-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
     @media (max-width: 767.98px) {
+      .ledexpo-video-selector { display: grid; grid-template-columns: 1fr; }
+      .ledexpo-video-choice { width: 100%; text-align: left; }
       .ledexpo-gallery-item { grid-template-columns: 1fr; }
       .ledexpo-image-frame {
         min-height: 250px;
@@ -249,29 +280,47 @@
       <div class="container">
         <p class="ledexpo-eyebrow">Featured motion</p>
         <h2 id="ledexpo-video-heading" class="section-title mb-4">LED EXPO Videos</h2>
-        <div id="ledexpo-video-list" class="ledexpo-video-list">
-          <article id="ledexpo-video-item-01" class="ledexpo-panel">
-            <div id="ledexpo-video-frame-01" class="ledexpo-video-frame">
-              <iframe id="ledexpo-feature-video" class="ledexpo-video-embed" src="https://drive.google.com/file/d/1huJPwyvxxQWnTZdVU50DA8J0bGD52oE6/preview" title="Illuminated bicycle ride near the waterfront" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
-            </div>
-            <div id="ledexpo-video-description" class="ledexpo-video-copy">
-              <p class="ledexpo-media-date"><time datetime="2021-08-15">August 15, 2021</time></p>
-              <h3 class="h4">Waterfront light ride</h3>
-              <p class="mb-0">Illuminated bicycles moving along the waterfront at dusk, with programmed wheel and frame lighting, spectators and a fire performer creating a bright nighttime scene.</p>
-            </div>
-          </article>
 
-          <article id="ledexpo-video-item-02" class="ledexpo-panel">
-            <div id="ledexpo-video-frame-02" class="ledexpo-video-frame">
-              <iframe id="ledexpo-feature-video-02" class="ledexpo-video-embed" src="https://drive.google.com/file/d/1cD5sdEwBRyPmfCOUHmy6UrUhRB7XPupn/preview" title="Large illuminated bicycle group ride" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
-            </div>
-            <div id="ledexpo-video-description-02" class="ledexpo-video-copy">
-              <p class="ledexpo-media-date"><time datetime="2021-08-15">August 15, 2021</time></p>
-              <h3 class="h4">Night bicycle procession</h3>
-              <p class="mb-0">A large group of riders crosses a city intersection with colorful wheel rings, frame strips and moving LED effects visible throughout the procession.</p>
-            </div>
-          </article>
-        </div>
+        <article id="ledexpo-video-player" class="ledexpo-panel ledexpo-video-player">
+          <div id="ledexpo-video-frame" class="ledexpo-video-frame">
+            <iframe id="ledexpo-feature-video" class="ledexpo-video-embed" src="https://drive.google.com/file/d/1huJPwyvxxQWnTZdVU50DA8J0bGD52oE6/preview" title="Illuminated bicycle ride near the waterfront" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
+          </div>
+
+          <div id="ledexpo-video-selector" class="ledexpo-video-selector" aria-label="Choose a video">
+            <button
+              id="ledexpo-video-choice-01"
+              class="ledexpo-video-choice"
+              type="button"
+              aria-pressed="true"
+              data-video-url="https://drive.google.com/file/d/1huJPwyvxxQWnTZdVU50DA8J0bGD52oE6/preview"
+              data-video-title="Illuminated bicycle ride near the waterfront"
+              data-description-title="Waterfront light ride"
+              data-description-date="August 15, 2021"
+              data-description-datetime="2021-08-15"
+              data-description-text="Illuminated bicycles moving along the waterfront at dusk, with programmed wheel and frame lighting, spectators and a fire performer creating a bright nighttime scene.">
+              Waterfront light ride
+            </button>
+            <button
+              id="ledexpo-video-choice-02"
+              class="ledexpo-video-choice"
+              type="button"
+              aria-pressed="false"
+              data-video-url="https://drive.google.com/file/d/1cD5sdEwBRyPmfCOUHmy6UrUhRB7XPupn/preview"
+              data-video-title="Large illuminated bicycle group ride"
+              data-description-title="Night bicycle procession"
+              data-description-date="August 15, 2021"
+              data-description-datetime="2021-08-15"
+              data-description-text="A large group of riders crosses a city intersection with colorful wheel rings, frame strips and moving LED effects visible throughout the procession.">
+              Night bicycle procession
+            </button>
+          </div>
+
+          <div id="ledexpo-video-description" class="ledexpo-video-copy" aria-live="polite">
+            <p class="ledexpo-media-date"><time id="ledexpo-video-date" datetime="2021-08-15">August 15, 2021</time></p>
+            <h3 id="ledexpo-video-description-title" class="h4">Waterfront light ride</h3>
+            <p id="ledexpo-video-description-text" class="mb-0">Illuminated bicycles moving along the waterfront at dusk, with programmed wheel and frame lighting, spectators and a fire performer creating a bright nighttime scene.</p>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -393,6 +442,33 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    (() => {
+      "use strict";
+
+      const player = document.getElementById("ledexpo-feature-video");
+      const title = document.getElementById("ledexpo-video-description-title");
+      const description = document.getElementById("ledexpo-video-description-text");
+      const date = document.getElementById("ledexpo-video-date");
+      const choices = Array.from(document.querySelectorAll(".ledexpo-video-choice"));
+
+      if (!player || !title || !description || !date || choices.length === 0) return;
+
+      choices.forEach((choice) => {
+        choice.addEventListener("click", () => {
+          choices.forEach((button) => button.setAttribute("aria-pressed", "false"));
+          choice.setAttribute("aria-pressed", "true");
+
+          player.src = choice.dataset.videoUrl;
+          player.title = choice.dataset.videoTitle;
+          title.textContent = choice.dataset.descriptionTitle;
+          description.textContent = choice.dataset.descriptionText;
+          date.dateTime = choice.dataset.descriptionDatetime;
+          date.textContent = choice.dataset.descriptionDate;
+        });
+      });
+    })();
+  </script>
   <script src="../js/site-guide.js?v=shared-ui-9"></script>
 </body>
 </html>
