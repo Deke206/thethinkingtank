@@ -63,6 +63,7 @@
   const bikeBuilderUrl = new URL("build-my-bike.html", siteRoot).href;
   const homeBuilderUrl = new URL("build-my-home.html", siteRoot).href;
   const catalogUrl = new URL("led-catalog.html", siteRoot).href;
+  const expoUrl = new URL("ledexpo/", siteRoot).href;
   const aboutDekeUrl = new URL("aboutme.html", siteRoot).href;
   const contactUrl = new URL("contact.html", siteRoot).href;
 
@@ -98,9 +99,11 @@
     if (navbar && !navbar.hasAttribute("aria-label")) navbar.setAttribute("aria-label", "Primary navigation");
 
     const page = getPageKey();
+    const currentPath = window.location.pathname.toLowerCase();
     const bikeActive = page === "build-my-bike.html";
     const homeActive = page === "build-my-home.html";
     const catalogActive = page === "led-catalog.html";
+    const expoActive = currentPath.endsWith("/ledexpo") || currentPath.includes("/ledexpo/");
     const aboutActive = page === "aboutme.html";
     const contactActive = page === "contact.html";
 
@@ -113,6 +116,7 @@
         </ul>
       </div>
       <a class="nav-link${catalogActive ? " active" : ""}"${catalogActive ? " aria-current=\"page\"" : ""} href="${catalogUrl}">LED Catalog</a>
+      <a class="nav-link${expoActive ? " active" : ""}"${expoActive ? " aria-current=\"page\"" : ""} href="${expoUrl}">LED EXPO</a>
       <a class="nav-link${aboutActive ? " active" : ""}"${aboutActive ? " aria-current=\"page\"" : ""} href="${aboutDekeUrl}">About Deke</a>
       <a class="nav-link${contactActive ? " active" : ""}"${contactActive ? " aria-current=\"page\"" : ""} href="${contactUrl}">Contact</a>
       <div class="nav-item dropdown shynetyme-language-menu" data-shynetyme-language-menu="true">
