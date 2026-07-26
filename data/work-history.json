@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-26T19:26:47.172Z",
-  "commitCount": 302,
+  "generatedAt": "2026-07-26T19:27:04.957Z",
+  "commitCount": 303,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1513,6 +1513,11 @@
       "sha": "f2fff52ef635beb66281aa8ebcc315c98e3ff840",
       "date": "2026-07-26T19:26:30Z",
       "message": "Add brand spacing for lowered twinkle dot"
+    },
+    {
+      "sha": "f77084e78566bcd2777b249cb44bee0d15c64b47",
+      "date": "2026-07-26T19:26:50Z",
+      "message": "Add lowered brand dot override"
     }
   ]
 }
