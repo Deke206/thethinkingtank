@@ -53,14 +53,23 @@
   position: relative;
   overflow: hidden;
   border-radius: .72rem;
+  color: #d9e8fb;
+  font-family: var(--heading-font);
+  font-weight: 650;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link:focus-visible {
+  color: #d9e8fb;
+}
+
+.navbar .nav-link.active {
   color: #fff3d2;
   background-image: linear-gradient(180deg, #fff, #fff2bd 34%, #ffc562 58%, #ff7c82 78%, #ff9bd2);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 7px rgba(255, 138, 0, .38), 0 0 13px rgba(255, 90, 185, .28);
-  font-family: var(--heading-font);
-  font-weight: 650;
 }
 
 .navbar .nav-link::after {
