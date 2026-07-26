@@ -48,17 +48,21 @@
 
 .brand-lockup img { filter: drop-shadow(0 0 7px rgba(49, 230, 255, .8)); }
 .brand-lockup span {
+  position: relative;
   display: inline-flex;
   align-items: baseline;
   white-space: nowrap;
+  padding-bottom: .42em;
 }
 .brand-lockup em { color: var(--cyan); font-style: normal; text-shadow: 0 0 11px rgba(49, 230, 255, .72); }
 .brand-dot {
-  position: relative;
+  position: absolute;
+  left: 50%;
+  bottom: -.12em;
   display: inline-block;
   width: .34em;
   height: .34em;
-  margin: 0 .08em .08em;
+  margin: 0;
   border-radius: 50%;
   color: transparent;
   background:
@@ -67,7 +71,7 @@
     0 0 7px rgba(255, 255, 255, .95),
     0 0 13px rgba(49, 230, 255, .9),
     0 0 22px rgba(255, 90, 185, .7);
-  transform: translateY(-.04em) scale(1);
+  transform: translateX(-50%) scale(1);
   animation: shynetyme-brand-dot-twinkle 1.7s ease-in-out infinite;
 }
 .brand-dot::before,
@@ -216,7 +220,7 @@
 @keyframes shynetyme-brand-dot-twinkle {
   0%, 100% {
     opacity: .76;
-    transform: translateY(-.04em) scale(.84) rotate(0deg);
+    transform: translateX(-50%) translateY(0) scale(.84) rotate(0deg);
     box-shadow:
       0 0 5px rgba(255, 255, 255, .7),
       0 0 10px rgba(49, 230, 255, .62),
@@ -224,7 +228,7 @@
   }
   38% {
     opacity: 1;
-    transform: translateY(-.08em) scale(1.22) rotate(12deg);
+    transform: translateX(-50%) translateY(-.04em) scale(1.22) rotate(12deg);
     box-shadow:
       0 0 8px #fff,
       0 0 18px rgba(49, 230, 255, .98),
@@ -232,11 +236,11 @@
   }
   54% {
     opacity: .9;
-    transform: translateY(-.03em) scale(.94) rotate(-8deg);
+    transform: translateX(-50%) translateY(.01em) scale(.94) rotate(-8deg);
   }
   72% {
     opacity: 1;
-    transform: translateY(-.06em) scale(1.12) rotate(8deg);
+    transform: translateX(-50%) translateY(-.02em) scale(1.12) rotate(8deg);
   }
 }
 @keyframes shynetyme-nav-flare {
@@ -265,7 +269,7 @@
     animation: none !important;
     transition: none !important;
   }
-  .brand-dot { opacity: 1; transform: translateY(-.04em) scale(1); }
+  .brand-dot { opacity: 1; transform: translateX(-50%) scale(1); }
 }
 
 @media (max-width: 991.98px) {
