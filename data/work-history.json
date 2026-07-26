@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-26T19:46:34.871Z",
-  "commitCount": 311,
+  "generatedAt": "2026-07-26T20:18:13.122Z",
+  "commitCount": 312,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1558,6 +1558,11 @@
       "sha": "22aa01e1aff3e2f4d3ae041b774e20ab6f19e9b2",
       "date": "2026-07-26T19:46:23Z",
       "message": "Remove animated brand period styling"
+    },
+    {
+      "sha": "bff69a9bd18e107e82e54bee51c1983df9f0c1bd",
+      "date": "2026-07-26T20:17:59Z",
+      "message": "Add LED Expo media showcase page"
     }
   ]
 }
