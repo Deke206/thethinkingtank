@@ -128,20 +128,6 @@
       </div>`;
   };
 
-  const bindNavigationFlare = () => {
-    const nav = document.querySelector(".navbar .navbar-nav");
-    if (!nav || nav.dataset.navigationFlareBound === "true") return;
-    nav.dataset.navigationFlareBound = "true";
-    nav.addEventListener("click", (event) => {
-      const target = event.target.closest(".nav-link, .dropdown-item");
-      if (!target || !nav.contains(target)) return;
-      target.classList.remove("nav-link--flare-click");
-      void target.offsetWidth;
-      target.classList.add("nav-link--flare-click");
-      window.setTimeout(() => target.classList.remove("nav-link--flare-click"), 620);
-    });
-  };
-
   const loadBikeBuilder = () => {
     if (!document.getElementById("bikeBuilderForm")) return;
     loadScript("js/bike-builder-upgrade.js", "data-bike-builder-upgrade", "ShynetymeBikeBuilderRenderer")
@@ -152,7 +138,6 @@
   sharedStyles.forEach(loadStyle);
   installBrandLockup();
   installNavigation();
-  bindNavigationFlare();
   loadBikeBuilder();
   loadScript("js/site-chuck.js", "data-shynetyme-site-chuck-script", "ShynetymeChuck");
 })();
