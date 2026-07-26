@@ -44,14 +44,13 @@
   <link rel="stylesheet" href="../css/site-chuck.css?v=shared-ui-9" data-shynetyme-site-chuck="true">
   <style>
     .ledexpo-page {
+      min-height: 100vh;
+      color: #eaf4ff;
       background:
         radial-gradient(circle at 15% 10%, rgba(49, 230, 255, .11), transparent 28rem),
         radial-gradient(circle at 88% 18%, rgba(255, 90, 185, .09), transparent 30rem),
         #030918;
-      color: #eaf4ff;
-      min-height: 100vh;
     }
-
     .ledexpo-eyebrow {
       margin: 0 0 .7rem;
       color: var(--cyan, #31e6ff);
@@ -60,68 +59,49 @@
       letter-spacing: .14em;
       text-transform: uppercase;
     }
-
-    .ledexpo-section {
-      padding: 4rem 0;
-    }
-
-    .ledexpo-section + .ledexpo-section {
-      border-top: 1px solid rgba(49, 230, 255, .16);
-    }
-
+    .ledexpo-section { padding: 4rem 0; }
+    .ledexpo-section + .ledexpo-section { border-top: 1px solid rgba(49, 230, 255, .16); }
     .ledexpo-panel {
+      overflow: hidden;
       border: 1px solid rgba(49, 230, 255, .34);
       border-radius: 1rem;
       background: linear-gradient(150deg, rgba(8, 27, 55, .92), rgba(13, 12, 38, .94));
       box-shadow: 0 18px 42px rgba(0, 0, 0, .34), inset 0 1px 0 rgba(255, 255, 255, .06);
     }
-
-    .ledexpo-video-shell {
-      overflow: hidden;
-    }
-
+    .ledexpo-video-list,
+    .ledexpo-gallery-list { display: grid; gap: 1.5rem; }
     .ledexpo-video-frame {
-      display: grid;
-      min-height: clamp(240px, 48vw, 620px);
-      place-items: center;
-      border-bottom: 1px solid rgba(49, 230, 255, .24);
-      background:
-        radial-gradient(circle at center, rgba(49, 230, 255, .12), transparent 38%),
-        linear-gradient(135deg, #06152f, #130d31);
-    }
-
-    #ledexpo-feature-video {
-      display: block;
+      position: relative;
       width: 100%;
-      max-height: 72vh;
+      aspect-ratio: 16 / 9;
+      border-bottom: 1px solid rgba(49, 230, 255, .24);
       background: #000;
     }
-
-    .ledexpo-media-placeholder {
-      padding: 2rem;
-      color: #a9bdd3;
+    .ledexpo-video-embed {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #000;
+    }
+    .ledexpo-video-copy { padding: 1.35rem 1.5rem 1.55rem; }
+    .ledexpo-video-copy h3 {
+      color: var(--cyan, #31e6ff);
       font-family: var(--heading-font, "Oxanium", sans-serif);
+      font-weight: 750;
+    }
+    .ledexpo-media-date {
+      margin: 0 0 .65rem;
+      color: #98afc8;
+      font-size: .84rem;
       font-weight: 700;
-      letter-spacing: .08em;
-      text-align: center;
+      letter-spacing: .04em;
       text-transform: uppercase;
     }
-
-    .ledexpo-video-copy {
-      padding: 1.35rem 1.5rem 1.55rem;
-    }
-
-    .ledexpo-gallery-list {
-      display: grid;
-      gap: 1.5rem;
-    }
-
     .ledexpo-gallery-item {
       display: grid;
       grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr);
-      overflow: hidden;
     }
-
     .ledexpo-image-frame {
       position: relative;
       display: grid;
@@ -129,21 +109,17 @@
       place-items: center;
       overflow: hidden;
       border-right: 1px solid rgba(49, 230, 255, .24);
-      background:
-        linear-gradient(45deg, rgba(49, 230, 255, .04) 25%, transparent 25% 75%, rgba(155, 131, 255, .05) 75%),
-        linear-gradient(-45deg, rgba(49, 230, 255, .04) 25%, transparent 25% 75%, rgba(155, 131, 255, .05) 75%),
-        #07152c;
-      background-size: 42px 42px;
+      background: #050c1c;
     }
-
     .ledexpo-image-frame img {
       display: block;
       width: 100%;
       height: 100%;
       min-height: 330px;
-      object-fit: cover;
+      max-height: 78vh;
+      object-fit: contain;
+      background: #020711;
     }
-
     .ledexpo-image-date {
       position: absolute;
       right: .8rem;
@@ -153,46 +129,36 @@
       border: 1px solid rgba(255, 255, 255, .2);
       border-radius: .45rem;
       color: #fff;
-      background: rgba(3, 9, 24, .82);
+      background: rgba(3, 9, 24, .86);
       font-size: .78rem;
       font-weight: 700;
       letter-spacing: .04em;
       backdrop-filter: blur(8px);
     }
-
     .ledexpo-image-description {
       display: flex;
       flex-direction: column;
       justify-content: center;
       padding: 1.5rem;
     }
-
     .ledexpo-image-description h3 {
       margin-bottom: .7rem;
       color: var(--cyan, #31e6ff);
       font-family: var(--heading-font, "Oxanium", sans-serif);
       font-weight: 750;
     }
-
-    .ledexpo-image-description p {
-      margin-bottom: 0;
-      color: #c7d6e7;
+    .ledexpo-image-description p { margin-bottom: 0; color: #c7d6e7; }
+    @media (min-width: 1100px) {
+      .ledexpo-video-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
-
     @media (max-width: 767.98px) {
-      .ledexpo-gallery-item {
-        grid-template-columns: 1fr;
-      }
-
+      .ledexpo-gallery-item { grid-template-columns: 1fr; }
       .ledexpo-image-frame {
         min-height: 250px;
         border-right: 0;
         border-bottom: 1px solid rgba(49, 230, 255, .24);
       }
-
-      .ledexpo-image-frame img {
-        min-height: 250px;
-      }
+      .ledexpo-image-frame img { min-height: 250px; }
     }
   </style>
   <script type="application/ld+json" id="ledexpo-seo-schema">
@@ -245,36 +211,26 @@
       <div class="carousel-inner">
         <div class="carousel-item active" data-bs-interval="6000">
           <img src="../assets/images/hero-scene-work.webp" class="d-block w-100 site-banner-image" width="1600" height="900" alt="Deke working on a ShyneTyme project" fetchpriority="high">
-          <div class="carousel-caption site-banner-caption">
-            <span class="site-banner-callout site-banner-callout--cyan">CUSTOM LED BUILDS</span>
-          </div>
+          <div class="carousel-caption site-banner-caption"><span class="site-banner-callout site-banner-callout--cyan">CUSTOM LED BUILDS</span></div>
         </div>
         <div class="carousel-item" data-bs-interval="6000">
           <img src="../assets/images/hero-scene-school.webp" class="d-block w-100 site-banner-image" width="1600" height="900" alt="School-day ShyneTyme lighting scene" loading="lazy">
-          <div class="carousel-caption site-banner-caption">
-            <span class="site-banner-callout site-banner-callout--pink">COOL. WEIRD. USEFUL.</span>
-          </div>
+          <div class="carousel-caption site-banner-caption"><span class="site-banner-callout site-banner-callout--pink">COOL. WEIRD. USEFUL.</span></div>
         </div>
         <div class="carousel-item" data-bs-interval="6000">
           <img src="../assets/images/hero-scene-dance.webp" class="d-block w-100 site-banner-image" width="1600" height="900" alt="Neighborhood dance and lighting scene" loading="lazy">
-          <div class="carousel-caption site-banner-caption">
-            <span class="site-banner-callout site-banner-callout--amber">LIGHT UP EVERYTHING</span>
-          </div>
+          <div class="carousel-caption site-banner-caption"><span class="site-banner-callout site-banner-callout--amber">LIGHT UP EVERYTHING</span></div>
         </div>
         <div class="carousel-item" data-bs-interval="6000">
           <img src="../assets/images/hero-scene-marina.webp" class="d-block w-100 site-banner-image" width="1600" height="900" alt="Marina lighting scene" loading="lazy">
-          <div class="carousel-caption site-banner-caption">
-            <span class="site-banner-callout site-banner-callout--violet">BUILT BY DEKE</span>
-          </div>
+          <div class="carousel-caption site-banner-caption"><span class="site-banner-callout site-banner-callout--violet">BUILT BY DEKE</span></div>
         </div>
       </div>
       <button class="carousel-control-prev" type="button" data-bs-target="#siteBannerCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous slide</span>
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="visually-hidden">Previous slide</span>
       </button>
       <button class="carousel-control-next" type="button" data-bs-target="#siteBannerCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next slide</span>
+        <span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Next slide</span>
       </button>
     </div>
   </header>
@@ -292,19 +248,29 @@
     <section id="ledexpo-video-section" class="ledexpo-section" aria-labelledby="ledexpo-video-heading">
       <div class="container">
         <p class="ledexpo-eyebrow">Featured motion</p>
-        <h2 id="ledexpo-video-heading" class="section-title mb-4">LED EXPO Video</h2>
-
-        <div id="ledexpo-video-shell" class="ledexpo-panel ledexpo-video-shell">
-          <div id="ledexpo-video-frame" class="ledexpo-video-frame">
-            <video id="ledexpo-feature-video" controls preload="metadata" hidden aria-describedby="ledexpo-video-description"></video>
-            <div id="ledexpo-video-placeholder" class="ledexpo-media-placeholder" data-media-status="empty">
-              Video area ready for import
+        <h2 id="ledexpo-video-heading" class="section-title mb-4">LED EXPO Videos</h2>
+        <div id="ledexpo-video-list" class="ledexpo-video-list">
+          <article id="ledexpo-video-item-01" class="ledexpo-panel">
+            <div id="ledexpo-video-frame-01" class="ledexpo-video-frame">
+              <iframe id="ledexpo-feature-video" class="ledexpo-video-embed" src="https://drive.google.com/file/d/1huJPwyvxxQWnTZdVU50DA8J0bGD52oE6/preview" title="Illuminated bicycle ride near the waterfront" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
             </div>
-          </div>
-          <div id="ledexpo-video-description" class="ledexpo-video-copy">
-            <h3 class="h4">Featured video description</h3>
-            <p class="mb-0">Example text: This area will describe the featured LED EXPO video, including the project shown, lighting hardware, controller setup, animation style and anything important happening in the footage.</p>
-          </div>
+            <div id="ledexpo-video-description" class="ledexpo-video-copy">
+              <p class="ledexpo-media-date"><time datetime="2021-08-15">August 15, 2021</time></p>
+              <h3 class="h4">Waterfront light ride</h3>
+              <p class="mb-0">Illuminated bicycles moving along the waterfront at dusk, with programmed wheel and frame lighting, spectators and a fire performer creating a bright nighttime scene.</p>
+            </div>
+          </article>
+
+          <article id="ledexpo-video-item-02" class="ledexpo-panel">
+            <div id="ledexpo-video-frame-02" class="ledexpo-video-frame">
+              <iframe id="ledexpo-feature-video-02" class="ledexpo-video-embed" src="https://drive.google.com/file/d/1cD5sdEwBRyPmfCOUHmy6UrUhRB7XPupn/preview" title="Large illuminated bicycle group ride" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div id="ledexpo-video-description-02" class="ledexpo-video-copy">
+              <p class="ledexpo-media-date"><time datetime="2021-08-15">August 15, 2021</time></p>
+              <h3 class="h4">Night bicycle procession</h3>
+              <p class="mb-0">A large group of riders crosses a city intersection with colorful wheel rings, frame strips and moving LED effects visible throughout the procession.</p>
+            </div>
+          </article>
         </div>
       </div>
     </section>
@@ -313,54 +279,105 @@
       <div class="container">
         <p class="ledexpo-eyebrow">Project photographs</p>
         <h2 id="ledexpo-gallery-heading" class="section-title mb-2">LED EXPO Gallery</h2>
-        <p class="mb-4 text-light-emphasis">Image dates are designed to appear in the lower-right corner only when usable date information is available. If an imported image has no date information, its date tag can remain hidden.</p>
+        <p class="mb-4 text-light-emphasis">The gallery is arranged by capture date. Dates come from the original image information or filename when that information is available.</p>
 
         <div id="ledexpo-gallery-list" class="ledexpo-gallery-list">
           <article id="ledexpo-gallery-item-01" class="ledexpo-panel ledexpo-gallery-item">
             <div id="ledexpo-image-frame-01" class="ledexpo-image-frame">
-              <img id="ledexpo-image-01" alt="" hidden>
-              <div id="ledexpo-image-placeholder-01" class="ledexpo-media-placeholder" data-media-status="empty">Image 01 area</div>
-              <time id="ledexpo-image-date-01" class="ledexpo-image-date" datetime="" hidden></time>
+              <img id="ledexpo-image-01" src="https://drive.google.com/thumbnail?id=1tbhFSzvHZWDUkRWW7NrkHJEqE5Zp0NBm&amp;sz=w1800" alt="Warm LED strip lighting installed around the ceiling of a van sleeping area" loading="lazy">
+              <time id="ledexpo-image-date-01" class="ledexpo-image-date" datetime="2019-02-27">February 27, 2019</time>
             </div>
             <div id="ledexpo-image-description-01" class="ledexpo-image-description">
-              <h3>Project image 01</h3>
-              <p>Example text: Describe what the viewer is seeing, where the LEDs are installed, the colors or effects being demonstrated, and what made this particular build useful or different.</p>
+              <h3>Warm van interior lighting</h3>
+              <p>Warm white strip lighting follows the ceiling edge around a compact van sleeping and work area, providing broad usable light without taking up interior space.</p>
             </div>
           </article>
 
           <article id="ledexpo-gallery-item-02" class="ledexpo-panel ledexpo-gallery-item">
             <div id="ledexpo-image-frame-02" class="ledexpo-image-frame">
-              <img id="ledexpo-image-02" alt="" hidden>
-              <div id="ledexpo-image-placeholder-02" class="ledexpo-media-placeholder" data-media-status="empty">Image 02 area</div>
-              <time id="ledexpo-image-date-02" class="ledexpo-image-date" datetime="" hidden></time>
+              <img id="ledexpo-image-02" src="https://drive.google.com/thumbnail?id=1C8p1K_7KVbVnxhgRNT9N6wMWdiJi7Hjw&amp;sz=w1800" alt="Cargo bicycle covered with multicolor frame and wheel LEDs at night" loading="lazy">
+              <time id="ledexpo-image-date-02" class="ledexpo-image-date" datetime="2020-06-07">June 7, 2020</time>
             </div>
             <div id="ledexpo-image-description-02" class="ledexpo-image-description">
-              <h3>Project image 02</h3>
-              <p>Example text: Use this description for the project’s purpose, equipment, installation challenges, power source, controls and the visual result shown in the photograph.</p>
+              <h3>Full bicycle lighting build</h3>
+              <p>A cargo bicycle uses multicolor LEDs across the frame, fork, wheel and equipment areas to create a highly visible complete nighttime lighting setup.</p>
             </div>
           </article>
 
           <article id="ledexpo-gallery-item-03" class="ledexpo-panel ledexpo-gallery-item">
             <div id="ledexpo-image-frame-03" class="ledexpo-image-frame">
-              <img id="ledexpo-image-03" alt="" hidden>
-              <div id="ledexpo-image-placeholder-03" class="ledexpo-media-placeholder" data-media-status="empty">Image 03 area</div>
-              <time id="ledexpo-image-date-03" class="ledexpo-image-date" datetime="" hidden></time>
+              <img id="ledexpo-image-03" src="https://drive.google.com/thumbnail?id=1iOYU1kdtmcwNKfg3sDTlVwxka7QD2TVI&amp;sz=w1800" alt="Close view of bicycle controls, wiring and multicolor LED strips" loading="lazy">
+              <time id="ledexpo-image-date-03" class="ledexpo-image-date" datetime="2020-06-07">June 7, 2020</time>
             </div>
             <div id="ledexpo-image-description-03" class="ledexpo-image-description">
-              <h3>Project image 03</h3>
-              <p>Example text: Add the story behind this image, what was changed or repaired, which LED zones are visible and any detail that helps a possible customer understand the work.</p>
+              <h3>Controls and lighting zones</h3>
+              <p>A close view of the bicycle shows the display, handlebar equipment, wiring routes and separate LED zones running along the frame and wheel area.</p>
             </div>
           </article>
 
           <article id="ledexpo-gallery-item-04" class="ledexpo-panel ledexpo-gallery-item">
             <div id="ledexpo-image-frame-04" class="ledexpo-image-frame">
-              <img id="ledexpo-image-04" alt="" hidden>
-              <div id="ledexpo-image-placeholder-04" class="ledexpo-media-placeholder" data-media-status="empty">Image 04 area</div>
-              <time id="ledexpo-image-date-04" class="ledexpo-image-date" datetime="" hidden></time>
+              <img id="ledexpo-image-04" src="https://drive.google.com/thumbnail?id=1M4cU5YvekEqAdKId6w5wPSiz_T6oezB9&amp;sz=w1800" alt="Customized car with purple accent lighting at night" loading="lazy">
+              <time id="ledexpo-image-date-04" class="ledexpo-image-date" datetime="2020-06-07">June 7, 2020</time>
             </div>
             <div id="ledexpo-image-description-04" class="ledexpo-image-description">
-              <h3>Project image 04</h3>
-              <p>Example text: Explain the finished effect, the practical or safety benefit, and the technical choices that went into creating the lighting shown here.</p>
+              <h3>Vehicle accent-lighting scene</h3>
+              <p>A customized vehicle is shown at night with purple accent lighting adding definition around the body and cabin area.</p>
+            </div>
+          </article>
+
+          <article id="ledexpo-gallery-item-05" class="ledexpo-panel ledexpo-gallery-item">
+            <div id="ledexpo-image-frame-05" class="ledexpo-image-frame">
+              <img id="ledexpo-image-05" src="https://drive.google.com/thumbnail?id=1mlMfUzV8wDX8cvR9MQFizxkyvwXTtL12&amp;sz=w1800" alt="Bicycle with bright multicolor LED lighting along the frame and wheels" loading="lazy">
+              <time id="ledexpo-image-date-05" class="ledexpo-image-date" datetime="2020-09-13">September 13, 2020</time>
+            </div>
+            <div id="ledexpo-image-description-05" class="ledexpo-image-description">
+              <h3>Multicolor bicycle installation</h3>
+              <p>Bright addressable lighting runs across the bicycle frame and wheel areas, combining pink, white and multicolor effects around the cargo setup.</p>
+            </div>
+          </article>
+
+          <article id="ledexpo-gallery-item-06" class="ledexpo-panel ledexpo-gallery-item">
+            <div id="ledexpo-image-frame-06" class="ledexpo-image-frame">
+              <img id="ledexpo-image-06" src="https://drive.google.com/thumbnail?id=1zZbUFMvTT_dYxd9NPNg1GQCIc4x2VI3P&amp;sz=w1800" alt="Fat tire electric bicycle with white and purple LED lighting" loading="lazy">
+              <time id="ledexpo-image-date-06" class="ledexpo-image-date" datetime="2020-11-14">November 14, 2020</time>
+            </div>
+            <div id="ledexpo-image-description-06" class="ledexpo-image-description">
+              <h3>Fat-tire e-bike lighting</h3>
+              <p>A compact fat-tire electric bicycle combines intense white illumination with purple and blue accents around the frame, front end and cargo equipment.</p>
+            </div>
+          </article>
+
+          <article id="ledexpo-gallery-item-07" class="ledexpo-panel ledexpo-gallery-item">
+            <div id="ledexpo-image-frame-07" class="ledexpo-image-frame">
+              <img id="ledexpo-image-07" src="https://drive.google.com/thumbnail?id=1a74Po1mi_DarGUOClRZXOtFUcaE1vdh3&amp;sz=w1800" alt="Electric bicycle illuminated in blue and cyan beside a railing" loading="lazy">
+              <time id="ledexpo-image-date-07" class="ledexpo-image-date" datetime="2020-12-09">December 9, 2020</time>
+            </div>
+            <div id="ledexpo-image-description-07" class="ledexpo-image-description">
+              <h3>Blue e-bike night setup</h3>
+              <p>Blue and cyan LEDs highlight the electric bicycle frame, wheel and equipment areas, creating a clean high-visibility look beside the waterfront railing.</p>
+            </div>
+          </article>
+
+          <article id="ledexpo-gallery-item-08" class="ledexpo-panel ledexpo-gallery-item">
+            <div id="ledexpo-image-frame-08" class="ledexpo-image-frame">
+              <img id="ledexpo-image-08" src="https://drive.google.com/thumbnail?id=1SEb8XLZQhpMSwtrlaWnng6rNJJsR0BSI&amp;sz=w1800" alt="Moving bicycle rider creating circular multicolor wheel light trails" loading="lazy">
+              <time id="ledexpo-image-date-08" class="ledexpo-image-date" datetime="2021-06-06">June 6, 2021</time>
+            </div>
+            <div id="ledexpo-image-description-08" class="ledexpo-image-description">
+              <h3>Lighting effects in motion</h3>
+              <p>A moving rider demonstrates how the wheel and frame LEDs appear during actual travel, producing bright circular patterns and visible color trails.</p>
+            </div>
+          </article>
+
+          <article id="ledexpo-gallery-item-09" class="ledexpo-panel ledexpo-gallery-item">
+            <div id="ledexpo-image-frame-09" class="ledexpo-image-frame">
+              <img id="ledexpo-image-09" src="https://drive.google.com/thumbnail?id=1crgS0NQAg-lkiu3UxXdJ6LAL09gJ102U&amp;sz=w1800" alt="Van interior illuminated with rainbow LED strips around the ceiling and rear area" loading="lazy">
+              <time id="ledexpo-image-date-09" class="ledexpo-image-date" datetime="2021-06-29">June 29, 2021</time>
+            </div>
+            <div id="ledexpo-image-description-09" class="ledexpo-image-description">
+              <h3>Rainbow van interior</h3>
+              <p>Addressable LEDs wrap the van ceiling and rear interior with a rainbow sequence, adding colorful ambient light throughout the sleeping and work space.</p>
             </div>
           </article>
         </div>
