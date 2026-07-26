@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-26T21:35:17.072Z",
-  "commitCount": 320,
+  "generatedAt": "2026-07-26T22:51:33.917Z",
+  "commitCount": 321,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1603,6 +1603,11 @@
       "sha": "16d7a348f4786c756075c2ec0f952ef404d4d6a5",
       "date": "2026-07-26T21:35:02Z",
       "message": "Add selectable single LED Expo player"
+    },
+    {
+      "sha": "930be55d984cd845ff6df188ee7a6b8843a36d0e",
+      "date": "2026-07-26T22:51:18Z",
+      "message": "Highlight only active navigation item"
     }
   ]
 }
