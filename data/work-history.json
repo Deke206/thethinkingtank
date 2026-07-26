@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-26T20:18:13.122Z",
-  "commitCount": 312,
+  "generatedAt": "2026-07-26T20:18:52.091Z",
+  "commitCount": 313,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1563,6 +1563,11 @@
       "sha": "bff69a9bd18e107e82e54bee51c1983df9f0c1bd",
       "date": "2026-07-26T20:17:59Z",
       "message": "Add LED Expo media showcase page"
+    },
+    {
+      "sha": "2f7624e576956a134e6b58d149c1e73d64f556ce",
+      "date": "2026-07-26T20:18:39Z",
+      "message": "Add LED Expo to shared navigation"
     }
   ]
 }
