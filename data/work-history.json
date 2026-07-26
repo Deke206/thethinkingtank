@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-26T20:20:59.681Z",
-  "commitCount": 315,
+  "generatedAt": "2026-07-26T20:57:34.529Z",
+  "commitCount": 316,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1578,6 +1578,11 @@
       "sha": "6bd92c4986955cda1f51d1b5f84435cf502422a2",
       "date": "2026-07-26T20:20:43Z",
       "message": "Add LED Expo to sitemap"
+    },
+    {
+      "sha": "90d697b0fa5d099c52a26d1163c01c9bd38b3f6e",
+      "date": "2026-07-26T20:57:19Z",
+      "message": "Use shared site banner on LED EXPO"
     }
   ]
 }
