@@ -51,13 +51,16 @@
 
 .navbar .nav-link {
   position: relative;
-  isolation: isolate;
   overflow: hidden;
   border-radius: .72rem;
-  color: #d9e8fb;
+  color: #fff3d2;
+  background-image: linear-gradient(180deg, #fff, #fff2bd 34%, #ffc562 58%, #ff7c82 78%, #ff9bd2);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 7px rgba(255, 138, 0, .38), 0 0 13px rgba(255, 90, 185, .28);
   font-family: var(--heading-font);
   font-weight: 650;
-  transition: color .18s ease, text-shadow .18s ease, filter .18s ease, transform .18s ease;
 }
 
 .navbar .nav-link::after {
@@ -70,40 +73,6 @@
   background: linear-gradient(90deg, var(--cyan), var(--violet));
   transform: scaleX(0);
   transition: transform .2s ease;
-}
-
-.navbar .nav-link::before {
-  content: "";
-  position: absolute;
-  inset: -.4rem -.65rem;
-  z-index: -1;
-  opacity: 0;
-  border-radius: inherit;
-  background:
-    radial-gradient(circle at 22% 50%, rgba(49, 230, 255, .75), transparent 34%),
-    radial-gradient(circle at 78% 50%, rgba(255, 90, 185, .72), transparent 34%),
-    linear-gradient(90deg, rgba(49, 230, 255, .18), rgba(155, 131, 255, .2), rgba(255, 90, 185, .18));
-  filter: blur(.4px) saturate(1.35);
-  transform: scaleX(.2) translateY(8px);
-  transition: opacity .18s ease, transform .18s ease;
-}
-
-.navbar .nav-link:hover,
-.navbar .nav-link:focus-visible,
-.navbar .nav-link.active,
-.navbar .nav-link.nav-link--flare-click {
-  color: #fff !important;
-  text-shadow: 0 0 5px #fff, 0 0 13px rgba(49, 230, 255, .9), 0 0 24px rgba(255, 90, 185, .66);
-  filter: saturate(1.22) brightness(1.12);
-  transform: translateY(-1px);
-}
-
-.navbar .nav-link:hover::before,
-.navbar .nav-link:focus-visible::before,
-.navbar .nav-link.active::before,
-.navbar .nav-link.nav-link--flare-click::before {
-  opacity: 1;
-  transform: scaleX(1) translateY(0);
 }
 
 .navbar .nav-link:hover::after,
@@ -125,7 +94,7 @@
   align-items: center;
   gap: .35rem;
   border: 0;
-  background: transparent;
+  background-color: transparent;
 }
 
 .shynetyme-build-menu .dropdown-menu,
@@ -151,7 +120,7 @@
   font-family: var(--heading-font);
   font-weight: 750;
   letter-spacing: .015em;
-  transition: color .18s ease, background-color .18s ease, transform .18s ease, text-shadow .18s ease;
+  transition: color .18s ease, background-color .18s ease;
 }
 
 .shynetyme-build-menu li + li .dropdown-item,
@@ -165,40 +134,15 @@
 .shynetyme-language-menu .dropdown-item.active {
   color: #fff;
   background: linear-gradient(90deg, rgba(49, 230, 255, .2), rgba(155, 131, 255, .24));
-  text-shadow: 0 0 12px rgba(49, 230, 255, .72);
-  transform: translateX(3px);
 }
 
 .shynetyme-build-menu .dropdown-item.active,
 .shynetyme-language-menu .dropdown-item.active { box-shadow: inset 3px 0 0 var(--cyan); }
 
-.nav-link--flare-click { animation: shynetyme-nav-flare .56s ease-out both; }
-.nav-link--flare-click::after { animation: shynetyme-nav-line-flare .56s ease-out both !important; }
-.dropdown-item.nav-link--flare-click { animation: shynetyme-dropdown-flare .56s ease-out both; }
-
-@keyframes shynetyme-nav-flare {
-  0% { color: #fff; text-shadow: 0 0 0 rgba(49, 230, 255, 0); filter: brightness(1); }
-  38% { color: #fff; text-shadow: 0 0 8px #fff, 0 0 18px rgba(49, 230, 255, .95), 0 0 28px rgba(155, 131, 255, .72); filter: brightness(1.28); }
-  100% { filter: brightness(1); }
-}
-@keyframes shynetyme-nav-line-flare {
-  0% { transform: scaleX(0); opacity: .2; }
-  45% { transform: scaleX(1.22); opacity: 1; box-shadow: 0 0 14px var(--cyan); }
-  100% { transform: scaleX(1); opacity: .85; box-shadow: 0 0 0 transparent; }
-}
-@keyframes shynetyme-dropdown-flare {
-  0% { transform: translateX(0); filter: brightness(1); }
-  42% { transform: translateX(5px); filter: brightness(1.3); box-shadow: 0 0 16px rgba(49, 230, 255, .28); }
-  100% { transform: translateX(3px); filter: brightness(1); }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .skip-link,
-  .navbar .nav-link,
-  .navbar .nav-link::before,
   .navbar .nav-link::after,
   .dropdown-item {
-    animation: none !important;
     transition: none !important;
   }
 }
@@ -211,7 +155,6 @@
   .shynetyme-build-menu .dropdown-menu,
   .shynetyme-language-menu .dropdown-menu { margin: .25rem 0 .45rem .55rem; border-radius: .72rem; box-shadow: inset 0 0 18px rgba(49, 230, 255, .06); }
 }
-
 
 /* Shared navbar LED edge strip. */
 .navbar { position: sticky; top: 0; isolation: isolate; z-index: 1030; }
