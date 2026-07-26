@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-26T19:45:45.572Z",
-  "commitCount": 310,
+  "generatedAt": "2026-07-26T19:46:34.871Z",
+  "commitCount": 311,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1553,6 +1553,11 @@
       "sha": "3691431f7f0d1af4b719db54c80055b2d432c416",
       "date": "2026-07-26T19:45:31Z",
       "message": "Revert navigation brand to plain ShyneTyme.Works"
+    },
+    {
+      "sha": "22aa01e1aff3e2f4d3ae041b774e20ab6f19e9b2",
+      "date": "2026-07-26T19:46:23Z",
+      "message": "Remove animated brand period styling"
     }
   ]
 }
