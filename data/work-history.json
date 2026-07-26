@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-26T20:20:31.534Z",
-  "commitCount": 314,
+  "generatedAt": "2026-07-26T20:20:59.681Z",
+  "commitCount": 315,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1573,6 +1573,11 @@
       "sha": "12b4ea360927faee72e3a20e00f3a112e14c7b62",
       "date": "2026-07-26T20:20:19Z",
       "message": "Polish LED Expo media placeholders"
+    },
+    {
+      "sha": "6bd92c4986955cda1f51d1b5f84435cf502422a2",
+      "date": "2026-07-26T20:20:43Z",
+      "message": "Add LED Expo to sitemap"
     }
   ]
 }
