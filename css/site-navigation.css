@@ -47,7 +47,44 @@
 }
 
 .brand-lockup img { filter: drop-shadow(0 0 7px rgba(49, 230, 255, .8)); }
+.brand-lockup span {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+}
 .brand-lockup em { color: var(--cyan); font-style: normal; text-shadow: 0 0 11px rgba(49, 230, 255, .72); }
+.brand-dot {
+  position: relative;
+  display: inline-block;
+  width: .34em;
+  height: .34em;
+  margin: 0 .08em .08em;
+  border-radius: 50%;
+  color: transparent;
+  background:
+    radial-gradient(circle, #fff 0 21%, var(--cyan, #31e6ff) 22% 48%, rgba(155, 131, 255, .9) 49% 100%);
+  box-shadow:
+    0 0 7px rgba(255, 255, 255, .95),
+    0 0 13px rgba(49, 230, 255, .9),
+    0 0 22px rgba(255, 90, 185, .7);
+  transform: translateY(-.04em) scale(1);
+  animation: shynetyme-brand-dot-twinkle 1.7s ease-in-out infinite;
+}
+.brand-dot::before,
+.brand-dot::after {
+  content: "";
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: .95em;
+  height: 1px;
+  border-radius: 999px;
+  background: currentColor;
+  color: rgba(255, 255, 255, .82);
+  filter: drop-shadow(0 0 5px var(--cyan, #31e6ff));
+  transform: translate(-50%, -50%) scaleX(.78);
+  opacity: .8;
+}
+.brand-dot::after { transform: translate(-50%, -50%) rotate(90deg) scaleX(.78); }
 
 .navbar .nav-link {
   position: relative;
@@ -176,6 +213,32 @@
 .nav-link--flare-click::after { animation: shynetyme-nav-line-flare .56s ease-out both !important; }
 .dropdown-item.nav-link--flare-click { animation: shynetyme-dropdown-flare .56s ease-out both; }
 
+@keyframes shynetyme-brand-dot-twinkle {
+  0%, 100% {
+    opacity: .76;
+    transform: translateY(-.04em) scale(.84) rotate(0deg);
+    box-shadow:
+      0 0 5px rgba(255, 255, 255, .7),
+      0 0 10px rgba(49, 230, 255, .62),
+      0 0 16px rgba(255, 90, 185, .42);
+  }
+  38% {
+    opacity: 1;
+    transform: translateY(-.08em) scale(1.22) rotate(12deg);
+    box-shadow:
+      0 0 8px #fff,
+      0 0 18px rgba(49, 230, 255, .98),
+      0 0 31px rgba(255, 90, 185, .8);
+  }
+  54% {
+    opacity: .9;
+    transform: translateY(-.03em) scale(.94) rotate(-8deg);
+  }
+  72% {
+    opacity: 1;
+    transform: translateY(-.06em) scale(1.12) rotate(8deg);
+  }
+}
 @keyframes shynetyme-nav-flare {
   0% { color: #fff; text-shadow: 0 0 0 rgba(49, 230, 255, 0); filter: brightness(1); }
   38% { color: #fff; text-shadow: 0 0 8px #fff, 0 0 18px rgba(49, 230, 255, .95), 0 0 28px rgba(155, 131, 255, .72); filter: brightness(1.28); }
@@ -194,6 +257,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .skip-link,
+  .brand-dot,
   .navbar .nav-link,
   .navbar .nav-link::before,
   .navbar .nav-link::after,
@@ -201,6 +265,7 @@
     animation: none !important;
     transition: none !important;
   }
+  .brand-dot { opacity: 1; transform: translateY(-.04em) scale(1); }
 }
 
 @media (max-width: 991.98px) {
