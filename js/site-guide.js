@@ -18,6 +18,7 @@
   const sharedStyles = [
     ["css/site-motion.css", "data-shynetyme-motion"],
     ["css/site-navigation.css", "data-shynetyme-navigation"],
+    ["css/site-brand-dot.css", "data-shynetyme-brand-dot"],
     ["css/site-hero.css", "data-shynetyme-hero"],
     ["css/site-chuck.css", "data-shynetyme-site-chuck"],
     ["css/site-chuck-cloud.css", "data-shynetyme-site-chuck-cloud"]
