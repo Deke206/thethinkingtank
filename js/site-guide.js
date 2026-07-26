@@ -105,7 +105,7 @@
       </div>
       <a class="nav-link${catalogActive ? " active" : ""}"${catalogActive ? " aria-current=\"page\"" : ""} href="${catalogUrl}">LED Catalog</a>
       <a class="nav-link${aboutActive ? " active" : ""}"${aboutActive ? " aria-current=\"page\"" : ""} href="${aboutDekeUrl}">About Deke</a>
-      <a class="nav-link${contactActive ? " active" : ""}"${contactActive ? " aria-current=\"page\"" : ""} href="${contactUrl}">Request Install</a>
+      <a class="nav-link${contactActive ? " active" : ""}"${contactActive ? " aria-current=\"page\"" : ""} href="${contactUrl}">Contact</a>
       <div class="nav-item dropdown shynetyme-language-menu" data-shynetyme-language-menu="true">
         <button class="nav-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Change language">Language</button>
         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-label="Choose page language">
