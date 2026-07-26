@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-26T19:33:53.287Z",
-  "commitCount": 305,
+  "generatedAt": "2026-07-26T19:34:32.971Z",
+  "commitCount": 307,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1528,6 +1528,16 @@
       "sha": "ae0d05148e15dcb8459a0c6b3f3c42d079c71477",
       "date": "2026-07-26T19:33:37Z",
       "message": "Remove extra brand dot stylesheet loader"
+    },
+    {
+      "sha": "f4f711b7a7c206ada160c5b1ca25a3f80fbea421",
+      "date": "2026-07-26T19:34:10Z",
+      "message": "Move brand dot styling inline in navigation CSS"
+    },
+    {
+      "sha": "21e27fb83573e67c73d8c73563042d7f6165a2c6",
+      "date": "2026-07-26T19:34:15Z",
+      "message": "Remove extra brand dot override file"
     }
   ]
 }
