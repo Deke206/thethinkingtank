@@ -8,7 +8,7 @@
     ? new URL(document.currentScript.src, window.location.href)
     : new URL("js/site-guide.js", window.location.href);
   const siteRoot = new URL("../", scriptUrl);
-  const sharedRevision = scriptUrl.searchParams.get("v") || "shared-ui-8";
+  const sharedRevision = scriptUrl.searchParams.get("v") || "shared-ui-9";
   const withRevision = (path) => {
     const url = new URL(path, siteRoot);
     url.searchParams.set("v", sharedRevision);
@@ -139,7 +139,6 @@
   sharedStyles.forEach(loadStyle);
   installNavigation();
   bindNavigationFlare();
-  loadScript("js/hero-carousel.js", "data-shynetyme-hero-carousel", "ShynetymeHeroCarousel");
   loadBikeBuilder();
   loadScript("js/site-chuck.js", "data-shynetyme-site-chuck-script", "ShynetymeChuck");
 })();

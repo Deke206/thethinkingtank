@@ -24,12 +24,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oxanium:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="css/site.css?v=shared-ui-8">
-  <link rel="stylesheet" href="css/site-motion.css?v=shared-ui-8" data-shynetyme-motion>
+  <link rel="stylesheet" href="css/site.css?v=shared-ui-9">
+  <link rel="stylesheet" href="css/site-motion.css?v=shared-ui-9" data-shynetyme-motion>
   <link rel="stylesheet" href="css/led-banner-magic.css?v=20260723-matrix-demo">
-  <link rel="stylesheet" href="css/site-navigation.css?v=shared-ui-8" data-shynetyme-navigation="true">
-  <link rel="stylesheet" href="css/site-hero.css?v=shared-ui-8" data-shynetyme-hero="true">
-<link rel="stylesheet" href="css/site-chuck.css?v=shared-ui-8" data-shynetyme-site-chuck="true">
+  <link rel="stylesheet" href="css/site-navigation.css?v=shared-ui-9" data-shynetyme-navigation="true">
+  <link rel="stylesheet" href="css/site-hero.css?v=shared-ui-9" data-shynetyme-hero="true">
+<link rel="stylesheet" href="css/site-chuck.css?v=shared-ui-9" data-shynetyme-site-chuck="true">
   <meta name="author" content="Dedric “Deke” Alexander">
   <meta name="color-scheme" content="dark light">
   <link rel="alternate" href="https://shynetyme.works/led-banner-magic.html" hreflang="en">
@@ -112,11 +112,53 @@
     </div>
   </nav>
 
-  <header class="hero py-5" data-site-hero>
+  <header class="site-banner">
     <div class="visually-hidden">
-    <p>ShyneTyme LED banner experiment</p>
-    <h1>What if the website banner moved like the real thing?</h1>
-    <p>Pixel text, color chases, center-out reveals, scanners and sparkles.</p>
+        <p>ShyneTyme LED banner experiment</p>
+        <h1>What if the website banner moved like the real thing?</h1>
+        <p>Pixel text, color chases, center-out reveals, scanners and sparkles.</p>
+        </div>
+    <div id="siteBannerCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-touch="true" aria-label="ShyneTyme Works project scenes">
+      <div class="carousel-indicators">
+      <button type="button" data-bs-target="#siteBannerCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#siteBannerCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#siteBannerCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      <button type="button" data-bs-target="#siteBannerCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+      </div>
+      <div class="carousel-inner">
+      <div class="carousel-item active" data-bs-interval="6000">
+        <img src="assets/images/hero-scene-work.webp" class="d-block w-100 site-banner-image" width="1600" height="900" alt="Deke working on a ShyneTyme project" fetchpriority="high">
+        <div class="carousel-caption site-banner-caption">
+          <span class="site-banner-callout site-banner-callout--cyan">CUSTOM LED BUILDS</span>
+        </div>
+      </div>
+      <div class="carousel-item" data-bs-interval="6000">
+        <img src="assets/images/hero-scene-school.webp" class="d-block w-100 site-banner-image" width="1600" height="900" alt="School-day ShyneTyme lighting scene" loading="lazy">
+        <div class="carousel-caption site-banner-caption">
+          <span class="site-banner-callout site-banner-callout--pink">COOL. WEIRD. USEFUL.</span>
+        </div>
+      </div>
+      <div class="carousel-item" data-bs-interval="6000">
+        <img src="assets/images/hero-scene-dance.webp" class="d-block w-100 site-banner-image" width="1600" height="900" alt="Neighborhood dance and lighting scene" loading="lazy">
+        <div class="carousel-caption site-banner-caption">
+          <span class="site-banner-callout site-banner-callout--amber">LIGHT UP EVERYTHING</span>
+        </div>
+      </div>
+      <div class="carousel-item" data-bs-interval="6000">
+        <img src="assets/images/hero-scene-marina.webp" class="d-block w-100 site-banner-image" width="1600" height="900" alt="Marina lighting scene" loading="lazy">
+        <div class="carousel-caption site-banner-caption">
+          <span class="site-banner-callout site-banner-callout--violet">BUILT BY DEKE</span>
+        </div>
+      </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#siteBannerCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous slide</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#siteBannerCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next slide</span>
+      </button>
     </div>
   </header>
 
@@ -169,6 +211,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/led-banner-magic.js?v=20260723-matrix-demo"></script>
-  <script src="js/site-guide.js?v=shared-ui-8"></script>
+  <script src="js/site-guide.js?v=shared-ui-9"></script>
 </body>
 </html>
