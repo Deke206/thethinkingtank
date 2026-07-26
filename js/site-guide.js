@@ -65,7 +65,6 @@
   const catalogUrl = new URL("led-catalog.html", siteRoot).href;
   const aboutDekeUrl = new URL("aboutme.html", siteRoot).href;
   const contactUrl = new URL("contact.html", siteRoot).href;
-  const brandMarkup = 'ShyneTyme<span class="brand-dot" aria-hidden="true">.</span><em>Works</em>';
 
   const getPageUrl = () => {
     const canonical = document.querySelector('link[rel="canonical"]')?.href;
@@ -84,11 +83,10 @@
 
   const installBrandLockup = () => {
     document.querySelectorAll(".brand-lockup").forEach((brand) => {
-      const label = "ShyneTyme.Works";
       const textNode = brand.querySelector("span");
-      if (textNode && !textNode.querySelector(".brand-dot")) textNode.innerHTML = brandMarkup;
-      brand.setAttribute("aria-label", label);
-      brand.setAttribute("title", label);
+      if (textNode) textNode.innerHTML = "ShyneTyme.<em>Works</em>";
+      brand.setAttribute("aria-label", "ShyneTyme.Works");
+      brand.setAttribute("title", "ShyneTyme.Works");
     });
   };
 
@@ -150,7 +148,6 @@
   sharedStyles.forEach(loadStyle);
   installBrandLockup();
   installNavigation();
-  installBrandLockup();
   bindNavigationFlare();
   loadBikeBuilder();
   loadScript("js/site-chuck.js", "data-shynetyme-site-chuck-script", "ShynetymeChuck");
