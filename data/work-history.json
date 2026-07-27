@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-27T08:19:20.244Z",
-  "commitCount": 337,
+  "generatedAt": "2026-07-27T08:29:04.466Z",
+  "commitCount": 338,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1688,6 +1688,11 @@
       "sha": "8d53b02261a8faae00133771581f08c901984a08",
       "date": "2026-07-27T08:19:07Z",
       "message": "Redirect old catalog preview to production catalog"
+    },
+    {
+      "sha": "5a0daca49d2636db058520363175cbf78f4252df",
+      "date": "2026-07-27T08:28:49Z",
+      "message": "Replace catalog category buttons with select filter"
     }
   ]
 }
