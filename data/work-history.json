@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-27T08:30:29.257Z",
-  "commitCount": 339,
+  "generatedAt": "2026-07-27T08:31:39.925Z",
+  "commitCount": 340,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1698,6 +1698,11 @@
       "sha": "0eef7a99908e424d87521976e8aaed0f08061362",
       "date": "2026-07-27T08:30:15Z",
       "message": "Use real category dropdown filtering"
+    },
+    {
+      "sha": "ed56a29e544fa0d6ae0d97352a37560ed33f67ef",
+      "date": "2026-07-27T08:31:25Z",
+      "message": "Style catalog category select"
     }
   ]
 }
