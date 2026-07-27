@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-27T08:18:24.697Z",
-  "commitCount": 336,
+  "generatedAt": "2026-07-27T08:19:20.244Z",
+  "commitCount": 337,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1683,6 +1683,11 @@
       "sha": "b0db6d5a45081ea5e4077828e4a26eea7ad0a91b",
       "date": "2026-07-27T08:18:06Z",
       "message": "Rename site navigation catalog link"
+    },
+    {
+      "sha": "8d53b02261a8faae00133771581f08c901984a08",
+      "date": "2026-07-27T08:19:07Z",
+      "message": "Redirect old catalog preview to production catalog"
     }
   ]
 }
