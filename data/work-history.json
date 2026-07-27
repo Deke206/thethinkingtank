@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-27T08:17:31.737Z",
-  "commitCount": 335,
+  "generatedAt": "2026-07-27T08:18:24.697Z",
+  "commitCount": 336,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1678,6 +1678,11 @@
       "sha": "476247c6bddb5a1ae74861083a6e74e2af99d209",
       "date": "2026-07-27T08:17:15Z",
       "message": "Publish full catalog with material controls"
+    },
+    {
+      "sha": "b0db6d5a45081ea5e4077828e4a26eea7ad0a91b",
+      "date": "2026-07-27T08:18:06Z",
+      "message": "Rename site navigation catalog link"
     }
   ]
 }
