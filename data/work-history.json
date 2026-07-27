@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-26T22:51:33.917Z",
-  "commitCount": 321,
+  "generatedAt": "2026-07-27T05:33:30.734Z",
+  "commitCount": 323,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1608,6 +1608,16 @@
       "sha": "930be55d984cd845ff6df188ee7a6b8843a36d0e",
       "date": "2026-07-26T22:51:18Z",
       "message": "Highlight only active navigation item"
+    },
+    {
+      "sha": "8a3a9cc51af9fa78ba828eb79b43744cc0488819",
+      "date": "2026-07-27T05:32:58Z",
+      "message": "Publish hidden catalog preview page"
+    },
+    {
+      "sha": "74e136ffaaef92d2ebde0f01a83e22e7755c1428",
+      "date": "2026-07-27T05:33:11Z",
+      "message": "Clean public repository README"
     }
   ]
 }
