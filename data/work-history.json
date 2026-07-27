@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-27T12:49:06.191Z",
-  "commitCount": 360,
+  "generatedAt": "2026-07-27T12:50:15.893Z",
+  "commitCount": 361,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1803,6 +1803,11 @@
       "sha": "b91c35f26524e6d888014dad44c06818ea895b9a",
       "date": "2026-07-27T12:48:31Z",
       "message": "Add LED EXPO page and restore site navigation"
+    },
+    {
+      "sha": "8fbe386dc822e7f10033231e505cecd4bcd90d58",
+      "date": "2026-07-27T12:50:00Z",
+      "message": "Remove incorrectly capitalized LED EXPO duplicate"
     }
   ]
 }
