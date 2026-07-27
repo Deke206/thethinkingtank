@@ -2,12 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://shynetyme.works/</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
       <image:loc>https://shynetyme.works/assets/images/shynetyme-works-hero.webp</image:loc>
       <image:title>Custom LED Installations Los Angeles | ShyneTyme Works</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://shynetyme.works/LEDexpo.html</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://shynetyme.works/assets/images/shynetyme-works-hero.webp</image:loc>
+      <image:title>LED EXPO | ShyneTyme Works</image:title>
     </image:image>
   </url>
   <url>
@@ -52,7 +62,7 @@
   </url>
   <url>
     <loc>https://shynetyme.works/led-catalog.html</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-07-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
