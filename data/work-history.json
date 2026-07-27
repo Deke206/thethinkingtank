@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-27T08:16:33.372Z",
-  "commitCount": 334,
+  "generatedAt": "2026-07-27T08:17:31.737Z",
+  "commitCount": 335,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1673,6 +1673,11 @@
       "sha": "499b7a99b6f4463d2e9bc420c23be7db626f1c6b",
       "date": "2026-07-27T08:16:16Z",
       "message": "Build uniform catalog cards and material controls"
+    },
+    {
+      "sha": "476247c6bddb5a1ae74861083a6e74e2af99d209",
+      "date": "2026-07-27T08:17:15Z",
+      "message": "Publish full catalog with material controls"
     }
   ]
 }
