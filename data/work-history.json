@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-27T05:47:17.519Z",
-  "commitCount": 324,
+  "generatedAt": "2026-07-27T07:16:26.611Z",
+  "commitCount": 325,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1623,6 +1623,11 @@
       "sha": "4b56e9928ed8acfcc4d99f9b01b954f87b06c9a9",
       "date": "2026-07-27T05:46:57Z",
       "message": "Add LEDExpo page from existing expo index"
+    },
+    {
+      "sha": "eeabb70da858ead3e3755dc148ac53e2799b57f1",
+      "date": "2026-07-27T07:16:13Z",
+      "message": "Update preview catalog products and remove excluded items"
     }
   ]
 }
