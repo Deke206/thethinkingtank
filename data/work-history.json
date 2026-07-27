@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-27T11:11:11.304Z",
-  "commitCount": 353,
+  "generatedAt": "2026-07-27T11:11:45.339Z",
+  "commitCount": 355,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1768,6 +1768,16 @@
       "sha": "481cdbea592a0e81d1575b2e44f0430ae670e41c",
       "date": "2026-07-27T11:10:58Z",
       "message": "Remove LED EXPO link from catalog navigation"
+    },
+    {
+      "sha": "330bd570fe152a81a774ca98e460671ac5d2212c",
+      "date": "2026-07-27T11:11:19Z",
+      "message": "Remove LED EXPO from sitemap"
+    },
+    {
+      "sha": "712c0e79daccc53d2d8f76345d102ccd1656081f",
+      "date": "2026-07-27T11:11:27Z",
+      "message": "Remove obsolete LED EXPO page"
     }
   ]
 }
