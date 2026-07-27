@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-27T08:29:04.466Z",
-  "commitCount": 338,
+  "generatedAt": "2026-07-27T08:30:29.257Z",
+  "commitCount": 339,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1693,6 +1693,11 @@
       "sha": "5a0daca49d2636db058520363175cbf78f4252df",
       "date": "2026-07-27T08:28:49Z",
       "message": "Replace catalog category buttons with select filter"
+    },
+    {
+      "sha": "0eef7a99908e424d87521976e8aaed0f08061362",
+      "date": "2026-07-27T08:30:15Z",
+      "message": "Use real category dropdown filtering"
     }
   ]
 }
