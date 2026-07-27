@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-27T11:10:17.968Z",
-  "commitCount": 352,
+  "generatedAt": "2026-07-27T11:11:11.304Z",
+  "commitCount": 353,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1763,6 +1763,11 @@
       "sha": "05ea8eb459b37e61e007d317d1657982d348edaf",
       "date": "2026-07-27T11:10:03Z",
       "message": "Remove LED EXPO from shared site navigation"
+    },
+    {
+      "sha": "481cdbea592a0e81d1575b2e44f0430ae670e41c",
+      "date": "2026-07-27T11:10:58Z",
+      "message": "Remove LED EXPO link from catalog navigation"
     }
   ]
 }
