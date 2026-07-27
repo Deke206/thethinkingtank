@@ -209,8 +209,7 @@
               <h2 class="catalog-product-title">${escapeHtml(product.name)}</h2>
             </div>
             <div class="catalog-product-specs">${preferredSpecs(product)}</div>
-            ${materialControls(product)}
-            <div class="catalog-card-actions">
+            <div class="catalog-details-section">
               <button
                 class="btn btn-outline-light catalog-details-button"
                 type="button"
@@ -218,6 +217,7 @@
                 Product Details
               </button>
             </div>
+            ${materialControls(product)}
           </div>
         </article>
       </div>`).join("");
