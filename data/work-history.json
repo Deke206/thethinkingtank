@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-27T11:33:06.139Z",
-  "commitCount": 357,
+  "generatedAt": "2026-07-27T11:35:13.535Z",
+  "commitCount": 358,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1788,6 +1788,11 @@
       "sha": "ffc9d6cae909b44df4ffad4bf868ee6420df0272",
       "date": "2026-07-27T11:32:49Z",
       "message": "Revert uniform catalog image and content heights"
+    },
+    {
+      "sha": "ad4b90a32ee11d1f60d957949ff015187dcd10d7",
+      "date": "2026-07-27T11:34:56Z",
+      "message": "Bust catalog cache after natural sizing revert"
     }
   ]
 }
