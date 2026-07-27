@@ -60,14 +60,4 @@
       <image:title>Addressable LED Product Catalog | ShyneTyme Works</image:title>
     </image:image>
   </url>
-  <url>
-    <loc>https://shynetyme.works/ledexpo/</loc>
-    <lastmod>2026-07-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://shynetyme.works/assets/images/shynetyme-works-hero.webp</image:loc>
-      <image:title>LED EXPO | ShyneTyme Works</image:title>
-    </image:image>
-  </url>
 </urlset>
