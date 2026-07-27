@@ -115,7 +115,7 @@
           <li><a class="dropdown-item${homeActive ? " active" : ""}"${homeActive ? " aria-current=\"page\"" : ""} href="${homeBuilderUrl}">LED SIM HOME</a></li>
         </ul>
       </div>
-      <a class="nav-link${catalogActive ? " active" : ""}"${catalogActive ? " aria-current=\"page\"" : ""} href="${catalogUrl}">LED Catalog</a>
+      <a class="nav-link${catalogActive ? " active" : ""}"${catalogActive ? " aria-current=\"page\"" : ""} href="${catalogUrl}">Catalog</a>
       <a class="nav-link${expoActive ? " active" : ""}"${expoActive ? " aria-current=\"page\"" : ""} href="${expoUrl}">LED EXPO</a>
       <a class="nav-link${aboutActive ? " active" : ""}"${aboutActive ? " aria-current=\"page\"" : ""} href="${aboutDekeUrl}">About Deke</a>
       <a class="nav-link${contactActive ? " active" : ""}"${contactActive ? " aria-current=\"page\"" : ""} href="${contactUrl}">Contact</a>
