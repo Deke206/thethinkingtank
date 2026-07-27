@@ -1,32 +1,14 @@
-# ShyneTyme Works — Mobile LED Effects
+# ShyneTyme.Works
 
-A Bootstrap 5 website and product catalog for ShyneTyme Works: custom 5V WS2812B mobile LED projects in Los Angeles, including bicycles, e-bikes, helmets, vans, motorcycles, automobiles, boats, patios, and custom installations.
+Source repository for the public ShyneTyme.Works website.
 
-## Initial website goals
+**Live site:** https://shynetyme.works/
 
-- Show working bicycle and helmet LED effects.
-- Explain phone-controlled ESP32/WLED lighting.
-- Present simple installation packages.
-- Catalog compatible 5V WS2812B parts.
-- Collect installation requests through a direct website form.
-- Support a future BTF-LIGHTING product and field-testing partnership.
-
-## Repository structure
-
-```text
-index.html
-css/site.css
-js/catalog.js
-data/products.json
-COPYRIGHT.md
-THIRD_PARTY_NOTICES.md
-PRIVACY.md
-TERMS.md
-```
+The repository contains the website’s public pages, styles, scripts, images, and catalog data.
 
 ## Publishing
 
-The site is designed for GitHub Pages. In the repository, open **Settings → Pages**, choose **Deploy from a branch**, select **main** and **/(root)**, then save.
+The site is published with GitHub Pages from the `main` branch and connected to the `shynetyme.works` domain.
 
 ## Rights
 
