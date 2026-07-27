@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-27T11:35:13.535Z",
-  "commitCount": 358,
+  "generatedAt": "2026-07-27T12:47:39.607Z",
+  "commitCount": 359,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1793,6 +1793,11 @@
       "sha": "ad4b90a32ee11d1f60d957949ff015187dcd10d7",
       "date": "2026-07-27T11:34:56Z",
       "message": "Bust catalog cache after natural sizing revert"
+    },
+    {
+      "sha": "f7a4a549d9eb28cca0678e52842e5e93551b4f08",
+      "date": "2026-07-27T12:47:25Z",
+      "message": "Restore original ShyneTyme homepage"
     }
   ]
 }
