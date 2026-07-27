@@ -1,0 +1,93 @@
+/* Catalog card flow correction: natural content height, tighter specs, actions above material controls. */
+.catalog-product-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: .5rem;
+  min-height: 0;
+  height: auto;
+  padding: 1rem;
+}
+
+.catalog-product-category {
+  order: 1;
+}
+
+.catalog-product-title-area {
+  order: 2;
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+  padding-right: 0;
+}
+
+.catalog-product-title {
+  line-height: 1.32;
+}
+
+.catalog-product-specs {
+  order: 3;
+  display: flex;
+  align-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .22rem .3rem;
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+  margin: .1rem 0 .15rem;
+  padding: 0;
+}
+
+.catalog-spec-chip {
+  padding: .2rem .4rem;
+  font-size: .71rem;
+  line-height: 1.05;
+}
+
+.catalog-card-actions {
+  order: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: .15rem 0 .1rem;
+  padding: 0;
+}
+
+.catalog-details-button {
+  min-width: 9rem;
+  padding: .42rem .85rem;
+}
+
+.catalog-material-controls {
+  order: 5;
+  min-height: 0;
+  margin-top: .25rem;
+  padding: .65rem;
+  gap: .45rem;
+}
+
+.catalog-add-status {
+  min-height: .9rem;
+  line-height: 1.05;
+}
+
+@media (max-width: 991.98px) {
+  .catalog-product-body {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .catalog-product-body {
+    display: flex;
+    min-height: 0;
+    height: auto;
+  }
+
+  .catalog-product-title-area,
+  .catalog-product-specs {
+    height: auto;
+    min-height: 0;
+  }
+}
