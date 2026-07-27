@@ -2,10 +2,19 @@
   "use strict";
 
   const STORAGE_KEY = "shynetymeMaterialNotes";
+  const CATEGORY_ORDER = [
+    "LED Lighting",
+    "Controllers",
+    "Connectors and Wiring",
+    "Installation Supplies",
+    "Mobile Power",
+    "Power Supplies",
+    "Splitters and Boosters"
+  ];
   const products = Array.isArray(window.SHYNETYME_PRODUCTS) ? window.SHYNETYME_PRODUCTS : [];
 
   const catalogGrid = document.getElementById("catalogGrid");
-  const categoryFilters = document.getElementById("categoryFilters");
+  const categoryFilter = document.getElementById("categoryFilter");
   const catalogSearch = document.getElementById("catalogSearch");
   const catalogCount = document.getElementById("catalogCount");
 
@@ -21,7 +30,7 @@
   const modalAddMaterial = document.getElementById("modalAddMaterial");
   const modalMaterialStatus = document.getElementById("modalMaterialStatus");
 
-  let selectedCategory = "All";
+  let selectedCategory = "all";
   let activeProductId = null;
 
   function escapeHtml(value = "") {
@@ -39,6 +48,59 @@
       style: "currency",
       currency: "USD"
     }).format(value);
+  }
+
+  function productCategory(product) {
+    const name = String(product.name || "").toLowerCase();
+    const originalCategory = String(product.category || "").toLowerCase();
+
+    if (
+      name.includes("signal amplifier") ||
+      name.includes("signal repeater") ||
+      name.includes("data signal") ||
+      name.includes("splitter") ||
+      name.includes("booster") ||
+      name.includes("sp901e")
+    ) {
+      return "Splitters and Boosters";
+    }
+
+    if (
+      name.includes("aluminum channel") ||
+      name.includes("mounting channel") ||
+      name.includes("diffuser") ||
+      name.includes("mounting clip")
+    ) {
+      return "Installation Supplies";
+    }
+
+    if (
+      originalCategory.includes("connectors") ||
+      name.includes("connector") ||
+      name.includes("extension cable") ||
+      name.includes("extension wire") ||
+      name.includes("jst-sm")
+    ) {
+      return "Connectors and Wiring";
+    }
+
+    if (
+      name.includes("power bank") ||
+      name.includes("portable battery") ||
+      name.includes("mobile power")
+    ) {
+      return "Mobile Power";
+    }
+
+    if (originalCategory.includes("power supplies") || name.includes("power supply")) {
+      return "Power Supplies";
+    }
+
+    if (originalCategory.includes("controllers")) {
+      return "Controllers";
+    }
+
+    return "LED Lighting";
   }
 
   function preferredSpecs(product) {
@@ -67,10 +129,11 @@
     const query = catalogSearch.value.trim().toLowerCase();
 
     return products.filter((product) => {
-      const categoryMatch = selectedCategory === "All" || product.category === selectedCategory;
+      const displayCategory = productCategory(product);
+      const categoryMatch = selectedCategory === "all" || displayCategory === selectedCategory;
       const searchableText = [
         product.name,
-        product.category,
+        displayCategory,
         formatPrice(product.price),
         ...Object.values(product.specs || {}),
         ...(product.included || [])
@@ -80,23 +143,22 @@
     });
   }
 
-  function renderFilters() {
-    const categories = ["All", ...new Set(products.map((product) => product.category))];
+  function populateCategoryFilter() {
+    const actualCategories = [...new Set(products.map(productCategory))]
+      .sort((a, b) => {
+        const aIndex = CATEGORY_ORDER.indexOf(a);
+        const bIndex = CATEGORY_ORDER.indexOf(b);
+        if (aIndex === -1 && bIndex === -1) return a.localeCompare(b);
+        if (aIndex === -1) return 1;
+        if (bIndex === -1) return -1;
+        return aIndex - bIndex;
+      });
 
-    categoryFilters.innerHTML = categories.map((category) => {
-      const count = category === "All"
-        ? products.length
-        : products.filter((product) => product.category === category).length;
-
-      return `
-        <button
-          class="catalog-filter-button"
-          type="button"
-          data-category="${escapeHtml(category)}"
-          aria-pressed="${category === selectedCategory}">
-          ${escapeHtml(category)} · ${count}
-        </button>`;
-    }).join("");
+    categoryFilter.innerHTML = [
+      '<option value="all">All categories</option>',
+      ...actualCategories.map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`)
+    ].join("");
+    categoryFilter.value = selectedCategory;
   }
 
   function materialControls(product, context = "card") {
@@ -142,7 +204,7 @@
               loading="lazy">
           </div>
           <div class="catalog-product-body">
-            <p class="catalog-product-category">${escapeHtml(product.category)}</p>
+            <p class="catalog-product-category">${escapeHtml(productCategory(product))}</p>
             <div class="catalog-product-title-area">
               <h2 class="catalog-product-title">${escapeHtml(product.name)}</h2>
             </div>
@@ -188,7 +250,7 @@
     const entry = {
       id: product.id,
       name: product.name,
-      category: product.category,
+      category: productCategory(product),
       price: product.price,
       quantityNeeded: quantity,
       areaSqFt,
@@ -239,7 +301,7 @@
 
   function openProduct(product) {
     activeProductId = product.id;
-    productModalCategory.textContent = product.category;
+    productModalCategory.textContent = productCategory(product);
     productModalDescription.textContent = product.name;
     productModalImage.src = product.image;
     productModalImage.alt = product.name;
@@ -267,12 +329,8 @@
     productModalImage.classList.remove("is-zoomed");
   }
 
-  categoryFilters.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-category]");
-    if (!button) return;
-
-    selectedCategory = button.dataset.category;
-    renderFilters();
+  categoryFilter.addEventListener("change", () => {
+    selectedCategory = categoryFilter.value;
     renderCatalog();
   });
 
@@ -328,7 +386,7 @@
   });
 
   if (products.length) {
-    renderFilters();
+    populateCategoryFilter();
     renderCatalog();
   } else {
     catalogGrid.innerHTML = `
