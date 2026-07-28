@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-28T23:14:06.090Z",
-  "commitCount": 381,
+  "generatedAt": "2026-07-28T23:18:49.566Z",
+  "commitCount": 382,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1908,6 +1908,11 @@
       "sha": "18d73843b0350fb3439891359b236c3da6f8b867",
       "date": "2026-07-28T23:13:41Z",
       "message": "Align simulator navigation and mobile previews"
+    },
+    {
+      "sha": "52346a393ff3172942cf568d5b2f4d4695cf47fa",
+      "date": "2026-07-28T23:18:28Z",
+      "message": "Remove Home Sim intro block"
     }
   ]
 }
