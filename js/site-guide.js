@@ -110,11 +110,11 @@
 
     nav.innerHTML = `
       <div class="nav-item dropdown shynetyme-build-menu" data-shynetyme-build-menu="true">
-        <button class="nav-link dropdown-toggle${bikeActive || homeActive || autoActive ? " active" : ""}" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open Sim menu">Sim</button>
+        <button class="nav-link dropdown-toggle${bikeActive || homeActive || autoActive ? " active" : ""}" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open LED simulator menu">Sim</button>
         <ul class="dropdown-menu dropdown-menu-dark" aria-label="LED simulator pages">
-          <li><a class="dropdown-item${bikeActive ? " active" : ""}"${bikeActive ? " aria-current=\"page\"" : ""} href="${bikeBuilderUrl}">LED SIM BIKE</a></li>
-          <li><a class="dropdown-item${autoActive ? " active" : ""}"${autoActive ? " aria-current=\"page\"" : ""} href="${autoBuilderUrl}">LED SIM AUTO</a></li>
-          <li><a class="dropdown-item${homeActive ? " active" : ""}"${homeActive ? " aria-current=\"page\"" : ""} href="${homeBuilderUrl}">LED SIM HOME</a></li>
+          <li><a class="dropdown-item${bikeActive ? " active" : ""}"${bikeActive ? " aria-current=\"page\"" : ""} href="${bikeBuilderUrl}">LED BIKE SIM</a></li>
+          <li><a class="dropdown-item${homeActive ? " active" : ""}"${homeActive ? " aria-current=\"page\"" : ""} href="${homeBuilderUrl}">LED HOME SIM</a></li>
+          <li><a class="dropdown-item${autoActive ? " active" : ""}"${autoActive ? " aria-current=\"page\"" : ""} href="${autoBuilderUrl}">LED AUTO SIM</a></li>
         </ul>
       </div>
       <a class="nav-link${catalogActive ? " active" : ""}"${catalogActive ? " aria-current=\"page\"" : ""} href="${catalogUrl}">Catalog</a>
@@ -130,9 +130,34 @@
       </div>`;
   };
 
+  const installBikePreviewRules = () => {
+    if (getPageKey() !== "build-my-bike.html") return;
+    const firstBody = document.querySelector("#bikeSetup .accordion-body");
+    if (!firstBody || firstBody.querySelector(".home-preview-rules")) return;
+
+    const rules = document.createElement("div");
+    rules.className = "home-preview-rules mt-3";
+    rules.innerHTML = `<div><span class="home-legend home-legend--on" aria-hidden="true"></span>Selected lighting zone</div><div><span class="home-legend home-legend--off" aria-hidden="true"></span>Available but not selected</div><p class="mb-0">Use all four views before copying the summary so the front, rear and yard details are represented.</p>`;
+    firstBody.appendChild(rules);
+
+    if (!document.getElementById("bikePreviewRulesStyles")) {
+      const style = document.createElement("style");
+      style.id = "bikePreviewRulesStyles";
+      style.textContent = `
+        #bikeSetup .home-preview-rules{display:grid;gap:.48rem;padding:.8rem;border:1px solid rgba(155,131,255,.24);border-radius:.8rem;color:#dceaf8;background:rgba(3,9,24,.55);font-size:.84rem}
+        #bikeSetup .home-preview-rules>div{display:flex;align-items:center;gap:.5rem}
+        #bikeSetup .home-preview-rules p{color:#aebed5}
+        #bikeSetup .home-legend{display:inline-block;flex:0 0 auto;width:.85rem;height:.85rem;border-radius:50%}
+        #bikeSetup .home-legend--on{background:linear-gradient(135deg,#ff5ab9,#ffe76a,#31e6ff);box-shadow:0 0 8px rgba(49,230,255,.8)}
+        #bikeSetup .home-legend--off{background:#ff7189;opacity:.6}`;
+      document.head.appendChild(style);
+    }
+  };
+
   document.documentElement.lang = document.documentElement.lang || "en";
   sharedStyles.forEach(loadStyle);
   installBrandLockup();
   installNavigation();
+  installBikePreviewRules();
   loadScript("js/site-chuck.js", "data-shynetyme-site-chuck-script", "ShynetymeChuck");
 })();
