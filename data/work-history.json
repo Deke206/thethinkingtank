@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-28T22:57:58.484Z",
-  "commitCount": 380,
+  "generatedAt": "2026-07-28T23:14:06.090Z",
+  "commitCount": 381,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1903,6 +1903,11 @@
       "sha": "a72dee8cf46ea640ea1b6aca6bd4739b968a9946",
       "date": "2026-07-28T22:57:37Z",
       "message": "Simplify bike preview and make Budget a dropdown"
+    },
+    {
+      "sha": "18d73843b0350fb3439891359b236c3da6f8b867",
+      "date": "2026-07-28T23:13:41Z",
+      "message": "Align simulator navigation and mobile previews"
     }
   ]
 }
