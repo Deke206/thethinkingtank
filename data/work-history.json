@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-28T22:51:05.276Z",
-  "commitCount": 379,
+  "generatedAt": "2026-07-28T22:57:58.484Z",
+  "commitCount": 380,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1898,6 +1898,11 @@
       "sha": "e340f09707a21a6c942605b463d12f1a64c8049c",
       "date": "2026-07-28T22:50:50Z",
       "message": "Remove bike preview toolbar and instructions panel"
+    },
+    {
+      "sha": "a72dee8cf46ea640ea1b6aca6bd4739b968a9946",
+      "date": "2026-07-28T22:57:37Z",
+      "message": "Simplify bike preview and make Budget a dropdown"
     }
   ]
 }
