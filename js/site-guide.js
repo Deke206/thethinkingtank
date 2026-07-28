@@ -8,7 +8,7 @@
     ? new URL(document.currentScript.src, window.location.href)
     : new URL("js/site-guide.js", window.location.href);
   const siteRoot = new URL("../", scriptUrl);
-  const sharedRevision = scriptUrl.searchParams.get("v") || "shared-ui-12";
+  const sharedRevision = scriptUrl.searchParams.get("v") || "shared-ui-13";
   const withRevision = (path) => {
     const url = new URL(path, siteRoot);
     url.searchParams.set("v", sharedRevision);
@@ -130,16 +130,9 @@
       </div>`;
   };
 
-  const loadBikeBuilder = () => {
-    if (!document.getElementById("bikeBuilderForm")) return;
-    loadScript("js/bike-builder-upgrade.js", "data-bike-builder-upgrade", "ShynetymeBikeBuilderRenderer")
-      .finally(() => loadScript("js/bike-builder-size-hotfix.js?position=adult-transform-v3", "data-bike-builder-size-hotfix", "ShynetymeBikeBuilderSizeHotfix"));
-  };
-
   document.documentElement.lang = document.documentElement.lang || "en";
   sharedStyles.forEach(loadStyle);
   installBrandLockup();
   installNavigation();
-  loadBikeBuilder();
   loadScript("js/site-chuck.js", "data-shynetyme-site-chuck-script", "ShynetymeChuck");
 })();
