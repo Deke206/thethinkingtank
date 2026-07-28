@@ -2,11 +2,8 @@
   "use strict";
 
   const NOTE_TEXT = "Please submit more than one builder of the selected type of bike you would like to have LEDs installed on.";
-  const SMALL_FRAME_BASELINES = {
-    toddler: 632,
-    preschool: 632,
-    youth: 632
-  };
+  const SMALL_FRAME_KEYS = new Set(["toddler", "preschool", "youth"]);
+  const ADULT_VIEW_BOTTOM = 632;
 
   let installed = false;
   let scheduledFrame = 0;
@@ -72,7 +69,7 @@
     cardBody.appendChild(note);
   };
 
-  const liftSmallPrimaryFrames = () => {
+  const centerSmallPrimaryFrames = () => {
     const data = window.ShynetymeBikeBuilderData;
     const renderer = window.ShynetymeBikeBuilderRenderer;
     const frameSelect = document.getElementById("frameSize");
@@ -82,14 +79,20 @@
     if (!data || !renderer || !frameSelect || !bodySelect || !mainBike) return;
 
     const sizeKey = frameSelect.value;
-    const bottomY = SMALL_FRAME_BASELINES[sizeKey];
-    if (!bottomY) return;
+    if (!SMALL_FRAME_KEYS.has(sizeKey)) return;
 
     const body = data.bikeBodies[bodySelect.value] || data.bikeBodies.comfort;
     const size = data.sizeConfig[sizeKey];
-    if (!body || !size) return;
+    const adultSize = data.sizeConfig.adult;
+    if (!body || !size || !adultSize) return;
 
-    const transform = renderer.fitTransform(body, size.scale, 450, 825, bottomY);
+    const adultTransform = renderer.fitTransform(body, adultSize.scale, 450, 825, ADULT_VIEW_BOTTOM);
+    const transform = renderer.fitTransform(body, size.scale, 450, 825, ADULT_VIEW_BOTTOM);
+    const artworkCenterY = (body.bounds.minY + body.bounds.maxY) / 2;
+    const adultCenterY = adultTransform.y + artworkCenterY * adultTransform.scale;
+
+    transform.y = Math.round(adultCenterY - artworkCenterY * transform.scale);
+
     mainBike.setAttribute(
       "transform",
       `translate(${transform.x} ${transform.y}) scale(${transform.scale})`
@@ -111,7 +114,7 @@
   const applyFixes = () => {
     removeSecondaryBikeControls();
     addPreviewFooterNote();
-    liftSmallPrimaryFrames();
+    centerSmallPrimaryFrames();
   };
 
   const scheduleFixes = () => {
