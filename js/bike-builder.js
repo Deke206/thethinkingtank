@@ -6,16 +6,12 @@
 
   const summaryList = document.getElementById("buildSummary");
   const budgetSelect = document.getElementById("budget");
-  const budgetBadge = document.getElementById("budgetBadge");
   const copyStatus = document.getElementById("copyStatus");
   const mainBike = document.getElementById("mainBikeGroup");
   const kidBike = document.getElementById("kidBikeGroup");
   const rearPanel = document.getElementById("rearViewPanel");
   const appIcons = document.getElementById("appControlIcons");
-  const sizeLabel = document.getElementById("sizeLabel");
   const previewCard = document.querySelector(".preview-card");
-  const previewStage = document.querySelector(".bike-stage");
-  const previewInfo = previewCard?.querySelector(".card-body");
 
   const touched = new Set();
   let currentView = "side";
@@ -195,7 +191,6 @@
     helmetLights: "helmetOptions"
   };
 
-  const idFor = (prefix, base) => prefix ? `${prefix}${base.charAt(0).toUpperCase()}${base.slice(1)}` : base;
   const pathsMarkup = (paths) => paths.map((d) => `<path d="${d}"/>`).join("");
 
   const wheelMarkup = (wheel) => {
@@ -276,7 +271,7 @@
 
   const installLayout = () => {
     document.getElementById("addKidBikeYes")?.closest(".question-row")?.remove();
-    document.getElementById("kidBikeGroup")?.setAttribute("hidden", "");
+    kidBike?.setAttribute("hidden", "");
 
     const setupButton = document.querySelector('[data-bs-target="#bikeSetup"]');
     if (setupButton) setupButton.textContent = "1. Bicycle size";
@@ -298,10 +293,24 @@
       accordion.appendChild(section);
     }
 
-    if (previewInfo && previewStage) {
-      previewCard.querySelector(".preview-toolbar")?.after(previewInfo);
-      previewInfo.classList.add("bike-preview-instructions");
-      previewInfo.innerHTML = `<div class="preview-rules"><strong class="preview-rules__title">Start here</strong><div class="preview-rules__item"><span class="preview-step-number">1</span><span>Open <strong>Bicycle size</strong> and choose the closest size and body style.</span></div><div class="preview-rules__item"><span class="preview-step-number">2</span><span>Open each accordion section and choose the lighting, safety and equipment options wanted.</span></div><div class="preview-rules__item"><span class="preview-step-number">3</span><span>Watch this live view update. The build summary stays empty until a selection is made.</span></div><p class="preview-rules__note">The diagram is a planning guide. Final strip lengths, power and mounting locations are confirmed from actual bicycle photos and measurements.</p></div>`;
+    previewCard?.querySelector(".preview-toolbar")?.remove();
+    previewCard?.querySelector(".card-body.border-top")?.remove();
+    previewCard?.querySelector(".bike-preview-instructions")?.remove();
+
+    const summaryHeader = summaryList?.closest(".summary-box")?.querySelector(".d-flex");
+    const oldBudgetBadge = document.getElementById("budgetBadge");
+    const budgetRow = budgetSelect?.closest(".question-row");
+    if (summaryHeader && budgetSelect && oldBudgetBadge) {
+      const budgetField = document.createElement("label");
+      budgetField.className = "budget-select-field";
+      budgetField.setAttribute("for", "budgetBadge");
+      budgetField.innerHTML = '<span class="budget-select-label">Budget</span>';
+      budgetSelect.id = "budgetBadge";
+      budgetSelect.name = "Budget";
+      budgetSelect.className = "form-select form-select-sm budget-select";
+      budgetField.appendChild(budgetSelect);
+      oldBudgetBadge.replaceWith(budgetField);
+      budgetRow?.remove();
     }
 
     if (!document.getElementById("bikeBuilderIntegratedStyles")) {
@@ -309,14 +318,13 @@
       style.id = "bikeBuilderIntegratedStyles";
       style.textContent = `
         .preview-card{position:sticky!important;top:5.1rem!important;z-index:20;align-self:start}
-        .bike-preview-instructions{padding:.75rem .9rem!important;background:#07172c}
-        .bike-preview-instructions .preview-rules{margin:0;padding:.75rem}
-        .preview-step-number{display:inline-grid;place-items:center;flex:0 0 1.35rem;width:1.35rem;height:1.35rem;border-radius:50%;background:#31e6ff;color:#06152f;font-weight:900}
         .preview-multi-build-note{display:none!important}
         #buildSummary:empty{display:none}
         .summary-box.is-empty #copyBuild{opacity:.55}
-        @media(max-width:991.98px){.preview-card{order:-1;top:4.15rem!important;max-height:calc(100vh - 4.35rem);overflow:auto}.bike-stage,.bike-stage svg{min-height:300px!important;height:300px!important}.bike-preview-instructions .preview-rules__item{font-size:.8rem}.bike-preview-instructions .preview-rules__note{display:none}}
-        @media(max-width:575.98px){.bike-stage,.bike-stage svg{min-height:255px!important;height:255px!important}.preview-toolbar{padding:.65rem .8rem!important}.bike-preview-instructions{padding:.55rem .7rem!important}.bike-preview-instructions .preview-rules{padding:.55rem}.bike-preview-instructions .preview-rules__title{font-size:.85rem}.bike-preview-instructions .preview-rules__item{margin-top:.25rem;line-height:1.25}}
+        .budget-select-field{display:flex;align-items:center;gap:.5rem;margin:0;color:#fff;font-weight:800;white-space:nowrap}
+        .budget-select{min-width:118px;width:auto;background-color:#fff;color:#111}
+        @media(max-width:991.98px){.preview-card{order:-1;top:4.15rem!important;max-height:calc(100vh - 4.35rem);overflow:auto}.bike-stage,.bike-stage svg{min-height:300px!important;height:300px!important}}
+        @media(max-width:575.98px){.bike-stage,.bike-stage svg{min-height:255px!important;height:255px!important}.budget-select-field{width:100%;justify-content:space-between}.budget-select{flex:0 0 125px}}
       `;
       document.head.appendChild(style);
     }
@@ -334,7 +342,7 @@
       budgetSelect.replaceChildren();
       const placeholder = document.createElement("option");
       placeholder.value = "";
-      placeholder.textContent = "Select budget";
+      placeholder.textContent = "Select";
       placeholder.selected = true;
       budgetSelect.appendChild(placeholder);
       for (let amount = 50; amount <= 500; amount += 50) {
@@ -343,11 +351,7 @@
         option.textContent = `$${amount}`;
         budgetSelect.appendChild(option);
       }
-      const note = budgetSelect.parentElement?.querySelector(".question-note");
-      if (note) note.textContent = "Budget options run from $50 through $500 in $50 increments.";
     }
-
-    if (budgetBadge) budgetBadge.textContent = "Budget: Not selected";
   };
 
   const updateConditionalOptions = () => Object.entries(conditionalMap).forEach(([name,id]) => {
@@ -372,7 +376,6 @@
     const wheelBottom = Math.max(body.rearWheel.y + body.rearWheel.r, body.frontWheel.y + body.frontWheel.r);
     const iconScale = Math.max(.58, Math.min(.92, transform.scale * .85));
     appIcons?.setAttribute("transform", `translate(${Math.round(transform.x + gapCenter * transform.scale - 72 * iconScale)} ${Math.round(transform.y + wheelBottom * transform.scale - 43 * iconScale)}) scale(${iconScale})`);
-    if (sizeLabel) sizeLabel.textContent = `${sizeConfig[sizeKey].label} · ${bikeStyleLabels[styleKey]}`;
   };
 
   const updateVisualStates = () => {
@@ -466,7 +469,6 @@
     if (summaryList) summaryList.innerHTML = lines.map((line) => `<li>${line}</li>`).join("");
     const summaryBox = summaryList?.closest(".summary-box");
     summaryBox?.classList.toggle("is-empty",lines.length === 0);
-    if (budgetBadge) budgetBadge.textContent = budgetSelect?.value ? `Budget: $${budgetSelect.value}` : "Budget: Not selected";
   };
 
   const sync = () => {
@@ -480,7 +482,7 @@
     if (target.name && yesNoLabels[target.name]) return target.name;
     if (target.id === "frameSize") return "frameSize";
     if (target.id === "bikeBodyStyle") return "bikeBodyStyle";
-    if (target.id === "budget") return "budget";
+    if (target.id === "budgetBadge") return "budget";
     if (target.classList.contains("app-control-option")) return "appControl";
     if (target.classList.contains("helmet-option")) return "helmetLights";
     if (target.classList.contains("equipment-checkbox")) return "equipment";
