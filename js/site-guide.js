@@ -62,6 +62,7 @@
   const getPageKey = () => (window.location.pathname.split("/").filter(Boolean).pop() || "index.html").toLowerCase();
   const bikeBuilderUrl = new URL("build-my-bike.html", siteRoot).href;
   const homeBuilderUrl = new URL("build-my-home.html", siteRoot).href;
+  const autoBuilderUrl = new URL("sim/ledsimauto.html", siteRoot).href;
   const catalogUrl = new URL("led-catalog.html", siteRoot).href;
   const expoUrl = new URL("LEDexpo.html", siteRoot).href;
   const aboutDekeUrl = new URL("aboutme.html", siteRoot).href;
@@ -101,6 +102,7 @@
     const page = getPageKey();
     const bikeActive = page === "build-my-bike.html";
     const homeActive = page === "build-my-home.html";
+    const autoActive = page === "ledsimauto.html";
     const catalogActive = page === "led-catalog.html";
     const expoActive = page === "ledexpo.html";
     const aboutActive = page === "aboutme.html";
@@ -108,9 +110,10 @@
 
     nav.innerHTML = `
       <div class="nav-item dropdown shynetyme-build-menu" data-shynetyme-build-menu="true">
-        <button class="nav-link dropdown-toggle${bikeActive || homeActive ? " active" : ""}" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open Sim menu">Sim</button>
+        <button class="nav-link dropdown-toggle${bikeActive || homeActive || autoActive ? " active" : ""}" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open Sim menu">Sim</button>
         <ul class="dropdown-menu dropdown-menu-dark" aria-label="LED simulator pages">
           <li><a class="dropdown-item${bikeActive ? " active" : ""}"${bikeActive ? " aria-current=\"page\"" : ""} href="${bikeBuilderUrl}">LED SIM BIKE</a></li>
+          <li><a class="dropdown-item${autoActive ? " active" : ""}"${autoActive ? " aria-current=\"page\"" : ""} href="${autoBuilderUrl}">LED SIM AUTO</a></li>
           <li><a class="dropdown-item${homeActive ? " active" : ""}"${homeActive ? " aria-current=\"page\"" : ""} href="${homeBuilderUrl}">LED SIM HOME</a></li>
         </ul>
       </div>
