@@ -130,7 +130,7 @@
   const loadBikeBuilder = () => {
     if (!document.getElementById("bikeBuilderForm")) return;
     loadScript("js/bike-builder-upgrade.js", "data-bike-builder-upgrade", "ShynetymeBikeBuilderRenderer")
-      .finally(() => loadScript("js/bike-builder-size-hotfix.js", "data-bike-builder-size-hotfix", "ShynetymeBikeBuilderSizeHotfix"));
+      .finally(() => loadScript("js/bike-builder-size-hotfix.js?position=adult-transform-v3", "data-bike-builder-size-hotfix", "ShynetymeBikeBuilderSizeHotfix"));
   };
 
   document.documentElement.lang = document.documentElement.lang || "en";

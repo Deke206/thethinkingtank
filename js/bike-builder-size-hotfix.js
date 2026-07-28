@@ -69,7 +69,7 @@
     cardBody.appendChild(note);
   };
 
-  const centerSmallPrimaryFrames = () => {
+  const copyAdultPrimaryTransform = () => {
     const data = window.ShynetymeBikeBuilderData;
     const renderer = window.ShynetymeBikeBuilderRenderer;
     const frameSelect = document.getElementById("frameSize");
@@ -78,24 +78,16 @@
     const appIcons = document.getElementById("appControlIcons");
     if (!data || !renderer || !frameSelect || !bodySelect || !mainBike) return;
 
-    const sizeKey = frameSelect.value;
-    if (!SMALL_FRAME_KEYS.has(sizeKey)) return;
+    if (!SMALL_FRAME_KEYS.has(frameSelect.value)) return;
 
     const body = data.bikeBodies[bodySelect.value] || data.bikeBodies.comfort;
-    const size = data.sizeConfig[sizeKey];
     const adultSize = data.sizeConfig.adult;
-    if (!body || !size || !adultSize) return;
+    if (!body || !adultSize) return;
 
     const adultTransform = renderer.fitTransform(body, adultSize.scale, 450, 825, ADULT_VIEW_BOTTOM);
-    const transform = renderer.fitTransform(body, size.scale, 450, 825, ADULT_VIEW_BOTTOM);
-    const artworkCenterY = (body.bounds.minY + body.bounds.maxY) / 2;
-    const adultCenterY = adultTransform.y + artworkCenterY * adultTransform.scale;
-
-    transform.y = Math.round(adultCenterY - artworkCenterY * transform.scale);
-
     mainBike.setAttribute(
       "transform",
-      `translate(${transform.x} ${transform.y}) scale(${transform.scale})`
+      `translate(${adultTransform.x} ${adultTransform.y}) scale(${adultTransform.scale})`
     );
 
     if (appIcons) {
@@ -104,9 +96,9 @@
         body.rearWheel.y + body.rearWheel.r,
         body.frontWheel.y + body.frontWheel.r
       );
-      const iconScale = Math.max(.58, Math.min(.92, transform.scale * .85));
-      const iconX = Math.round(transform.x + gapCenter * transform.scale - 72 * iconScale);
-      const iconY = Math.round(transform.y + wheelBottom * transform.scale - 43 * iconScale);
+      const iconScale = Math.max(.58, Math.min(.92, adultTransform.scale * .85));
+      const iconX = Math.round(adultTransform.x + gapCenter * adultTransform.scale - 72 * iconScale);
+      const iconY = Math.round(adultTransform.y + wheelBottom * adultTransform.scale - 43 * iconScale);
       appIcons.setAttribute("transform", `translate(${iconX} ${iconY}) scale(${iconScale})`);
     }
   };
@@ -114,7 +106,7 @@
   const applyFixes = () => {
     removeSecondaryBikeControls();
     addPreviewFooterNote();
-    centerSmallPrimaryFrames();
+    copyAdultPrimaryTransform();
   };
 
   const scheduleFixes = () => {
