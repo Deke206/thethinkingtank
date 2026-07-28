@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-28T23:22:40.026Z",
-  "commitCount": 383,
+  "generatedAt": "2026-07-28T23:29:28.874Z",
+  "commitCount": 384,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1918,6 +1918,11 @@
       "sha": "a4ef5609e2db352e6d47746b87cc2c6e0b24de0a",
       "date": "2026-07-28T23:22:24Z",
       "message": "Move Home Sim preview rules into first accordion"
+    },
+    {
+      "sha": "f7bf11c7280ff0c965abee3881495d26b1d056c8",
+      "date": "2026-07-28T23:29:08Z",
+      "message": "Remove Home Sim preview disclaimer"
     }
   ]
 }
