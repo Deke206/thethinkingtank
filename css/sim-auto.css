@@ -1,6 +1,285 @@
-.d-none{display:none!important}.modal{display:none}
-:root{--sim-blue:#0878ff;--sim-blue-deep:#0062df;--sim-ink:#0b1830;--sim-muted:#61708a;--sim-line:#d9e1ec;--sim-surface:#fff;--sim-soft:#f5f8fc}
-*{box-sizing:border-box}.sim-auto-page{margin:0;background:#f7f9fc;color:var(--sim-ink);font-family:Inter,system-ui,sans-serif}.sim-auto-page footer{background:#fff}.sim-auto-main{width:min(1600px,100%);margin:auto;padding:0 20px 24px}.sim-page-bar{height:84px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--sim-line);background:#fff;margin:0 -20px 22px;padding:0 max(28px,calc((100vw - 1600px)/2 + 28px));box-shadow:0 3px 14px rgba(25,44,73,.06)}.sim-page-title{display:flex;align-items:center;gap:24px}.sim-page-title strong{font:800 clamp(1.45rem,2.6vw,2.45rem)/1 Oxanium,sans-serif}.sim-page-title span{height:34px;width:1px;background:#d5dbe4}.sim-page-title p{margin:0;color:#5c6980;font-size:1.05rem}.sim-help-button,.how-button{border:1px solid #d5deea;background:#fff;color:#40516b;border-radius:10px;padding:.65rem 1rem;font-weight:600}.sim-help-button span{display:inline-grid;place-items:center;width:22px;height:22px;border:1px solid currentColor;border-radius:50%;margin-right:.35rem}.sim-workspace{display:grid;grid-template-columns:minmax(0,1fr) 390px;gap:20px;align-items:stretch}.sim-stage-panel,.selected-panel{background:#fff;border:1px solid #e0e5ed;border-radius:18px;box-shadow:0 14px 35px rgba(44,62,89,.08)}.sim-stage-panel{padding:26px}.sim-panel-heading,.selected-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}.sim-panel-heading h1,.selected-heading h2{font:800 1.4rem/1.1 Oxanium,sans-serif;margin:0;text-transform:uppercase}.selected-heading h2{text-transform:none;font-family:Inter,sans-serif}.sim-panel-heading p{margin:.35rem 0 0;color:var(--sim-muted)}.how-button{white-space:nowrap}.vehicle-view{margin-top:4px}.car-canvas{position:relative;width:100%;overflow:hidden;border-radius:12px;background:radial-gradient(circle at 50% 45%,#fff 0,#f8fbff 62%,#eef3f8 100%);isolation:isolate}.exterior-canvas{aspect-ratio:860/570;padding-top:70px}.interior-canvas{aspect-ratio:970/680;padding-top:55px}.vehicle-base,.zone-canvas{position:absolute;left:0;width:100%;height:auto;display:block;user-select:none;pointer-events:none}.exterior-canvas .vehicle-base,.exterior-canvas .zone-canvas{top:70px}.interior-canvas .vehicle-base,.interior-canvas .zone-canvas{top:55px}.vehicle-base{z-index:1}.zone-canvas{z-index:2}.zone-hit{position:absolute;left:var(--x);top:calc(var(--y) + 70px);width:var(--w);height:var(--h);z-index:4;border:0;background:transparent;border-radius:16px;cursor:pointer}.interior-canvas .zone-hit{top:calc(var(--y) + 55px)}.zone-hit:focus-visible{outline:3px solid #12a8ff;outline-offset:2px;background:rgba(8,120,255,.08)}.zone-callout{position:absolute;z-index:6;display:flex;align-items:center;gap:9px;border:0;background:transparent;color:#132039;font-size:.9rem;text-align:left;padding:4px;cursor:pointer}.zone-callout b{display:grid;place-items:center;min-width:26px;height:26px;border-radius:50%;background:#dbe8f7;color:#165996;font-size:.82rem;box-shadow:0 2px 7px rgba(0,70,160,.18)}.zone-callout.selected b{background:var(--sim-blue);color:#fff}.zone-callout.selected span{font-weight:600}.zone-callout::after{content:"";position:absolute;background:#cbd4df;z-index:-1}.callout-grille{left:2%;top:35%}.callout-grille::after{width:90px;height:1px;left:34px;top:28px;transform:rotate(72deg);transform-origin:left}.callout-mirrors{left:37%;top:14%}.callout-mirrors::after{width:72px;height:1px;left:28px;top:34px;transform:rotate(58deg);transform-origin:left}.callout-trunk{right:4%;top:17%}.callout-trunk::after{width:68px;height:1px;right:55px;top:34px;transform:rotate(93deg);transform-origin:right}.callout-front-bumper{left:0;bottom:5%}.callout-front-bumper::after{width:80px;height:1px;left:38px;top:-12px;transform:rotate(-77deg);transform-origin:left}.callout-front-wheel{left:22%;bottom:1%}.callout-front-wheel::after{width:82px;height:1px;left:42px;top:-17px;transform:rotate(-78deg);transform-origin:left}.callout-rocker{left:47%;bottom:0}.callout-rocker::after{width:58px;height:1px;left:20px;top:-9px;transform:rotate(-90deg);transform-origin:left}.callout-rear-wheel{right:10%;bottom:1%}.callout-rear-wheel::after{width:70px;height:1px;right:45px;top:-10px;transform:rotate(-85deg);transform-origin:right}.callout-rear-bumper{right:0;bottom:14%}.callout-rear-bumper::after{width:48px;height:1px;right:65px;top:10px}.callout-underglow{left:59%;bottom:-1%}.callout-underglow::after{width:60px;height:1px;left:28px;top:-8px;transform:rotate(-90deg);transform-origin:left}.int-dashboard{left:3%;top:5%}.int-console{left:31%;top:12%}.int-front-door{right:2%;top:10%}.int-front-feet{left:1%;top:50%}.int-rear-door{right:1%;top:42%}.int-rear-feet{left:41%;bottom:4%}.int-under-seat{left:13%;bottom:1%}.int-rear-deck{right:1%;bottom:25%}.int-trunk{right:1%;bottom:2%}.sim-tip{display:flex;align-items:center;gap:10px;border:1px solid #d5e5f6;border-radius:12px;background:#f4f9ff;padding:14px 17px;color:#415c7c;margin-top:8px}.sim-tip span{font-size:1.25rem}.selected-panel{padding:25px 22px;display:flex;flex-direction:column;min-height:760px}.selected-heading span{font-weight:700;color:var(--sim-blue);font-size:1.1rem}.selected-list{display:flex;flex-direction:column;gap:9px;margin:20px 0;overflow:auto;max-height:530px;padding-right:2px}.empty-selection{margin:0;border:1px dashed #cbd7e5;border-radius:12px;background:#f8fafc;color:#6f7c8f;padding:16px;text-align:center}.selected-item{display:grid;grid-template-columns:28px 28px 1fr 30px;align-items:center;gap:5px;background:#f2f7fd;border:1px solid #dbe8f6;border-radius:11px;padding:8px 9px}.selected-check,.selected-number{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--sim-blue);color:#fff;font-weight:700;font-size:.8rem}.selected-number{background:transparent;color:#086ee4;font-size:1rem}.selected-remove{border:1px solid #d9e2ed;background:#fff;border-radius:50%;width:27px;height:27px;color:#52657c;line-height:1}.view-switch{margin-top:auto;display:grid;grid-template-columns:1fr 1fr;border:1px solid #d2dbe6;border-radius:11px;overflow:hidden}.view-switch button{border:0;background:#fff;color:#526178;font-weight:700;padding:13px 8px}.view-switch button.active{color:#fff;background:linear-gradient(135deg,#0a7fff,#0067e7)}.sim-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.control-button,.next-button{border:1px solid #d8e0e9;background:#fff;border-radius:10px;padding:11px;font-weight:700;color:#27364e}.next-button{grid-column:1/-1;border:0;color:#fff;font-size:1.05rem;background:linear-gradient(135deg,#0a7fff,#0063e3);box-shadow:0 7px 17px rgba(0,103,227,.28)}.sim-assurances{display:grid;grid-template-columns:repeat(3,1fr);background:#fff;border:1px solid #e0e5ed;border-radius:15px;margin-top:20px;padding:18px;box-shadow:0 10px 26px rgba(44,62,89,.06)}.sim-assurances div{display:grid;grid-template-columns:46px 1fr;column-gap:12px;align-items:center;padding:4px 22px;border-right:1px solid #e4e9ef}.sim-assurances div:last-child{border-right:0}.sim-assurances span{grid-row:1/3;display:grid;place-items:center;width:36px;height:36px;border:2px solid var(--sim-blue);border-radius:50%;color:var(--sim-blue);font-size:1.15rem}.sim-assurances small{color:#69768a}.preview-mode .zone-callout{opacity:0;pointer-events:none}.preview-mode .zone-hit{pointer-events:none}.preview-mode .sim-tip{opacity:.35}
-@media(max-width:1100px){.sim-workspace{grid-template-columns:1fr 330px}.selected-panel{min-height:680px}.zone-callout{font-size:.77rem}.zone-callout b{min-width:23px;height:23px}}
-@media(max-width:900px){.sim-auto-main{padding-inline:12px}.sim-page-bar{margin-inline:-12px;padding-inline:18px}.sim-page-title p,.sim-page-title span{display:none}.sim-workspace{grid-template-columns:1fr}.selected-panel{min-height:auto}.selected-list{max-height:none}.sim-assurances{grid-template-columns:1fr}.sim-assurances div{border-right:0;border-bottom:1px solid #e4e9ef}.sim-assurances div:last-child{border-bottom:0}.zone-callout span{display:none}.zone-callout::after{display:none}.zone-callout b{min-width:30px;height:30px}}
-@media(max-width:575px){.sim-page-bar{height:68px}.sim-stage-panel,.selected-panel{border-radius:13px;padding:15px}.sim-panel-heading{align-items:center}.sim-panel-heading p{font-size:.82rem}.how-button{padding:.48rem .65rem;font-size:.78rem}.exterior-canvas{padding-top:40px}.interior-canvas{padding-top:35px}.exterior-canvas .vehicle-base,.exterior-canvas .zone-canvas{top:40px}.interior-canvas .vehicle-base,.interior-canvas .zone-canvas{top:35px}.zone-hit{top:calc(var(--y) + 40px)}.interior-canvas .zone-hit{top:calc(var(--y) + 35px)}.zone-callout{transform:scale(.82)}.selected-item{grid-template-columns:24px 22px 1fr 28px}.sim-assurances{padding:10px}.sim-assurances div{padding:10px 5px}}
+:root {
+  --sim-blue: #0878ff;
+  --sim-blue-deep: #005dd9;
+  --sim-cyan: #5ce1e6;
+  --sim-ink: #0b1830;
+  --sim-muted: #61708a;
+  --sim-line: #dbe3ed;
+  --sim-panel: #ffffff;
+  --sim-soft: #f4f7fb;
+  --sim-selected: rgba(8, 120, 255, 0.28);
+  --sim-available: rgba(8, 120, 255, 0.16);
+}
+
+.sim-auto-page {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--sim-ink);
+  background: #f6f8fb;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+.sim-auto-page footer { background: #fff; }
+.sim-auto-main { width: min(1640px, 100%); margin: 0 auto; padding: 0 20px 28px; }
+
+.sim-page-bar {
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 18px 28px;
+  margin: 0 -20px 20px;
+  background: #fff;
+  border-bottom: 1px solid var(--sim-line);
+  box-shadow: 0 3px 14px rgba(25, 44, 73, 0.06);
+}
+
+.sim-eyebrow,
+.sim-zone-kicker {
+  margin: 0 0 6px;
+  color: var(--sim-blue);
+  font: 800 0.76rem/1.2 Oxanium, sans-serif;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.sim-page-title { display: flex; align-items: center; gap: 22px; }
+.sim-page-title strong { font: 800 clamp(1.55rem, 3vw, 2.6rem)/1 Oxanium, sans-serif; }
+.sim-page-title > span { width: 1px; height: 35px; background: #d4dce6; }
+.sim-page-title p { margin: 0; color: var(--sim-muted); font-size: 1.04rem; }
+
+.sim-help-button,
+.sim-clear-button,
+.sim-preview-button,
+.sim-next-button,
+.sim-tab,
+.sim-zone-option {
+  font: inherit;
+  cursor: pointer;
+}
+
+.sim-help-button {
+  border: 1px solid #d5deea;
+  background: #fff;
+  color: #40516b;
+  border-radius: 11px;
+  padding: 0.68rem 1rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.sim-help-button span {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  margin-right: 0.35rem;
+}
+
+.sim-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.sim-toolbar p { margin: 0; color: var(--sim-muted); }
+.sim-toolbar p strong { color: var(--sim-blue); }
+
+.sim-tabs {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(130px, 1fr));
+  gap: 4px;
+  padding: 5px;
+  background: #eaf0f7;
+  border: 1px solid #d8e1ec;
+  border-radius: 13px;
+}
+
+.sim-tab {
+  border: 0;
+  border-radius: 9px;
+  padding: 10px 18px;
+  color: #53627a;
+  background: transparent;
+  font-weight: 800;
+}
+
+.sim-tab.is-active {
+  color: #fff;
+  background: linear-gradient(135deg, var(--sim-blue), var(--sim-blue-deep));
+  box-shadow: 0 6px 15px rgba(8, 120, 255, 0.22);
+}
+
+.sim-selector-layout {
+  display: grid;
+  grid-template-columns: minmax(270px, 340px) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.sim-zone-panel,
+.sim-vehicle-card,
+.sim-tip,
+.sim-assurances {
+  background: var(--sim-panel);
+  border: 1px solid #e0e6ee;
+  box-shadow: 0 14px 34px rgba(44, 62, 89, 0.07);
+}
+
+.sim-zone-panel {
+  position: sticky;
+  top: 92px;
+  max-height: calc(100vh - 112px);
+  overflow: auto;
+  border-radius: 18px;
+  padding: 20px;
+}
+
+.sim-zone-panel-heading { display: flex; justify-content: space-between; gap: 14px; align-items: start; }
+.sim-zone-panel h1 { margin: 0; font: 800 1.25rem/1.15 Oxanium, sans-serif; }
+.sim-zone-instruction { color: var(--sim-muted); margin: 10px 0 16px; line-height: 1.45; font-size: 0.9rem; }
+
+.sim-clear-button {
+  border: 1px solid #d8e1ec;
+  border-radius: 9px;
+  background: #fff;
+  color: #53627a;
+  padding: 7px 10px;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.sim-zone-buttons { display: grid; gap: 8px; }
+.sim-zone-option {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 25px 1fr;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 11px;
+  border: 1px solid #dce5ef;
+  border-radius: 11px;
+  background: #f7f9fc;
+  color: #516079;
+  text-align: left;
+  font-weight: 650;
+}
+
+.sim-zone-option::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border: 2px solid #a9b8ca;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.sim-zone-option:hover,
+.sim-zone-option:focus-visible { border-color: #68aefb; color: var(--sim-ink); outline: none; }
+.sim-zone-option.is-selected { background: #edf6ff; border-color: #99c9ff; color: #075dbd; }
+.sim-zone-option.is-selected::before { content: "✓"; display: grid; place-items: center; border-color: var(--sim-blue); background: var(--sim-blue); color: #fff; font-size: 0.72rem; }
+
+.sim-zone-actions { position: sticky; bottom: -20px; display: grid; gap: 9px; margin: 18px -20px -20px; padding: 15px 20px 20px; background: linear-gradient(to bottom, rgba(255,255,255,0.82), #fff 25%); }
+.sim-preview-button,
+.sim-next-button { border-radius: 10px; padding: 11px 13px; font-weight: 800; }
+.sim-preview-button { border: 1px solid #d6e0eb; background: #fff; color: #34465f; }
+.sim-preview-button.is-active { border-color: #89c1ff; background: #edf6ff; color: #075dbd; }
+.sim-next-button { border: 0; color: #fff; background: linear-gradient(135deg, var(--sim-blue), var(--sim-blue-deep)); box-shadow: 0 7px 17px rgba(0, 103, 227, 0.26); }
+
+.sim-view-column { min-width: 0; }
+.sim-view-panel[hidden] { display: none !important; }
+.sim-view-intro { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin: 0 4px 14px; }
+.sim-view-intro h2 { margin: 0; font: 800 clamp(1.35rem, 2.6vw, 2rem)/1 Oxanium, sans-serif; }
+.sim-view-intro > p { max-width: 560px; margin: 0; color: var(--sim-muted); line-height: 1.5; }
+
+.sim-vehicle-card { margin: 0 0 20px; border-radius: 18px; overflow: hidden; }
+.sim-vehicle-card figcaption { display: flex; justify-content: space-between; gap: 16px; align-items: center; padding: 14px 18px; border-bottom: 1px solid #e4e9ef; }
+.sim-vehicle-card figcaption strong { font-size: 1.03rem; }
+.sim-vehicle-card figcaption span { color: var(--sim-muted); font-size: 0.86rem; text-align: right; }
+
+.sim-image-stage {
+  position: relative;
+  aspect-ratio: 2688 / 1536;
+  overflow: hidden;
+  background: #dde5e9;
+  isolation: isolate;
+}
+
+.sim-image-stage img,
+.sim-zone-layer { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+.sim-image-stage img { object-fit: fill; z-index: 1; }
+.sim-zone-layer { z-index: 3; }
+.sim-artifact-cover { position: absolute; z-index: 2; left: 0; top: 0; width: 50%; height: 7.2%; background: #d9d6d2; }
+
+.sim-zone { cursor: pointer; outline: none; }
+.sim-zone-shape {
+  fill: rgba(8, 120, 255, 0.035);
+  stroke: var(--sim-available);
+  stroke-width: 14;
+  vector-effect: non-scaling-stroke;
+  transition: fill 0.16s ease, stroke 0.16s ease, filter 0.16s ease, opacity 0.16s ease;
+}
+
+.sim-zone-ring { fill: none; stroke-width: 44; }
+.sim-zone-stroke-only .sim-zone-shape { fill: none; stroke-width: 28; stroke-linecap: round; stroke-linejoin: round; }
+.sim-zone:hover .sim-zone-shape,
+.sim-zone:focus-visible .sim-zone-shape { fill: rgba(92, 225, 230, 0.22); stroke: var(--sim-cyan); filter: drop-shadow(0 0 10px rgba(8,120,255,0.68)); }
+.sim-zone.is-selected .sim-zone-shape { fill: var(--sim-selected); stroke: #35c9ff; filter: drop-shadow(0 0 17px rgba(8,120,255,0.92)); }
+.sim-zone-stroke-only.is-selected .sim-zone-shape,
+.sim-zone-stroke-only:hover .sim-zone-shape,
+.sim-zone-stroke-only:focus-visible .sim-zone-shape { fill: none; }
+
+.sim-tip { display: flex; gap: 11px; align-items: center; border-radius: 14px; padding: 14px 17px; color: #405a78; }
+.sim-tip span { font-size: 1.3rem; }
+.sim-tip p { margin: 0; }
+
+.sim-assurances { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 20px; border-radius: 15px; padding: 17px; }
+.sim-assurances div { display: grid; grid-template-columns: 44px 1fr; column-gap: 12px; align-items: center; padding: 4px 22px; border-right: 1px solid #e4e9ef; }
+.sim-assurances div:last-child { border-right: 0; }
+.sim-assurances span { grid-row: 1 / 3; display: grid; place-items: center; width: 36px; height: 36px; border: 2px solid var(--sim-blue); border-radius: 50%; color: var(--sim-blue); }
+.sim-assurances small { color: #69768a; }
+
+.sim-auto-page.is-previewing .sim-zone:not(.is-selected) .sim-zone-shape { opacity: 0; }
+.sim-auto-page.is-previewing .sim-zone-panel { opacity: 0.72; }
+
+@media (max-width: 1050px) {
+  .sim-selector-layout { grid-template-columns: 280px minmax(0, 1fr); }
+  .sim-zone-panel { padding: 16px; }
+  .sim-zone-actions { margin-inline: -16px; margin-bottom: -16px; padding-inline: 16px; }
+}
+
+@media (max-width: 900px) {
+  .sim-auto-main { padding-inline: 12px; }
+  .sim-page-bar { margin-inline: -12px; padding-inline: 18px; }
+  .sim-page-title > span,
+  .sim-page-title p { display: none; }
+  .sim-selector-layout { grid-template-columns: 1fr; }
+  .sim-zone-panel { position: static; max-height: none; }
+  .sim-zone-buttons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sim-zone-actions { position: static; margin-top: 16px; }
+  .sim-view-intro { align-items: start; flex-direction: column; gap: 8px; }
+  .sim-assurances { grid-template-columns: 1fr; }
+  .sim-assurances div { border-right: 0; border-bottom: 1px solid #e4e9ef; padding-block: 10px; }
+  .sim-assurances div:last-child { border-bottom: 0; }
+}
+
+@media (max-width: 600px) {
+  .sim-page-bar { min-height: 76px; }
+  .sim-eyebrow { display: none; }
+  .sim-toolbar { align-items: stretch; flex-direction: column; }
+  .sim-tabs { width: 100%; }
+  .sim-toolbar p { text-align: center; }
+  .sim-zone-buttons { grid-template-columns: 1fr; }
+  .sim-vehicle-card figcaption { align-items: start; flex-direction: column; gap: 4px; }
+  .sim-vehicle-card figcaption span { text-align: left; }
+  .sim-zone-shape { stroke-width: 9; }
+  .sim-zone-ring { stroke-width: 30; }
+  .sim-zone-stroke-only .sim-zone-shape { stroke-width: 18; }
+  .sim-assurances { padding: 10px; }
+  .sim-assurances div { padding-inline: 5px; }
+}

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LED Sim Auto | ShyneTyme.Works</title>
-  <meta name="description" content="Choose interior and exterior LED installation zones for a four-door sedan and prepare a ShyneTyme.Works installation request.">
+  <meta name="description" content="Select interior and exterior LED installation zones across multiple four-door sedan views and prepare a ShyneTyme.Works installation request.">
   <meta name="theme-color" content="#06152f">
   <link rel="canonical" href="https://shynetyme.works/sim/ledsimauto.html">
   <link rel="icon" href="../favicon.ico" sizes="any">
@@ -12,124 +12,154 @@
   <link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://photoshop-api.adobe.io">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oxanium:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../css/site.css?v=shared-ui-9">
   <link rel="stylesheet" href="../css/site-navigation.css?v=shared-ui-9" data-shynetyme-navigation="true">
   <link rel="stylesheet" href="../css/site-chuck.css?v=shared-ui-9" data-shynetyme-site-chuck="true">
   <link rel="stylesheet" href="../css/site-chuck-cloud.css?v=20260725-cloud-shift-v1" data-shynetyme-site-chuck-cloud="true">
-  <link rel="stylesheet" href="../css/sim-auto.css?v=3">
+  <link rel="stylesheet" href="../css/sim-auto.css?v=4">
 </head>
 <body class="sim-auto-page">
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top" aria-label="Primary navigation">
     <div class="container">
       <a class="navbar-brand fw-bold brand-lockup" href="../index.html"><img src="../assets/brand/favicon-32.png" width="34" height="34" alt=""> <span>ShyneTyme <em>Works</em></span></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-      <div class="collapse navbar-collapse" id="navMenu"><div class="navbar-nav ms-auto"><a class="nav-link active" href="#">LED Sim Auto</a></div></div>
+      <div class="collapse navbar-collapse" id="navMenu"><div class="navbar-nav ms-auto"><a class="nav-link active" href="ledsimauto.html" aria-current="page">LED Sim Auto</a></div></div>
     </div>
   </nav>
 
   <main id="main-content" tabindex="-1" class="sim-auto-main">
     <header class="sim-page-bar">
-      <div class="sim-page-title"><strong>Sim Auto</strong><span></span><p>Choose lighting / installation zones</p></div>
+      <div>
+        <p class="sim-eyebrow">ShyneTyme.Works · Vehicle planning tool</p>
+        <div class="sim-page-title"><strong>LED Sim Auto</strong><span></span><p>Choose lighting and installation zones</p></div>
+      </div>
       <button class="sim-help-button" type="button" data-bs-toggle="modal" data-bs-target="#simHelpModal"><span aria-hidden="true">?</span> Help</button>
     </header>
 
-    <section class="sim-workspace" aria-labelledby="sim-stage-title">
-      <article class="sim-stage-panel">
-        <div class="sim-panel-heading">
-          <div>
-            <h1 id="sim-stage-title" data-view-title>EXTERIOR</h1>
-            <p>Click any highlighted area to select or deselect it.</p>
-          </div>
-          <button class="how-button" type="button" data-bs-toggle="modal" data-bs-target="#simHelpModal"><span aria-hidden="true">ⓘ</span> How it works</button>
+    <section class="sim-toolbar" aria-label="Simulator view controls">
+      <div class="sim-tabs" role="tablist" aria-label="Vehicle area">
+        <button class="sim-tab is-active" type="button" role="tab" aria-selected="true" data-tab="exterior">Exterior</button>
+        <button class="sim-tab" type="button" role="tab" aria-selected="false" data-tab="interior">Interior</button>
+      </div>
+      <p><strong data-selected-count>0</strong> of 27 areas selected</p>
+    </section>
+
+    <section class="sim-selector-layout">
+      <aside class="sim-zone-panel" aria-label="Available installation zones">
+        <div class="sim-zone-panel-heading">
+          <div><p class="sim-zone-kicker" data-zone-kicker>Exterior</p><h1 data-zone-heading>Choose exterior areas</h1></div>
+          <button class="sim-clear-button" type="button" data-clear>Clear</button>
         </div>
-
-        <div class="vehicle-view" data-view="exterior">
-          <div class="car-canvas exterior-canvas" aria-label="Four-door sedan exterior LED installation selector">
-            <img class="vehicle-base" data-base-image="exterior" src="../assets/images/sim-auto-exterior.webp?v=1" alt="Silver four-door sedan shown from the front and driver side">
-            <canvas class="zone-canvas" data-zone-canvas="exterior" width="860" height="405" aria-hidden="true"></canvas>
-
-            <button class="zone-hit" style="--x:2%;--y:58%;--w:10%;--h:28%" data-zone="front-bumper" data-label="Front Bumper" data-view-name="exterior" aria-label="Toggle Front Bumper"></button>
-            <button class="zone-hit" style="--x:4%;--y:47%;--w:17%;--h:17%" data-zone="grille" data-label="Grille" data-view-name="exterior" aria-label="Toggle Grille"></button>
-            <button class="zone-hit" style="--x:52%;--y:72%;--w:35%;--h:13%" data-zone="rocker-panels" data-label="Side Skirts / Rocker Panels" data-view-name="exterior" aria-label="Toggle Side Skirts and Rocker Panels"></button>
-            <button class="zone-hit" style="--x:35%;--y:46%;--w:18%;--h:47%" data-zone="front-wheel-wells" data-label="Front Wheel Wells" data-view-name="exterior" aria-label="Toggle Front Wheel Wells"></button>
-            <button class="zone-hit" style="--x:57%;--y:26%;--w:12%;--h:18%" data-zone="mirrors" data-label="Mirrors" data-view-name="exterior" aria-label="Toggle Mirrors"></button>
-            <button class="zone-hit" style="--x:83%;--y:46%;--w:14%;--h:39%" data-zone="rear-wheel-wells" data-label="Rear Wheel Wells" data-view-name="exterior" aria-label="Toggle Rear Wheel Wells"></button>
-            <button class="zone-hit" style="--x:95%;--y:43%;--w:5%;--h:33%" data-zone="rear-bumper" data-label="Rear Bumper" data-view-name="exterior" aria-label="Toggle Rear Bumper"></button>
-            <button class="zone-hit" style="--x:91%;--y:31%;--w:8%;--h:12%" data-zone="trunk-lip" data-label="Trunk Lip" data-view-name="exterior" aria-label="Toggle Trunk Lip"></button>
-            <button class="zone-hit" style="--x:48%;--y:78%;--w:43%;--h:19%" data-zone="underglow" data-label="Underglow / Underbody" data-view-name="exterior" aria-label="Toggle Underglow and Underbody"></button>
-
-            <button class="zone-callout callout-grille" data-callout="grille" type="button"><b>2</b><span>Grille</span></button>
-            <button class="zone-callout callout-mirrors" data-callout="mirrors" type="button"><b>5</b><span>Mirrors</span></button>
-            <button class="zone-callout callout-trunk" data-callout="trunk-lip" type="button"><b>8</b><span>Trunk Lip</span></button>
-            <button class="zone-callout callout-front-bumper" data-callout="front-bumper" type="button"><b>1</b><span>Front Bumper</span></button>
-            <button class="zone-callout callout-front-wheel" data-callout="front-wheel-wells" type="button"><b>4</b><span>Front Wheel Wells</span></button>
-            <button class="zone-callout callout-rocker" data-callout="rocker-panels" type="button"><b>3</b><span>Side Skirts /<br>Rocker Panels</span></button>
-            <button class="zone-callout callout-rear-wheel" data-callout="rear-wheel-wells" type="button"><b>6</b><span>Rear Wheel Wells</span></button>
-            <button class="zone-callout callout-rear-bumper" data-callout="rear-bumper" type="button"><b>7</b><span>Rear Bumper</span></button>
-            <button class="zone-callout callout-underglow" data-callout="underglow" type="button"><b>9</b><span>Underglow /<br>Underbody</span></button>
-          </div>
-        </div>
-
-        <div class="vehicle-view d-none" data-view="interior">
-          <div class="car-canvas interior-canvas" aria-label="Four-door sedan interior LED installation selector">
-            <img class="vehicle-base" data-base-image="interior" src="../assets/images/sim-auto-interior.webp?v=1" alt="Four-door sedan cabin viewed from above with the trunk open">
-            <canvas class="zone-canvas" data-zone-canvas="interior" width="970" height="570" aria-hidden="true"></canvas>
-
-            <button class="zone-hit" style="--x:6%;--y:5%;--w:40%;--h:23%" data-zone="dashboard" data-label="Dashboard" data-view-name="interior" aria-label="Toggle Dashboard"></button>
-            <button class="zone-hit" style="--x:29%;--y:27%;--w:18%;--h:23%" data-zone="center-console" data-label="Center Console" data-view-name="interior" aria-label="Toggle Center Console"></button>
-            <button class="zone-hit" style="--x:45%;--y:12%;--w:35%;--h:25%" data-zone="front-door-panels" data-label="Front Door Panels" data-view-name="interior" aria-label="Toggle Front Door Panels"></button>
-            <button class="zone-hit" style="--x:8%;--y:31%;--w:46%;--h:25%" data-zone="front-footwells" data-label="Front Footwells" data-view-name="interior" aria-label="Toggle Front Footwells"></button>
-            <button class="zone-hit" style="--x:61%;--y:28%;--w:20%;--h:26%" data-zone="rear-door-panels" data-label="Rear Door Panels" data-view-name="interior" aria-label="Toggle Rear Door Panels"></button>
-            <button class="zone-hit" style="--x:38%;--y:51%;--w:35%;--h:25%" data-zone="rear-footwells" data-label="Rear Footwells" data-view-name="interior" aria-label="Toggle Rear Footwells"></button>
-            <button class="zone-hit" style="--x:20%;--y:65%;--w:50%;--h:25%" data-zone="under-seat" data-label="Under-Seat Lighting" data-view-name="interior" aria-label="Toggle Under-Seat Lighting"></button>
-            <button class="zone-hit" style="--x:72%;--y:58%;--w:25%;--h:24%" data-zone="rear-deck" data-label="Rear Deck" data-view-name="interior" aria-label="Toggle Rear Deck"></button>
-            <button class="zone-hit" style="--x:70%;--y:78%;--w:30%;--h:22%" data-zone="trunk-cargo" data-label="Trunk / Cargo Area" data-view-name="interior" aria-label="Toggle Trunk and Cargo Area"></button>
-
-            <button class="zone-callout int-dashboard" data-callout="dashboard" type="button"><b>1</b><span>Dashboard</span></button>
-            <button class="zone-callout int-console" data-callout="center-console" type="button"><b>2</b><span>Center Console</span></button>
-            <button class="zone-callout int-front-door" data-callout="front-door-panels" type="button"><b>3</b><span>Front Door Panels</span></button>
-            <button class="zone-callout int-front-feet" data-callout="front-footwells" type="button"><b>4</b><span>Front Footwells</span></button>
-            <button class="zone-callout int-rear-door" data-callout="rear-door-panels" type="button"><b>5</b><span>Rear Door Panels</span></button>
-            <button class="zone-callout int-rear-feet" data-callout="rear-footwells" type="button"><b>6</b><span>Rear Footwells</span></button>
-            <button class="zone-callout int-under-seat" data-callout="under-seat" type="button"><b>7</b><span>Under-Seat Lighting</span></button>
-            <button class="zone-callout int-rear-deck" data-callout="rear-deck" type="button"><b>8</b><span>Rear Deck</span></button>
-            <button class="zone-callout int-trunk" data-callout="trunk-cargo" type="button"><b>9</b><span>Trunk / Cargo Area</span></button>
-          </div>
-        </div>
-
-        <div class="sim-tip"><span aria-hidden="true">☝</span><strong>Tip:</strong> Click a label or the matching area on the car to toggle the selection.</div>
-      </article>
-
-      <aside class="selected-panel" aria-labelledby="selected-title">
-        <div class="selected-heading"><h2 id="selected-title">Selected Areas</h2><span><strong data-selected-count>0</strong> / 18</span></div>
-        <div class="selected-list" data-selected-list aria-live="polite"></div>
-        <div class="view-switch" role="tablist" aria-label="Vehicle view">
-          <button class="active" type="button" role="tab" aria-selected="true" data-view-button="exterior">🚘 Exterior</button>
-          <button type="button" role="tab" aria-selected="false" data-view-button="interior">💺 Interior</button>
-        </div>
-        <div class="sim-actions">
-          <button class="control-button" type="button" data-clear><span aria-hidden="true">♲</span> Clear</button>
-          <button class="control-button" type="button" data-preview><span aria-hidden="true">◉</span> Preview</button>
-          <button class="next-button" type="button" data-next>Next <span aria-hidden="true">›</span></button>
+        <p class="sim-zone-instruction">Tap a name or tap its matching area directly on the vehicle image.</p>
+        <div class="sim-zone-buttons" data-zone-buttons></div>
+        <div class="sim-zone-actions">
+          <button class="sim-preview-button" type="button" data-preview aria-pressed="false">Preview selections</button>
+          <button class="sim-next-button" type="button" data-next>Continue to request <span aria-hidden="true">›</span></button>
         </div>
       </aside>
+
+      <div class="sim-view-column">
+        <section class="sim-view-panel is-active" data-panel="exterior" aria-label="Exterior sedan views">
+          <div class="sim-view-intro"><div><p class="sim-zone-kicker">Exterior</p><h2>Front, side, and rear views</h2></div><p>Hover or tap directly on a highlighted area. Selected areas remain active as you move between views.</p></div>
+
+          <figure class="sim-vehicle-card">
+            <figcaption><strong>Front details</strong><span>Front bumper, grille, and headlights</span></figcaption>
+            <div class="sim-image-stage">
+              <img src="https://photoshop-api.adobe.io/v2/short-url/urn:aaid:ps:US:d20fd0d4-3d44-4d74-99c9-a498349ec6b3" alt="Four-view sedan front reference sheet" referrerpolicy="no-referrer" fetchpriority="high">
+              <svg class="sim-zone-layer" viewBox="0 0 2688 1536" role="group" aria-label="Front exterior selectable zones">
+                <g class="sim-zone" data-zone="front-bumper" tabindex="0" role="button" aria-label="Front bumper" aria-pressed="false"><path class="sim-zone-shape" d="M18 520 L90 455 L565 444 L676 505 L651 651 L492 694 L105 684 L24 635 Z"/></g>
+                <g class="sim-zone" data-zone="grille" tabindex="0" role="button" aria-label="Grille" aria-pressed="false"><path class="sim-zone-shape" d="M90 418 L410 410 L430 478 L390 544 L121 545 L74 486 Z"/></g>
+                <g class="sim-zone" data-zone="headlights" tabindex="0" role="button" aria-label="Headlights" aria-pressed="false"><path class="sim-zone-shape" d="M12 398 L73 381 L102 414 L83 470 L26 455 Z"/><path class="sim-zone-shape" d="M421 389 L589 360 L622 390 L601 454 L452 462 L414 432 Z"/></g>
+              </svg>
+            </div>
+          </figure>
+
+          <figure class="sim-vehicle-card">
+            <figcaption><strong>Side profile</strong><span>Wheel wells, trim, mirrors, doors, rocker panels, roof, and underglow</span></figcaption>
+            <div class="sim-image-stage">
+              <img src="https://photoshop-api.adobe.io/v2/short-url/urn:aaid:ps:US:e31de3ee-4de5-444c-a926-7cfdea1365fd" alt="Four-door sedan driver-side profile" referrerpolicy="no-referrer" loading="lazy">
+              <svg class="sim-zone-layer" viewBox="0 0 2688 1536" role="group" aria-label="Side exterior selectable zones">
+                <g class="sim-zone" data-zone="front-wheel-wells" tabindex="0" role="button" aria-label="Front wheel wells" aria-pressed="false"><ellipse class="sim-zone-shape sim-zone-ring" cx="2140" cy="900" rx="235" ry="260"/></g>
+                <g class="sim-zone" data-zone="rocker-panels" tabindex="0" role="button" aria-label="Rocker panels" aria-pressed="false"><path class="sim-zone-shape" d="M690 978 L1985 978 L1948 1082 L790 1087 L704 1042 Z"/></g>
+                <g class="sim-zone" data-zone="mirrors" tabindex="0" role="button" aria-label="Mirrors" aria-pressed="false"><path class="sim-zone-shape" d="M1710 515 L1845 513 L1886 581 L1863 703 L1741 695 L1707 620 Z"/></g>
+                <g class="sim-zone" data-zone="door-handles" tabindex="0" role="button" aria-label="Door handles" aria-pressed="false"><ellipse class="sim-zone-shape" cx="681" cy="687" rx="83" ry="38"/><ellipse class="sim-zone-shape" cx="1390" cy="704" rx="82" ry="38"/></g>
+                <g class="sim-zone sim-zone-stroke-only" data-zone="window-trim" tabindex="0" role="button" aria-label="Window trim" aria-pressed="false"><path class="sim-zone-shape" d="M570 570 L620 472 L845 387 L1202 348 L1584 376 L1786 485 L1842 574 L570 574 Z"/></g>
+                <g class="sim-zone sim-zone-stroke-only" data-zone="roof-accent" tabindex="0" role="button" aria-label="Roof accent" aria-pressed="false"><path class="sim-zone-shape" d="M328 438 Q930 264 1544 354 Q1773 387 1978 508"/></g>
+                <g class="sim-zone" data-zone="rear-wheel-wells" tabindex="0" role="button" aria-label="Rear wheel wells" aria-pressed="false"><ellipse class="sim-zone-shape sim-zone-ring" cx="505" cy="900" rx="235" ry="260"/></g>
+                <g class="sim-zone" data-zone="underglow" tabindex="0" role="button" aria-label="Underglow" aria-pressed="false"><path class="sim-zone-shape" d="M300 1085 L2315 1085 L2420 1165 L2245 1228 L450 1228 L245 1170 Z"/></g>
+              </svg>
+            </div>
+          </figure>
+
+          <figure class="sim-vehicle-card">
+            <figcaption><strong>Rear details</strong><span>Rear bumper, trunk lip, taillights, and license-plate area</span></figcaption>
+            <div class="sim-image-stage">
+              <img src="https://photoshop-api.adobe.io/v2/short-url/urn:aaid:ps:US:0a8c475f-a413-424d-b694-b033f5bffc49" alt="Multi-view sedan rear reference sheet" referrerpolicy="no-referrer" loading="lazy">
+              <svg class="sim-zone-layer" viewBox="0 0 2688 1536" role="group" aria-label="Rear exterior selectable zones">
+                <g class="sim-zone" data-zone="rear-bumper" tabindex="0" role="button" aria-label="Rear bumper" aria-pressed="false"><path class="sim-zone-shape" d="M900 570 L1730 570 L1744 728 L1662 800 L1012 800 L915 738 Z"/></g>
+                <g class="sim-zone sim-zone-stroke-only" data-zone="trunk-lip" tabindex="0" role="button" aria-label="Trunk lip" aria-pressed="false"><path class="sim-zone-shape" d="M982 402 Q1328 360 1667 407"/></g>
+                <g class="sim-zone" data-zone="taillights" tabindex="0" role="button" aria-label="Taillights" aria-pressed="false"><path class="sim-zone-shape" d="M934 397 L1101 397 L1127 446 L1085 492 L936 480 L913 438 Z"/><path class="sim-zone-shape" d="M1551 395 L1717 397 L1744 438 L1720 481 L1571 490 L1530 446 Z"/></g>
+                <g class="sim-zone" data-zone="license-plate-area" tabindex="0" role="button" aria-label="License plate area" aria-pressed="false"><rect class="sim-zone-shape" x="1180" y="426" width="313" height="118" rx="12"/></g>
+              </svg>
+            </div>
+          </figure>
+        </section>
+
+        <section class="sim-view-panel" data-panel="interior" aria-label="Interior sedan views" hidden>
+          <div class="sim-view-intro"><div><p class="sim-zone-kicker">Interior</p><h2>Cabin and cargo views</h2></div><p>Select dashboard, console, doors, footwells, seats, rear deck, and cargo areas from the matching view.</p></div>
+
+          <figure class="sim-vehicle-card">
+            <figcaption><strong>Cabin views</strong><span>Dashboard, console, doors, footwells, seats, and dash trim</span></figcaption>
+            <div class="sim-image-stage">
+              <img src="https://photoshop-api.adobe.io/v2/short-url/urn:aaid:ps:US:49041c01-c381-43cd-9439-47c32223cebb" alt="Multi-view sedan cabin reference sheet" referrerpolicy="no-referrer" loading="lazy">
+              <svg class="sim-zone-layer" viewBox="0 0 2688 1536" role="group" aria-label="Cabin selectable zones">
+                <g class="sim-zone" data-zone="dashboard" tabindex="0" role="button" aria-label="Dashboard" aria-pressed="false"><path class="sim-zone-shape" d="M282 235 L1018 223 L1045 415 L310 432 Z"/></g>
+                <g class="sim-zone" data-zone="center-console" tabindex="0" role="button" aria-label="Center console" aria-pressed="false"><path class="sim-zone-shape" d="M564 360 L727 360 L770 684 L545 684 Z"/></g>
+                <g class="sim-zone" data-zone="front-footwells" tabindex="0" role="button" aria-label="Front footwells" aria-pressed="false"><path class="sim-zone-shape" d="M253 474 L545 474 L536 711 L253 711 Z"/><path class="sim-zone-shape" d="M758 471 L1050 471 L1060 708 L771 708 Z"/></g>
+                <g class="sim-zone" data-zone="rear-footwells" tabindex="0" role="button" aria-label="Rear footwells" aria-pressed="false"><path class="sim-zone-shape" d="M1848 478 L2224 478 L2258 687 L1821 687 Z"/></g>
+                <g class="sim-zone" data-zone="front-door-panels" tabindex="0" role="button" aria-label="Front door panels" aria-pressed="false"><path class="sim-zone-shape" d="M20 243 L248 222 L280 640 L42 681 Z"/><path class="sim-zone-shape" d="M981 230 L1170 249 L1160 639 L957 668 Z"/></g>
+                <g class="sim-zone" data-zone="rear-door-panels" tabindex="0" role="button" aria-label="Rear door panels" aria-pressed="false"><path class="sim-zone-shape" d="M1904 120 L2245 127 L2280 422 L1909 430 Z"/></g>
+                <g class="sim-zone sim-zone-stroke-only" data-zone="seat-accent" tabindex="0" role="button" aria-label="Seat accent" aria-pressed="false"><path class="sim-zone-shape" d="M785 521 Q940 469 1084 527 L1101 683 Q942 738 779 681 Z"/><path class="sim-zone-shape" d="M2285 302 Q2445 254 2554 337 L2548 596 Q2421 659 2292 579 Z"/></g>
+                <g class="sim-zone sim-zone-stroke-only" data-zone="dash-trim" tabindex="0" role="button" aria-label="Dash trim" aria-pressed="false"><path class="sim-zone-shape" d="M321 335 L1040 333"/></g>
+              </svg>
+            </div>
+          </figure>
+
+          <figure class="sim-vehicle-card">
+            <figcaption><strong>Interior details</strong><span>Under-seat, rear deck, trunk/cargo, and cup-holder accent</span></figcaption>
+            <div class="sim-image-stage sim-image-stage-artifact">
+              <img src="https://photoshop-api.adobe.io/v2/short-url/urn:aaid:ps:US:5bf1b902-5e44-4ea0-b863-4238b27aa9b0" alt="Sedan interior detail reference sheet" referrerpolicy="no-referrer" loading="lazy">
+              <span class="sim-artifact-cover" aria-hidden="true"></span>
+              <svg class="sim-zone-layer" viewBox="0 0 2688 1536" role="group" aria-label="Interior detail selectable zones">
+                <g class="sim-zone" data-zone="under-seat" tabindex="0" role="button" aria-label="Under seat" aria-pressed="false"><path class="sim-zone-shape" d="M1434 1070 L2620 1070 L2618 1460 L1435 1460 Z"/></g>
+                <g class="sim-zone" data-zone="rear-deck" tabindex="0" role="button" aria-label="Rear deck" aria-pressed="false"><path class="sim-zone-shape" d="M1490 122 L2324 118 L2314 437 L1496 440 Z"/></g>
+                <g class="sim-zone" data-zone="trunk-cargo" tabindex="0" role="button" aria-label="Trunk cargo" aria-pressed="false"><path class="sim-zone-shape" d="M116 879 L1235 879 L1276 1417 L91 1420 Z"/></g>
+                <g class="sim-zone sim-zone-stroke-only" data-zone="cup-holder-accent" tabindex="0" role="button" aria-label="Cup holder accent" aria-pressed="false"><circle class="sim-zone-shape" cx="468" cy="482" r="182"/><circle class="sim-zone-shape" cx="892" cy="482" r="182"/></g>
+              </svg>
+            </div>
+          </figure>
+        </section>
+
+        <div class="sim-tip"><span aria-hidden="true">☝</span><p><strong>Tip:</strong> Every outlined shape is an editable SVG zone. The image stays untouched while the selected overlay changes color.</p></div>
+      </div>
     </section>
 
     <section class="sim-assurances" aria-label="Installation assurances">
       <div><span aria-hidden="true">◇</span><strong>Safe &amp; Secure</strong><small>12V low-voltage lighting options</small></div>
       <div><span aria-hidden="true">🛠</span><strong>Professional Install</strong><small>Guides and support included</small></div>
-      <div><span aria-hidden="true">✓</span><strong>Quality Guaranteed</strong><small>Premium products, built to last</small></div>
+      <div><span aria-hidden="true">✓</span><strong>Built for Your Ride</strong><small>Custom zones, controls, and effects</small></div>
     </section>
   </main>
 
   <footer class="py-4 border-top" aria-label="Site footer"><div class="container small d-flex flex-wrap justify-content-between gap-2"><span>Copyright © 2026 DeacStudio. All rights reserved.</span><span><a href="../PRIVACY.md">Privacy</a> · <a href="../TERMS.md">Terms</a> · <a href="../aboutme.html">About Deke</a> · <a href="../contact.html">Contact</a></span></div></footer>
 
-  <div class="modal fade" id="simHelpModal" tabindex="-1" aria-labelledby="simHelpTitle" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h2 class="modal-title fs-5" id="simHelpTitle">How LED Sim Auto works</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><p>Select every exterior and interior area where you may want LED lighting. Each selection activates its own realistic glow layer. Preview hides labels so you can inspect the lighting plan. Next carries the selections into your installation request.</p></div></div></div></div>
+  <div class="modal fade" id="simHelpModal" tabindex="-1" aria-labelledby="simHelpTitle" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h2 class="modal-title fs-5" id="simHelpTitle">How LED Sim Auto works</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><p>Choose Exterior or Interior, then tap either a zone name or the matching shape directly on a vehicle view. Selected SVG zones glow over the unchanged sedan image. Preview hides the available-zone outlines so only your choices remain visible. Continue carries the exact zone IDs into the installation request.</p></div></div></div></div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../js/site-guide.js?v=shared-ui-9"></script>
-  <script src="../js/sim-auto.js?v=3"></script>
+  <script src="../js/sim-auto.js?v=4"></script>
 </body>
 </html>
