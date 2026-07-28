@@ -10,15 +10,86 @@ const title=document.querySelector("[data-view-title]");
 const page=document.querySelector(".sim-auto-page");
 const defaultIds=["front-bumper","grille","rocker-panels","front-wheel-wells","mirrors","rear-wheel-wells","rear-bumper","trunk-lip","underglow"];
 const zoneById=new Map(allZones.map(zone=>[zone.dataset.zone,zone]));
-const exteriorShapes={"front-bumper":{type:"polygon",points:[[20,270],[32,246],[55,238],[72,253],[78,307],[52,334],[20,329]]},"grille":{type:"polygon",points:[[39,205],[144,205],[161,218],[145,257],[45,259],[35,241]]},"rocker-panels":{type:"line",points:[[465,321],[748,300]]},"front-wheel-wells":{type:"arc",box:[317,190,469,366],start:Math.PI*1.04,end:Math.PI*1.95},"mirrors":{type:"polygon",points:[[500,119],[543,112],[578,123],[569,145],[515,146],[499,136]]},"rear-wheel-wells":{type:"arc",box:[744,182,851,326],start:Math.PI,end:Math.PI*1.98},"rear-bumper":{type:"line",points:[[839,186],[852,212],[855,273],[845,292]]},"trunk-lip":{type:"line",points:[[806,144],[846,146]]},"underglow":{type:"multi",shapes:[{type:"line",points:[[455,347],[765,323]]},{type:"line",points:[[458,354],[766,331]]}]}};
-const interiorShapes={"dashboard":{type:"line",points:[[84,121],[110,92],[227,63],[383,53],[430,63]]},"center-console":{type:"multi",shapes:[{type:"line",points:[[300,194],[354,242],[417,265]]},{type:"line",points:[[330,170],[392,232],[427,249]]}]},"front-door-panels":{type:"multi",shapes:[{type:"line",points:[[452,119],[506,103],[545,111]]},{type:"line",points:[[645,151],[713,164],[751,191]]}]},"front-footwells":{type:"multi",shapes:[{type:"polygon",points:[[106,207],[205,198],[232,281],[126,299]]},{type:"polygon",points:[[421,169],[490,174],[510,238],[452,258]]}]},"rear-door-panels":{type:"multi",shapes:[{type:"line",points:[[633,189],[706,211],[759,250]]},{type:"line",points:[[27,227],[73,220],[102,257]]}]},"rear-footwells":{type:"multi",shapes:[{type:"polygon",points:[[381,303],[479,298],[506,377],[421,394]]},{type:"polygon",points:[[585,275],[670,285],[687,348],[608,365]]}]},"under-seat":{type:"multi",shapes:[{type:"line",points:[[214,399],[330,459]]},{type:"line",points:[[488,465],[628,512]]}]},"rear-deck":{type:"line",points:[[738,410],[804,453],[900,453],[951,420]]},"trunk-cargo":{type:"polygon",points:[[724,446],[950,445],[966,564],[701,564]]}};
-const drawPath=(ctx,shape)=>{if(shape.type==="multi"){shape.shapes.forEach(item=>drawPath(ctx,item));return;}ctx.beginPath();if(shape.type==="arc"){const[x1,y1,x2,y2]=shape.box;ctx.ellipse((x1+x2)/2,(y1+y2)/2,(x2-x1)/2,(y2-y1)/2,0,shape.start,shape.end);}else{shape.points.forEach(([x,y],index)=>index?ctx.lineTo(x,y):ctx.moveTo(x,y));if(shape.type==="polygon")ctx.closePath();}ctx.stroke();};
-const drawCanvas=view=>{const canvas=document.querySelector(`[data-zone-canvas="${view}"]`);if(!canvas)return;const ctx=canvas.getContext("2d");ctx.clearRect(0,0,canvas.width,canvas.height);const shapes=view==="exterior"?exteriorShapes:interiorShapes;[...selected.values()].filter(item=>item.view===view).forEach(item=>{const shape=shapes[item.id];if(!shape)return;ctx.save();ctx.lineCap="round";ctx.lineJoin="round";ctx.strokeStyle="rgba(0,110,255,.35)";ctx.lineWidth=13;ctx.shadowColor="#0078ff";ctx.shadowBlur=16;drawPath(ctx,shape);ctx.shadowBlur=8;ctx.strokeStyle="#55d6ff";ctx.lineWidth=4;drawPath(ctx,shape);ctx.restore();});};
+
+const exteriorShapes={
+ "front-bumper":{type:"polygon",points:[[20,270],[32,246],[55,238],[72,253],[78,307],[52,334],[20,329]]},
+ "grille":{type:"polygon",points:[[39,205],[144,205],[161,218],[145,257],[45,259],[35,241]]},
+ "rocker-panels":{type:"line",points:[[465,321],[748,300]]},
+ "front-wheel-wells":{type:"arc",box:[317,190,469,366],start:Math.PI*1.04,end:Math.PI*1.95},
+ "mirrors":{type:"polygon",points:[[500,119],[543,112],[578,123],[569,145],[515,146],[499,136]]},
+ "rear-wheel-wells":{type:"arc",box:[744,182,851,326],start:Math.PI,end:Math.PI*1.98},
+ "rear-bumper":{type:"line",points:[[839,186],[852,212],[855,273],[845,292]]},
+ "trunk-lip":{type:"line",points:[[806,144],[846,146]]},
+ "underglow":{type:"multi",shapes:[{type:"line",points:[[455,347],[765,323]]},{type:"line",points:[[458,354],[766,331]]}]}
+};
+const interiorShapes={
+ "dashboard":{type:"line",points:[[84,121],[110,92],[227,63],[383,53],[430,63]]},
+ "center-console":{type:"multi",shapes:[{type:"line",points:[[300,194],[354,242],[417,265]]},{type:"line",points:[[330,170],[392,232],[427,249]]}]},
+ "front-door-panels":{type:"multi",shapes:[{type:"line",points:[[452,119],[506,103],[545,111]]},{type:"line",points:[[645,151],[713,164],[751,191]]}]},
+ "front-footwells":{type:"multi",shapes:[{type:"polygon",points:[[106,207],[205,198],[232,281],[126,299]]},{type:"polygon",points:[[421,169],[490,174],[510,238],[452,258]]}]},
+ "rear-door-panels":{type:"multi",shapes:[{type:"line",points:[[633,189],[706,211],[759,250]]},{type:"line",points:[[27,227],[73,220],[102,257]]}]},
+ "rear-footwells":{type:"multi",shapes:[{type:"polygon",points:[[381,303],[479,298],[506,377],[421,394]]},{type:"polygon",points:[[585,275],[670,285],[687,348],[608,365]]}]},
+ "under-seat":{type:"multi",shapes:[{type:"line",points:[[214,399],[330,459]]},{type:"line",points:[[488,465],[628,512]]}]},
+ "rear-deck":{type:"line",points:[[738,410],[804,453],[900,453],[951,420]]},
+ "trunk-cargo":{type:"polygon",points:[[724,446],[950,445],[966,564],[701,564]]}
+};
+
+const drawPath=(ctx,shape)=>{
+ if(shape.type==="multi"){shape.shapes.forEach(item=>drawPath(ctx,item));return;}
+ ctx.beginPath();
+ if(shape.type==="arc"){
+  const [x1,y1,x2,y2]=shape.box;ctx.ellipse((x1+x2)/2,(y1+y2)/2,(x2-x1)/2,(y2-y1)/2,0,shape.start,shape.end);
+ }else{
+  shape.points.forEach(([x,y],index)=>index?ctx.lineTo(x,y):ctx.moveTo(x,y));
+  if(shape.type==="polygon")ctx.closePath();
+ }
+ ctx.stroke();
+};
+const drawCanvas=(view)=>{
+ const canvas=document.querySelector(`[data-zone-canvas="${view}"]`);if(!canvas)return;
+ const ctx=canvas.getContext("2d");ctx.clearRect(0,0,canvas.width,canvas.height);
+ const shapes=view==="exterior"?exteriorShapes:interiorShapes;
+ const active=[...selected.values()].filter(item=>item.view===view);
+ active.forEach(item=>{
+  const shape=shapes[item.id];if(!shape)return;
+  ctx.save();ctx.lineCap="round";ctx.lineJoin="round";
+  ctx.strokeStyle="rgba(0,110,255,.35)";ctx.lineWidth=13;ctx.shadowColor="#0078ff";ctx.shadowBlur=16;drawPath(ctx,shape);
+  ctx.shadowBlur=8;ctx.strokeStyle="#55d6ff";ctx.lineWidth=4;drawPath(ctx,shape);
+  ctx.restore();
+ });
+};
 const drawAll=()=>{drawCanvas("exterior");drawCanvas("interior");};
-const installImages=()=>{const exterior=document.querySelector('[data-base-image="exterior"]');const interior=document.querySelector('[data-base-image="interior"]');if(exterior)exterior.src=window.ShynetymeSimAutoImage_exterior||"";if(interior)interior.src=window.ShynetymeSimAutoImage_interior||"";};
-const load=()=>{let ids=defaultIds;try{const saved=JSON.parse(sessionStorage.getItem(storageKey));if(Array.isArray(saved))ids=saved;}catch(_error){}ids.forEach(id=>{const zone=zoneById.get(id);if(zone)selected.set(id,{id,label:zone.dataset.label,view:zone.dataset.viewName});});};
+const installImages=()=>{
+ const exterior=document.querySelector('[data-base-image="exterior"]');
+ const interior=document.querySelector('[data-base-image="interior"]');
+ if(exterior&&window.ShynetymeSimAutoImage_exterior)exterior.src=window.ShynetymeSimAutoImage_exterior;
+ if(interior&&window.ShynetymeSimAutoImage_interior)interior.src=window.ShynetymeSimAutoImage_interior;
+};
+const load=()=>{
+ let ids=defaultIds;
+ try{const saved=JSON.parse(sessionStorage.getItem(storageKey));if(Array.isArray(saved))ids=saved;}catch(_error){}
+ ids.forEach(id=>{const zone=zoneById.get(id);if(zone)selected.set(id,{id,label:zone.dataset.label,view:zone.dataset.viewName});});
+};
 const save=()=>sessionStorage.setItem(storageKey,JSON.stringify([...selected.keys()]));
-const render=()=>{counts.forEach(node=>node.textContent=selected.size);callouts.forEach(node=>node.classList.toggle("selected",selected.has(node.dataset.callout)));allZones.forEach(zone=>zone.setAttribute("aria-pressed",String(selected.has(zone.dataset.zone))));if(!selected.size){list.innerHTML='<p class="empty-selection">Nothing selected yet. Click a zone on the car.</p>';drawAll();save();return;}list.innerHTML=[...selected.values()].map((item,index)=>`<div class="selected-item"><span class="selected-check">✓</span><span class="selected-number">${index+1}</span><span>${item.label}</span><button class="selected-remove" type="button" data-remove="${item.id}" aria-label="Remove ${item.label}">×</button></div>`).join("");drawAll();save();};
+const render=()=>{
+ counts.forEach(node=>node.textContent=selected.size);
+ callouts.forEach(node=>node.classList.toggle("selected",selected.has(node.dataset.callout)));
+ allZones.forEach(zone=>zone.setAttribute("aria-pressed",String(selected.has(zone.dataset.zone))));
+ if(!selected.size){list.innerHTML='<p class="empty-selection">Nothing selected yet. Click a zone on the car.</p>';drawAll();save();return;}
+ list.innerHTML=[...selected.values()].map((item,index)=>`<div class="selected-item"><span class="selected-check">✓</span><span class="selected-number">${index+1}</span><span>${item.label}</span><button class="selected-remove" type="button" data-remove="${item.id}" aria-label="Remove ${item.label}">×</button></div>`).join("");
+ drawAll();save();
+};
 const toggle=id=>{const zone=zoneById.get(id);if(!zone)return;selected.has(id)?selected.delete(id):selected.set(id,{id,label:zone.dataset.label,view:zone.dataset.viewName});render();};
-allZones.forEach(zone=>zone.addEventListener("click",()=>toggle(zone.dataset.zone)));callouts.forEach(callout=>callout.addEventListener("click",()=>toggle(callout.dataset.callout)));list.addEventListener("click",event=>{const button=event.target.closest("[data-remove]");if(button){selected.delete(button.dataset.remove);render();}});document.querySelectorAll("[data-view-button]").forEach(button=>button.addEventListener("click",()=>{const view=button.dataset.viewButton;stages.forEach(stage=>stage.classList.toggle("d-none",stage.dataset.view!==view));document.querySelectorAll("[data-view-button]").forEach(item=>{const active=item===button;item.classList.toggle("active",active);item.setAttribute("aria-selected",String(active));});title.textContent=view.toUpperCase();page.classList.remove("preview-mode");}));document.querySelector("[data-clear]").addEventListener("click",()=>{selected.clear();page.classList.remove("preview-mode");render();});document.querySelector("[data-preview]").addEventListener("click",event=>{page.classList.toggle("preview-mode");event.currentTarget.classList.toggle("active",page.classList.contains("preview-mode"));});document.querySelector("[data-next]").addEventListener("click",()=>{const payload=[...selected.values()];sessionStorage.setItem("shynetymeSimAutoSelections",JSON.stringify(payload));const params=new URLSearchParams();if(payload.length)params.set("autoZones",payload.map(item=>item.label).join(", "));window.location.href=`../contact.html${params.toString()?`?${params}`:""}`;});installImages();load();render();
+allZones.forEach(zone=>zone.addEventListener("click",()=>toggle(zone.dataset.zone)));
+callouts.forEach(callout=>callout.addEventListener("click",()=>toggle(callout.dataset.callout)));
+list.addEventListener("click",event=>{const button=event.target.closest("[data-remove]");if(button){selected.delete(button.dataset.remove);render();}});
+document.querySelectorAll("[data-view-button]").forEach(button=>button.addEventListener("click",()=>{
+ const view=button.dataset.viewButton;stages.forEach(stage=>stage.classList.toggle("d-none",stage.dataset.view!==view));
+ document.querySelectorAll("[data-view-button]").forEach(item=>{const active=item===button;item.classList.toggle("active",active);item.setAttribute("aria-selected",String(active));});
+ title.textContent=view.toUpperCase();page.classList.remove("preview-mode");
+}));
+document.querySelector("[data-clear]").addEventListener("click",()=>{selected.clear();page.classList.remove("preview-mode");render();});
+document.querySelector("[data-preview]").addEventListener("click",event=>{page.classList.toggle("preview-mode");event.currentTarget.classList.toggle("active",page.classList.contains("preview-mode"));});
+document.querySelector("[data-next]").addEventListener("click",()=>{const payload=[...selected.values()];sessionStorage.setItem("shynetymeSimAutoSelections",JSON.stringify(payload));const params=new URLSearchParams();if(payload.length)params.set("autoZones",payload.map(item=>item.label).join(", "));window.location.href=`../contact.html${params.toString()?`?${params}`:""}`;});
+installImages();load();render();
 })();
