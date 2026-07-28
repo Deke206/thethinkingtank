@@ -3,9 +3,9 @@
 
   const NOTE_TEXT = "Please submit more than one builder of the selected type of bike you would like to have LEDs installed on.";
   const SMALL_FRAME_BASELINES = {
-    toddler: 540,
-    preschool: 565,
-    youth: 590
+    toddler: 632,
+    preschool: 632,
+    youth: 632
   };
 
   let installed = false;
