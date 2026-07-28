@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-28T23:18:49.566Z",
-  "commitCount": 382,
+  "generatedAt": "2026-07-28T23:22:40.026Z",
+  "commitCount": 383,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1913,6 +1913,11 @@
       "sha": "52346a393ff3172942cf568d5b2f4d4695cf47fa",
       "date": "2026-07-28T23:18:28Z",
       "message": "Remove Home Sim intro block"
+    },
+    {
+      "sha": "a4ef5609e2db352e6d47746b87cc2c6e0b24de0a",
+      "date": "2026-07-28T23:22:24Z",
+      "message": "Move Home Sim preview rules into first accordion"
     }
   ]
 }
