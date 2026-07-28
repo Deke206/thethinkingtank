@@ -50,7 +50,6 @@
         <aside class="home-preview-card card" aria-label="Interactive exterior home preview">
           <div class="home-preview-toolbar p-3"><div><strong>Property live view</strong><div id="homeViewLabel" class="small text-white-50">Site plan · Two story · Two-car garage</div></div><div class="home-view-buttons" role="group" aria-label="Select home preview view"><button type="button" class="home-view-button active" data-home-view="plan" aria-pressed="true">Site Plan</button><button type="button" class="home-view-button" data-home-view="front" aria-pressed="false">Front + Garage</button><button type="button" class="home-view-button" data-home-view="rear" aria-pressed="false">Rear Face</button><button type="button" class="home-view-button" data-home-view="garden" aria-pressed="false">Garden + Gazebo</button></div></div>
           <div class="home-stage"><svg id="homePreview" viewBox="0 0 1000 680" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="homePreviewTitle homePreviewDesc"></svg></div>
-          <div class="card-body border-top"><div class="small text-secondary">This is a planning visualization rather than a construction drawing. Final measurements, power-injection points, weatherproofing and ladder access must be confirmed from photos and an on-site inspection.</div></div>
         </aside>
       </div>`;
 })();
