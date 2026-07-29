@@ -1,0 +1,4 @@
+- Approved photorealistic sedan remains the visible vehicle
+- Lighting overlays share the sedan stage coordinate system
+- Wireframe vehicle is not used
+- Draft branch only
