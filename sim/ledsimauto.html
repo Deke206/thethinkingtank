@@ -3,81 +3,174 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LED Sim Auto — Coming Soon | ShyneTyme.Works</title>
-  <meta name="description" content="LED Sim Auto is currently under construction while ShyneTyme.Works improves the vehicle views and selectable LED installation zones.">
-  <meta name="theme-color" content="#06152f">
+  <title>SIM Auto Lighting Builder | ShyneTyme.Works</title>
+  <meta name="description" content="Preview selectable vehicle LED installation areas, colors, effects, and an estimated package range before requesting a ShyneTyme.Works installation.">
+  <meta name="theme-color" content="#030918">
   <link rel="canonical" href="https://shynetyme.works/sim/ledsimauto.html">
-  <link rel="icon" href="../favicon.ico" sizes="any">
-  <link rel="icon" type="image/png" sizes="32x32" href="../assets/brand/favicon-32.png">
-  <link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oxanium:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../css/site.css?v=shared-ui-9">
   <link rel="stylesheet" href="../css/site-navigation.css?v=shared-ui-9" data-shynetyme-navigation="true">
-  <link rel="stylesheet" href="../css/site-chuck.css?v=shared-ui-9" data-shynetyme-site-chuck="true">
-  <link rel="stylesheet" href="../css/site-chuck-cloud.css?v=20260725-cloud-shift-v1" data-shynetyme-site-chuck-cloud="true">
+  <link rel="stylesheet" href="../css/sim-auto.css?v=sim-auto-functional-1">
 </head>
-<body class="bg-body-tertiary d-flex flex-column min-vh-100">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top" aria-label="Primary navigation">
-    <div class="container">
-      <a class="navbar-brand fw-bold brand-lockup" href="../index.html">
-        <img src="../assets/brand/favicon-32.png" width="34" height="34" alt="">
-        <span>ShyneTyme <em>Works</em></span>
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navMenu">
-        <div class="navbar-nav ms-auto">
-          <a class="nav-link" href="../build-my-bike.html">Build</a>
-          <a class="nav-link" href="../index.html#effects">Effects</a>
-          <a class="nav-link" href="../led-catalog.html">LED Catalog</a>
-          <a class="nav-link active" href="ledsimauto.html" aria-current="page">LED Sim Auto</a>
-          <a class="nav-link" href="../aboutme.html">About Deke</a>
-          <a class="nav-link" href="../contact.html">Request Install</a>
-        </div>
-      </div>
+<body class="sim-auto-page">
+  <a class="sim-skip-link" href="#sim-builder">Skip to builder</a>
+
+  <nav class="sim-nav" aria-label="Primary navigation">
+    <a class="sim-brand" href="../index.html" aria-label="ShyneTyme Works home">
+      <span>ShyneTyme</span><em>.Works</em>
+    </a>
+    <button class="sim-nav-toggle" type="button" aria-expanded="false" aria-controls="sim-nav-links">Menu</button>
+    <div class="sim-nav-links" id="sim-nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../index.html#services">Services</a>
+      <a href="../led-catalog.html">Catalog</a>
+      <a class="is-active" href="ledsimauto.html" aria-current="page">Simulator</a>
+      <a href="../aboutme.html">About</a>
+      <a href="../contact.html">Contact</a>
     </div>
+    <a class="sim-book-link" href="../contact.html">Request install</a>
   </nav>
 
-  <main id="main-content" tabindex="-1" class="flex-grow-1 d-flex align-items-center py-5">
-    <div class="container py-4 py-lg-5">
-      <section class="mx-auto text-center bg-white border rounded-4 shadow-sm p-4 p-md-5" style="max-width: 900px;">
-        <div class="d-inline-flex align-items-center gap-2 rounded-pill border bg-light px-3 py-2 mb-4 text-uppercase fw-bold small" style="letter-spacing: .08em;">
-          <span aria-hidden="true">🛠️</span>
-          Under Construction
+  <main id="sim-builder" class="sim-shell" tabindex="-1">
+    <header class="sim-hero">
+      <div>
+        <p class="sim-eyebrow">Visualize. Select. Shyne.</p>
+        <h1>SIM Auto Lighting Builder</h1>
+        <p>Build a real installation request by selecting lighting zones directly on the vehicle.</p>
+      </div>
+      <div class="sim-hero-status" aria-live="polite">
+        <span>Build status</span>
+        <strong><span data-selected-count>0</span> zones selected</strong>
+      </div>
+    </header>
+
+    <section class="sim-workspace" aria-label="Vehicle lighting configurator">
+      <aside class="sim-panel sim-controls" aria-labelledby="lighting-controls-heading">
+        <div class="sim-panel-heading">
+          <div>
+            <p class="sim-panel-kicker">Step <span data-step-number>1</span> of 6</p>
+            <h2 id="lighting-controls-heading" data-step-title>Choose your vehicle</h2>
+          </div>
+          <button class="sim-icon-button" type="button" data-clear title="Clear all selections" aria-label="Clear all selections">↻</button>
         </div>
 
-        <h1 class="display-4 fw-bold mb-3" style="font-family: Oxanium, sans-serif;">LED Sim Auto</h1>
-        <p class="lead text-secondary mx-auto mb-4" style="max-width: 680px;">
-          We are rebuilding the vehicle views, selectable lighting zones, and mobile controls so the simulator is accurate and easy to use.
-        </p>
-
-        <div class="border rounded-4 bg-body-tertiary p-4 mb-4">
-          <h2 class="h4 fw-bold mb-2">Coming Soon</h2>
-          <p class="mb-0 text-secondary">
-            The finished simulator will let customers choose exterior and interior LED installation areas before requesting a quote or appointment.
-          </p>
+        <div class="sim-section" data-step-section="vehicle">
+          <label class="sim-label" for="vehicle-type">Vehicle type</label>
+          <select id="vehicle-type" class="sim-select" data-vehicle-type>
+            <option value="sedan">Four-door sedan</option>
+            <option value="coupe">Two-door coupe</option>
+            <option value="suv">SUV / crossover</option>
+            <option value="truck">Pickup truck</option>
+            <option value="van">Van</option>
+          </select>
+          <p class="sim-help">The sedan drawing is the current working template. Other body styles are saved with the request for custom review.</p>
         </div>
 
-        <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
-          <a class="btn btn-primary btn-lg px-4" href="../contact.html">Request an LED Consultation</a>
-          <a class="btn btn-outline-secondary btn-lg px-4" href="../index.html">Return Home</a>
+        <div class="sim-section" data-step-section="zones">
+          <div class="sim-zone-list" data-zone-list>
+            <label class="sim-zone-control"><input type="checkbox" value="underglow" data-zone-input><span class="sim-zone-icon" aria-hidden="true">▔</span><span><strong>Underglow</strong><small>Underbody perimeter glow</small></span></label>
+            <label class="sim-zone-control"><input type="checkbox" value="rocker-panels" data-zone-input><span class="sim-zone-icon" aria-hidden="true">━</span><span><strong>Rocker boards</strong><small>Side skirt accent line</small></span></label>
+            <label class="sim-zone-control"><input type="checkbox" value="wheel-rings" data-zone-input><span class="sim-zone-icon" aria-hidden="true">◉</span><span><strong>Wheel rings</strong><small>Glow inside each rim</small></span></label>
+            <label class="sim-zone-control"><input type="checkbox" value="wheel-wells" data-zone-input><span class="sim-zone-icon" aria-hidden="true">◠</span><span><strong>Wheel wells</strong><small>Light around the arches</small></span></label>
+            <label class="sim-zone-control"><input type="checkbox" value="headlights" data-zone-input><span class="sim-zone-icon" aria-hidden="true">◁</span><span><strong>Headlight accents</strong><small>Front lamp accent strips</small></span></label>
+            <label class="sim-zone-control"><input type="checkbox" value="interior" data-zone-input><span class="sim-zone-icon" aria-hidden="true">⌂</span><span><strong>Interior lighting</strong><small>Dash, footwell, and cabin glow</small></span></label>
+            <label class="sim-zone-control"><input type="checkbox" value="rear-accents" data-zone-input><span class="sim-zone-icon" aria-hidden="true">▷</span><span><strong>Trunk / rear accents</strong><small>Rear lamp and trunk lighting</small></span></label>
+          </div>
+          <p class="sim-help">Tap a control or tap the matching area on the vehicle.</p>
         </div>
+
+        <div class="sim-section" data-step-section="theme">
+          <fieldset class="sim-fieldset">
+            <legend>Theme color</legend>
+            <div class="sim-color-grid" data-color-grid>
+              <label style="--swatch:#9b5cff"><input type="radio" name="theme-color" value="#9b5cff" checked><span>Purple</span></label>
+              <label style="--swatch:#31e6ff"><input type="radio" name="theme-color" value="#31e6ff"><span>Cyan</span></label>
+              <label style="--swatch:#48a9ff"><input type="radio" name="theme-color" value="#48a9ff"><span>Blue</span></label>
+              <label style="--swatch:#55e6b5"><input type="radio" name="theme-color" value="#55e6b5"><span>Mint</span></label>
+              <label style="--swatch:#ffc562"><input type="radio" name="theme-color" value="#ffc562"><span>Amber</span></label>
+              <label style="--swatch:#ff5ab9"><input type="radio" name="theme-color" value="#ff5ab9"><span>Pink</span></label>
+              <label style="--swatch:#ffffff"><input type="radio" name="theme-color" value="#ffffff"><span>White</span></label>
+            </div>
+          </fieldset>
+          <label class="sim-label" for="effect-mode">Animation style</label>
+          <select id="effect-mode" class="sim-select" data-effect-mode><option value="solid">Solid</option><option value="breathe">Breathe</option><option value="chase">Chase</option><option value="spectrum">Color spectrum</option></select>
+          <label class="sim-label sim-range-label" for="brightness">Brightness <output for="brightness" data-brightness-output>82%</output></label>
+          <input id="brightness" class="sim-range" type="range" min="25" max="100" value="82" data-brightness>
+        </div>
+
+        <div class="sim-section" data-step-section="review"><div class="sim-review-card" data-inline-review><p>Select lighting zones to build your package.</p></div></div>
+        <div class="sim-control-actions"><button type="button" class="sim-button sim-button-secondary" data-back disabled>Back</button><button type="button" class="sim-button sim-button-primary" data-next>Start selecting</button></div>
+      </aside>
+
+      <section class="sim-stage-panel" aria-labelledby="vehicle-preview-heading">
+        <div class="sim-stage-toolbar">
+          <div><p class="sim-panel-kicker">Live vehicle preview</p><h2 id="vehicle-preview-heading">Four-door sedan</h2></div>
+          <div class="sim-view-tabs" role="tablist" aria-label="Vehicle view angle"><button type="button" role="tab" aria-selected="true" class="is-active" data-view="side">Side</button><button type="button" role="tab" aria-selected="false" data-view="front">Front</button><button type="button" role="tab" aria-selected="false" data-view="rear">Rear</button></div>
+        </div>
+
+        <div class="sim-stage" data-stage data-view="side" data-effect="solid">
+          <div class="sim-stage-grid" aria-hidden="true"></div>
+          <svg class="sim-car sim-car-side" data-car-view="side" viewBox="0 0 1200 700" role="img" aria-labelledby="side-car-title side-car-desc">
+            <title id="side-car-title">Side-view sedan lighting preview</title><desc id="side-car-desc">A vector sedan with selectable underglow, rocker panel, wheel ring, wheel well, headlight, interior, and rear accent zones.</desc>
+            <defs>
+              <linearGradient id="bodyPaint" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#29334a"/><stop offset="0.42" stop-color="#111827"/><stop offset="1" stop-color="#050812"/></linearGradient>
+              <linearGradient id="glassPaint" x1="0" x2="1"><stop offset="0" stop-color="#20314d"/><stop offset="1" stop-color="#07111f"/></linearGradient>
+              <filter id="softGlow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="16" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              <filter id="wideGlow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="30"/></filter>
+            </defs>
+            <ellipse class="sim-road-shadow" cx="600" cy="594" rx="455" ry="54"/>
+            <path class="sim-light-zone sim-underglow" data-zone-shape="underglow" d="M220 572 C400 612 800 612 1010 566"/>
+            <path class="sim-light-zone sim-rocker" data-zone-shape="rocker-panels" d="M335 531 C520 548 730 548 888 526"/>
+            <path class="sim-car-body" d="M139 459 C151 421 185 391 237 372 L360 327 C403 264 468 215 566 192 C682 166 788 192 873 271 L941 340 C1003 354 1055 384 1080 426 L1097 478 C1102 512 1071 536 1018 542 L964 547 C954 469 916 426 851 426 C785 426 743 470 733 549 L469 551 C459 470 417 426 351 426 C286 426 245 469 234 546 L186 538 C139 530 120 503 139 459 Z"/>
+            <path class="sim-body-highlight" d="M194 405 C346 353 476 314 864 329 C920 331 980 349 1025 379"/>
+            <path class="sim-window" d="M391 318 C432 263 488 228 568 211 L590 322 Z"/><path class="sim-window" d="M608 207 C701 199 780 223 850 284 L884 326 L620 322 Z"/>
+            <path class="sim-window-divider" d="M602 208 L611 323"/><path class="sim-window-divider" d="M783 229 L792 324"/><path class="sim-door-line" d="M610 327 L602 520"/><path class="sim-door-line" d="M790 327 L806 516"/><path class="sim-door-handle" d="M676 368 h44"/><path class="sim-door-handle" d="M842 367 h39"/><path class="sim-mirror" d="M894 321 q54 -14 69 11 q-20 28 -69 18 Z"/><path class="sim-bumper-detail" d="M1017 434 l72 4 l5 39 l-86 5"/><path class="sim-grille-detail" d="M1016 394 q49 7 65 30 l-77 2"/>
+            <g class="sim-wheel" transform="translate(351 528)"><circle class="sim-tire" r="102"/><circle class="sim-rim" r="72"/><circle class="sim-rim-inner" r="26"/><g class="sim-spokes"><path d="M0 -65 L10 -18 M56 -33 L17 -8 M56 33 L17 8 M0 65 L-10 18 M-56 33 L-17 8 M-56 -33 L-17 -8"/></g><circle class="sim-light-zone sim-wheel-ring" data-zone-shape="wheel-rings" r="78"/></g>
+            <g class="sim-wheel" transform="translate(851 528)"><circle class="sim-tire" r="102"/><circle class="sim-rim" r="72"/><circle class="sim-rim-inner" r="26"/><g class="sim-spokes"><path d="M0 -65 L10 -18 M56 -33 L17 -8 M56 33 L17 8 M0 65 L-10 18 M-56 33 L-17 8 M-56 -33 L-17 -8"/></g><circle class="sim-light-zone sim-wheel-ring" data-zone-shape="wheel-rings" r="78"/></g>
+            <path class="sim-light-zone sim-wheel-well" data-zone-shape="wheel-wells" d="M257 515 A96 96 0 0 1 445 515"/><path class="sim-light-zone sim-wheel-well" data-zone-shape="wheel-wells" d="M757 515 A96 96 0 0 1 945 515"/>
+            <path class="sim-light-zone sim-headlight" data-zone-shape="headlights" d="M965 381 C1018 381 1057 393 1073 412 C1030 425 992 425 958 411 Z"/><path class="sim-headlight-core" d="M976 395 C1018 394 1043 400 1058 409"/>
+            <path class="sim-light-zone sim-rear-accent" data-zone-shape="rear-accents" d="M155 421 C187 402 215 398 244 404 L227 437 L158 445 Z"/>
+            <path class="sim-light-zone sim-interior" data-zone-shape="interior" d="M391 318 C432 263 488 228 568 211 L590 322 L884 326 L850 284 C780 223 701 199 608 207 L602 208 L611 323 Z"/>
+            <g class="sim-hit-zones" aria-label="Selectable lighting areas">
+              <path tabindex="0" role="button" aria-label="Toggle underglow" data-zone-hit="underglow" d="M188 537 C350 618 895 621 1044 530 L1048 606 C835 679 390 673 170 605 Z"/>
+              <path tabindex="0" role="button" aria-label="Toggle rocker boards" data-zone-hit="rocker-panels" d="M322 497 H904 V566 H322 Z"/>
+              <circle tabindex="0" role="button" aria-label="Toggle wheel rings" data-zone-hit="wheel-rings" cx="351" cy="528" r="93"/><circle tabindex="0" role="button" aria-label="Toggle wheel rings" data-zone-hit="wheel-rings" cx="851" cy="528" r="93"/>
+              <path tabindex="0" role="button" aria-label="Toggle wheel wells" data-zone-hit="wheel-wells" d="M240 520 A112 112 0 0 1 462 520 L431 520 A81 81 0 0 0 271 520 Z"/><path tabindex="0" role="button" aria-label="Toggle wheel wells" data-zone-hit="wheel-wells" d="M740 520 A112 112 0 0 1 962 520 L931 520 A81 81 0 0 0 771 520 Z"/>
+              <path tabindex="0" role="button" aria-label="Toggle headlights" data-zone-hit="headlights" d="M938 356 H1093 V442 H938 Z"/><path tabindex="0" role="button" aria-label="Toggle interior lighting" data-zone-hit="interior" d="M370 180 H905 V345 H370 Z"/><path tabindex="0" role="button" aria-label="Toggle rear accents" data-zone-hit="rear-accents" d="M126 372 H264 V467 H126 Z"/>
+            </g>
+          </svg>
+
+          <svg class="sim-car sim-car-front" data-car-view="front" viewBox="0 0 1200 700" role="img" aria-label="Front view sedan lighting preview" hidden>
+            <ellipse class="sim-road-shadow" cx="600" cy="596" rx="350" ry="52"/><path class="sim-light-zone sim-underglow" data-zone-shape="underglow" d="M316 570 Q600 630 884 570"/><path class="sim-front-body" d="M310 491 C319 355 373 242 470 202 C545 171 655 171 730 202 C827 242 881 355 890 491 L858 556 H342 Z"/><path class="sim-front-glass" d="M430 337 C449 248 506 208 600 208 C694 208 751 248 770 337 Z"/><path class="sim-front-grille" d="M430 420 Q600 375 770 420 L743 506 H457 Z"/><circle class="sim-front-tire" cx="344" cy="514" r="72"/><circle class="sim-front-tire" cx="856" cy="514" r="72"/>
+            <path class="sim-light-zone sim-headlight" data-zone-shape="headlights" d="M351 385 Q425 355 503 383 L474 428 Q404 424 350 406 Z"/><path class="sim-light-zone sim-headlight" data-zone-shape="headlights" d="M697 383 Q775 355 849 385 L850 406 Q796 424 726 428 Z"/><path class="sim-light-zone sim-interior" data-zone-shape="interior" d="M430 337 C449 248 506 208 600 208 C694 208 751 248 770 337 Z"/><path class="sim-light-zone sim-wheel-well" data-zone-shape="wheel-wells" d="M292 511 A54 54 0 0 1 396 511"/><path class="sim-light-zone sim-wheel-well" data-zone-shape="wheel-wells" d="M804 511 A54 54 0 0 1 908 511"/>
+            <g class="sim-hit-zones"><path tabindex="0" role="button" aria-label="Toggle underglow" data-zone-hit="underglow" d="M270 535 H930 V646 H270 Z"/><path tabindex="0" role="button" aria-label="Toggle headlights" data-zone-hit="headlights" d="M320 338 H880 V455 H320 Z"/><path tabindex="0" role="button" aria-label="Toggle interior lighting" data-zone-hit="interior" d="M399 176 H801 V352 H399 Z"/><path tabindex="0" role="button" aria-label="Toggle wheel wells" data-zone-hit="wheel-wells" d="M272 446 H414 V574 H272 Z"/><path tabindex="0" role="button" aria-label="Toggle wheel wells" data-zone-hit="wheel-wells" d="M786 446 H928 V574 H786 Z"/></g>
+          </svg>
+
+          <svg class="sim-car sim-car-rear" data-car-view="rear" viewBox="0 0 1200 700" role="img" aria-label="Rear view sedan lighting preview" hidden>
+            <ellipse class="sim-road-shadow" cx="600" cy="596" rx="350" ry="52"/><path class="sim-light-zone sim-underglow" data-zone-shape="underglow" d="M316 570 Q600 630 884 570"/><path class="sim-rear-body" d="M310 491 C319 355 373 242 470 202 C545 171 655 171 730 202 C827 242 881 355 890 491 L858 556 H342 Z"/><path class="sim-rear-glass" d="M430 337 C449 248 506 208 600 208 C694 208 751 248 770 337 Z"/><path class="sim-rear-deck" d="M378 370 Q600 330 822 370 L806 439 H394 Z"/><path class="sim-rear-bumper" d="M351 461 Q600 505 849 461 L832 540 H368 Z"/><circle class="sim-front-tire" cx="344" cy="514" r="72"/><circle class="sim-front-tire" cx="856" cy="514" r="72"/>
+            <path class="sim-light-zone sim-rear-accent" data-zone-shape="rear-accents" d="M347 381 Q425 355 500 382 L480 426 Q410 426 350 405 Z"/><path class="sim-light-zone sim-rear-accent" data-zone-shape="rear-accents" d="M700 382 Q775 355 853 381 L850 405 Q790 426 720 426 Z"/><path class="sim-light-zone sim-interior" data-zone-shape="interior" d="M430 337 C449 248 506 208 600 208 C694 208 751 248 770 337 Z"/><path class="sim-light-zone sim-wheel-well" data-zone-shape="wheel-wells" d="M292 511 A54 54 0 0 1 396 511"/><path class="sim-light-zone sim-wheel-well" data-zone-shape="wheel-wells" d="M804 511 A54 54 0 0 1 908 511"/>
+            <g class="sim-hit-zones"><path tabindex="0" role="button" aria-label="Toggle underglow" data-zone-hit="underglow" d="M270 535 H930 V646 H270 Z"/><path tabindex="0" role="button" aria-label="Toggle rear accents" data-zone-hit="rear-accents" d="M320 338 H880 V455 H320 Z"/><path tabindex="0" role="button" aria-label="Toggle interior lighting" data-zone-hit="interior" d="M399 176 H801 V352 H399 Z"/><path tabindex="0" role="button" aria-label="Toggle wheel wells" data-zone-hit="wheel-wells" d="M272 446 H414 V574 H272 Z"/><path tabindex="0" role="button" aria-label="Toggle wheel wells" data-zone-hit="wheel-wells" d="M786 446 H928 V574 H786 Z"/></g>
+          </svg>
+          <div class="sim-stage-tip" aria-live="polite" data-stage-tip>Start by choosing a vehicle type, then select lighting zones.</div>
+        </div>
+
+        <ol class="sim-stepper" aria-label="Build progress"><li class="is-active" data-step="1"><button type="button"><span>1</span>Vehicle</button></li><li data-step="2"><button type="button"><span>2</span>Lighting</button></li><li data-step="3"><button type="button"><span>3</span>Wheels</button></li><li data-step="4"><button type="button"><span>4</span>Accents</button></li><li data-step="5"><button type="button"><span>5</span>Theme</button></li><li data-step="6"><button type="button"><span>6</span>Review</button></li></ol>
       </section>
-    </div>
+
+      <aside class="sim-panel sim-summary" aria-labelledby="build-summary-heading">
+        <div class="sim-panel-heading"><div><p class="sim-panel-kicker">Live build</p><h2 id="build-summary-heading">Build summary</h2></div><span class="sim-count-badge"><span data-selected-count>0</span>/7</span></div>
+        <div class="sim-summary-list" data-summary-list><p class="sim-empty-summary">No lighting zones selected yet.</p></div>
+        <div class="sim-theme-summary"><span>Theme</span><strong><i data-theme-dot></i><span data-theme-name>Electric purple</span></strong><small data-effect-label>Solid · 82% brightness</small></div>
+        <div class="sim-estimate-card"><span>Planning estimate</span><strong data-estimate>$0</strong><small>Final quote depends on vehicle access, product choice, wiring, and installation time.</small></div>
+        <div class="sim-assurance-list"><div><span aria-hidden="true">◈</span><p><strong>Visual selection</strong><small>Every active light corresponds to a saved zone.</small></p></div><div><span aria-hidden="true">⚡</span><p><strong>Custom installation</strong><small>Build details carry into the request form.</small></p></div><div><span aria-hidden="true">✓</span><p><strong>No automatic charge</strong><small>This simulator creates a consultation request.</small></p></div></div>
+      </aside>
+    </section>
   </main>
 
-  <footer class="py-4 border-top bg-white" aria-label="Site footer">
-    <div class="container small d-flex flex-wrap justify-content-between gap-2">
-      <span>Copyright © 2026 DeacStudio. All rights reserved.</span>
-      <span><a href="../PRIVACY.md">Privacy</a> · <a href="../TERMS.md">Terms</a> · <a href="../aboutme.html">About Deke</a> · <a href="../contact.html">Contact</a></span>
-    </div>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="../js/site-guide.js?v=shared-ui-9"></script>
+  <dialog class="sim-dialog" data-review-dialog aria-labelledby="review-dialog-title"><form method="dialog" class="sim-dialog-card"><button class="sim-dialog-close" value="cancel" aria-label="Close review">×</button><p class="sim-panel-kicker">SIM Auto package</p><h2 id="review-dialog-title">Review your lighting build</h2><div data-dialog-review></div><div class="sim-dialog-actions"><button class="sim-button sim-button-secondary" value="cancel">Keep editing</button><button class="sim-button sim-button-primary" type="button" data-request-build>Send to request form</button></div></form></dialog>
+  <footer class="sim-footer"><span>ShyneTyme.Works · Custom LED installation</span><span>Your ride. Your style. We make it shyne.</span></footer>
+  <script src="../js/sim-auto.js?v=sim-auto-functional-1"></script>
 </body>
 </html>
