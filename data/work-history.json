@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-29T09:31:43.430Z",
-  "commitCount": 390,
+  "generatedAt": "2026-07-29T09:32:50.673Z",
+  "commitCount": 391,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1953,6 +1953,11 @@
       "sha": "cac0ee54b0b3248688dfc79700762bdc8c9c67de",
       "date": "2026-07-29T09:31:22Z",
       "message": "Refresh Home Sim mobile stylesheet"
+    },
+    {
+      "sha": "cdca61cea69b2e5dd7c4a914cdaa5e1ca879c0d1",
+      "date": "2026-07-29T09:32:36Z",
+      "message": "Preserve Home Sim page metadata"
     }
   ]
 }
