@@ -1,0 +1,21 @@
+SIM Auto exact-car asset integrity
+
+Page segment Git blob SHAs:
+page-0.txt       ac86a147c8b21164931676af928571242664560e
+page-1.txt       fee8a9bb51dfbed1c0ed0d694fbaebbb82138bb1
+page-tail-0.txt  aa686bd893041e150dfd8dfb465f56e9464a5c9c
+page-tail-1.txt  b2e4787ed77061fd648b7c04a2e8db79597e4270
+page-tail-2.txt  301f8d9d479955b62933eb760fd0d6d4ad605b69
+page-tail-3.txt  1c576df217d3cfdc0fdee62b6d946e0f84d63665
+page-tail-4.txt  7a509eaf8342357c5ea90349600cca4edbf733f4
+
+Vehicle segment Git blob SHAs:
+car-base-1.txt   850b25433c6e6a7374b8528b834e9e8ca1a4a5cd
+car-base-2.txt   3224de14919687fc4e83d142a49d3a4615a3fbe4
+car-base-3.txt   6994713bb516eaf04d5b9887715d5ef42605cea5
+car-base-4.txt   c531c2e73af1cb129a862b8afe494404f1a15bf6
+car-base-5.txt   bd8ab0b399d35fd41440a075f9d7a65cf98c2101
+car-base-6.txt   57509c43dde1c7e279e51b30d1dc19ccdda046d4
+
+Standalone local artifact SHA-256:
+SIM-Auto-exact-car-functional.html  9b4edfe9bdc853a6ffbe1f5f92f330eb70d17938c48aff3bb88762ccb27c0432
