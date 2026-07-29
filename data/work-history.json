@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-28T23:29:28.874Z",
-  "commitCount": 384,
+  "generatedAt": "2026-07-29T03:29:03.348Z",
+  "commitCount": 385,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -1923,6 +1923,11 @@
       "sha": "f7bf11c7280ff0c965abee3881495d26b1d056c8",
       "date": "2026-07-28T23:29:08Z",
       "message": "Remove Home Sim preview disclaimer"
+    },
+    {
+      "sha": "4c695506dc2fcc67e953c022f5ca968103e8970b",
+      "date": "2026-07-29T03:28:47Z",
+      "message": "Standardize catalog image and card heights"
     }
   ]
 }
