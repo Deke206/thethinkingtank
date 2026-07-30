@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-30T07:37:49.086Z",
-  "commitCount": 404,
+  "generatedAt": "2026-07-30T20:02:58.502Z",
+  "commitCount": 405,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -2023,6 +2023,11 @@
       "sha": "945b70bf57dbc9ee57110fa0235301d701510d4c",
       "date": "2026-07-30T07:37:35Z",
       "message": "Unify simulator headers and add Auto planning range"
+    },
+    {
+      "sha": "19f31a90141acee42b126a5f02c5fe7c6a58a743",
+      "date": "2026-07-30T20:02:41Z",
+      "message": "Compact About page support links into icons"
     }
   ]
 }
