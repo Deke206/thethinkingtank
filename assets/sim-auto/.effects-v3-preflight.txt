@@ -1,1 +1,0 @@
-Temporary preflight marker for SIM Auto multi-effect upgrade. Safe to delete before merge.
