@@ -62,7 +62,7 @@
   const getPageKey = () => (window.location.pathname.split("/").filter(Boolean).pop() || "index.html").toLowerCase();
   const bikeBuilderUrl = new URL("build-my-bike.html", siteRoot).href;
   const homeBuilderUrl = new URL("build-my-home.html", siteRoot).href;
-  const autoBuilderUrl = new URL("sim/ledsimauto.html", siteRoot).href;
+  const autoBuilderUrl = new URL("build-my-auto.html", siteRoot).href;
   const catalogUrl = new URL("led-catalog.html", siteRoot).href;
   const expoUrl = new URL("LEDexpo.html", siteRoot).href;
   const aboutDekeUrl = new URL("aboutme.html", siteRoot).href;
@@ -102,7 +102,7 @@
     const page = getPageKey();
     const bikeActive = page === "build-my-bike.html";
     const homeActive = page === "build-my-home.html";
-    const autoActive = page === "ledsimauto.html";
+    const autoActive = page === "build-my-auto.html";
     const catalogActive = page === "led-catalog.html";
     const expoActive = page === "ledexpo.html";
     const aboutActive = page === "aboutme.html";
