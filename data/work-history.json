@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-07-30T20:34:37.504Z",
-  "commitCount": 406,
+  "generatedAt": "2026-07-31T05:21:23.966Z",
+  "commitCount": 407,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -2033,6 +2033,11 @@
       "sha": "bc9c676091289a749a573a43e4b803552468406b",
       "date": "2026-07-30T20:34:18Z",
       "message": "Use clean SIM Auto car and default all zones off"
+    },
+    {
+      "sha": "c10740ce84dfdbe17674e4b84927988a979fed50",
+      "date": "2026-07-31T05:21:09Z",
+      "message": "Move LED Auto simulator into root hierarchy"
     }
   ]
 }
