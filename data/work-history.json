@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-08-05T21:17:11.207Z",
-  "commitCount": 413,
+  "generatedAt": "2026-08-05T22:48:52.258Z",
+  "commitCount": 414,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -2068,6 +2068,11 @@
       "sha": "67b8744c223b088f55cbd9f935ab6244242aa411",
       "date": "2026-08-05T21:16:28Z",
       "message": "Build BTF project catalog"
+    },
+    {
+      "sha": "1614e19a2c0fd9ba95e82d85b863fdc37b2fc515",
+      "date": "2026-08-05T22:48:31Z",
+      "message": "Connect catalog selections to full project requests"
     }
   ]
 }
