@@ -59,11 +59,15 @@
     messageColumn.before(template.content);
   };
 
+  const zipField = document.getElementById("serviceZip")
+    ? ""
+    : `<div class="col-md-6">
+        <label class="form-label" for="contactZip">ZIP code</label>
+        <input class="form-control" id="contactZip" name="zip_code" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="10" placeholder="90034">
+      </div>`;
+
   insertBeforeMessage(`
-    <div class="col-md-6">
-      <label class="form-label" for="contactZip">ZIP code</label>
-      <input class="form-control" id="contactZip" name="zip_code" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="10" placeholder="90034">
-    </div>
+    ${zipField}
     <div class="col-md-6">
       <label class="form-label" for="preferredContact">Preferred contact</label>
       <select class="form-select" id="preferredContact" name="preferred_contact">
@@ -136,6 +140,13 @@
     form.appendChild(input);
   });
 
+  if (!form.elements.namedItem("zip_code")) {
+    const zipInput = document.createElement("input");
+    zipInput.type = "hidden";
+    zipInput.name = "zip_code";
+    form.appendChild(zipInput);
+  }
+
   const honeypot = document.createElement("div");
   honeypot.className = "shynetyme-honeypot";
   honeypot.setAttribute("aria-hidden", "true");
@@ -174,7 +185,37 @@
     form.elements.namedItem("user_agent").value = navigator.userAgent;
   };
 
+  const syncProjectDetails = () => {
+    const serviceZip = getField("service_zip");
+    if (serviceZip && form.elements.namedItem("zip_code")) {
+      form.elements.namedItem("zip_code").value = serviceZip;
+    }
+
+    const details = [];
+    const addDetail = (label, fieldName) => {
+      const value = escapeMailValue(getField(fieldName));
+      if (value) details.push(`${label}: ${value}`);
+    };
+
+    addDetail("Service address", "service_address");
+    addDetail("Service city", "service_city");
+    addDetail("Service state", "service_state");
+    addDetail("Service ZIP", "service_zip");
+    addDetail("Material delivery", "material_delivery");
+    addDetail("Appointment timing", "appointment_timing");
+    addDetail("Shipping address", "shipping_address");
+    addDetail("Material deposit", "material_deposit_acknowledgement");
+
+    const catalogSelections = escapeMailValue(getField("catalog_selections"));
+    if (catalogSelections) details.push(`Catalog selections:\n${catalogSelections}`);
+
+    const existingSummary = escapeMailValue(getField("build_summary"));
+    const combined = [existingSummary, details.join("\n")].filter(Boolean).join("\n\n");
+    form.elements.namedItem("build_summary").value = combined;
+  };
+
   const buildMailto = () => {
+    syncProjectDetails();
     const projectType = escapeMailValue(getField("project_type"));
     const subject = `ShyneTyme ${projectType || "LED"} project request`;
     const body = [
@@ -196,14 +237,16 @@
 
   const applyStoredBuild = () => {
     try {
-      const stored = sessionStorage.getItem("shynetymeLeadDraft");
+      const stored = sessionStorage.getItem("shynetymeLeadDraft")
+        || localStorage.getItem("shynetymeContactDraft");
       if (!stored) return;
       const draft = JSON.parse(stored);
       if (!draft || typeof draft !== "object") return;
       if (draft.projectType && form.elements.namedItem("project_type")) form.elements.namedItem("project_type").value = draft.projectType;
       if (draft.budget && form.elements.namedItem("budget")) form.elements.namedItem("budget").value = draft.budget;
-      if (draft.summary) {
-        form.elements.namedItem("build_summary").value = String(draft.summary);
+      const draftSummary = draft.summary || (Array.isArray(draft.project) ? draft.project.map((item) => item.productName || item.name || item.key).filter(Boolean).join(", ") : "");
+      if (draftSummary) {
+        form.elements.namedItem("build_summary").value = String(draftSummary);
         if (!getField("message")) form.elements.namedItem("message").value = "I completed a ShyneTyme simulator build and would like the next steps for an estimate.";
         setStatus("info", "Your simulator selections were attached to this request.");
       }
@@ -236,6 +279,7 @@
       }
       form.reset();
       sessionStorage.removeItem("shynetymeLeadDraft");
+      localStorage.removeItem("shynetymeContactDraft");
       refreshSubmissionIdentity();
       activeToken = "";
       return;
@@ -258,6 +302,7 @@
       return;
     }
 
+    syncProjectDetails();
     fallbackLink.href = buildMailto();
 
     if (!endpoint) {
