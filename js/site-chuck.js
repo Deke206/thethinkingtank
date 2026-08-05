@@ -10,13 +10,16 @@
   const siteRoot = new URL("../", scriptUrl);
 
   const chuckCssUrl = new URL("css/site-chuck.css?v=20260724-cloud-guidance", siteRoot).href;
-  const cloudCssUrl = new URL("css/site-chuck-cloud.css?v=20260725-cloud-shift-v1", siteRoot).href;
+  const cloudCssUrl = new URL("css/site-chuck-cloud.css?v=20260805-design-chain-v1", siteRoot).href;
   const chuckSpriteUrl = new URL("js/chuck-sprite.js?v=20260725-phone-scroll-v2", siteRoot).href;
+  const designChainUrl = new URL("js/customer-design-chain.js?v=20260805-design-chain-v1", siteRoot).href;
   const scanAtlasUrl = new URL("assets/brand/chuck-search-map.webp", siteRoot).href;
   const laptopAtlasUrl = new URL("assets/brand/chuck-search-laptop.webp", siteRoot).href;
   const fallbackImageUrl = new URL("assets/brand/pet-chuck-mark.png", siteRoot).href;
   const aboutDekeUrl = new URL("aboutme.html", siteRoot).href;
   const bikeBuilderUrl = new URL("build-my-bike.html", siteRoot).href;
+  const homeBuilderUrl = new URL("build-my-home.html", siteRoot).href;
+  const autoBuilderUrl = new URL("build-my-auto.html", siteRoot).href;
 
   const loadStylesheet = (href, attribute) => {
     const existing = document.querySelector(`link[${attribute}]`);
@@ -31,6 +34,30 @@
     link.setAttribute(attribute, "true");
     document.head.appendChild(link);
   };
+
+  const loadScript = (src, attribute) => new Promise((resolve) => {
+    const existing = document.querySelector(`script[${attribute}]`);
+    if (existing) {
+      if (existing.dataset.loaded === "true") {
+        resolve(true);
+        return;
+      }
+      existing.addEventListener("load", () => resolve(true), { once: true });
+      existing.addEventListener("error", () => resolve(false), { once: true });
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = src;
+    script.defer = true;
+    script.setAttribute(attribute, "true");
+    script.addEventListener("load", () => {
+      script.dataset.loaded = "true";
+      resolve(true);
+    }, { once: true });
+    script.addEventListener("error", () => resolve(false), { once: true });
+    document.head.appendChild(script);
+  });
 
   const removeRetiredGuide = () => {
     document.querySelectorAll(".site-guide-button, #siteGuidePanel").forEach((element) => element.remove());
@@ -52,6 +79,7 @@
         <button class="deke-chuck-thought__close" id="dekeChuckClose" type="button" aria-label="Close Chuck's message">×</button>
         <p class="deke-chuck-thought__text" id="dekeChuckText"></p>
         <a class="deke-chuck-thought__action" id="dekeChuckAction" href="#"></a>
+        <div class="deke-chuck-thought__choices" id="dekeChuckChoices" hidden></div>
       </div>
       <button class="deke-chuck-trigger" id="dekeChuckTrigger" type="button" aria-expanded="false" aria-controls="dekeChuckThought" aria-label="Tickle Chuck for another thought">
         <span class="deke-chuck-search-light" aria-hidden="true"></span>
@@ -91,9 +119,10 @@
   const thought = widget.querySelector("#dekeChuckThought");
   const text = widget.querySelector("#dekeChuckText");
   const action = widget.querySelector("#dekeChuckAction");
+  const choices = widget.querySelector("#dekeChuckChoices");
   const close = widget.querySelector("#dekeChuckClose");
 
-  if (!trigger || !thought || !text || !action || !close) return;
+  if (!trigger || !thought || !text || !action || !choices || !close) return;
   if (widget.dataset.chuckMounted === "true") return;
   widget.dataset.chuckMounted = "true";
 
@@ -105,6 +134,14 @@
 
   const rotatingMessages = [
     {
+      text: "What do you\nwant to light?",
+      choices: [
+        { label: "Bike", href: bikeBuilderUrl },
+        { label: "Home", href: homeBuilderUrl },
+        { label: "Auto", href: autoBuilderUrl }
+      ]
+    },
+    {
       text: "Need help?\nTickle Chuck.\nI'll point\nthe way.",
       label: "Next",
       href: "#chuck-next"
@@ -113,17 +150,12 @@
       text: "Need Shyne?\nTry the LED\nBike Factory.",
       label: "LED\nBike Sim",
       href: bikeBuilderUrl
-    },
-    {
-      text: "Need another\nspot?\nTickle Chuck\nagain.",
-      label: "Next",
-      href: "#chuck-next"
     }
   ];
 
   const CLOUD_THEMES = ["cyan", "pink", "amber"];
-  const WELCOME_VISIBLE_MS = 6000;
-  const MESSAGE_VISIBLE_MS = 10000;
+  const WELCOME_VISIBLE_MS = 7000;
+  const MESSAGE_VISIBLE_MS = 12000;
   const AFTER_SCROLL_DELAY_MS = 15000;
   const SCROLL_STOP_MS = 650;
 
@@ -153,8 +185,8 @@
   });
 
   const nextCloudTheme = () => {
-    const choices = CLOUD_THEMES.filter((theme) => theme !== previousTheme);
-    const theme = choices[Math.floor(Math.random() * choices.length)];
+    const available = CLOUD_THEMES.filter((theme) => theme !== previousTheme);
+    const theme = available[Math.floor(Math.random() * available.length)] || CLOUD_THEMES[0];
     previousTheme = theme;
     return theme;
   };
@@ -174,7 +206,7 @@
 
   const hideThought = () => {
     window.clearTimeout(hideTimer);
-    thought.classList.remove("is-visible", "is-materializing");
+    thought.classList.remove("is-visible", "is-materializing", "has-choices");
     trigger.setAttribute("aria-expanded", "false");
     window.setTimeout(() => {
       if (!thought.classList.contains("is-visible")) thought.hidden = true;
@@ -187,15 +219,45 @@
     thought.classList.add("is-materializing");
   };
 
+  const renderChoices = (items = []) => {
+    choices.innerHTML = items.map((item, index) => {
+      const label = String(item?.label || `Choice ${index + 1}`);
+      const href = item?.href ? String(item.href) : "#";
+      const actionName = item?.action ? String(item.action) : "";
+      const className = item?.primary ? " is-primary" : "";
+      return `<a class="deke-chuck-thought__choice${className}" href="${href.replaceAll('"', '&quot;')}" data-chuck-choice="${actionName.replaceAll('"', '&quot;')}">${label.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</a>`;
+    }).join("");
+    choices.hidden = !items.length;
+    thought.classList.toggle("has-choices", Boolean(items.length));
+  };
+
   const showMessage = (message, visibleMs = MESSAGE_VISIBLE_MS) => {
+    if (!message) return;
+    window.clearTimeout(welcomeTimer);
     window.clearTimeout(hideTimer);
     widget.classList.remove("is-searching");
     pendingScrollMode = "";
     chuckAnimation?.stop();
-    setTheme(nextCloudTheme());
-    text.textContent = message.text;
-    action.textContent = message.label;
-    action.href = message.href;
+    setTheme(message.theme || nextCloudTheme());
+    text.textContent = String(message.text || "");
+
+    const messageChoices = Array.isArray(message.choices) ? message.choices.filter(Boolean) : [];
+    renderChoices(messageChoices);
+
+    if (messageChoices.length) {
+      action.hidden = true;
+      action.textContent = "";
+      action.removeAttribute("href");
+    } else if (message.label && message.href) {
+      action.hidden = false;
+      action.textContent = String(message.label);
+      action.href = String(message.href);
+    } else {
+      action.hidden = true;
+      action.textContent = "";
+      action.removeAttribute("href");
+    }
+
     thought.hidden = false;
     materializeThought();
 
@@ -204,7 +266,11 @@
       trigger.setAttribute("aria-expanded", "true");
     });
 
-    hideTimer = window.setTimeout(hideThought, visibleMs);
+    if (visibleMs > 0) hideTimer = window.setTimeout(hideThought, visibleMs);
+  };
+
+  const showChoices = (textValue, choiceItems, visibleMs = 0) => {
+    showMessage({ text: textValue, choices: choiceItems }, visibleMs);
   };
 
   const showNextMessage = () => {
@@ -258,13 +324,66 @@
     }
   });
 
+  choices.addEventListener("click", (event) => {
+    const choice = event.target.closest("[data-chuck-choice]");
+    if (!choice) return;
+    const actionName = choice.dataset.chuckChoice || "";
+    if (actionName === "dismiss") {
+      event.preventDefault();
+      hideThought();
+      return;
+    }
+    if (actionName === "next") {
+      event.preventDefault();
+      showNextMessage();
+      return;
+    }
+    if (actionName) {
+      event.preventDefault();
+      document.dispatchEvent(new CustomEvent("shynetyme:chuck-choice", {
+        detail: { action: actionName, element: choice }
+      }));
+    }
+  });
+
   close.addEventListener("click", hideThought);
   window.addEventListener("scroll", handleScroll, { passive: true });
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") hideThought();
   });
 
-  welcomeTimer = window.setTimeout(() => showMessage(welcomeMessage, WELCOME_VISIBLE_MS), 650);
+  const pageKey = (window.location.pathname.split("/").filter(Boolean).pop() || "index.html").toLowerCase();
+  const chainManagedPages = new Set([
+    "index.html",
+    "build-my-bike.html",
+    "build-my-home.html",
+    "build-my-auto.html",
+    "project-recommendations.html",
+    "contact.html"
+  ]);
+
+  window.ShynetymeChuck = {
+    mounted: true,
+    widget,
+    showMessage,
+    showChoices,
+    showNextMessage,
+    hideThought,
+    showWelcome: () => showMessage(welcomeMessage, WELCOME_VISIBLE_MS),
+    urls: {
+      siteRoot: siteRoot.href,
+      bike: bikeBuilderUrl,
+      home: homeBuilderUrl,
+      auto: autoBuilderUrl,
+      about: aboutDekeUrl
+    }
+  };
+
+  loadScript(designChainUrl, "data-shynetyme-design-chain").then((loaded) => {
+    if (!loaded || !chainManagedPages.has(pageKey)) {
+      welcomeTimer = window.setTimeout(() => showMessage(welcomeMessage, WELCOME_VISIBLE_MS), 650);
+    }
+  });
 
   window.addEventListener("pagehide", () => {
     chuckAnimation?.stop();
@@ -273,12 +392,4 @@
     window.clearTimeout(hideTimer);
     window.clearTimeout(welcomeTimer);
   }, { once: true });
-
-  window.ShynetymeChuck = {
-    mounted: true,
-    widget,
-    showNextMessage,
-    hideThought,
-    showWelcome: () => showMessage(welcomeMessage, WELCOME_VISIBLE_MS)
-  };
 })();
