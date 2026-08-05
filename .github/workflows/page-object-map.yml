@@ -1,0 +1,48 @@
+name: Page object map v1
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - chore/page-object-map-v1
+    paths:
+      - "**/*.html"
+      - "scripts/page-object-tools.mjs"
+      - ".github/workflows/page-object-map.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  normalize-and-document:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chore/page-object-map-v1
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Add semantic zones and generate cheat sheets
+        run: node scripts/page-object-tools.mjs
+
+      - name: Verify generated JavaScript
+        run: |
+          node --check scripts/page-object-tools.mjs
+          if [ -f js/page-object-zones.js ]; then node --check js/page-object-zones.js; fi
+          if [ -f public/page-object-zones.js ]; then node --check public/page-object-zones.js; fi
+
+      - name: Commit generated files
+        run: |
+          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
+            echo "No generated changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --all
+          git commit -m "docs: generate page object cheat sheets v1.0 [skip ci]"
+          git push origin HEAD:chore/page-object-map-v1
