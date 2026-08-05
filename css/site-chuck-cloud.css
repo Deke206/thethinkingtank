@@ -1,5 +1,4 @@
-/* Chuck thought cloud: three finished neon sprite animations.
-   The cloud artwork already contains its fill, outline and contour LED effect. */
+/* Chuck thought cloud: neon sprite animation and guided customer choices. */
 .deke-chuck-thought {
   --cloud-art: url("../assets/brand/chuck-cloud-cyan.svg?v=20260725-site-led-v1");
   --cloud-glow: rgba(49, 230, 255, .48);
@@ -19,7 +18,6 @@
   transform-origin: 88% 90% !important;
 }
 
-/* One finished transparent sprite. No mask, filler or duplicate outline. */
 .deke-chuck-thought::before {
   content: "" !important;
   position: absolute !important;
@@ -56,7 +54,8 @@
 
 .deke-chuck-thought.is-materializing > .deke-chuck-thought__close,
 .deke-chuck-thought.is-materializing > .deke-chuck-thought__text,
-.deke-chuck-thought.is-materializing > .deke-chuck-thought__action {
+.deke-chuck-thought.is-materializing > .deke-chuck-thought__action,
+.deke-chuck-thought.is-materializing > .deke-chuck-thought__choices {
   animation: chuck-cloud-content .92s ease both !important;
 }
 
@@ -70,7 +69,6 @@
   background: rgba(3, 9, 24, .68) !important;
 }
 
-/* The text area stays completely transparent and sits above the translucent art. */
 .deke-chuck-thought__text {
   position: relative !important;
   z-index: 2 !important;
@@ -113,6 +111,52 @@
   line-height: 1 !important;
   white-space: pre-line !important;
   text-align: center !important;
+}
+
+.deke-chuck-thought__choices {
+  position: relative !important;
+  z-index: 3 !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: .28rem !important;
+  width: 88% !important;
+  max-width: 190px !important;
+  margin: .05rem auto 0 !important;
+}
+
+.deke-chuck-thought__choices[hidden] {
+  display: none !important;
+}
+
+.deke-chuck-thought__choice {
+  display: grid !important;
+  place-items: center !important;
+  min-height: 27px !important;
+  padding: .22rem .3rem !important;
+  color: #fff !important;
+  text-decoration: none !important;
+  text-align: center !important;
+  border: 1px solid rgba(255, 255, 255, .52) !important;
+  border-radius: .45rem !important;
+  background: rgba(3, 9, 24, .78) !important;
+  box-shadow: 0 0 10px rgba(3, 9, 24, .4) !important;
+  font-size: .61rem !important;
+  font-weight: 900 !important;
+  line-height: 1.05 !important;
+}
+
+.deke-chuck-thought__choice:hover,
+.deke-chuck-thought__choice:focus-visible,
+.deke-chuck-thought__choice.is-primary {
+  color: #03111f !important;
+  background: #72efff !important;
+  border-color: #fff !important;
+  outline: none !important;
+}
+
+.deke-chuck-thought.has-choices .deke-chuck-thought__text {
+  max-width: 78% !important;
+  font-size: clamp(.75rem, 1.7vw, .9rem) !important;
 }
 
 .deke-chuck-thought--cyan {
@@ -180,6 +224,18 @@
     padding: .19rem .32rem !important;
     font-size: .6rem !important;
   }
+
+  .deke-chuck-thought__choices {
+    width: 92% !important;
+    max-width: 165px !important;
+    gap: .22rem !important;
+  }
+
+  .deke-chuck-thought__choice {
+    min-height: 24px !important;
+    padding: .18rem .23rem !important;
+    font-size: .55rem !important;
+  }
 }
 
 @media (max-width: 390px) {
@@ -203,5 +259,9 @@
     min-height: 23px !important;
     padding: .17rem .28rem !important;
     font-size: .56rem !important;
+  }
+
+  .deke-chuck-thought__choices {
+    max-width: 154px !important;
   }
 }
