@@ -1,0 +1,153 @@
+# build-my-bike.html — Page Object Cheat Sheet v1.0
+
+**Source file:** `build-my-bike.html`  
+**Purpose:** Stable object names and additive semantic selectors for page editing.
+
+## Object map
+
+- `body.builder-page` — **Builder Page** (classes `.builder-page`) → normalized `.page .page--build-my-bike`
+- `a.skip-link` — **Skip Link** (classes `.skip-link`) [TRIGGER: link #main-content]
+- `nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.sticky-top` — **Primary navigation** (classes `.navbar .navbar-expand-lg .navbar-dark .bg-dark .sticky-top`) → normalized `.site-nav .zone .zone--top`
+- `div.container` — **Container** (classes `.container`) → normalized `.layout-container`
+- `a.navbar-brand.fw-bold.brand-lockup` — **Navbar Brand** (classes `.navbar-brand .fw-bold .brand-lockup`) [TRIGGER: link index.html]
+- `img` — **Img 6** (no existing ID/class) → normalized `.media-object`
+- `button.navbar-toggler` — **Toggle navigation** (classes `.navbar-toggler`) → normalized `.action-trigger` [TRIGGER: button; Bootstrap collapse; target #navMenu; controls #navMenu]
+- `span.navbar-toggler-icon` — **Navbar Toggler Icon** (classes `.navbar-toggler-icon`)
+- `#navMenu` — **NavMenu** (ID `#navMenu`; classes `.collapse .navbar-collapse`)
+- `div.navbar-nav.ms-auto` — **Navbar Nav** (classes `.navbar-nav .ms-auto`)
+- `a.nav-link` — **Nav Link** (classes `.nav-link`) [TRIGGER: link index.html#effects]
+- `a.nav-link.active` — **Nav Link** (classes `.nav-link .active`) [TRIGGER: link build-my-bike.html]
+- `a.nav-link` — **Nav Link** (classes `.nav-link`) [TRIGGER: link led-catalog.html]
+- `a.nav-link` — **Nav Link** (classes `.nav-link`) [TRIGGER: link contact.html]
+- `header.site-banner` — **Page hero / banner** (classes `.site-banner`) → normalized `.page-hero`
+- `#siteBannerCarousel` — **ShyneTyme Works project scenes** (ID `#siteBannerCarousel`; classes `.carousel .slide`)
+- `div.carousel-indicators` — **Carousel Indicators** (classes `.carousel-indicators`)
+- `button.active` — **Slide 1** (classes `.active`) → normalized `.action-trigger` [TRIGGER: button; target #siteBannerCarousel]
+- `button` — **Slide 2** (no existing ID/class) → normalized `.action-trigger` [TRIGGER: button; target #siteBannerCarousel]
+- `button` — **Slide 3** (no existing ID/class) → normalized `.action-trigger` [TRIGGER: button; target #siteBannerCarousel]
+- `button` — **Slide 4** (no existing ID/class) → normalized `.action-trigger` [TRIGGER: button; target #siteBannerCarousel]
+- `div.carousel-inner` — **Carousel Inner** (classes `.carousel-inner`)
+- `div.carousel-item.active` — **Carousel Item** (classes `.carousel-item .active`)
+- `img.d-block.w-100.site-banner-image` — **D Block** (classes `.d-block .w-100 .site-banner-image`) → normalized `.media-object`
+- `div.carousel-caption.site-banner-caption` — **Carousel Caption** (classes `.carousel-caption .site-banner-caption`)
+- `span.site-banner-callout.site-banner-callout--cyan` — **Site Banner Callout** (classes `.site-banner-callout .site-banner-callout--cyan`)
+- `div.carousel-item` — **Carousel Item** (classes `.carousel-item`)
+- `img.d-block.w-100.site-banner-image` — **D Block** (classes `.d-block .w-100 .site-banner-image`) → normalized `.media-object`
+- `div.carousel-caption.site-banner-caption` — **Carousel Caption** (classes `.carousel-caption .site-banner-caption`)
+- `span.site-banner-callout.site-banner-callout--pink` — **Site Banner Callout** (classes `.site-banner-callout .site-banner-callout--pink`)
+- `div.carousel-item` — **Carousel Item** (classes `.carousel-item`)
+- `img.d-block.w-100.site-banner-image` — **D Block** (classes `.d-block .w-100 .site-banner-image`) → normalized `.media-object`
+- `div.carousel-caption.site-banner-caption` — **Carousel Caption** (classes `.carousel-caption .site-banner-caption`)
+- `span.site-banner-callout.site-banner-callout--amber` — **Site Banner Callout** (classes `.site-banner-callout .site-banner-callout--amber`)
+- `div.carousel-item` — **Carousel Item** (classes `.carousel-item`)
+- `img.d-block.w-100.site-banner-image` — **D Block** (classes `.d-block .w-100 .site-banner-image`) → normalized `.media-object`
+- `div.carousel-caption.site-banner-caption` — **Carousel Caption** (classes `.carousel-caption .site-banner-caption`)
+- `span.site-banner-callout.site-banner-callout--violet` — **Site Banner Callout** (classes `.site-banner-callout .site-banner-callout--violet`)
+- `button.carousel-control-prev` — **Carousel Control Prev trigger** (classes `.carousel-control-prev`) → normalized `.action-trigger` [TRIGGER: button; target #siteBannerCarousel]
+- `span.carousel-control-prev-icon` — **Carousel Control Prev Icon** (classes `.carousel-control-prev-icon`)
+- `button.carousel-control-next` — **Carousel Control Next trigger** (classes `.carousel-control-next`) → normalized `.action-trigger` [TRIGGER: button; target #siteBannerCarousel]
+- `span.carousel-control-next-icon` — **Carousel Control Next Icon** (classes `.carousel-control-next-icon`)
+- `#page-subheader` — **Breadcrumb** (ID `#page-subheader`) → normalized `.page-breadcrumb`
+- `#page-subheader-row` — **Page Subheader Row** (ID `#page-subheader-row`)
+- `#page-subheader-text` — **Page Subheader Text** (ID `#page-subheader-text`)
+- `li.page-subheader-item` — **Page Subheader Item** (classes `.page-subheader-item`)
+- `li.page-subheader-item` — **Page Subheader Item** (classes `.page-subheader-item`)
+- `#main-content` — **Main page content** (ID `#main-content`; classes `.py-5`) → normalized `.page-main`
+- `div.container` — **Container** (classes `.container`) → normalized `.layout-container`
+- `div.builder-shell` — **Builder Shell** (classes `.builder-shell`)
+- `#bikeBuilderForm` — **BikeBuilderForm form** (ID `#bikeBuilderForm`; classes `.builder-form`) → normalized `.form-object` [TRIGGER: form submit]
+- `#builderAccordion` — **BuilderAccordion** (ID `#builderAccordion`; classes `.accordion`) → normalized `.component-object`
+- `section.accordion-item` — **Accordion Item section** (classes `.accordion-item`) → normalized `.page-section .page-section--accordion-item .component-object`
+- `h2.accordion-header` — **Accordion Header** (classes `.accordion-header`) → normalized `.component-object`
+- `button.accordion-button` — **Accordion Button trigger** (classes `.accordion-button`) → normalized `.action-trigger .component-object` [TRIGGER: button; Bootstrap collapse; target #bikeSetup; controls #bikeSetup]
+- `#bikeSetup` — **BikeSetup** (ID `#bikeSetup`; classes `.accordion-collapse .collapse .show`) → normalized `.component-object`
+- `div.accordion-body` — **Accordion Body** (classes `.accordion-body`) → normalized `.component-object`
+- `#frameSize` — **FrameSize** (ID `#frameSize`; classes `.form-select`) → normalized `.form-control-object`
+- `#addKidBikeYes` — **AddKidBikeYes** (ID `#addKidBikeYes`; classes `.btn-check`) → normalized `.form-control-object`
+- `#addKidBikeNo` — **AddKidBikeNo** (ID `#addKidBikeNo`; classes `.btn-check`) → normalized `.form-control-object`
+- `#kidBikeOptions` — **KidBikeOptions** (ID `#kidBikeOptions`; classes `.conditional-options`)
+- `#kidFrameSize` — **KidFrameSize** (ID `#kidFrameSize`; classes `.form-select`) → normalized `.form-control-object`
+- `section.accordion-item` — **Accordion Item section** (classes `.accordion-item`) → normalized `.page-section .page-section--accordion-item .component-object`
+- `h2.accordion-header` — **Accordion Header** (classes `.accordion-header`) → normalized `.component-object`
+- `button.accordion-button.collapsed` — **Accordion Button trigger** (classes `.accordion-button .collapsed`) → normalized `.action-trigger .component-object` [TRIGGER: button; Bootstrap collapse; target #lightingZones; controls #lightingZones]
+- `#lightingZones` — **LightingZones** (ID `#lightingZones`; classes `.accordion-collapse .collapse`) → normalized `.component-object`
+- `div.accordion-body` — **Accordion Body** (classes `.accordion-body`) → normalized `.component-object`
+- `section.accordion-item` — **Accordion Item section** (classes `.accordion-item`) → normalized `.page-section .page-section--accordion-item .component-object`
+- `h2.accordion-header` — **Accordion Header** (classes `.accordion-header`) → normalized `.component-object`
+- `button.accordion-button.collapsed` — **Accordion Button trigger** (classes `.accordion-button .collapsed`) → normalized `.action-trigger .component-object` [TRIGGER: button; Bootstrap collapse; target #basketsStorage; controls #basketsStorage]
+- `#basketsStorage` — **BasketsStorage** (ID `#basketsStorage`; classes `.accordion-collapse .collapse`) → normalized `.component-object`
+- `div.accordion-body` — **Accordion Body** (classes `.accordion-body`) → normalized `.component-object`
+- `#pouchOptions` — **PouchOptions** (ID `#pouchOptions`; classes `.conditional-options`)
+- `#pouchStyle` — **PouchStyle** (ID `#pouchStyle`; classes `.form-select`) → normalized `.form-control-object`
+- `#seatPouchOptions` — **SeatPouchOptions** (ID `#seatPouchOptions`; classes `.conditional-options`)
+- `#seatPouchStyle` — **SeatPouchStyle** (ID `#seatPouchStyle`; classes `.form-select`) → normalized `.form-control-object`
+- `section.accordion-item` — **Accordion Item section** (classes `.accordion-item`) → normalized `.page-section .page-section--accordion-item .component-object`
+- `h2.accordion-header` — **Accordion Header** (classes `.accordion-header`) → normalized `.component-object`
+- `button.accordion-button.collapsed` — **Accordion Button trigger** (classes `.accordion-button .collapsed`) → normalized `.action-trigger .component-object` [TRIGGER: button; Bootstrap collapse; target #flagControls; controls #flagControls]
+- `#flagControls` — **FlagControls** (ID `#flagControls`; classes `.accordion-collapse .collapse`) → normalized `.component-object`
+- `div.accordion-body` — **Accordion Body** (classes `.accordion-body`) → normalized `.component-object`
+- `#flagPoleOptions` — **FlagPoleOptions** (ID `#flagPoleOptions`; classes `.conditional-options`)
+- `#flagPoleStyle` — **FlagPoleStyle** (ID `#flagPoleStyle`; classes `.form-select`) → normalized `.form-control-object`
+- `section.accordion-item` — **Accordion Item section** (classes `.accordion-item`) → normalized `.page-section .page-section--accordion-item .component-object`
+- `h2.accordion-header` — **Accordion Header** (classes `.accordion-header`) → normalized `.component-object`
+- `button.accordion-button.collapsed` — **Accordion Button trigger** (classes `.accordion-button .collapsed`) → normalized `.action-trigger .component-object` [TRIGGER: button; Bootstrap collapse; target #appControls; controls #appControls]
+- `#appControls` — **AppControls** (ID `#appControls`; classes `.accordion-collapse .collapse`) → normalized `.component-object`
+- `div.accordion-body` — **Accordion Body** (classes `.accordion-body`) → normalized `.component-object`
+- `#appControlOptions` — **AppControlOptions** (ID `#appControlOptions`; classes `.conditional-options`)
+- `#appWifi` — **AppWifi** (ID `#appWifi`; classes `.form-check-input .app-control-option`) → normalized `.form-control-object`
+- `#appBluetooth` — **AppBluetooth** (ID `#appBluetooth`; classes `.form-check-input .app-control-option`) → normalized `.form-control-object`
+- `#appRemote` — **AppRemote** (ID `#appRemote`; classes `.form-check-input .app-control-option`) → normalized `.form-control-object`
+- `section.accordion-item` — **Accordion Item section** (classes `.accordion-item`) → normalized `.page-section .page-section--accordion-item .component-object`
+- `h2.accordion-header` — **Accordion Header** (classes `.accordion-header`) → normalized `.component-object`
+- `button.accordion-button.collapsed` — **Accordion Button trigger** (classes `.accordion-button .collapsed`) → normalized `.action-trigger .component-object` [TRIGGER: button; Bootstrap collapse; target #rearSafety; controls #rearSafety]
+- `#rearSafety` — **RearSafety** (ID `#rearSafety`; classes `.accordion-collapse .collapse`) → normalized `.component-object`
+- `div.accordion-body` — **Accordion Body** (classes `.accordion-body`) → normalized `.component-object`
+- `#rearBrakeOptions` — **RearBrakeOptions** (ID `#rearBrakeOptions`; classes `.conditional-options`)
+- `#rearBrakeStyle` — **RearBrakeStyle** (ID `#rearBrakeStyle`; classes `.form-select`) → normalized `.form-control-object`
+- `#turnSignalOptions` — **TurnSignalOptions** (ID `#turnSignalOptions`; classes `.conditional-options`)
+- `#turnSignalStyle` — **TurnSignalStyle** (ID `#turnSignalStyle`; classes `.form-select`) → normalized `.form-control-object`
+- `section.accordion-item` — **Accordion Item section** (classes `.accordion-item`) → normalized `.page-section .page-section--accordion-item .component-object`
+- `h2.accordion-header` — **Accordion Header** (classes `.accordion-header`) → normalized `.component-object`
+- `button.accordion-button.collapsed` — **Accordion Button trigger** (classes `.accordion-button .collapsed`) → normalized `.action-trigger .component-object` [TRIGGER: button; Bootstrap collapse; target #helmetBudget; controls #helmetBudget]
+- `#helmetBudget` — **HelmetBudget** (ID `#helmetBudget`; classes `.accordion-collapse .collapse`) → normalized `.component-object`
+- `div.accordion-body` — **Accordion Body** (classes `.accordion-body`) → normalized `.component-object`
+- `#helmetOptions` — **HelmetOptions** (ID `#helmetOptions`; classes `.conditional-options`) → normalized `.zone .zone--top`
+- `#helmetRed` — **HelmetRed** (ID `#helmetRed`; classes `.form-check-input .helmet-option`) → normalized `.form-control-object`
+- `#helmetWhite` — **HelmetWhite** (ID `#helmetWhite`; classes `.form-check-input .helmet-option`) → normalized `.form-control-object`
+- `#helmetStrobe` — **HelmetStrobe** (ID `#helmetStrobe`; classes `.form-check-input .helmet-option`) → normalized `.form-control-object`
+- `#helmetFlashing` — **HelmetFlashing** (ID `#helmetFlashing`; classes `.form-check-input .helmet-option`) → normalized `.form-control-object`
+- `#budget` — **Budget** (ID `#budget`; classes `.form-select`) → normalized `.form-control-object`
+- `div.summary-box.mt-4` — **Summary Box** (classes `.summary-box .mt-4`) → normalized `.component-object`
+- `div.d-flex.flex-wrap.justify-content-between.gap-2.align-items-center.mb-2` — **D Flex** (classes `.d-flex .flex-wrap .justify-content-between .gap-2 .align-items-center .mb-2`) → normalized `.zone .zone--center`
+- `#budgetBadge` — **BudgetBadge** (ID `#budgetBadge`; classes `.badge .budget-badge`)
+- `#buildSummary` — **BuildSummary** (ID `#buildSummary`) → normalized `.component-object`
+- `#copyBuild` — **CopyBuild trigger** (ID `#copyBuild`; classes `.btn .btn-light`) → normalized `.action-trigger` [TRIGGER: button]
+- `#resetBuild` — **ResetBuild trigger** (ID `#resetBuild`; classes `.btn .btn-outline-light`) → normalized `.action-trigger` [TRIGGER: button]
+- `#copyStatus` — **CopyStatus** (ID `#copyStatus`; classes `.small .mt-2`)
+- `aside.preview-card.card` — **Interactive bicycle preview** (classes `.preview-card .card`) → normalized `.component-object`
+- `div.bike-stage` — **Bike Stage** (classes `.bike-stage`)
+- `#bikePreview` — **BikePreview** (ID `#bikePreview`) → normalized `.media-object .component-object`
+- `#bikePreviewTitle` — **BikePreviewTitle** (ID `#bikePreviewTitle`) → normalized `.component-object`
+- `#bikePreviewDesc` — **BikePreviewDesc** (ID `#bikePreviewDesc`) → normalized `.component-object`
+- `#rgbGradient` — **RgbGradient** (ID `#rgbGradient`)
+- `#signalGradientLeft` — **SignalGradientLeft** (ID `#signalGradientLeft`) → normalized `.zone .zone--left`
+- `#signalGradientRight` — **SignalGradientRight** (ID `#signalGradientRight`) → normalized `.zone .zone--right`
+- `#mainBikeGroup` — **MainBikeGroup** (ID `#mainBikeGroup`; classes `.svg-bike-group`)
+- `#kidBikeGroup` — **KidBikeGroup** (ID `#kidBikeGroup`; classes `.svg-bike-group`)
+- `#rearViewPanel` — **RearViewPanel** (ID `#rearViewPanel`) → normalized `.component-object`
+- `#rearBasketRearSvg` — **RearBasketRearSvg** (ID `#rearBasketRearSvg`; classes `.zone .zone-off`)
+- `#rearBrakeRearSvg` — **RearBrakeRearSvg** (ID `#rearBrakeRearSvg`; classes `.tail-light .zone .zone-off`)
+- `rect.tail-pixel.tail-center` — **Tail Pixel** (classes `.tail-pixel .tail-center`) → normalized `.zone .zone--center`
+- `#turnSignalsRearSvg` — **TurnSignalsRearSvg** (ID `#turnSignalsRearSvg`; classes `.turn-signal .zone .zone-off`)
+- `g.signal-arrow.signal-left` — **Signal Arrow** (classes `.signal-arrow .signal-left`) → normalized `.zone .zone--left`
+- `g.signal-arrow.signal-right` — **Signal Arrow** (classes `.signal-arrow .signal-right`) → normalized `.zone .zone--right`
+- `#appControlIcons` — **Selected control methods** (ID `#appControlIcons`; classes `.app-control-icons`)
+- `#wifiIcon` — **WifiIcon** (ID `#wifiIcon`; classes `.control-icon`)
+- `#bluetoothIcon` — **BluetoothIcon** (ID `#bluetoothIcon`; classes `.control-icon`)
+- `#remoteIcon` — **RemoteIcon** (ID `#remoteIcon`; classes `.control-icon`)
+- `footer.py-4.border-top` — **Site footer** (classes `.py-4 .border-top`) → normalized `.site-footer .zone .zone--top`
+- `div.container.small.d-flex.flex-wrap.justify-content-between.gap-2` — **Container** (classes `.container .small .d-flex .flex-wrap .justify-content-between .gap-2`) → normalized `.layout-container`
+
+## Naming rule
+
+Use normalized selectors for future shared CSS/JavaScript; retain existing selectors wherever current functionality depends on them.
