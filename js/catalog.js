@@ -1,7 +1,8 @@
 (async () => {
   "use strict";
 
-  const STORAGE_KEY = "shynetymeBtfProject";
+  const PROJECT_STORAGE_KEY = "shynetymeBtfProject";
+  const CONTACT_DRAFT_KEY = "shynetymeContactDraft";
   const catalog = await window.SHYNETYME_BTF_READY;
   const products = Array.isArray(catalog?.products) ? catalog.products : [];
   const categories = Array.isArray(catalog?.categories) ? catalog.categories : [];
@@ -29,7 +30,18 @@
     addFamilyFromModal: document.getElementById("addFamilyFromModal")
   };
 
-  const productModal = elements.modal ? new bootstrap.Modal(elements.modal) : null;
+  if (!catalog || !products.length || !elements.grid) {
+    if (elements.grid) {
+      elements.grid.innerHTML = '<div class="alert alert-danger" role="alert">The BTF-LIGHTING project catalog could not be loaded.</div>';
+    }
+    if (elements.catalogCount) elements.catalogCount.textContent = "Catalog unavailable";
+    return;
+  }
+
+  const productModal = elements.modal && window.bootstrap?.Modal
+    ? new bootstrap.Modal(elements.modal)
+    : null;
+
   let activeCategory = "all";
   let activeProductId = null;
 
@@ -44,7 +56,7 @@
 
   function readProject() {
     try {
-      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      const saved = JSON.parse(localStorage.getItem(PROJECT_STORAGE_KEY) || "[]");
       return Array.isArray(saved) ? saved : [];
     } catch {
       return [];
@@ -52,7 +64,7 @@
   }
 
   function writeProject(items) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    localStorage.setItem(PROJECT_STORAGE_KEY, JSON.stringify(items));
     renderProject();
   }
 
@@ -78,7 +90,7 @@
   }
 
   function visibleProducts() {
-    const query = elements.search.value.trim().toLowerCase();
+    const query = elements.search?.value.trim().toLowerCase() || "";
     return products.filter((product) => {
       const categoryMatch = activeCategory === "all" || product.category === activeCategory;
       return categoryMatch && (!query || productSearchText(product).includes(query));
@@ -86,37 +98,49 @@
   }
 
   function categoryCount(categoryId) {
-    if (categoryId === "all") return products.length;
-    return products.filter((product) => product.category === categoryId).length;
+    return categoryId === "all"
+      ? products.length
+      : products.filter((product) => product.category === categoryId).length;
   }
 
   function populateCategories() {
-    elements.categoryNav.innerHTML = categories.map((category) => `
-      <button class="catalog-category-button${category.id === activeCategory ? " is-active" : ""}" type="button" data-category="${escapeHtml(category.id)}">
-        <span>${escapeHtml(category.label)}</span>
-        <span class="catalog-category-count">${categoryCount(category.id)}</span>
-      </button>`).join("");
+    if (elements.categoryNav) {
+      elements.categoryNav.innerHTML = categories.map((category) => `
+        <button class="catalog-category-button${category.id === activeCategory ? " is-active" : ""}" type="button" data-category="${escapeHtml(category.id)}">
+          <span>${escapeHtml(category.label)}</span>
+          <span class="catalog-category-count">${categoryCount(category.id)}</span>
+        </button>`).join("");
+    }
 
-    elements.categorySelect.innerHTML = categories.map((category) => `
-      <option value="${escapeHtml(category.id)}">${escapeHtml(category.label)} (${categoryCount(category.id)})</option>`).join("");
-    elements.categorySelect.value = activeCategory;
+    if (elements.categorySelect) {
+      elements.categorySelect.innerHTML = categories.map((category) => `
+        <option value="${escapeHtml(category.id)}">${escapeHtml(category.label)} (${categoryCount(category.id)})</option>`).join("");
+      elements.categorySelect.value = activeCategory;
+    }
   }
 
   function cardCode(product) {
-    if (/WS\d+|SK\d+|TM\d+|XGB\d+/i.test(product.control)) {
-      return product.control.split(/\s+/).slice(0, 2).join(" ");
-    }
-    return product.category.replace("FCOB ", "").replace("Pixel ", "");
+    const controlCode = String(product.control || "").match(/(?:WS|SK|TM|XGB)\d+[A-Z0-9-]*/i)?.[0];
+    if (controlCode) return controlCode.toUpperCase();
+    return String(product.category || "LED")
+      .replace("FCOB ", "")
+      .replace("Pixel ", "")
+      .slice(0, 18);
   }
 
   function renderCards() {
     const items = visibleProducts();
-    const variantTotal = items.reduce((sum, product) => sum + product.variants.length, 0);
-    elements.activeCategory.textContent = categoryLabel(activeCategory);
-    elements.searchScope.textContent = activeCategory === "all"
-      ? "Searching all categories"
-      : `Searching ${categoryLabel(activeCategory)}`;
-    elements.catalogCount.textContent = `${items.length} product families · ${variantTotal} configurations`;
+    const variantTotal = items.reduce((sum, product) => sum + (product.variants?.length || 0), 0);
+
+    if (elements.activeCategory) elements.activeCategory.textContent = categoryLabel(activeCategory);
+    if (elements.searchScope) {
+      elements.searchScope.textContent = activeCategory === "all"
+        ? "Searching all categories"
+        : `Searching ${categoryLabel(activeCategory)}`;
+    }
+    if (elements.catalogCount) {
+      elements.catalogCount.textContent = `${items.length} product families · ${variantTotal} configurations`;
+    }
 
     if (!items.length) {
       elements.grid.innerHTML = `
@@ -140,7 +164,7 @@
             <span class="catalog-chip">${escapeHtml(product.voltages)}</span>
             <span class="catalog-chip">${escapeHtml(product.waterproof)}</span>
             <span class="catalog-chip">${product.variants.length} variants</span>
-            <span class="catalog-chip catalog-chip--quote">Complete project quote</span>
+            <span class="catalog-chip catalog-chip--quote">Project priced</span>
           </div>
           <dl class="catalog-card-meta">
             <div><dt>Control</dt><dd>${escapeHtml(product.control)}</dd></div>
@@ -156,9 +180,19 @@
       </article>`).join("");
   }
 
+  function setModalStatus(message) {
+    if (!elements.modalStatus) return;
+    elements.modalStatus.textContent = message;
+    window.clearTimeout(elements.modalStatus._timer);
+    elements.modalStatus._timer = window.setTimeout(() => {
+      elements.modalStatus.textContent = "";
+    }, 2600);
+  }
+
   function addSelection(product, variant = null) {
     const project = readProject();
     const key = variant ? `${product.id}:item-${variant.item}` : product.id;
+
     if (project.some((item) => item.key === key)) {
       setModalStatus("Already in project list.");
       return;
@@ -170,6 +204,7 @@
       productName: product.name,
       category: product.category,
       sourceItems: product.sourceItems,
+      applications: product.applications || [],
       variant: variant ? {
         item: variant.item,
         length: variant.length,
@@ -181,6 +216,7 @@
       } : null,
       addedAt: new Date().toISOString()
     });
+
     writeProject(project);
     setModalStatus(variant ? `Item ${variant.item} added to project.` : "Product family added to project.");
   }
@@ -191,10 +227,11 @@
 
   function renderProject() {
     const project = readProject();
-    elements.projectCount.textContent = String(project.length);
-    elements.requestQuote.disabled = !project.length;
-    elements.clearProject.disabled = !project.length;
+    if (elements.projectCount) elements.projectCount.textContent = String(project.length);
+    if (elements.requestQuote) elements.requestQuote.disabled = !project.length;
+    if (elements.clearProject) elements.clearProject.disabled = !project.length;
 
+    if (!elements.projectItems) return;
     if (!project.length) {
       elements.projectItems.innerHTML = '<p class="catalog-project-empty">Add product families to build a materials-and-installation request.</p>';
       return;
@@ -203,7 +240,8 @@
     elements.projectItems.innerHTML = project.map((item) => {
       const variantText = item.variant
         ? `Item ${item.variant.item} · ${item.variant.length} · ${item.variant.voltage} · ${item.variant.density} · ${item.variant.waterproof}`
-        : "Family selection · exact configuration to be finalized";
+        : "Family selection · exact configuration finalized during project planning";
+
       return `
         <div class="catalog-project-item">
           <div>
@@ -217,15 +255,6 @@
 
   function modalSummaryCell(label, value) {
     return `<div class="catalog-summary-cell"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`;
-  }
-
-  function setModalStatus(message) {
-    if (!elements.modalStatus) return;
-    elements.modalStatus.textContent = message;
-    window.clearTimeout(elements.modalStatus._timer);
-    elements.modalStatus._timer = window.setTimeout(() => {
-      elements.modalStatus.textContent = "";
-    }, 2600);
   }
 
   function openProduct(product) {
@@ -257,37 +286,42 @@
       </tr>`).join("");
 
     elements.modalStatus.textContent = "";
-    productModal.show();
+    productModal?.show();
   }
 
-  function buildRequestEmail() {
+  function selectionSummary(project) {
+    return project.map((item, index) => {
+      const option = item.variant
+        ? [
+            `Manufacturer item ${item.variant.item}`,
+            item.variant.length,
+            item.variant.voltage,
+            item.variant.density,
+            item.variant.waterproof,
+            item.variant.width,
+            item.variant.detail
+          ].filter(Boolean).join("; ")
+        : "Product family selected; exact configuration to be finalized during design review.";
+
+      return `${index + 1}. ${item.productName}\n   Category: ${item.category}\n   Selection: ${option}`;
+    }).join("\n\n");
+  }
+
+  function openContactRequest() {
     const project = readProject();
     if (!project.length) return;
 
-    const lines = project.map((item, index) => {
-      const variant = item.variant
-        ? `Manufacturer item ${item.variant.item}; ${item.variant.length}; ${item.variant.voltage}; ${item.variant.density}; ${item.variant.waterproof}; ${item.variant.width}; ${item.variant.detail || ""}`
-        : "Exact manufacturer configuration to be selected during project planning.";
-      return `${index + 1}. ${item.productName}\n   Category: ${item.category}\n   Selection: ${variant}`;
-    }).join("\n\n");
+    const draft = {
+      source: "btf-catalog",
+      createdAt: new Date().toISOString(),
+      project,
+      summary: selectionSummary(project),
+      requestType: "Complete LED materials and installation quote",
+      pricingModel: "ShyneTyme-supplied materials, design, controls, fabrication and installation"
+    };
 
-    const subject = "ShyneTyme Complete LED Project Quote Request";
-    const body = [
-      "I selected the following BTF-LIGHTING systems for a complete ShyneTyme materials-and-installation quote:",
-      "",
-      lines,
-      "",
-      "Project type:",
-      "Installation address or ZIP code:",
-      "Approximate measurements:",
-      "Indoor/outdoor:",
-      "Desired colors, effects and controls:",
-      "Preferred timeline:",
-      "",
-      "Please provide the next steps for measurements, design review, material deposit and installation scheduling."
-    ].join("\n");
-
-    window.location.href = `mailto:westsidelistingservices@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    localStorage.setItem(CONTACT_DRAFT_KEY, JSON.stringify(draft));
+    window.location.href = "contact.html?source=btf-catalog#contact-request";
   }
 
   function setCategory(categoryId) {
@@ -297,14 +331,14 @@
     document.getElementById("catalog-shell")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  elements.categoryNav.addEventListener("click", (event) => {
+  elements.categoryNav?.addEventListener("click", (event) => {
     const button = event.target.closest("[data-category]");
     if (button) setCategory(button.dataset.category);
   });
 
-  elements.categorySelect.addEventListener("change", () => setCategory(elements.categorySelect.value));
-  elements.search.addEventListener("input", renderCards);
-  elements.clearSearch.addEventListener("click", () => {
+  elements.categorySelect?.addEventListener("change", () => setCategory(elements.categorySelect.value));
+  elements.search?.addEventListener("input", renderCards);
+  elements.clearSearch?.addEventListener("click", () => {
     elements.search.value = "";
     elements.search.focus();
     renderCards();
@@ -325,7 +359,7 @@
     }
   });
 
-  elements.variantRows.addEventListener("click", (event) => {
+  elements.variantRows?.addEventListener("click", (event) => {
     const button = event.target.closest("[data-add-variant]");
     if (!button) return;
     const product = products.find((item) => item.id === activeProductId);
@@ -333,29 +367,23 @@
     if (product && variant) addSelection(product, variant);
   });
 
-  elements.addFamilyFromModal.addEventListener("click", () => {
+  elements.addFamilyFromModal?.addEventListener("click", () => {
     const product = products.find((item) => item.id === activeProductId);
     if (product) addSelection(product);
   });
 
-  elements.projectItems.addEventListener("click", (event) => {
+  elements.projectItems?.addEventListener("click", (event) => {
     const button = event.target.closest("[data-remove-project]");
     if (button) removeSelection(button.dataset.removeProject);
   });
 
-  elements.requestQuote.addEventListener("click", buildRequestEmail);
-  elements.clearProject.addEventListener("click", () => writeProject([]));
+  elements.requestQuote?.addEventListener("click", openContactRequest);
+  elements.clearProject?.addEventListener("click", () => writeProject([]));
 
-  elements.modal.addEventListener("hidden.bs.modal", () => {
+  elements.modal?.addEventListener("hidden.bs.modal", () => {
     activeProductId = null;
     elements.modalStatus.textContent = "";
   });
-
-  if (!catalog || !products.length) {
-    elements.grid.innerHTML = '<div class="alert alert-danger" role="alert">The BTF-LIGHTING project catalog could not be loaded.</div>';
-    elements.catalogCount.textContent = "Catalog unavailable";
-    return;
-  }
 
   populateCategories();
   renderCards();

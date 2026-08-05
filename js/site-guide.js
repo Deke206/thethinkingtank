@@ -4,11 +4,14 @@
   if (window.ShynetymeSiteGuide?.initialized) return;
   window.ShynetymeSiteGuide = { initialized: true };
 
+  const CONTACT_DRAFT_KEY = "shynetymeContactDraft";
+  const PROJECT_STORAGE_KEY = "shynetymeBtfProject";
+
   const scriptUrl = document.currentScript?.src
     ? new URL(document.currentScript.src, window.location.href)
     : new URL("js/site-guide.js", window.location.href);
   const siteRoot = new URL("../", scriptUrl);
-  const sharedRevision = scriptUrl.searchParams.get("v") || "shared-ui-13";
+  const sharedRevision = scriptUrl.searchParams.get("v") || "shared-ui-14";
   const withRevision = (path) => {
     const url = new URL(path, siteRoot);
     url.searchParams.set("v", sharedRevision);
@@ -154,10 +157,157 @@
     }
   };
 
+  const readContactDraft = () => {
+    try {
+      const draft = JSON.parse(localStorage.getItem(CONTACT_DRAFT_KEY) || "null");
+      return draft && typeof draft === "object" ? draft : null;
+    } catch {
+      return null;
+    }
+  };
+
+  const inferProjectType = (draft) => {
+    const text = JSON.stringify(draft?.project || []).toLowerCase();
+    if (/house|home|room|garage|pathway|yard|property|architectural|exterior/.test(text)) return "House Exterior";
+    if (/car|vehicle|auto/.test(text)) return "Car";
+    if (/motorcycle/.test(text)) return "Motorcycle";
+    if (/boat|marina/.test(text)) return "Boat";
+    if (/bike|bicycle|e-bike/.test(text)) return "Bicycle";
+    return "Special Request";
+  };
+
+  const installContactRequestFields = () => {
+    if (getPageKey() !== "contact.html") return;
+
+    const form = document.querySelector(".contact-form");
+    const fieldsRow = form?.querySelector(".row.g-3");
+    const message = form?.querySelector("#contactMessage");
+    if (!form || !fieldsRow || !message || document.getElementById("contactProjectDetails")) return;
+
+    form.id = "contact-request";
+    const draft = readContactDraft();
+    const project = Array.isArray(draft?.project) ? draft.project : [];
+    const selectionSummary = String(draft?.summary || "").trim();
+
+    const section = document.createElement("div");
+    section.id = "contactProjectDetails";
+    section.className = "col-12";
+    section.innerHTML = `
+      <section class="contact-project-details" aria-labelledby="contactProjectDetailsTitle">
+        <div class="contact-project-details__heading">
+          <div>
+            <p class="section-kicker mb-1">Project logistics</p>
+            <h2 id="contactProjectDetailsTitle" class="h4 mb-1">Materials, delivery and installation address</h2>
+          </div>
+          <span class="contact-project-details__count">${project.length} selected</span>
+        </div>
+        <p class="contact-project-details__note">ShyneTyme supplies the approved materials as part of the complete project quote. A material deposit is collected before products are ordered.</p>
+
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label" for="serviceAddress">Service address</label>
+            <input class="form-control" id="serviceAddress" name="service_address" type="text" autocomplete="street-address" placeholder="Street address where the installation will be completed">
+          </div>
+          <div class="col-md-5">
+            <label class="form-label" for="serviceCity">City</label>
+            <input class="form-control" id="serviceCity" name="service_city" type="text" autocomplete="address-level2" value="Los Angeles">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label" for="serviceState">State</label>
+            <input class="form-control" id="serviceState" name="service_state" type="text" autocomplete="address-level1" value="CA">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="serviceZip">ZIP code</label>
+            <input class="form-control" id="serviceZip" name="service_zip" type="text" inputmode="numeric" autocomplete="postal-code">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="materialDelivery">Material delivery</label>
+            <select class="form-select" id="materialDelivery" name="material_delivery">
+              <option value="hold-for-installation">Hold materials for the scheduled installation</option>
+              <option value="service-address">Ship materials to the service address</option>
+              <option value="customer-address">Ship materials to a different customer address</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="appointmentTiming">Appointment timing</label>
+            <select class="form-select" id="appointmentTiming" name="appointment_timing">
+              <option>Schedule after materials arrive</option>
+              <option>Need an on-site measurement first</option>
+              <option>Requesting an estimate only</option>
+            </select>
+          </div>
+          <div class="col-12 d-none" id="shippingAddressGroup">
+            <label class="form-label" for="shippingAddress">Different shipping address</label>
+            <textarea class="form-control" id="shippingAddress" name="shipping_address" rows="3" autocomplete="shipping street-address" placeholder="Recipient name and complete delivery address"></textarea>
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="catalogSelectionSummary">Selected catalog systems</label>
+            <textarea class="form-control contact-selection-summary" id="catalogSelectionSummary" name="catalog_selections" rows="${project.length ? Math.min(14, Math.max(5, project.length * 3)) : 4}" readonly placeholder="Selections added from the BTF-LIGHTING project catalog will appear here.">${selectionSummary}</textarea>
+            <input id="catalogSelectionJson" name="catalog_selection_json" type="hidden" value="">
+          </div>
+          <div class="col-12">
+            <div class="form-check">
+              <input class="form-check-input" id="materialDepositAcknowledgement" name="material_deposit_acknowledgement" type="checkbox" value="Acknowledged">
+              <label class="form-check-label" for="materialDepositAcknowledgement">I understand that approved project materials require a deposit before ShyneTyme places the order.</label>
+            </div>
+          </div>
+        </div>
+      </section>`;
+
+    message.closest(".col-12")?.insertAdjacentElement("beforebegin", section);
+
+    const projectJson = section.querySelector("#catalogSelectionJson");
+    if (projectJson) projectJson.value = JSON.stringify(project);
+
+    const delivery = section.querySelector("#materialDelivery");
+    const shippingGroup = section.querySelector("#shippingAddressGroup");
+    const updateShippingVisibility = () => {
+      shippingGroup?.classList.toggle("d-none", delivery?.value !== "customer-address");
+    };
+    delivery?.addEventListener("change", updateShippingVisibility);
+    updateShippingVisibility();
+
+    const projectType = form.querySelector("#contactProject");
+    if (draft && projectType) projectType.value = inferProjectType(draft);
+
+    if (selectionSummary && !message.value.trim()) {
+      message.value = [
+        "I am requesting a complete materials-and-installation quote for the selected lighting systems.",
+        "",
+        selectionSummary,
+        "",
+        "Project measurements and effect goals:",
+        "Preferred timeline:"
+      ].join("\n");
+    }
+
+    form.addEventListener("submit", () => {
+      if (!selectionSummary || message.value.includes(selectionSummary)) return;
+      message.value = `${message.value.trim()}\n\nSelected catalog systems:\n${selectionSummary}`.trim();
+    });
+
+    if (!document.getElementById("contactProjectDetailsStyles")) {
+      const style = document.createElement("style");
+      style.id = "contactProjectDetailsStyles";
+      style.textContent = `
+        .contact-project-details{margin:.35rem 0;padding:1rem;border:1px solid rgba(92,238,255,.24);border-radius:1rem;background:linear-gradient(145deg,rgba(6,28,54,.88),rgba(5,15,32,.94))}
+        .contact-project-details__heading{display:flex;align-items:start;justify-content:space-between;gap:1rem}
+        .contact-project-details__count{flex:0 0 auto;padding:.32rem .6rem;color:#04151f;border-radius:999px;background:#72efff;font-size:.76rem;font-weight:900}
+        .contact-project-details__note{margin:.85rem 0 1rem;color:#ffd18e;font-size:.86rem;line-height:1.55}
+        .contact-selection-summary{min-height:9rem;white-space:pre-wrap;background:rgba(2,13,28,.82)!important}`;
+      document.head.appendChild(style);
+    }
+
+    if (window.location.hash === "#contact-request") {
+      window.setTimeout(() => form.scrollIntoView({ behavior: "smooth", block: "start" }), 120);
+    }
+  };
+
   document.documentElement.lang = document.documentElement.lang || "en";
   sharedStyles.forEach(loadStyle);
   installBrandLockup();
   installNavigation();
   installBikePreviewRules();
+  installContactRequestFields();
   loadScript("js/site-chuck.js", "data-shynetyme-site-chuck-script", "ShynetymeChuck");
 })();
