@@ -1,36 +1,36 @@
-(() => {
+(async () => {
   "use strict";
 
-  const STORAGE_KEY = "shynetymeMaterialNotes";
-  const CATEGORY_ORDER = [
-    "LED Lighting",
-    "Controllers",
-    "Connectors and Wiring",
-    "Installation Supplies",
-    "Mobile Power",
-    "Power Supplies",
-    "Splitters and Boosters"
-  ];
-  const products = Array.isArray(window.SHYNETYME_PRODUCTS) ? window.SHYNETYME_PRODUCTS : [];
+  const STORAGE_KEY = "shynetymeBtfProject";
+  const catalog = await window.SHYNETYME_BTF_READY;
+  const products = Array.isArray(catalog?.products) ? catalog.products : [];
+  const categories = Array.isArray(catalog?.categories) ? catalog.categories : [];
 
-  const catalogGrid = document.getElementById("catalogGrid");
-  const categoryFilter = document.getElementById("categoryFilter");
-  const catalogSearch = document.getElementById("catalogSearch");
-  const catalogCount = document.getElementById("catalogCount");
+  const elements = {
+    search: document.getElementById("catalogSearch"),
+    clearSearch: document.getElementById("clearSearch"),
+    categoryNav: document.getElementById("categoryNav"),
+    categorySelect: document.getElementById("categorySelect"),
+    searchScope: document.getElementById("searchScope"),
+    activeCategory: document.getElementById("activeCategory"),
+    catalogCount: document.getElementById("catalogCount"),
+    grid: document.getElementById("catalogGrid"),
+    projectCount: document.getElementById("projectCount"),
+    projectItems: document.getElementById("projectItems"),
+    requestQuote: document.getElementById("requestQuote"),
+    clearProject: document.getElementById("clearProject"),
+    modal: document.getElementById("productModal"),
+    modalCategory: document.getElementById("productModalCategory"),
+    modalTitle: document.getElementById("productModalTitle"),
+    modalDescription: document.getElementById("productModalDescription"),
+    modalSummary: document.getElementById("productModalSummary"),
+    variantRows: document.getElementById("productVariantRows"),
+    modalStatus: document.getElementById("modalStatus"),
+    addFamilyFromModal: document.getElementById("addFamilyFromModal")
+  };
 
-  const modalElement = document.getElementById("productModal");
-  const productModal = modalElement ? new bootstrap.Modal(modalElement) : null;
-  const productModalCategory = document.getElementById("productModalCategory");
-  const productModalDescription = document.getElementById("productModalDescription");
-  const productModalImage = document.getElementById("productModalImage");
-  const productModalSpecs = document.getElementById("productModalSpecs");
-  const productModalIncluded = document.getElementById("productModalIncluded");
-  const modalQuantity = document.getElementById("modalQuantity");
-  const modalArea = document.getElementById("modalArea");
-  const modalAddMaterial = document.getElementById("modalAddMaterial");
-  const modalMaterialStatus = document.getElementById("modalMaterialStatus");
-
-  let selectedCategory = "all";
+  const productModal = elements.modal ? new bootstrap.Modal(elements.modal) : null;
+  let activeCategory = "all";
   let activeProductId = null;
 
   function escapeHtml(value = "") {
@@ -42,357 +42,322 @@
       .replaceAll("'", "&#039;");
   }
 
-  function formatPrice(value) {
-    if (typeof value !== "number" || Number.isNaN(value)) return "Not listed";
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD"
-    }).format(value);
-  }
-
-  function productCategory(product) {
-    const name = String(product.name || "").toLowerCase();
-    const originalCategory = String(product.category || "").toLowerCase();
-
-    if (
-      name.includes("signal amplifier") ||
-      name.includes("signal repeater") ||
-      name.includes("data signal") ||
-      name.includes("splitter") ||
-      name.includes("booster") ||
-      name.includes("sp901e")
-    ) {
-      return "Splitters and Boosters";
-    }
-
-    if (
-      name.includes("aluminum channel") ||
-      name.includes("mounting channel") ||
-      name.includes("diffuser") ||
-      name.includes("mounting clip")
-    ) {
-      return "Installation Supplies";
-    }
-
-    if (
-      originalCategory.includes("connectors") ||
-      name.includes("connector") ||
-      name.includes("extension cable") ||
-      name.includes("extension wire") ||
-      name.includes("jst-sm")
-    ) {
-      return "Connectors and Wiring";
-    }
-
-    if (
-      name.includes("power bank") ||
-      name.includes("portable battery") ||
-      name.includes("mobile power")
-    ) {
-      return "Mobile Power";
-    }
-
-    if (originalCategory.includes("power supplies") || name.includes("power supply")) {
-      return "Power Supplies";
-    }
-
-    if (originalCategory.includes("controllers")) {
-      return "Controllers";
-    }
-
-    return "LED Lighting";
-  }
-
-  function preferredSpecs(product) {
-    const preferredKeys = [
-      "Voltage",
-      "Input voltage",
-      "Water protection",
-      "Length",
-      "LED density",
-      "Output",
-      "Wire",
-      "Connector",
-      "Compatibility"
-    ];
-
-    const chips = preferredKeys
-      .filter((key) => product.specs?.[key])
-      .slice(0, 3)
-      .map((key) => `<span class="catalog-spec-chip">${escapeHtml(product.specs[key])}</span>`);
-
-    chips.push(`<span class="catalog-spec-chip catalog-price-chip">Price: ${escapeHtml(formatPrice(product.price))}</span>`);
-    return chips.join("");
-  }
-
-  function visibleProducts() {
-    const query = catalogSearch.value.trim().toLowerCase();
-
-    return products.filter((product) => {
-      const displayCategory = productCategory(product);
-      const categoryMatch = selectedCategory === "all" || displayCategory === selectedCategory;
-      const searchableText = [
-        product.name,
-        displayCategory,
-        formatPrice(product.price),
-        ...Object.values(product.specs || {}),
-        ...(product.included || [])
-      ].join(" ").toLowerCase();
-
-      return categoryMatch && (!query || searchableText.includes(query));
-    });
-  }
-
-  function populateCategoryFilter() {
-    const actualCategories = [...new Set(products.map(productCategory))]
-      .sort((a, b) => {
-        const aIndex = CATEGORY_ORDER.indexOf(a);
-        const bIndex = CATEGORY_ORDER.indexOf(b);
-        if (aIndex === -1 && bIndex === -1) return a.localeCompare(b);
-        if (aIndex === -1) return 1;
-        if (bIndex === -1) return -1;
-        return aIndex - bIndex;
-      });
-
-    categoryFilter.innerHTML = [
-      '<option value="all">All categories</option>',
-      ...actualCategories.map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`)
-    ].join("");
-    categoryFilter.value = selectedCategory;
-  }
-
-  function materialControls(product, context = "card") {
-    const prefix = `${context}-${product.id}`;
-    return `
-      <div class="catalog-material-controls" data-material-controls="${escapeHtml(product.id)}">
-        <label class="catalog-number-field" for="${prefix}-quantity">
-          <span>Quantity Needed</span>
-          <input id="${prefix}-quantity" class="form-control form-control-sm material-quantity" type="number" min="1" step="1" inputmode="numeric" value="1">
-        </label>
-        <label class="catalog-number-field" for="${prefix}-area">
-          <span>Area Sq Ft</span>
-          <input id="${prefix}-area" class="form-control form-control-sm material-area" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0">
-        </label>
-        <button class="btn btn-neon-cyan catalog-add-button" type="button" data-add-material="${escapeHtml(product.id)}">Add Material</button>
-        <span class="catalog-add-status" aria-live="polite"></span>
-      </div>`;
-  }
-
-  function renderCatalog() {
-    const items = visibleProducts();
-    catalogCount.textContent = `${items.length} of ${products.length} items`;
-
-    if (!items.length) {
-      catalogGrid.innerHTML = `
-        <div class="col-12">
-          <div class="catalog-empty">
-            <strong>No products match that search.</strong><br>
-            Try another specification or category.
-          </div>
-        </div>`;
-      return;
-    }
-
-    catalogGrid.innerHTML = items.map((product) => `
-      <div class="col-sm-6 col-xl-4">
-        <article class="catalog-product-card">
-          <div class="catalog-product-image-wrap">
-            <img
-              class="catalog-product-image"
-              src="${escapeHtml(product.image)}"
-              alt="${escapeHtml(product.name)}"
-              loading="lazy">
-          </div>
-          <div class="catalog-product-body">
-            <p class="catalog-product-category">${escapeHtml(productCategory(product))}</p>
-            <div class="catalog-product-title-area">
-              <h2 class="catalog-product-title">${escapeHtml(product.name)}</h2>
-            </div>
-            <div class="catalog-product-specs">${preferredSpecs(product)}</div>
-            <div class="catalog-details-section">
-              <button
-                class="btn btn-outline-light catalog-details-button"
-                type="button"
-                data-product-id="${escapeHtml(product.id)}">
-                Product Details
-              </button>
-            </div>
-            ${materialControls(product)}
-          </div>
-        </article>
-      </div>`).join("");
-  }
-
-  function readMaterialNotes() {
+  function readProject() {
     try {
-      const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-      return Array.isArray(value) ? value : [];
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      return Array.isArray(saved) ? saved : [];
     } catch {
       return [];
     }
   }
 
-  function writeMaterialNotes(notes) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+  function writeProject(items) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    renderProject();
   }
 
-  function normalizedNumber(value, fallback = 0) {
-    const number = Number(value);
-    return Number.isFinite(number) ? number : fallback;
+  function categoryLabel(categoryId) {
+    return categories.find((category) => category.id === categoryId)?.label || categoryId;
   }
 
-  function addMaterial(product, quantityValue, areaValue, statusElement) {
-    const quantity = Math.max(1, Math.round(normalizedNumber(quantityValue, 1)));
-    const areaSqFt = Math.max(0, normalizedNumber(areaValue, 0));
-    const notes = readMaterialNotes();
-    const existingIndex = notes.findIndex((item) => item.id === product.id);
+  function productSearchText(product) {
+    return [
+      product.name,
+      product.description,
+      product.category,
+      product.control,
+      product.colors,
+      product.voltages,
+      product.waterproof,
+      product.densities,
+      product.widths,
+      product.sourceItems,
+      ...(product.applications || []),
+      ...(product.variants || []).flatMap((variant) => Object.values(variant))
+    ].join(" ").toLowerCase();
+  }
 
-    const entry = {
-      id: product.id,
-      name: product.name,
-      category: productCategory(product),
-      price: product.price,
-      quantityNeeded: quantity,
-      areaSqFt,
-      specs: product.specs || {},
-      updatedAt: new Date().toISOString()
-    };
+  function visibleProducts() {
+    const query = elements.search.value.trim().toLowerCase();
+    return products.filter((product) => {
+      const categoryMatch = activeCategory === "all" || product.category === activeCategory;
+      return categoryMatch && (!query || productSearchText(product).includes(query));
+    });
+  }
 
-    if (existingIndex >= 0) notes[existingIndex] = entry;
-    else notes.push(entry);
+  function categoryCount(categoryId) {
+    if (categoryId === "all") return products.length;
+    return products.filter((product) => product.category === categoryId).length;
+  }
 
-    writeMaterialNotes(notes);
+  function populateCategories() {
+    elements.categoryNav.innerHTML = categories.map((category) => `
+      <button class="catalog-category-button${category.id === activeCategory ? " is-active" : ""}" type="button" data-category="${escapeHtml(category.id)}">
+        <span>${escapeHtml(category.label)}</span>
+        <span class="catalog-category-count">${categoryCount(category.id)}</span>
+      </button>`).join("");
 
-    if (statusElement) {
-      statusElement.textContent = "Added to Material Notes";
-      window.clearTimeout(statusElement._clearTimer);
-      statusElement._clearTimer = window.setTimeout(() => {
-        statusElement.textContent = "";
-      }, 2600);
+    elements.categorySelect.innerHTML = categories.map((category) => `
+      <option value="${escapeHtml(category.id)}">${escapeHtml(category.label)} (${categoryCount(category.id)})</option>`).join("");
+    elements.categorySelect.value = activeCategory;
+  }
+
+  function cardCode(product) {
+    if (/WS\d+|SK\d+|TM\d+|XGB\d+/i.test(product.control)) {
+      return product.control.split(/\s+/).slice(0, 2).join(" ");
     }
+    return product.category.replace("FCOB ", "").replace("Pixel ", "");
   }
 
-  function addFromCard(button) {
-    const product = products.find((item) => item.id === button.dataset.addMaterial);
-    const controls = button.closest("[data-material-controls]");
-    if (!product || !controls) return;
+  function renderCards() {
+    const items = visibleProducts();
+    const variantTotal = items.reduce((sum, product) => sum + product.variants.length, 0);
+    elements.activeCategory.textContent = categoryLabel(activeCategory);
+    elements.searchScope.textContent = activeCategory === "all"
+      ? "Searching all categories"
+      : `Searching ${categoryLabel(activeCategory)}`;
+    elements.catalogCount.textContent = `${items.length} product families · ${variantTotal} configurations`;
 
-    const quantityInput = controls.querySelector(".material-quantity");
-    const areaInput = controls.querySelector(".material-area");
-    const status = controls.querySelector(".catalog-add-status");
-    addMaterial(product, quantityInput?.value, areaInput?.value, status);
+    if (!items.length) {
+      elements.grid.innerHTML = `
+        <div class="catalog-empty">
+          <strong>No catalog systems match that search.</strong><br>
+          Clear the search or choose another category.
+        </div>`;
+      return;
+    }
+
+    elements.grid.innerHTML = items.map((product) => `
+      <article class="catalog-product-card">
+        <div class="catalog-card-visual" aria-hidden="true">
+          <span class="catalog-card-code">${escapeHtml(cardCode(product))}</span>
+        </div>
+        <div class="catalog-product-body">
+          <p class="catalog-product-category">${escapeHtml(product.category)}</p>
+          <h2 class="catalog-product-title">${escapeHtml(product.name)}</h2>
+          <p class="catalog-product-description">${escapeHtml(product.description)}</p>
+          <div class="catalog-chip-list">
+            <span class="catalog-chip">${escapeHtml(product.voltages)}</span>
+            <span class="catalog-chip">${escapeHtml(product.waterproof)}</span>
+            <span class="catalog-chip">${product.variants.length} variants</span>
+            <span class="catalog-chip catalog-chip--quote">Complete project quote</span>
+          </div>
+          <dl class="catalog-card-meta">
+            <div><dt>Control</dt><dd>${escapeHtml(product.control)}</dd></div>
+            <div><dt>Colors</dt><dd>${escapeHtml(product.colors)}</dd></div>
+            <div><dt>Density</dt><dd>${escapeHtml(product.densities)}</dd></div>
+            <div><dt>Width</dt><dd>${escapeHtml(product.widths)}</dd></div>
+          </dl>
+          <div class="catalog-card-actions">
+            <button class="btn btn-outline-light" type="button" data-details="${escapeHtml(product.id)}">View Variants</button>
+            <button class="btn btn-neon-cyan" type="button" data-add-family="${escapeHtml(product.id)}">Add to Project</button>
+          </div>
+        </div>
+      </article>`).join("");
   }
 
-  function buildModalSpecs(product) {
-    const rows = Object.entries(product.specs || {}).map(([label, value]) => `
-      <div class="catalog-spec-row">
-        <dt>${escapeHtml(label)}</dt>
-        <dd>${escapeHtml(value)}</dd>
-      </div>`);
+  function addSelection(product, variant = null) {
+    const project = readProject();
+    const key = variant ? `${product.id}:item-${variant.item}` : product.id;
+    if (project.some((item) => item.key === key)) {
+      setModalStatus("Already in project list.");
+      return;
+    }
 
-    rows.push(`
-      <div class="catalog-spec-row">
-        <dt>Price</dt>
-        <dd>${escapeHtml(formatPrice(product.price))}</dd>
-      </div>`);
+    project.push({
+      key,
+      productId: product.id,
+      productName: product.name,
+      category: product.category,
+      sourceItems: product.sourceItems,
+      variant: variant ? {
+        item: variant.item,
+        length: variant.length,
+        voltage: variant.voltage,
+        density: variant.density,
+        waterproof: variant.waterproof,
+        width: variant.width,
+        detail: variant.detail
+      } : null,
+      addedAt: new Date().toISOString()
+    });
+    writeProject(project);
+    setModalStatus(variant ? `Item ${variant.item} added to project.` : "Product family added to project.");
+  }
 
-    return rows.join("");
+  function removeSelection(key) {
+    writeProject(readProject().filter((item) => item.key !== key));
+  }
+
+  function renderProject() {
+    const project = readProject();
+    elements.projectCount.textContent = String(project.length);
+    elements.requestQuote.disabled = !project.length;
+    elements.clearProject.disabled = !project.length;
+
+    if (!project.length) {
+      elements.projectItems.innerHTML = '<p class="catalog-project-empty">Add product families to build a materials-and-installation request.</p>';
+      return;
+    }
+
+    elements.projectItems.innerHTML = project.map((item) => {
+      const variantText = item.variant
+        ? `Item ${item.variant.item} · ${item.variant.length} · ${item.variant.voltage} · ${item.variant.density} · ${item.variant.waterproof}`
+        : "Family selection · exact configuration to be finalized";
+      return `
+        <div class="catalog-project-item">
+          <div>
+            <strong>${escapeHtml(item.productName)}</strong>
+            <span>${escapeHtml(variantText)}</span>
+          </div>
+          <button class="catalog-project-remove" type="button" data-remove-project="${escapeHtml(item.key)}">Remove</button>
+        </div>`;
+    }).join("");
+  }
+
+  function modalSummaryCell(label, value) {
+    return `<div class="catalog-summary-cell"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`;
+  }
+
+  function setModalStatus(message) {
+    if (!elements.modalStatus) return;
+    elements.modalStatus.textContent = message;
+    window.clearTimeout(elements.modalStatus._timer);
+    elements.modalStatus._timer = window.setTimeout(() => {
+      elements.modalStatus.textContent = "";
+    }, 2600);
   }
 
   function openProduct(product) {
     activeProductId = product.id;
-    productModalCategory.textContent = productCategory(product);
-    productModalDescription.textContent = product.name;
-    productModalImage.src = product.image;
-    productModalImage.alt = product.name;
-    productModalImage.classList.remove("is-zoomed");
-    productModalSpecs.innerHTML = buildModalSpecs(product);
+    elements.modalCategory.textContent = product.category;
+    elements.modalTitle.textContent = product.name;
+    elements.modalDescription.textContent = product.description;
+    elements.modalSummary.innerHTML = [
+      modalSummaryCell("Control", product.control),
+      modalSummaryCell("Colors", product.colors),
+      modalSummaryCell("Voltage", product.voltages),
+      modalSummaryCell("Protection", product.waterproof),
+      modalSummaryCell("Density", product.densities),
+      modalSummaryCell("Widths", product.widths),
+      modalSummaryCell("Best fits", (product.applications || []).join(", ")),
+      modalSummaryCell("Source", product.sourceItems)
+    ].join("");
 
-    if (product.included?.length) {
-      productModalIncluded.classList.remove("d-none");
-      productModalIncluded.innerHTML = `
-        <strong>Included / package details</strong>
-        <ul>${product.included.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`;
-    } else {
-      productModalIncluded.classList.add("d-none");
-      productModalIncluded.innerHTML = "";
-    }
+    elements.variantRows.innerHTML = product.variants.map((variant, index) => `
+      <tr>
+        <td>${escapeHtml(variant.item)}</td>
+        <td>${escapeHtml(variant.length)}</td>
+        <td>${escapeHtml(variant.voltage)}</td>
+        <td>${escapeHtml(variant.density)}</td>
+        <td>${escapeHtml(variant.waterproof)}</td>
+        <td>${escapeHtml(variant.width)}</td>
+        <td>${escapeHtml(variant.detail || "—")}</td>
+        <td><button class="btn btn-sm btn-neon-cyan catalog-variant-add" type="button" data-add-variant="${index}">Add Option</button></td>
+      </tr>`).join("");
 
-    const cardControls = catalogGrid.querySelector(`[data-material-controls="${CSS.escape(product.id)}"]`);
-    modalQuantity.value = cardControls?.querySelector(".material-quantity")?.value || "1";
-    modalArea.value = cardControls?.querySelector(".material-area")?.value || "";
-    modalMaterialStatus.textContent = "";
+    elements.modalStatus.textContent = "";
     productModal.show();
   }
 
-  function removeZoom() {
-    productModalImage.classList.remove("is-zoomed");
+  function buildRequestEmail() {
+    const project = readProject();
+    if (!project.length) return;
+
+    const lines = project.map((item, index) => {
+      const variant = item.variant
+        ? `Manufacturer item ${item.variant.item}; ${item.variant.length}; ${item.variant.voltage}; ${item.variant.density}; ${item.variant.waterproof}; ${item.variant.width}; ${item.variant.detail || ""}`
+        : "Exact manufacturer configuration to be selected during project planning.";
+      return `${index + 1}. ${item.productName}\n   Category: ${item.category}\n   Selection: ${variant}`;
+    }).join("\n\n");
+
+    const subject = "ShyneTyme Complete LED Project Quote Request";
+    const body = [
+      "I selected the following BTF-LIGHTING systems for a complete ShyneTyme materials-and-installation quote:",
+      "",
+      lines,
+      "",
+      "Project type:",
+      "Installation address or ZIP code:",
+      "Approximate measurements:",
+      "Indoor/outdoor:",
+      "Desired colors, effects and controls:",
+      "Preferred timeline:",
+      "",
+      "Please provide the next steps for measurements, design review, material deposit and installation scheduling."
+    ].join("\n");
+
+    window.location.href = `mailto:westsidelistingservices@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   }
 
-  categoryFilter.addEventListener("change", () => {
-    selectedCategory = categoryFilter.value;
-    renderCatalog();
+  function setCategory(categoryId) {
+    activeCategory = categories.some((category) => category.id === categoryId) ? categoryId : "all";
+    populateCategories();
+    renderCards();
+    document.getElementById("catalog-shell")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  elements.categoryNav.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-category]");
+    if (button) setCategory(button.dataset.category);
   });
 
-  catalogSearch.addEventListener("input", renderCatalog);
+  elements.categorySelect.addEventListener("change", () => setCategory(elements.categorySelect.value));
+  elements.search.addEventListener("input", renderCards);
+  elements.clearSearch.addEventListener("click", () => {
+    elements.search.value = "";
+    elements.search.focus();
+    renderCards();
+  });
 
-  catalogGrid.addEventListener("click", (event) => {
-    const detailsButton = event.target.closest("[data-product-id]");
-    if (detailsButton) {
-      const product = products.find((item) => item.id === detailsButton.dataset.productId);
+  elements.grid.addEventListener("click", (event) => {
+    const details = event.target.closest("[data-details]");
+    if (details) {
+      const product = products.find((item) => item.id === details.dataset.details);
       if (product) openProduct(product);
       return;
     }
 
-    const addButton = event.target.closest("[data-add-material]");
-    if (addButton) addFromCard(addButton);
-  });
-
-  modalAddMaterial.addEventListener("click", () => {
-    const product = products.find((item) => item.id === activeProductId);
-    if (!product) return;
-    addMaterial(product, modalQuantity.value, modalArea.value, modalMaterialStatus);
-
-    const cardControls = catalogGrid.querySelector(`[data-material-controls="${CSS.escape(product.id)}"]`);
-    if (cardControls) {
-      const quantityInput = cardControls.querySelector(".material-quantity");
-      const areaInput = cardControls.querySelector(".material-area");
-      if (quantityInput) quantityInput.value = modalQuantity.value;
-      if (areaInput) areaInput.value = modalArea.value;
+    const add = event.target.closest("[data-add-family]");
+    if (add) {
+      const product = products.find((item) => item.id === add.dataset.addFamily);
+      if (product) addSelection(product);
     }
   });
 
-  productModalImage.addEventListener("pointermove", (event) => {
-    const rect = productModalImage.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width) * 100;
-    const y = ((event.clientY - rect.top) / rect.height) * 100;
-    productModalImage.style.setProperty("--zoom-x", `${Math.max(0, Math.min(100, x))}%`);
-    productModalImage.style.setProperty("--zoom-y", `${Math.max(0, Math.min(100, y))}%`);
+  elements.variantRows.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-add-variant]");
+    if (!button) return;
+    const product = products.find((item) => item.id === activeProductId);
+    const variant = product?.variants?.[Number(button.dataset.addVariant)];
+    if (product && variant) addSelection(product, variant);
   });
 
-  productModalImage.addEventListener("pointerdown", (event) => {
-    event.preventDefault();
-    productModalImage.setPointerCapture?.(event.pointerId);
-    productModalImage.classList.add("is-zoomed");
+  elements.addFamilyFromModal.addEventListener("click", () => {
+    const product = products.find((item) => item.id === activeProductId);
+    if (product) addSelection(product);
   });
 
-  ["pointerup", "pointercancel", "pointerleave", "lostpointercapture"].forEach((eventName) => {
-    productModalImage.addEventListener(eventName, removeZoom);
+  elements.projectItems.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-remove-project]");
+    if (button) removeSelection(button.dataset.removeProject);
   });
 
-  modalElement.addEventListener("hidden.bs.modal", () => {
+  elements.requestQuote.addEventListener("click", buildRequestEmail);
+  elements.clearProject.addEventListener("click", () => writeProject([]));
+
+  elements.modal.addEventListener("hidden.bs.modal", () => {
     activeProductId = null;
-    removeZoom();
+    elements.modalStatus.textContent = "";
   });
 
-  if (products.length) {
-    populateCategoryFilter();
-    renderCatalog();
-  } else {
-    catalogGrid.innerHTML = `
-      <div class="col-12">
-        <div class="alert alert-danger" role="alert">The catalog data could not be loaded.</div>
-      </div>`;
-    catalogCount.textContent = "Catalog unavailable";
+  if (!catalog || !products.length) {
+    elements.grid.innerHTML = '<div class="alert alert-danger" role="alert">The BTF-LIGHTING project catalog could not be loaded.</div>';
+    elements.catalogCount.textContent = "Catalog unavailable";
+    return;
   }
+
+  populateCategories();
+  renderCards();
+  renderProject();
 })();
