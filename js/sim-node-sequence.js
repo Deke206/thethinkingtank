@@ -424,7 +424,7 @@
     root.innerHTML = `
       <header class="sim-workbench-header">
         <div><p>Shared controller workflow</p><h2>Controller nodes + ten-step sequence</h2><span>Each button is one physical controller. Check the nodes that should receive the same sequence, then press Apply.</span></div>
-        <div class="sim-workbench-count"><b>${nodes.length}</b><span>controller nodes</span></div>
+        <div class="sim-workbench-count"><b>${nodes.length}</b><span>nodes</span></div>
       </header>
       <section class="sim-node-panel" aria-labelledby="simNodePanelTitle">
         <div class="sim-panel-heading"><div><p>Step 1</p><h3 id="simNodePanelTitle">Choose controller nodes</h3></div><span id="simTargetCount">${selectedNodes().length} checked</span></div>

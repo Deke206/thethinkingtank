@@ -623,3 +623,34 @@
   .sim-controller-note { grid-template-columns: 1fr; }
   .sim-controller-note button { width: 100%; }
 }
+
+/* Keep the mobile sequence scroller inside the viewport. */
+.sim-sequence-panel,
+.sim-sequence-list,
+.sim-sequence-row {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.sim-workbench-header > div {
+  min-width: 0;
+}
+
+@media (max-width: 760px) {
+  .sim-workbench-header h2,
+  .sim-workbench-header > div > span {
+    overflow-wrap: anywhere;
+  }
+}
+@media (max-width: 760px) {
+  .sim-workbench-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 76px;
+    gap: .5rem;
+  }
+  .sim-workbench-count {
+    width: 76px;
+    min-width: 0;
+    padding-inline: .35rem;
+  }
+}
