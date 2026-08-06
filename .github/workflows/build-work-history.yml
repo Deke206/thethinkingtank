@@ -46,5 +46,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/work-history.json
-          git commit -m "chore(history): refresh read-only website timeline [skip ci]"
+          # Do not add [skip ci]: the follow-up history commit must trigger a new
+          # GitHub Pages deployment after it supersedes the original site commit.
+          git commit -m "chore(history): refresh read-only website timeline"
           git push
