@@ -42,9 +42,11 @@ jobs:
           node --check js/project-recommendations.js
           python - <<'PY'
           import json
+          from collections import Counter
           with open('data/btf-catalog-items.json', encoding='utf-8') as handle:
               catalog = json.load(handle)
           products = catalog['products']
+          sources = Counter(item.get('source') for item in products)
           assert catalog['source']['quotationRows'] == 197
           assert catalog['source']['addressableRows'] == 131
           assert catalog['source']['fcobRows'] == 66
@@ -52,9 +54,10 @@ jobs:
           assert catalog['totalItems'] == 231
           assert len(products) == 231
           assert len({item['id'] for item in products}) == 231
-          assert sum(item.get('sourceType') == 'quotation-addressable' for item in products) == 131
-          assert sum(item.get('sourceType') == 'quotation-fcob' for item in products) == 66
-          assert sum(item.get('sourceType') == 'selected-system' for item in products) == 34
+          assert sources['Addressable Pixel Strip Quotation List'] == 131
+          assert sources['FCOB LED Strip Price List'] == 66
+          assert sources['Previously selected ShyneTyme catalog'] == 34
+          assert all(item.get('name') and item.get('category') for item in products)
           print('Validated 231 unique catalog records: 131 addressable + 66 FCOB + 34 selected systems')
           PY
 
