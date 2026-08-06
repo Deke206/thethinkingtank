@@ -37,10 +37,12 @@
 
     window.fetch = async function shynetymeHomeGeometryFetch(input, init) {
       const response = await nativeFetch(input, init);
-      const requestUrl = new URL(
-        typeof input === "string" ? input : input.url,
-        window.location.href
-      );
+      const inputUrl = input instanceof Request
+        ? input.url
+        : input instanceof URL
+          ? input.href
+          : String(input);
+      const requestUrl = new URL(inputUrl, window.location.href);
 
       if (!requestUrl.pathname.endsWith(`/${GEOMETRY_PATH}`) || !response.ok) {
         return response;
