@@ -57,12 +57,16 @@
   const snapshot = () => ({ zones: Object.fromEntries(zones.map((z) => [z.id, clone(get(z.id))])) });
 
   function save() {
-    sessionStorage.setItem(key, JSON.stringify({
-      version: 1,
-      selectedStep,
-      current: snapshot(),
-      steps
-    }));
+    try {
+      sessionStorage.setItem(key, JSON.stringify({
+        version: 1,
+        selectedStep,
+        current: snapshot(),
+        steps
+      }));
+    } catch (error) {
+      console.warn("Auto sequence storage is unavailable.", error);
+    }
   }
 
   function load() {
