@@ -21,12 +21,39 @@
   const siteRoot = new URL("../", scriptUrl);
   // END OBJECT: Production Home SIM source package.
 
+  // BEGIN OBJECT: Controller source repair rules.
+  // These two repairs correct the existing production source package without
+  // changing its approved geometry, images, effects, or responsive layout.
+  function repairControllerSource(sourceText) {
+    const invalidMountTemplate = "${zone.mount|</small>";
+    const validMountTemplate = "${zone.mount}</small>";
+    const invalidBlobRoot = "const siteRoot = new URL(\"../\", scriptUrl);";
+    const validSiteRoot = (
+      "const siteRoot = new URL(" +
+      "window.ShynetymeHomeSimLoader.siteRoot" +
+      ");"
+    );
+
+    if (!sourceText.includes(invalidMountTemplate)) {
+      throw new Error("Home SIM mount-template repair target was not found.");
+    }
+
+    if (!sourceText.includes(invalidBlobRoot)) {
+      throw new Error("Home SIM blob-root repair target was not found.");
+    }
+
+    return sourceText
+      .replace(invalidMountTemplate, validMountTemplate)
+      .replace(invalidBlobRoot, validSiteRoot);
+  }
+  // END OBJECT: Controller source repair rules.
+
   // BEGIN API CALL: Load and execute the formatted Home SIM controller.
   async function loadHomeSimController() {
     const sourceParts = await Promise.all(
       SOURCE_PARTS.map(async (path) => {
         const url = new URL(path, siteRoot);
-        url.searchParams.set("v", "20260805-production-home-v1");
+        url.searchParams.set("v", "20260805-production-home-v2");
 
         const response = await fetch(url, {
           cache: "no-store",
@@ -41,7 +68,8 @@
       })
     );
 
-    const sourceBlob = new Blob(sourceParts, {
+    const repairedSource = repairControllerSource(sourceParts.join(""));
+    const sourceBlob = new Blob([repairedSource], {
       type: "text/javascript"
     });
     const sourceUrl = URL.createObjectURL(sourceBlob);
@@ -73,6 +101,7 @@
   window.ShynetymeHomeSimLoader = {
     initialized: true,
     sourceParts: SOURCE_PARTS,
+    siteRoot: siteRoot.href,
     load: loadHomeSimController
   };
   // END OBJECT: Public Home SIM loader API.
