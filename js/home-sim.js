@@ -9,6 +9,7 @@
   // The formatted controller remains plain readable JavaScript split into
   // numbered source files so no page contains one compressed run-on string.
   const SOURCE_PARTS = Object.freeze([
+    "js/home-sim-source/home-sim-part-00.txt",
     "js/home-sim-source/home-sim-part-01.txt",
     "js/home-sim-source/home-sim-part-02.txt",
     "js/home-sim-source/home-sim-part-03.txt",
@@ -16,7 +17,7 @@
     "js/home-sim-source/home-sim-part-05.txt"
   ]);
 
-  const SOURCE_REVISION = "20260806-approved-home-final-v3";
+  const SOURCE_REVISION = "20260806-approved-home-images-v4";
 
   const scriptUrl = document.currentScript?.src
     ? new URL(document.currentScript.src, window.location.href)
