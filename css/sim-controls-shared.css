@@ -1,0 +1,136 @@
+:root {
+  --sim-cyan: #31e6ff;
+  --sim-pink: #ff5ab9;
+  --sim-violet: #9b7cff;
+  --sim-amber: #ffe76a;
+  --sim-green: #55e6b5;
+  --sim-deep: #030918;
+  --sim-panel: #07172c;
+  --sim-panel-2: #102845;
+  --sim-line: rgba(49, 230, 255, .28);
+  --sim-line-strong: rgba(49, 230, 255, .54);
+  --sim-shadow: 0 .8rem 2.2rem rgba(0, 0, 0, .28);
+}
+
+/* Shared ShyneTyme SIM control skin. This file styles controls only; it does not
+   modify any LED animation, geometry, state, or simulator event logic. */
+.builder-page main,
+.home-builder-page main,
+.sim-auto-page main {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(49, 230, 255, .08), transparent 28rem),
+    radial-gradient(circle at 88% 28%, rgba(255, 90, 185, .07), transparent 28rem),
+    linear-gradient(180deg, #030918, #07162c);
+}
+
+.builder-page .accordion-item,
+.home-builder-page .accordion-item,
+.sim-auto-page .auto-card,
+.home-builder-page .home-builder-card,
+.home-builder-page .preview-card,
+.builder-page .preview-card {
+  border: 1px solid var(--sim-line) !important;
+  background: linear-gradient(145deg, rgba(16, 40, 69, .98), rgba(4, 13, 30, .98)) !important;
+  box-shadow: var(--sim-shadow) !important;
+}
+
+.builder-page .accordion-button,
+.home-builder-page .accordion-button,
+.builder-page .btn,
+.home-builder-page .btn,
+.sim-auto-page button,
+.sim-auto-page .sim-zone-option,
+.home-builder-page button,
+.home-builder-page select,
+.builder-page select {
+  border-color: rgba(49, 230, 255, .26) !important;
+  border-radius: .72rem !important;
+  font-weight: 750;
+  transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+.builder-page .btn:not(.btn-danger):not(.btn-success),
+.home-builder-page .btn:not(.btn-danger):not(.btn-success),
+.sim-auto-page button,
+.sim-auto-page .sim-zone-option {
+  color: #eef8ff !important;
+  background: linear-gradient(180deg, rgba(18, 45, 78, .96), rgba(7, 22, 42, .96)) !important;
+  box-shadow: inset 0 1px rgba(255, 255, 255, .05), 0 .3rem .9rem rgba(0, 0, 0, .16);
+}
+
+.builder-page .btn:hover,
+.home-builder-page .btn:hover,
+.sim-auto-page button:hover,
+.sim-auto-page .sim-zone-option:hover {
+  transform: translateY(-1px);
+  border-color: var(--sim-line-strong) !important;
+  box-shadow: 0 0 1rem rgba(49, 230, 255, .14), inset 0 1px rgba(255, 255, 255, .08) !important;
+}
+
+.builder-page .btn-check:checked + .btn,
+.home-builder-page .btn-check:checked + .btn,
+.sim-auto-page .sim-zone-option.is-selected,
+.sim-auto-page button.is-active,
+.home-builder-page button.active,
+.home-builder-page button[aria-pressed="true"] {
+  color: #04111f !important;
+  border-color: transparent !important;
+  background: linear-gradient(135deg, var(--sim-cyan), #7aa7ff 52%, var(--sim-violet)) !important;
+  box-shadow: 0 0 1.05rem rgba(49, 230, 255, .25), 0 .45rem 1rem rgba(0, 0, 0, .2) !important;
+}
+
+.builder-page .accordion-button,
+.home-builder-page .accordion-button {
+  color: #eef8ff !important;
+  background: linear-gradient(180deg, #122c4d, #0a1e38) !important;
+}
+
+.builder-page .accordion-button:not(.collapsed),
+.home-builder-page .accordion-button:not(.collapsed) {
+  color: #04111f !important;
+  background: linear-gradient(135deg, rgba(49, 230, 255, .95), rgba(155, 124, 255, .92)) !important;
+}
+
+.builder-page .conditional-options,
+.home-builder-page .conditional-options,
+.builder-page .summary-box,
+.home-builder-page .summary-box,
+.sim-auto-page .build-summary {
+  border: 1px solid rgba(155, 124, 255, .24) !important;
+  background: rgba(3, 9, 24, .62) !important;
+  color: #eef8ff !important;
+}
+
+.builder-page select,
+.home-builder-page select,
+.sim-auto-page select,
+.builder-page input,
+.home-builder-page input,
+.sim-auto-page input,
+.builder-page textarea,
+.home-builder-page textarea,
+.sim-auto-page textarea {
+  color: #eef8ff;
+  background-color: #06152b;
+  border-color: rgba(49, 230, 255, .26);
+  accent-color: var(--sim-cyan);
+}
+
+.builder-page .question-note,
+.home-builder-page .question-note,
+.sim-auto-page .muted,
+.home-builder-page .text-muted,
+.builder-page .text-muted {
+  color: #aebed5 !important;
+}
+
+@media (max-width: 720px) {
+  .builder-page .btn,
+  .home-builder-page .btn,
+  .sim-auto-page button,
+  .sim-auto-page .sim-zone-option {
+    min-height: 2.3rem;
+    padding: .45rem .65rem;
+    font-size: .78rem;
+  }
+}
