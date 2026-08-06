@@ -1,0 +1,27 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "shynetyme-lead-receiver",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-05",
+  "compatibility_flags": ["nodejs_compat"],
+  "routes": [
+    {
+      "pattern": "shynetyme.works/api/leads*",
+      "zone_name": "shynetyme.works"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB"
+    }
+  ],
+  "vars": {
+    "OWNER_EMAIL": "westsidelistingservices@gmail.com",
+    "FROM_EMAIL": "leads@shynetyme.works",
+    "ALLOWED_ORIGINS": "https://shynetyme.works,https://www.shynetyme.works,https://deke206.github.io"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
+}

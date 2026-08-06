@@ -311,3 +311,44 @@
   installContactRequestFields();
   loadScript("js/site-chuck.js", "data-shynetyme-site-chuck-script", "ShynetymeChuck");
 })();
+
+(() => {
+  "use strict";
+
+  const page = (window.location.pathname.split("/").filter(Boolean).pop() || "index.html").toLowerCase();
+  if (page !== "contact.html") return;
+
+  const source = document.currentScript?.src
+    ? new URL(document.currentScript.src, window.location.href)
+    : new URL("js/site-guide.js", window.location.href);
+  const root = new URL("../", source);
+  const revision = source.searchParams.get("v") || "shared-ui-14";
+
+  const load = (path, attribute, globalName) => new Promise((resolve, reject) => {
+    if (window[globalName]) {
+      resolve(window[globalName]);
+      return;
+    }
+
+    const existing = document.querySelector(`script[${attribute}]`);
+    if (existing) {
+      existing.addEventListener("load", () => resolve(window[globalName] || null), { once: true });
+      existing.addEventListener("error", reject, { once: true });
+      return;
+    }
+
+    const script = document.createElement("script");
+    const url = new URL(path, root);
+    url.searchParams.set("v", revision);
+    script.src = url.href;
+    script.defer = true;
+    script.setAttribute(attribute, "true");
+    script.addEventListener("load", () => resolve(window[globalName] || null), { once: true });
+    script.addEventListener("error", reject, { once: true });
+    document.head.appendChild(script);
+  });
+
+  load("js/contact-lead-config.js", "data-shynetyme-lead-config", "ShynetymeLeadConfig")
+    .then(() => load("js/contact-lead-form.js", "data-shynetyme-lead-form", "ShynetymeLeadForm"))
+    .catch((error) => console.error("ShyneTyme lead form failed to load", error));
+})();
