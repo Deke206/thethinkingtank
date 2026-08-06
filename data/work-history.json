@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-08-06T02:48:05.732Z",
-  "commitCount": 417,
+  "generatedAt": "2026-08-06T04:31:29.428Z",
+  "commitCount": 418,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -2088,6 +2088,11 @@
       "sha": "a6b2dd38c659654a0a25301b3ffd3122d063cc62",
       "date": "2026-08-06T02:47:50Z",
       "message": "Build complete BTF catalog from every quotation row"
+    },
+    {
+      "sha": "1e190ec46d720595b1a67d0cca8e6a44daa010e2",
+      "date": "2026-08-06T04:31:01Z",
+      "message": "Deploy fixed Home SIM and unify simulator controls"
     }
   ]
 }
