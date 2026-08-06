@@ -1,0 +1,434 @@
+name: Apply catalog theme and compact Chuck cloud
+
+on:
+  push:
+    branches:
+      - agent/catalog-theme-chuck-cloud-fix
+    paths:
+      - .github/workflows/apply-catalog-theme-chuck-fix.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply-fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out fix branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/catalog-theme-chuck-cloud-fix
+          fetch-depth: 0
+
+      - name: Apply integrated catalog and Chuck fixes
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path, old, new):
+              p = Path(path)
+              text = p.read_text(encoding='utf-8')
+              if old not in text:
+                  raise SystemExit(f'Expected text not found in {path}: {old[:100]!r}')
+              p.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          replace_once(
+              'led-catalog.html',
+              'Browse 197 BTF-LIGHTING FCOB and addressable pixel-strip configurations',
+              'Browse 231 searchable BTF-LIGHTING systems, quotation configurations, controllers and installation accessories'
+          )
+          replace_once(
+              'led-catalog.html',
+              '<meta name="color-scheme" content="dark light">',
+              '<meta name="color-scheme" content="dark">'
+          )
+          replace_once(
+              'led-catalog.html',
+              'css/site.css?v=shared-ui-11',
+              'css/site.css?v=shared-ui-16'
+          )
+          replace_once(
+              'led-catalog.html',
+              'css/site-navigation.css?v=shared-ui-11',
+              'css/site-navigation.css?v=shared-ui-16'
+          )
+          replace_once(
+              'led-catalog.html',
+              'css/site-hero.css?v=shared-ui-11',
+              'css/site-hero.css?v=shared-ui-16'
+          )
+          replace_once(
+              'led-catalog.html',
+              'css/site-chuck.css?v=shared-ui-11',
+              'css/site-chuck.css?v=shared-ui-16'
+          )
+          replace_once(
+              'led-catalog.html',
+              '<link rel="stylesheet" href="css/catalog.css?v=20260805-btf-catalog-1">',
+              '<link rel="stylesheet" href="css/catalog.css?v=20260806-catalog-theme-v2">\n  <link rel="stylesheet" href="css/catalog-row-items.css?v=20260806-catalog-theme-v2" data-btf-row-catalog="true">'
+          )
+          replace_once(
+              'led-catalog.html',
+              'This catalog covers <strong>197 manufacturer configurations</strong> organized into simple product families.',
+              'This catalog contains <strong>231 searchable entries</strong>: 197 exact manufacturer configurations plus selected controllers, signal devices, connectors, wiring, ropes, kits and pixel systems.'
+          )
+          replace_once(
+              'led-catalog.html',
+              'data/btf-catalog.js?v=20260805-btf-catalog-1',
+              'data/btf-catalog.js?v=20260806-row-complete-2'
+          )
+          replace_once(
+              'led-catalog.html',
+              'js/catalog.js?v=20260805-btf-catalog-1',
+              'js/catalog.js?v=20260806-row-complete-2'
+          )
+          replace_once(
+              'led-catalog.html',
+              'js/site-guide.js?v=shared-ui-11',
+              'js/site-guide.js?v=shared-ui-16'
+          )
+
+          replace_once(
+              'js/catalog.js',
+              'css/catalog-row-items.css?v=20260805-row-complete-1',
+              'css/catalog-row-items.css?v=20260806-catalog-theme-v2'
+          )
+          replace_once(
+              'js/site-chuck.js',
+              'css/site-chuck-cloud.css?v=20260805-design-chain-v1',
+              'css/site-chuck-cloud.css?v=20260806-compact-cloud-v2'
+          )
+
+          row_css = '''/* Exact-row catalog image treatment integrated with the ShyneTyme dark theme. */
+          .catalog-card-visual.has-image::before,
+          .catalog-card-visual.has-image::after {
+            content: none !important;
+          }
+
+          .catalog-card-visual.has-image {
+            min-height: 12rem;
+            padding: .65rem;
+            border-bottom-color: rgba(112, 231, 255, .2);
+            background:
+              radial-gradient(circle at 18% 16%, rgba(49, 230, 255, .14), transparent 11rem),
+              radial-gradient(circle at 85% 82%, rgba(255, 90, 185, .11), transparent 12rem),
+              linear-gradient(145deg, rgba(16, 39, 71, .98), rgba(3, 9, 24, .99));
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .035);
+          }
+
+          .catalog-card-visual.has-image img {
+            display: block;
+            width: 100%;
+            height: 11rem;
+            object-fit: contain;
+            object-position: center;
+            filter: drop-shadow(0 9px 16px rgba(0, 0, 0, .42));
+          }
+
+          .catalog-card-visual.has-image .catalog-card-code {
+            position: absolute;
+            left: .65rem;
+            bottom: .65rem;
+            max-width: calc(100% - 1.3rem);
+            background: rgba(2, 15, 29, .9);
+          }
+
+          .catalog-product-title {
+            font-size: .94rem;
+            overflow-wrap: anywhere;
+          }
+
+          .catalog-product-description {
+            display: -webkit-box;
+            overflow: hidden;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 4;
+          }
+
+          .catalog-card-meta dd {
+            overflow-wrap: anywhere;
+          }
+
+          .catalog-modal-product-image {
+            display: grid;
+            place-items: center;
+            min-height: 12rem;
+            margin: 0 0 1rem;
+            padding: 1rem;
+            border: 1px solid rgba(112, 231, 255, .2);
+            border-radius: .85rem;
+            background:
+              radial-gradient(circle at 16% 12%, rgba(49, 230, 255, .13), transparent 13rem),
+              linear-gradient(145deg, rgba(16, 39, 71, .99), rgba(3, 9, 24, .99));
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05);
+          }
+
+          .catalog-modal-product-image img {
+            display: block;
+            max-width: 100%;
+            max-height: 22rem;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .46));
+          }
+
+          .catalog-modal-product-image span {
+            color: #eefaff;
+            font-family: "Oxanium", sans-serif;
+            font-size: 1.2rem;
+            font-weight: 900;
+          }
+
+          @media (max-width: 1199.98px) {
+            .catalog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+          }
+
+          @media (max-width: 767.98px) {
+            .catalog-card-visual.has-image { min-height: 10rem; }
+            .catalog-card-visual.has-image img { height: 9rem; }
+          }
+          '''
+          Path('css/catalog-row-items.css').write_text('\n'.join(line.strip() for line in row_css.splitlines()) + '\n', encoding='utf-8')
+
+          catalog_marker = '/* BEGIN OBJECT: Catalog shared dark-theme guard. */'
+          catalog_path = Path('css/catalog.css')
+          catalog_css = catalog_path.read_text(encoding='utf-8')
+          if catalog_marker not in catalog_css:
+              catalog_css += '''
+
+          /* BEGIN OBJECT: Catalog shared dark-theme guard. */
+          html {
+            color-scheme: dark;
+            background: #030918;
+          }
+
+          body.catalog-page {
+            --bs-body-bg: #030918;
+            --bs-body-color: #f4f8ff;
+            --bs-emphasis-color: #ffffff;
+            --bs-secondary-color: #b8c6dc;
+            --bs-tertiary-bg: #0a1d38;
+            --bs-border-color: rgba(138, 220, 255, .24);
+            min-height: 100vh;
+            color: var(--text, #f4f8ff);
+            background:
+              radial-gradient(circle at 8% 18%, rgba(49, 230, 255, .08), transparent 25rem),
+              radial-gradient(circle at 92% 42%, rgba(255, 90, 185, .07), transparent 28rem),
+              var(--night, #030918) !important;
+          }
+
+          body.catalog-page main,
+          body.catalog-page .catalog-intro,
+          body.catalog-page .catalog-section,
+          body.catalog-page footer {
+            color: var(--text, #f4f8ff);
+            background-color: transparent !important;
+          }
+
+          body.catalog-page .site-banner {
+            color: var(--text, #f4f8ff);
+            background: var(--night, #030918);
+          }
+
+          body.catalog-page #page-subheader {
+            color: #eaf7ff;
+            border-top: 1px solid rgba(49, 230, 255, .14);
+            border-bottom: 1px solid rgba(49, 230, 255, .2);
+            background: rgba(3, 9, 24, .96) !important;
+          }
+
+          body.catalog-page #page-subheader a,
+          body.catalog-page #page-subheader span {
+            color: #eaf7ff;
+          }
+
+          body.catalog-page .catalog-intro h1,
+          body.catalog-page .catalog-intro h2,
+          body.catalog-page .catalog-main-column h2,
+          body.catalog-page .catalog-product-title,
+          body.catalog-page .catalog-project-heading h2,
+          body.catalog-page .modal-title {
+            color: #ffffff !important;
+          }
+
+          body.catalog-page .catalog-lead,
+          body.catalog-page .catalog-product-description,
+          body.catalog-page .catalog-modal-description,
+          body.catalog-page .catalog-project-empty,
+          body.catalog-page footer,
+          body.catalog-page footer span {
+            color: var(--muted, #b8c6dc) !important;
+          }
+
+          body.catalog-page .catalog-process-card,
+          body.catalog-page .catalog-search-block,
+          body.catalog-page .catalog-project-box,
+          body.catalog-page .catalog-category-nav,
+          body.catalog-page .catalog-product-card,
+          body.catalog-page .catalog-modal .modal-content {
+            color: var(--text, #f4f8ff);
+            background-color: var(--panel, #0a1d38);
+          }
+
+          body.catalog-page .form-control,
+          body.catalog-page .form-select {
+            color: #eef9ff;
+            color-scheme: dark;
+            border-color: rgba(112, 231, 255, .3);
+            background-color: rgba(2, 13, 28, .96);
+          }
+
+          body.catalog-page .form-select option {
+            color: #eef9ff;
+            background: #06152f;
+          }
+
+          body.catalog-page .form-control::placeholder {
+            color: rgba(213, 231, 242, .58);
+          }
+
+          body.catalog-page .catalog-card-visual.has-image,
+          body.catalog-page .catalog-modal-product-image {
+            background-color: var(--panel-soft, #102747) !important;
+          }
+
+          body.catalog-page .alert {
+            color: #f4f8ff;
+            border-color: rgba(255, 124, 130, .45);
+            background: rgba(92, 24, 38, .82);
+          }
+          /* END OBJECT: Catalog shared dark-theme guard. */
+          '''
+              catalog_path.write_text(catalog_css, encoding='utf-8')
+
+          cloud_marker = '/* BEGIN OBJECT: Compact Chuck message cloud. */'
+          cloud_path = Path('css/site-chuck-cloud.css')
+          cloud_css = cloud_path.read_text(encoding='utf-8')
+          if cloud_marker not in cloud_css:
+              cloud_css += '''
+
+          /* BEGIN OBJECT: Compact Chuck message cloud. */
+          .deke-chuck-thought {
+            right: 66px !important;
+            bottom: 70px !important;
+            width: min(250px, calc(100vw - 92px)) !important;
+            gap: .25rem !important;
+          }
+
+          .deke-chuck-thought__text {
+            font-size: clamp(.72rem, 1.55vw, .86rem) !important;
+          }
+
+          .deke-chuck-thought.has-choices .deke-chuck-thought__text {
+            font-size: clamp(.68rem, 1.4vw, .8rem) !important;
+          }
+
+          .deke-chuck-thought__action {
+            min-width: 76px !important;
+            max-width: 108px !important;
+            min-height: 26px !important;
+            font-size: .6rem !important;
+          }
+
+          .deke-chuck-thought__choices {
+            max-width: 166px !important;
+            gap: .23rem !important;
+          }
+
+          .deke-chuck-thought__choice {
+            min-height: 24px !important;
+            padding: .18rem .24rem !important;
+            font-size: .54rem !important;
+          }
+
+          @media (max-width: 575.98px) {
+            .deke-chuck-thought {
+              right: 56px !important;
+              bottom: 54px !important;
+              width: min(210px, calc(100vw - 80px)) !important;
+              gap: .2rem !important;
+            }
+
+            .deke-chuck-thought__close {
+              width: 20px !important;
+              height: 20px !important;
+              font-size: .78rem !important;
+            }
+
+            .deke-chuck-thought__text,
+            .deke-chuck-thought.has-choices .deke-chuck-thought__text {
+              font-size: clamp(.64rem, 3.15vw, .74rem) !important;
+            }
+
+            .deke-chuck-thought__action {
+              min-width: 64px !important;
+              max-width: 88px !important;
+              min-height: 22px !important;
+              font-size: .52rem !important;
+            }
+
+            .deke-chuck-thought__choices {
+              max-width: 142px !important;
+              gap: .18rem !important;
+            }
+
+            .deke-chuck-thought__choice {
+              min-height: 21px !important;
+              padding: .14rem .18rem !important;
+              font-size: .48rem !important;
+            }
+          }
+
+          @media (max-width: 390px) {
+            .deke-chuck-thought {
+              right: 53px !important;
+              bottom: 51px !important;
+              width: min(198px, calc(100vw - 74px)) !important;
+            }
+
+            .deke-chuck-thought__text,
+            .deke-chuck-thought.has-choices .deke-chuck-thought__text {
+              font-size: .62rem !important;
+            }
+          }
+          /* END OBJECT: Compact Chuck message cloud. */
+          '''
+              cloud_path.write_text(cloud_css, encoding='utf-8')
+          PY
+
+      - name: Validate integrated fix
+        run: |
+          set -euo pipefail
+          node --check js/catalog.js
+          node --check js/site-chuck.js
+          python - <<'PY'
+          from pathlib import Path
+          html = Path('led-catalog.html').read_text(encoding='utf-8')
+          catalog = Path('css/catalog.css').read_text(encoding='utf-8')
+          rows = Path('css/catalog-row-items.css').read_text(encoding='utf-8')
+          cloud = Path('css/site-chuck-cloud.css').read_text(encoding='utf-8')
+          assert '<meta name="color-scheme" content="dark">' in html
+          assert 'data-btf-row-catalog="true"' in html
+          assert '20260806-catalog-theme-v2' in html
+          assert 'Catalog shared dark-theme guard' in catalog
+          assert 'background: #030918' in catalog
+          assert 'rgba(255,255,255,.98)' not in rows
+          assert 'rgba(255,255,255,.96)' not in rows
+          assert 'Compact Chuck message cloud' in cloud
+          assert 'width: min(210px' in cloud
+          for path in ('css/catalog.css', 'css/catalog-row-items.css', 'css/site-chuck-cloud.css'):
+              text = Path(path).read_text(encoding='utf-8')
+              assert text.count('{') == text.count('}'), f'Unbalanced CSS braces in {path}'
+          print('Catalog theme, dark image panels, cache revisions and compact Chuck cloud validated')
+          PY
+          git diff --check
+
+      - name: Commit full visual integration fix
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/apply-catalog-theme-chuck-fix.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add led-catalog.html css/catalog.css css/catalog-row-items.css css/site-chuck-cloud.css js/catalog.js js/site-chuck.js .github/workflows/apply-catalog-theme-chuck-fix.yml
+          git commit -m 'Restore catalog theme and compact Chuck cloud'
+          git push origin HEAD:agent/catalog-theme-chuck-cloud-fix
