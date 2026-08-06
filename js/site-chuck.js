@@ -10,7 +10,7 @@
   const siteRoot = new URL("../", scriptUrl);
 
   const chuckCssUrl = new URL("css/site-chuck.css?v=20260724-cloud-guidance", siteRoot).href;
-  const cloudCssUrl = new URL("css/site-chuck-cloud.css?v=20260805-design-chain-v1", siteRoot).href;
+  const cloudCssUrl = new URL("css/site-chuck-cloud.css?v=20260806-compact-cloud-v2", siteRoot).href;
   const chuckSpriteUrl = new URL("js/chuck-sprite.js?v=20260725-phone-scroll-v2", siteRoot).href;
   const designChainUrl = new URL("js/customer-design-chain.js?v=20260805-design-chain-v1", siteRoot).href;
   const scanAtlasUrl = new URL("assets/brand/chuck-search-map.webp", siteRoot).href;

@@ -265,3 +265,90 @@
     max-width: 154px !important;
   }
 }
+
+
+/* BEGIN OBJECT: Compact Chuck message cloud. */
+.deke-chuck-thought {
+  right: 66px !important;
+  bottom: 70px !important;
+  width: min(250px, calc(100vw - 92px)) !important;
+  gap: .25rem !important;
+}
+
+.deke-chuck-thought__text {
+  font-size: clamp(.72rem, 1.55vw, .86rem) !important;
+}
+
+.deke-chuck-thought.has-choices .deke-chuck-thought__text {
+  font-size: clamp(.68rem, 1.4vw, .8rem) !important;
+}
+
+.deke-chuck-thought__action {
+  min-width: 76px !important;
+  max-width: 108px !important;
+  min-height: 26px !important;
+  font-size: .6rem !important;
+}
+
+.deke-chuck-thought__choices {
+  max-width: 166px !important;
+  gap: .23rem !important;
+}
+
+.deke-chuck-thought__choice {
+  min-height: 24px !important;
+  padding: .18rem .24rem !important;
+  font-size: .54rem !important;
+}
+
+@media (max-width: 575.98px) {
+  .deke-chuck-thought {
+    right: 56px !important;
+    bottom: 54px !important;
+    width: min(210px, calc(100vw - 80px)) !important;
+    gap: .2rem !important;
+  }
+
+  .deke-chuck-thought__close {
+    width: 20px !important;
+    height: 20px !important;
+    font-size: .78rem !important;
+  }
+
+  .deke-chuck-thought__text,
+  .deke-chuck-thought.has-choices .deke-chuck-thought__text {
+    font-size: clamp(.64rem, 3.15vw, .74rem) !important;
+  }
+
+  .deke-chuck-thought__action {
+    min-width: 64px !important;
+    max-width: 88px !important;
+    min-height: 22px !important;
+    font-size: .52rem !important;
+  }
+
+  .deke-chuck-thought__choices {
+    max-width: 142px !important;
+    gap: .18rem !important;
+  }
+
+  .deke-chuck-thought__choice {
+    min-height: 21px !important;
+    padding: .14rem .18rem !important;
+    font-size: .48rem !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .deke-chuck-thought {
+    right: 53px !important;
+    bottom: 51px !important;
+    width: min(198px, calc(100vw - 74px)) !important;
+  }
+
+  .deke-chuck-thought__text,
+  .deke-chuck-thought.has-choices .deke-chuck-thought__text {
+    font-size: .62rem !important;
+  }
+}
+/* END OBJECT: Compact Chuck message cloud. */
