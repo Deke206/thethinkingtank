@@ -3,12 +3,29 @@
 
   const PROJECT_STORAGE_KEY = "shynetymeBtfProject";
   const CONTACT_DRAFT_KEY = "shynetymeContactDraft";
-  const catalog = await window.SHYNETYME_BTF_READY;
+  const catalog = await window.SHYNETYME_BTF_READY.catch(() => null);
   const products = Array.isArray(catalog?.products) ? catalog.products : [];
   const categories = Array.isArray(catalog?.categories) ? catalog.categories : [];
 
+  const injectCatalogStyles = () => {
+    if (document.querySelector("link[data-btf-row-catalog]")) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "css/catalog-row-items.css?v=20260805-row-complete-1";
+    link.dataset.btfRowCatalog = "true";
+    document.head.appendChild(link);
+  };
+  injectCatalogStyles();
+
+  const lead = document.querySelector(".catalog-lead");
+  if (lead && catalog) {
+    lead.innerHTML = `This searchable catalog contains <strong>${catalog.source.quotationRows} exact manufacturer quotation lines</strong> plus <strong>${catalog.source.selectedSystems} previously selected controllers, signal devices, connectors, wiring, ropes, kits and pixel systems</strong>. Every quotation row remains separate so voltage, length, density, width and protection can be selected without losing the original configuration.`;
+  }
+  const searchInput = document.getElementById("catalogSearch");
+  if (searchInput) searchInput.placeholder = "Item number, WS2812B, 5V, 12V, IP67, RGBIC, controller, connector...";
+
   const elements = {
-    search: document.getElementById("catalogSearch"),
+    search: searchInput,
     clearSearch: document.getElementById("clearSearch"),
     categoryNav: document.getElementById("categoryNav"),
     categorySelect: document.getElementById("categorySelect"),
@@ -31,150 +48,99 @@
   };
 
   if (!catalog || !products.length || !elements.grid) {
-    if (elements.grid) {
-      elements.grid.innerHTML = '<div class="alert alert-danger" role="alert">The BTF-LIGHTING project catalog could not be loaded.</div>';
-    }
+    if (elements.grid) elements.grid.innerHTML = '<div class="alert alert-danger" role="alert">The BTF-LIGHTING project catalog could not be loaded.</div>';
     if (elements.catalogCount) elements.catalogCount.textContent = "Catalog unavailable";
     return;
   }
 
-  const productModal = elements.modal && window.bootstrap?.Modal
-    ? new bootstrap.Modal(elements.modal)
-    : null;
-
+  const productModal = elements.modal && window.bootstrap?.Modal ? new bootstrap.Modal(elements.modal) : null;
   let activeCategory = "all";
   let activeProductId = null;
 
-  function escapeHtml(value = "") {
-    return String(value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
+  const escapeHtml = (value = "") => String(value)
+    .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;").replaceAll("'", "&#039;");
 
-  function readProject() {
+  const readProject = () => {
     try {
       const saved = JSON.parse(localStorage.getItem(PROJECT_STORAGE_KEY) || "[]");
       return Array.isArray(saved) ? saved : [];
-    } catch {
-      return [];
-    }
-  }
+    } catch { return []; }
+  };
 
-  function writeProject(items) {
+  const writeProject = (items) => {
     localStorage.setItem(PROJECT_STORAGE_KEY, JSON.stringify(items));
     renderProject();
-  }
+  };
 
-  function categoryLabel(categoryId) {
-    return categories.find((category) => category.id === categoryId)?.label || categoryId;
-  }
+  const categoryLabel = (id) => categories.find((c) => c.id === id)?.label || id;
+  const productSearchText = (p) => [
+    p.id, p.name, p.description, p.category, p.model, p.productDetails, p.control,
+    p.colors, p.voltages, p.waterproof, p.densities, p.widths, p.length,
+    p.sourceItems, p.searchText, ...(p.tags || [])
+  ].join(" ").toLowerCase();
 
-  function productSearchText(product) {
-    return [
-      product.name,
-      product.description,
-      product.category,
-      product.control,
-      product.colors,
-      product.voltages,
-      product.waterproof,
-      product.densities,
-      product.widths,
-      product.sourceItems,
-      ...(product.applications || []),
-      ...(product.variants || []).flatMap((variant) => Object.values(variant))
-    ].join(" ").toLowerCase();
-  }
-
-  function visibleProducts() {
+  const visibleProducts = () => {
     const query = elements.search?.value.trim().toLowerCase() || "";
-    return products.filter((product) => {
-      const categoryMatch = activeCategory === "all" || product.category === activeCategory;
-      return categoryMatch && (!query || productSearchText(product).includes(query));
-    });
-  }
+    return products.filter((p) => (activeCategory === "all" || p.category === activeCategory)
+      && (!query || productSearchText(p).includes(query)));
+  };
 
-  function categoryCount(categoryId) {
-    return categoryId === "all"
-      ? products.length
-      : products.filter((product) => product.category === categoryId).length;
-  }
+  const categoryCount = (id) => id === "all" ? products.length : products.filter((p) => p.category === id).length;
 
   function populateCategories() {
     if (elements.categoryNav) {
       elements.categoryNav.innerHTML = categories.map((category) => `
         <button class="catalog-category-button${category.id === activeCategory ? " is-active" : ""}" type="button" data-category="${escapeHtml(category.id)}">
-          <span>${escapeHtml(category.label)}</span>
-          <span class="catalog-category-count">${categoryCount(category.id)}</span>
+          <span>${escapeHtml(category.label)}</span><span class="catalog-category-count">${categoryCount(category.id)}</span>
         </button>`).join("");
     }
-
     if (elements.categorySelect) {
-      elements.categorySelect.innerHTML = categories.map((category) => `
-        <option value="${escapeHtml(category.id)}">${escapeHtml(category.label)} (${categoryCount(category.id)})</option>`).join("");
+      elements.categorySelect.innerHTML = categories.map((category) => `<option value="${escapeHtml(category.id)}">${escapeHtml(category.label)} (${categoryCount(category.id)})</option>`).join("");
       elements.categorySelect.value = activeCategory;
     }
   }
 
-  function cardCode(product) {
-    const controlCode = String(product.control || "").match(/(?:WS|SK|TM|XGB)\d+[A-Z0-9-]*/i)?.[0];
-    if (controlCode) return controlCode.toUpperCase();
-    return String(product.category || "LED")
-      .replace("FCOB ", "")
-      .replace("Pixel ", "")
-      .slice(0, 18);
-  }
+  const cardCode = (p) => p.sourceItem
+    ? `${p.source.startsWith("FCOB") ? "FCOB" : "PIX"} #${p.sourceItem}`
+    : String(p.control || p.category || "LED").slice(0, 22);
 
   function renderCards() {
     const items = visibleProducts();
-    const variantTotal = items.reduce((sum, product) => sum + (product.variants?.length || 0), 0);
-
     if (elements.activeCategory) elements.activeCategory.textContent = categoryLabel(activeCategory);
-    if (elements.searchScope) {
-      elements.searchScope.textContent = activeCategory === "all"
-        ? "Searching all categories"
-        : `Searching ${categoryLabel(activeCategory)}`;
-    }
-    if (elements.catalogCount) {
-      elements.catalogCount.textContent = `${items.length} product families · ${variantTotal} configurations`;
-    }
+    if (elements.searchScope) elements.searchScope.textContent = activeCategory === "all" ? "Searching all categories" : `Searching ${categoryLabel(activeCategory)}`;
+    if (elements.catalogCount) elements.catalogCount.textContent = `${items.length} catalog items shown · ${products.length} total`;
 
     if (!items.length) {
-      elements.grid.innerHTML = `
-        <div class="catalog-empty">
-          <strong>No catalog systems match that search.</strong><br>
-          Clear the search or choose another category.
-        </div>`;
+      elements.grid.innerHTML = '<div class="catalog-empty"><strong>No catalog items match that search.</strong><br>Clear the search or choose another category.</div>';
       return;
     }
 
-    elements.grid.innerHTML = items.map((product) => `
-      <article class="catalog-product-card">
-        <div class="catalog-card-visual" aria-hidden="true">
-          <span class="catalog-card-code">${escapeHtml(cardCode(product))}</span>
+    elements.grid.innerHTML = items.map((p) => `
+      <article class="catalog-product-card" data-product-id="${escapeHtml(p.id)}">
+        <div class="catalog-card-visual${p.image ? " has-image" : ""}">
+          ${p.image ? `<img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.imageAlt || p.name)}" loading="lazy" width="720" height="520">` : ""}
+          <span class="catalog-card-code">${escapeHtml(cardCode(p))}</span>
         </div>
         <div class="catalog-product-body">
-          <p class="catalog-product-category">${escapeHtml(product.category)}</p>
-          <h2 class="catalog-product-title">${escapeHtml(product.name)}</h2>
-          <p class="catalog-product-description">${escapeHtml(product.description)}</p>
+          <p class="catalog-product-category">${escapeHtml(p.category)}</p>
+          <h2 class="catalog-product-title">${escapeHtml(p.name)}</h2>
+          <p class="catalog-product-description">${escapeHtml(p.productDetails || p.description)}</p>
           <div class="catalog-chip-list">
-            <span class="catalog-chip">${escapeHtml(product.voltages)}</span>
-            <span class="catalog-chip">${escapeHtml(product.waterproof)}</span>
-            <span class="catalog-chip">${product.variants.length} variants</span>
+            <span class="catalog-chip">${escapeHtml(p.voltages)}</span>
+            <span class="catalog-chip">${escapeHtml(p.waterproof)}</span>
+            <span class="catalog-chip">${escapeHtml(p.densities)}</span>
             <span class="catalog-chip catalog-chip--quote">Project priced</span>
           </div>
           <dl class="catalog-card-meta">
-            <div><dt>Control</dt><dd>${escapeHtml(product.control)}</dd></div>
-            <div><dt>Colors</dt><dd>${escapeHtml(product.colors)}</dd></div>
-            <div><dt>Density</dt><dd>${escapeHtml(product.densities)}</dd></div>
-            <div><dt>Width</dt><dd>${escapeHtml(product.widths)}</dd></div>
+            <div><dt>Model</dt><dd>${escapeHtml(p.model || p.control)}</dd></div>
+            <div><dt>Length</dt><dd>${escapeHtml(p.length)}</dd></div>
+            <div><dt>Width</dt><dd>${escapeHtml(p.widths)}</dd></div>
+            <div><dt>Source</dt><dd>${escapeHtml(p.sourceItems)}</dd></div>
           </dl>
           <div class="catalog-card-actions">
-            <button class="btn btn-outline-light" type="button" data-details="${escapeHtml(product.id)}">View Variants</button>
-            <button class="btn btn-neon-cyan" type="button" data-add-family="${escapeHtml(product.id)}">Add to Project</button>
+            <button class="btn btn-outline-light" type="button" data-details="${escapeHtml(p.id)}">View Exact Row</button>
+            <button class="btn btn-neon-cyan" type="button" data-add-item="${escapeHtml(p.id)}">Add Item</button>
           </div>
         </div>
       </article>`).join("");
@@ -183,209 +149,115 @@
   function setModalStatus(message) {
     if (!elements.modalStatus) return;
     elements.modalStatus.textContent = message;
-    window.clearTimeout(elements.modalStatus._timer);
-    elements.modalStatus._timer = window.setTimeout(() => {
-      elements.modalStatus.textContent = "";
-    }, 2600);
+    clearTimeout(elements.modalStatus._timer);
+    elements.modalStatus._timer = setTimeout(() => { elements.modalStatus.textContent = ""; }, 2600);
   }
 
-  function addSelection(product, variant = null) {
+  function addSelection(product) {
     const project = readProject();
-    const key = variant ? `${product.id}:item-${variant.item}` : product.id;
-
-    if (project.some((item) => item.key === key)) {
+    if (project.some((item) => item.productId === product.id)) {
       setModalStatus("Already in project list.");
       return;
     }
-
     project.push({
-      key,
+      key: product.id,
       productId: product.id,
       productName: product.name,
       category: product.category,
       sourceItems: product.sourceItems,
-      applications: product.applications || [],
-      variant: variant ? {
-        item: variant.item,
-        length: variant.length,
-        voltage: variant.voltage,
-        density: variant.density,
-        waterproof: variant.waterproof,
-        width: variant.width,
-        detail: variant.detail
-      } : null,
+      applications: product.tags || [],
+      variant: {
+        item: product.sourceItem || "Selected",
+        length: product.length,
+        voltage: product.voltages,
+        density: product.densities,
+        waterproof: product.waterproof,
+        width: product.widths,
+        detail: product.productDetails || product.description
+      },
       addedAt: new Date().toISOString()
     });
-
     writeProject(project);
-    setModalStatus(variant ? `Item ${variant.item} added to project.` : "Product family added to project.");
+    setModalStatus("Exact catalog item added to project.");
   }
 
-  function removeSelection(key) {
-    writeProject(readProject().filter((item) => item.key !== key));
-  }
+  const removeSelection = (key) => writeProject(readProject().filter((item) => item.key !== key));
 
   function renderProject() {
     const project = readProject();
     if (elements.projectCount) elements.projectCount.textContent = String(project.length);
     if (elements.requestQuote) elements.requestQuote.disabled = !project.length;
     if (elements.clearProject) elements.clearProject.disabled = !project.length;
-
     if (!elements.projectItems) return;
     if (!project.length) {
-      elements.projectItems.innerHTML = '<p class="catalog-project-empty">Add product families to build a materials-and-installation request.</p>';
+      elements.projectItems.innerHTML = '<p class="catalog-project-empty">Add exact catalog rows to build a materials-and-installation request.</p>';
       return;
     }
-
-    elements.projectItems.innerHTML = project.map((item) => {
-      const variantText = item.variant
-        ? `Item ${item.variant.item} · ${item.variant.length} · ${item.variant.voltage} · ${item.variant.density} · ${item.variant.waterproof}`
-        : "Family selection · exact configuration finalized during project planning";
-
-      return `
-        <div class="catalog-project-item">
-          <div>
-            <strong>${escapeHtml(item.productName)}</strong>
-            <span>${escapeHtml(variantText)}</span>
-          </div>
-          <button class="catalog-project-remove" type="button" data-remove-project="${escapeHtml(item.key)}">Remove</button>
-        </div>`;
-    }).join("");
+    elements.projectItems.innerHTML = project.map((item) => `
+      <div class="catalog-project-item"><div><strong>${escapeHtml(item.productName)}</strong><span>${escapeHtml([item.variant?.length,item.variant?.voltage,item.variant?.density,item.variant?.waterproof].filter(Boolean).join(" · "))}</span></div><button class="catalog-project-remove" type="button" data-remove-project="${escapeHtml(item.key)}">Remove</button></div>`).join("");
   }
 
-  function modalSummaryCell(label, value) {
-    return `<div class="catalog-summary-cell"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`;
-  }
+  const modalSummaryCell = (label, value) => `<div class="catalog-summary-cell"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`;
 
-  function openProduct(product) {
-    activeProductId = product.id;
-    elements.modalCategory.textContent = product.category;
-    elements.modalTitle.textContent = product.name;
-    elements.modalDescription.textContent = product.description;
+  function openProduct(p) {
+    activeProductId = p.id;
+    elements.modalCategory.textContent = p.category;
+    elements.modalTitle.textContent = p.name;
+    elements.modalDescription.textContent = p.description;
+    let image = elements.modal.querySelector(".catalog-modal-product-image");
+    if (!image) {
+      image = document.createElement("div");
+      image.className = "catalog-modal-product-image";
+      elements.modalDescription.insertAdjacentElement("beforebegin", image);
+    }
+    image.innerHTML = p.image ? `<img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.imageAlt || p.name)}">` : `<span>${escapeHtml(cardCode(p))}</span>`;
     elements.modalSummary.innerHTML = [
-      modalSummaryCell("Control", product.control),
-      modalSummaryCell("Colors", product.colors),
-      modalSummaryCell("Voltage", product.voltages),
-      modalSummaryCell("Protection", product.waterproof),
-      modalSummaryCell("Density", product.densities),
-      modalSummaryCell("Widths", product.widths),
-      modalSummaryCell("Best fits", (product.applications || []).join(", ")),
-      modalSummaryCell("Source", product.sourceItems)
+      modalSummaryCell("Model", p.model), modalSummaryCell("Control / IC", p.control),
+      modalSummaryCell("Voltage", p.voltages), modalSummaryCell("Protection", p.waterproof),
+      modalSummaryCell("Length", p.length), modalSummaryCell("Density", p.densities),
+      modalSummaryCell("Width", p.widths), modalSummaryCell("Source", p.sourceItems)
     ].join("");
-
-    elements.variantRows.innerHTML = product.variants.map((variant, index) => `
-      <tr>
-        <td>${escapeHtml(variant.item)}</td>
-        <td>${escapeHtml(variant.length)}</td>
-        <td>${escapeHtml(variant.voltage)}</td>
-        <td>${escapeHtml(variant.density)}</td>
-        <td>${escapeHtml(variant.waterproof)}</td>
-        <td>${escapeHtml(variant.width)}</td>
-        <td>${escapeHtml(variant.detail || "—")}</td>
-        <td><button class="btn btn-sm btn-neon-cyan catalog-variant-add" type="button" data-add-variant="${index}">Add Option</button></td>
-      </tr>`).join("");
-
+    elements.variantRows.innerHTML = `<tr><td>${escapeHtml(p.sourceItem || "Selected")}</td><td>${escapeHtml(p.length)}</td><td>${escapeHtml(p.voltages)}</td><td>${escapeHtml(p.densities)}</td><td>${escapeHtml(p.waterproof)}</td><td>${escapeHtml(p.widths)}</td><td>${escapeHtml(p.productDetails || p.description)}</td><td><button class="btn btn-sm btn-neon-cyan" type="button" data-add-modal-item="${escapeHtml(p.id)}">Add Item</button></td></tr>`;
     elements.modalStatus.textContent = "";
     productModal?.show();
   }
 
   function selectionSummary(project) {
-    return project.map((item, index) => {
-      const option = item.variant
-        ? [
-            `Manufacturer item ${item.variant.item}`,
-            item.variant.length,
-            item.variant.voltage,
-            item.variant.density,
-            item.variant.waterproof,
-            item.variant.width,
-            item.variant.detail
-          ].filter(Boolean).join("; ")
-        : "Product family selected; exact configuration to be finalized during design review.";
-
-      return `${index + 1}. ${item.productName}\n   Category: ${item.category}\n   Selection: ${option}`;
-    }).join("\n\n");
+    return project.map((item, index) => `${index + 1}. ${item.productName}\n   Category: ${item.category}\n   Selection: ${[item.variant?.length,item.variant?.voltage,item.variant?.density,item.variant?.waterproof,item.variant?.width,item.variant?.detail].filter(Boolean).join("; ")}`).join("\n\n");
   }
 
   function openContactRequest() {
     const project = readProject();
     if (!project.length) return;
-
-    const draft = {
-      source: "btf-catalog",
-      createdAt: new Date().toISOString(),
-      project,
-      summary: selectionSummary(project),
-      requestType: "Complete LED materials and installation quote",
+    localStorage.setItem(CONTACT_DRAFT_KEY, JSON.stringify({
+      source: "btf-catalog", createdAt: new Date().toISOString(), project,
+      summary: selectionSummary(project), requestType: "Complete LED materials and installation quote",
       pricingModel: "ShyneTyme-supplied materials, design, controls, fabrication and installation"
-    };
-
-    localStorage.setItem(CONTACT_DRAFT_KEY, JSON.stringify(draft));
+    }));
     window.location.href = "contact.html?source=btf-catalog#contact-request";
   }
 
-  function setCategory(categoryId) {
-    activeCategory = categories.some((category) => category.id === categoryId) ? categoryId : "all";
-    populateCategories();
-    renderCards();
+  function setCategory(id) {
+    activeCategory = categories.some((c) => c.id === id) ? id : "all";
+    populateCategories(); renderCards();
     document.getElementById("catalog-shell")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  elements.categoryNav?.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-category]");
-    if (button) setCategory(button.dataset.category);
-  });
-
+  elements.categoryNav?.addEventListener("click", (e) => { const b=e.target.closest("[data-category]"); if(b) setCategory(b.dataset.category); });
   elements.categorySelect?.addEventListener("change", () => setCategory(elements.categorySelect.value));
   elements.search?.addEventListener("input", renderCards);
-  elements.clearSearch?.addEventListener("click", () => {
-    elements.search.value = "";
-    elements.search.focus();
-    renderCards();
+  elements.clearSearch?.addEventListener("click", () => { elements.search.value=""; elements.search.focus(); renderCards(); });
+  elements.grid.addEventListener("click", (e) => {
+    const d=e.target.closest("[data-details]"); if(d){ const p=products.find(x=>x.id===d.dataset.details); if(p) openProduct(p); return; }
+    const a=e.target.closest("[data-add-item]"); if(a){ const p=products.find(x=>x.id===a.dataset.addItem); if(p) addSelection(p); }
   });
-
-  elements.grid.addEventListener("click", (event) => {
-    const details = event.target.closest("[data-details]");
-    if (details) {
-      const product = products.find((item) => item.id === details.dataset.details);
-      if (product) openProduct(product);
-      return;
-    }
-
-    const add = event.target.closest("[data-add-family]");
-    if (add) {
-      const product = products.find((item) => item.id === add.dataset.addFamily);
-      if (product) addSelection(product);
-    }
-  });
-
-  elements.variantRows?.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-add-variant]");
-    if (!button) return;
-    const product = products.find((item) => item.id === activeProductId);
-    const variant = product?.variants?.[Number(button.dataset.addVariant)];
-    if (product && variant) addSelection(product, variant);
-  });
-
-  elements.addFamilyFromModal?.addEventListener("click", () => {
-    const product = products.find((item) => item.id === activeProductId);
-    if (product) addSelection(product);
-  });
-
-  elements.projectItems?.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-remove-project]");
-    if (button) removeSelection(button.dataset.removeProject);
-  });
-
+  elements.variantRows?.addEventListener("click", (e) => { const b=e.target.closest("[data-add-modal-item]"); if(b){ const p=products.find(x=>x.id===b.dataset.addModalItem); if(p) addSelection(p); } });
+  elements.addFamilyFromModal?.addEventListener("click", () => { const p=products.find(x=>x.id===activeProductId); if(p) addSelection(p); });
+  if (elements.addFamilyFromModal) elements.addFamilyFromModal.textContent = "Add Exact Item to Project";
+  elements.projectItems?.addEventListener("click", (e) => { const b=e.target.closest("[data-remove-project]"); if(b) removeSelection(b.dataset.removeProject); });
   elements.requestQuote?.addEventListener("click", openContactRequest);
   elements.clearProject?.addEventListener("click", () => writeProject([]));
+  elements.modal?.addEventListener("hidden.bs.modal", () => { activeProductId=null; elements.modalStatus.textContent=""; });
 
-  elements.modal?.addEventListener("hidden.bs.modal", () => {
-    activeProductId = null;
-    elements.modalStatus.textContent = "";
-  });
-
-  populateCategories();
-  renderCards();
-  renderProject();
+  populateCategories(); renderCards(); renderProject();
 })();
