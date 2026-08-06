@@ -1,4 +1,4 @@
-name: Install validated mobile simulator corrections
+name: Install corrected mobile simulator files
 
 on:
   push:
@@ -20,26 +20,32 @@ jobs:
           ref: agent/unified-node-sequence-sim
           fetch-depth: 0
 
-      - name: Install validated JavaScript and CSS
+      - name: Install and validate JavaScript and CSS
         shell: bash
         run: |
           set -euo pipefail
+          gzip --test tmp/sim-node-sequence-mobile.js.gz
+          gzip --test tmp/sim-node-sequence-mobile.css.gz
           gzip --decompress --stdout tmp/sim-node-sequence-mobile.js.gz > js/sim-node-sequence.js
           gzip --decompress --stdout tmp/sim-node-sequence-mobile.css.gz > css/sim-node-sequence.css
           node --check js/sim-node-sequence.js
-          grep -q '<span>nodes</span>' js/sim-node-sequence.js
-          grep -q 'grid-template-columns: minmax(0, 1fr) 76px' css/sim-node-sequence.css
+          grep -Fq '<span>nodes</span>' js/sim-node-sequence.js
+          grep -Fq 'grid-template-columns: minmax(0, 1fr) 76px' css/sim-node-sequence.css
           python - <<'PY'
           from pathlib import Path
+
           css = Path('css/sim-node-sequence.css').read_text(encoding='utf-8')
+          js = Path('js/sim-node-sequence.js').read_text(encoding='utf-8')
           assert css.count('{') == css.count('}')
           assert '.sim-workbench-header > div' in css
           assert '.sim-sequence-panel,' in css
-          print('Mobile node-sequence static validation passed.')
+          assert 'Array.from({ length: 10 }' in js
+          assert js.count('label: "') >= 25
+          print('Corrected mobile node-sequence validation passed.')
           PY
           git diff --check
 
-      - name: Commit and remove installer
+      - name: Commit validated files and remove installer
         shell: bash
         run: |
           set -euo pipefail
