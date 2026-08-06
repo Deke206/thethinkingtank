@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-08-06T04:31:29.428Z",
-  "commitCount": 418,
+  "generatedAt": "2026-08-06T05:43:37.305Z",
+  "commitCount": 419,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -2093,6 +2093,11 @@
       "sha": "1e190ec46d720595b1a67d0cca8e6a44daa010e2",
       "date": "2026-08-06T04:31:01Z",
       "message": "Deploy fixed Home SIM and unify simulator controls"
+    },
+    {
+      "sha": "d76374ebaa8def9a42e823d3cdcb5906e9bef06f",
+      "date": "2026-08-06T05:43:24Z",
+      "message": "Fix Home SIM live-view controller startup"
     }
   ]
 }
