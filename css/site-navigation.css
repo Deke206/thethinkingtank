@@ -1,3 +1,12 @@
+@import url("sim-controls-shared.css?v=20260805-unified-sim-v2");
+
+/*
+  BEGIN OBJECT: Shared simulator stylesheet loader.
+  Loading site-navigation.css now also loads the shared Bike, Home, and Auto
+  simulator control theme. This keeps all three production routes aligned.
+  END OBJECT: Shared simulator stylesheet loader.
+*/
+
 /* Canonical site-wide navigation styling. */
 .skip-link {
   position: fixed;
