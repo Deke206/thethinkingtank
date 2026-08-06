@@ -11,7 +11,7 @@
     if (document.querySelector("link[data-btf-row-catalog]")) return;
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "css/catalog-row-items.css?v=20260805-row-complete-1";
+    link.href = "css/catalog-row-items.css?v=20260806-catalog-theme-v2";
     link.dataset.btfRowCatalog = "true";
     document.head.appendChild(link);
   };

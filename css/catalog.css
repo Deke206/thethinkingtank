@@ -617,3 +617,107 @@
     transition: none;
   }
 }
+
+
+/* BEGIN OBJECT: Catalog shared dark-theme guard. */
+html {
+  color-scheme: dark;
+  background: #030918;
+}
+
+body.catalog-page {
+  --bs-body-bg: #030918;
+  --bs-body-color: #f4f8ff;
+  --bs-emphasis-color: #ffffff;
+  --bs-secondary-color: #b8c6dc;
+  --bs-tertiary-bg: #0a1d38;
+  --bs-border-color: rgba(138, 220, 255, .24);
+  min-height: 100vh;
+  color: var(--text, #f4f8ff);
+  background:
+    radial-gradient(circle at 8% 18%, rgba(49, 230, 255, .08), transparent 25rem),
+    radial-gradient(circle at 92% 42%, rgba(255, 90, 185, .07), transparent 28rem),
+    var(--night, #030918) !important;
+}
+
+body.catalog-page main,
+body.catalog-page .catalog-intro,
+body.catalog-page .catalog-section,
+body.catalog-page footer {
+  color: var(--text, #f4f8ff);
+  background-color: transparent !important;
+}
+
+body.catalog-page .site-banner {
+  color: var(--text, #f4f8ff);
+  background: var(--night, #030918);
+}
+
+body.catalog-page #page-subheader {
+  color: #eaf7ff;
+  border-top: 1px solid rgba(49, 230, 255, .14);
+  border-bottom: 1px solid rgba(49, 230, 255, .2);
+  background: rgba(3, 9, 24, .96) !important;
+}
+
+body.catalog-page #page-subheader a,
+body.catalog-page #page-subheader span {
+  color: #eaf7ff;
+}
+
+body.catalog-page .catalog-intro h1,
+body.catalog-page .catalog-intro h2,
+body.catalog-page .catalog-main-column h2,
+body.catalog-page .catalog-product-title,
+body.catalog-page .catalog-project-heading h2,
+body.catalog-page .modal-title {
+  color: #ffffff !important;
+}
+
+body.catalog-page .catalog-lead,
+body.catalog-page .catalog-product-description,
+body.catalog-page .catalog-modal-description,
+body.catalog-page .catalog-project-empty,
+body.catalog-page footer,
+body.catalog-page footer span {
+  color: var(--muted, #b8c6dc) !important;
+}
+
+body.catalog-page .catalog-process-card,
+body.catalog-page .catalog-search-block,
+body.catalog-page .catalog-project-box,
+body.catalog-page .catalog-category-nav,
+body.catalog-page .catalog-product-card,
+body.catalog-page .catalog-modal .modal-content {
+  color: var(--text, #f4f8ff);
+  background-color: var(--panel, #0a1d38);
+}
+
+body.catalog-page .form-control,
+body.catalog-page .form-select {
+  color: #eef9ff;
+  color-scheme: dark;
+  border-color: rgba(112, 231, 255, .3);
+  background-color: rgba(2, 13, 28, .96);
+}
+
+body.catalog-page .form-select option {
+  color: #eef9ff;
+  background: #06152f;
+}
+
+body.catalog-page .form-control::placeholder {
+  color: rgba(213, 231, 242, .58);
+}
+
+body.catalog-page .catalog-card-visual.has-image,
+body.catalog-page .catalog-modal-product-image {
+  background-color: var(--panel-soft, #102747) !important;
+}
+
+body.catalog-page .alert {
+  color: #f4f8ff;
+  border-color: rgba(255, 124, 130, .45);
+  background: rgba(92, 24, 38, .82);
+}
+/* END OBJECT: Catalog shared dark-theme guard. */
