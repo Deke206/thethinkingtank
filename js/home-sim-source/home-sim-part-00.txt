@@ -21,10 +21,12 @@
   });
 
   window.fetch = async function shynetymeApprovedImageFetch(input, init) {
-    const requestUrl = new URL(
-      typeof input === "string" ? input : input.url,
-      window.location.href
-    );
+    const inputUrl = input instanceof Request
+      ? input.url
+      : input instanceof URL
+        ? input.href
+        : String(input);
+    const requestUrl = new URL(inputUrl, window.location.href);
     const fileName = requestUrl.pathname.split("/").pop();
     const chunks = APPROVED_IMAGE_CHUNKS[fileName];
 
@@ -35,7 +37,7 @@
     const base64Parts = await Promise.all(
       chunks.map(async (chunkName) => {
         const chunkUrl = new URL(chunkName, requestUrl);
-        chunkUrl.searchParams.set("v", "20260806-approved-home-images-v4");
+        chunkUrl.searchParams.set("v", "20260806-approved-home-images-v5");
 
         const response = await nativeFetch(chunkUrl, {
           cache: "no-store",
