@@ -4,73 +4,24 @@
   const DESIGN_KEY = "shynetymeDesignChainDraft";
   const CONTACT_KEY = "shynetymeContactDraft";
   const params = new URLSearchParams(window.location.search);
-  const typeFromUrl = params.get("type");
-
-  const defaults = {
-    bike: ["pixel-ws2815", "pixel-sk6812-rgbw-12v", "pixel-ws2812b-2020", "fcob-rgbic-5mm"],
-    home: ["fcob-rgbcct-addressable", "pixel-ws2811-24v-108", "pixel-ws2805-rgbcct", "fcob-cct-ip30-ip65"],
-    auto: ["pixel-ws2815", "pixel-sk6812-rgbw-12v", "pixel-ws2814-rgbw", "fcob-rgbic-576"]
-  };
+  const requestedType = params.get("type");
+  const requestedEnvironment = params.get("environment");
 
   const projectLabels = {
     bike: "LED Bike Simulator",
     home: "LED Home Simulator",
     auto: "LED Auto Simulator"
   };
-
   const simulatorPages = {
     bike: "build-my-bike.html",
     home: "build-my-home.html",
     auto: "build-my-auto.html"
   };
-
   const fallbackSupport = [
-    {
-      id: "support-controller",
-      name: "Project Controller System",
-      category: "Controls",
-      description: "WLED-compatible Wi-Fi, Bluetooth or preprogrammed control selected for the final zones and effects."
-    },
-    {
-      id: "support-power",
-      name: "Sized Power and Voltage System",
-      category: "Power",
-      description: "Power supply, converter, distribution and voltage-injection plan sized after measurements."
-    },
-    {
-      id: "support-wiring",
-      name: "Wiring, Connectors and Fusing",
-      category: "Electrical",
-      description: "Correct wire gauge, branch protection, connectors, disconnects and service loops for the installation."
-    },
-    {
-      id: "support-mounting",
-      name: "Mounting Channels and Project Hardware",
-      category: "Installation",
-      description: "Channels, clips, diffusers, fasteners, adhesives and custom mounting pieces for a finished result."
-    },
-    {
-      id: "support-measurement",
-      name: "Measurement and Layout Package",
-      category: "Design",
-      description: "Final lengths, zone map, wire routes and controller placement verified before ordering."
-    }
+    { id: "service-measurement-layout", name: "Measurement and Layout Package", category: "Design", description: "Final lengths, zones, wire routes and controller positions are verified before products are ordered." },
+    { id: "service-installation-hardware", name: "Installation Hardware and Fabrication", category: "Installation", description: "Mounting, brackets, channels, fasteners, adhesives, sealing and custom fabrication are finalized for the project." },
+    { id: "service-power-design", name: "Power, Fusing and Distribution Design", category: "Power", description: "Supply capacity, conversion, fusing, wire gauge and power injection are calculated from the exact selected rows." }
   ];
-
-  const elements = {
-    back: document.getElementById("backToSimulator"),
-    projectType: document.getElementById("projectType"),
-    selectionCount: document.getElementById("selectionCount"),
-    suggestedCount: document.getElementById("suggestedCount"),
-    recordedSelections: document.getElementById("recordedSelections"),
-    familyGrid: document.getElementById("familyGrid"),
-    supportGrid: document.getElementById("supportGrid"),
-    familyCount: document.getElementById("familyCount"),
-    supportCount: document.getElementById("supportCount"),
-    comingSoon: document.getElementById("comingSoonSection"),
-    requestTop: document.getElementById("requestConsultationTop"),
-    requestBottom: document.getElementById("requestConsultation")
-  };
 
   const escapeHtml = (value = "") => String(value)
     .replaceAll("&", "&amp;")
@@ -88,112 +39,222 @@
     }
   };
 
-  const writeDraft = (draft) => {
+  const loadSets = () => new Promise((resolve) => {
+    if (window.SHYNETYME_BTF_RECOMMENDATION_SETS) {
+      resolve(window.SHYNETYME_BTF_RECOMMENDATION_SETS);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "data/btf-recommendation-sets.js?v=20260805-row-complete-1";
+    script.defer = true;
+    script.addEventListener("load", () => resolve(window.SHYNETYME_BTF_RECOMMENDATION_SETS || {}), { once: true });
+    script.addEventListener("error", () => resolve({}), { once: true });
+    document.head.appendChild(script);
+  });
+
+  const [catalog, sets] = await Promise.all([
+    window.SHYNETYME_BTF_READY.catch(() => null),
+    loadSets()
+  ]);
+  const allProducts = Array.isArray(catalog?.products) ? catalog.products : [];
+  const productMap = new Map(allProducts.map((product) => [product.id, product]));
+
+  const savedDraft = readDraft();
+  const projectType = ["bike", "home", "auto"].includes(requestedType)
+    ? requestedType
+    : ["bike", "home", "auto"].includes(savedDraft?.projectType) ? savedDraft.projectType : "home";
+  const environment = ["indoor", "outdoor"].includes(requestedEnvironment)
+    ? requestedEnvironment
+    : ["indoor", "outdoor"].includes(savedDraft?.environment) ? savedDraft.environment : "indoor";
+
+  const poolIds = (sets?.[projectType]?.[environment] || []).map((entry) => entry.id).filter((id) => productMap.has(id));
+  const savedIds = Array.isArray(savedDraft?.recommendedFamilyIds)
+    ? savedDraft.recommendedFamilyIds.filter((id) => productMap.has(id))
+    : [];
+  const recommendedIds = savedIds.length ? savedIds : poolIds;
+
+  const draft = {
+    version: 2,
+    source: savedDraft?.source || "recommendations-page",
+    projectType,
+    projectLabel: savedDraft?.projectLabel || projectLabels[projectType],
+    simulatorPage: savedDraft?.simulatorPage || simulatorPages[projectType],
+    environment,
+    selections: Array.isArray(savedDraft?.selections) ? savedDraft.selections : [],
+    summary: savedDraft?.summary || "",
+    recommendedFamilyIds: recommendedIds,
+    recommendedProducts: recommendedIds.map((id) => {
+      const product = productMap.get(id);
+      return product ? {
+        id: product.id,
+        name: product.name,
+        category: product.category,
+        voltages: product.voltages,
+        waterproof: product.waterproof,
+        image: product.image || "",
+        sourceItems: product.sourceItems
+      } : null;
+    }).filter(Boolean),
+    selectedFamilyIds: Array.isArray(savedDraft?.selectedFamilyIds) && savedDraft.selectedFamilyIds.some((id) => productMap.has(id))
+      ? savedDraft.selectedFamilyIds.filter((id) => recommendedIds.includes(id))
+      : [...recommendedIds],
+    supportItems: Array.isArray(savedDraft?.supportItems) && savedDraft.supportItems.length ? savedDraft.supportItems : fallbackSupport,
+    selectedSupportIds: Array.isArray(savedDraft?.selectedSupportIds) ? savedDraft.selectedSupportIds : fallbackSupport.map((item) => item.id),
+    selectionCustomized: Boolean(savedDraft?.selectionCustomized),
+    flags: savedDraft?.flags || {},
+    updatedAt: new Date().toISOString()
+  };
+
+  const elements = {
+    back: document.getElementById("backToSimulator"),
+    projectType: document.getElementById("projectType"),
+    selectionCount: document.getElementById("selectionCount"),
+    suggestedCount: document.getElementById("suggestedCount"),
+    recordedSelections: document.getElementById("recordedSelections"),
+    familyGrid: document.getElementById("familyGrid"),
+    supportGrid: document.getElementById("supportGrid"),
+    familyCount: document.getElementById("familyCount"),
+    supportCount: document.getElementById("supportCount"),
+    comingSoon: document.getElementById("comingSoonSection"),
+    requestTop: document.getElementById("requestConsultationTop"),
+    requestBottom: document.getElementById("requestConsultation")
+  };
+
+  const selectedFamilies = new Set(draft.selectedFamilyIds);
+  const selectedSupport = new Set(draft.selectedSupportIds);
+  const recommendedProducts = recommendedIds.map((id) => productMap.get(id)).filter(Boolean);
+  let query = "";
+  let category = "all";
+
+  const injectControls = () => {
+    const section = document.getElementById("recommendedMaterials");
+    const heading = section?.querySelector(".recommendations-section-heading");
+    if (!section || !heading || document.getElementById("recommendationFilters")) return;
+
+    const controls = document.createElement("div");
+    controls.id = "recommendationFilters";
+    controls.className = "recommendation-filters";
+    const categories = [...new Set(recommendedProducts.map((product) => product.category))].sort();
+    controls.innerHTML = `
+      <label class="recommendation-filter-field">
+        <span>Search suggested items</span>
+        <input id="recommendationSearch" class="form-control" type="search" placeholder="WS2812B, IP67, 5V, connector, rope, controller...">
+      </label>
+      <label class="recommendation-filter-field">
+        <span>Category</span>
+        <select id="recommendationCategory" class="form-select">
+          <option value="all">All suggested categories</option>
+          ${categories.map((value) => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join("")}
+        </select>
+      </label>
+      <button id="selectVisibleRecommendations" class="btn btn-outline-light" type="button">Select Visible</button>
+      <button id="clearVisibleRecommendations" class="btn btn-outline-light" type="button">Clear Visible</button>`;
+    heading.insertAdjacentElement("afterend", controls);
+
+    const style = document.createElement("style");
+    style.textContent = `
+      .recommendation-filters{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(13rem,.8fr) auto auto;gap:.65rem;align-items:end;margin:0 0 1rem;padding:.8rem;border:1px solid rgba(114,239,255,.18);border-radius:.85rem;background:rgba(4,18,36,.82)}
+      .recommendation-filter-field span{display:block;margin-bottom:.3rem;color:#dff8ff;font-size:.72rem;font-weight:800}
+      .recommendation-filter-field .form-control,.recommendation-filter-field .form-select{color:#eefaff;border-color:rgba(114,239,255,.25);background:#06162c}
+      .recommendation-card__image{display:grid;place-items:center;min-height:9rem;padding:.45rem;border-bottom:1px solid rgba(114,239,255,.14);background:linear-gradient(135deg,rgba(49,230,255,.08),rgba(255,90,185,.06))}
+      .recommendation-card__image img{width:100%;height:9rem;object-fit:contain;border-radius:.55rem;background:#fff}
+      .recommendation-card__image span{font-family:Oxanium,sans-serif;font-weight:900;color:#72efff}
+      .recommendation-card__source{margin-top:.55rem;color:#88a5b7;font-size:.68rem}
+      @media(max-width:991.98px){.recommendation-filters{grid-template-columns:1fr 1fr}}
+      @media(max-width:575.98px){.recommendation-filters{grid-template-columns:1fr}}
+    `;
+    document.head.appendChild(style);
+
+    document.getElementById("recommendationSearch")?.addEventListener("input", (event) => {
+      query = event.target.value.trim().toLowerCase();
+      renderFamilyGrid();
+    });
+    document.getElementById("recommendationCategory")?.addEventListener("change", (event) => {
+      category = event.target.value;
+      renderFamilyGrid();
+    });
+    document.getElementById("selectVisibleRecommendations")?.addEventListener("click", () => {
+      visibleProducts().forEach((product) => selectedFamilies.add(product.id));
+      saveSelections();
+      renderFamilyGrid();
+    });
+    document.getElementById("clearVisibleRecommendations")?.addEventListener("click", () => {
+      visibleProducts().forEach((product) => selectedFamilies.delete(product.id));
+      saveSelections();
+      renderFamilyGrid();
+    });
+  };
+
+  const writeDraft = () => {
+    draft.selectionCustomized = true;
+    draft.selectedFamilyIds = [...selectedFamilies];
+    draft.selectedSupportIds = [...selectedSupport];
     draft.updatedAt = new Date().toISOString();
     localStorage.setItem(DESIGN_KEY, JSON.stringify(draft));
   };
 
-  const projectType = ["bike", "home", "auto"].includes(typeFromUrl)
-    ? typeFromUrl
-    : readDraft()?.projectType || "home";
+  const productSearchText = (product) => [
+    product.id, product.name, product.category, product.model, product.productDetails,
+    product.control, product.colors, product.voltages, product.waterproof, product.densities,
+    product.widths, product.length, product.sourceItems, product.searchText, ...(product.tags || [])
+  ].join(" ").toLowerCase();
 
-  const draft = readDraft() || {
-    version: 1,
-    source: "recommendations-page",
-    projectType,
-    projectLabel: projectLabels[projectType],
-    simulatorPage: simulatorPages[projectType],
-    selections: [],
-    summary: "",
-    recommendedFamilyIds: defaults[projectType],
-    selectedFamilyIds: defaults[projectType],
-    supportItems: fallbackSupport,
-    selectedSupportIds: fallbackSupport.map((item) => item.id),
-    flags: {},
-    updatedAt: new Date().toISOString()
-  };
-
-  draft.projectType = projectType;
-  draft.projectLabel = draft.projectLabel || projectLabels[projectType];
-  draft.simulatorPage = draft.simulatorPage || simulatorPages[projectType];
-  draft.recommendedFamilyIds = Array.isArray(draft.recommendedFamilyIds) && draft.recommendedFamilyIds.length
-    ? draft.recommendedFamilyIds
-    : defaults[projectType];
-  draft.selectedFamilyIds = Array.isArray(draft.selectedFamilyIds)
-    ? draft.selectedFamilyIds
-    : [...draft.recommendedFamilyIds];
-  draft.supportItems = Array.isArray(draft.supportItems) && draft.supportItems.length
-    ? draft.supportItems
-    : fallbackSupport;
-  draft.selectedSupportIds = Array.isArray(draft.selectedSupportIds)
-    ? draft.selectedSupportIds
-    : draft.supportItems.map((item) => item.id);
-  draft.flags = draft.flags || {};
-  writeDraft(draft);
-
-  const catalog = await window.SHYNETYME_BTF_READY.catch(() => null);
-  const allProducts = Array.isArray(catalog?.products) ? catalog.products : [];
-  const products = draft.recommendedFamilyIds
-    .map((id) => allProducts.find((product) => product.id === id))
-    .filter(Boolean);
-
-  const selectedFamilies = new Set(draft.selectedFamilyIds);
-  const selectedSupport = new Set(draft.selectedSupportIds);
+  const visibleProducts = () => recommendedProducts.filter((product) =>
+    (category === "all" || product.category === category) &&
+    (!query || productSearchText(product).includes(query))
+  );
 
   const updateCounts = () => {
-    elements.familyCount.textContent = `${selectedFamilies.size} selected`;
+    elements.familyCount.textContent = `${selectedFamilies.size} selected · ${recommendedProducts.length} matched`;
     elements.supportCount.textContent = `${selectedSupport.size} selected`;
     elements.suggestedCount.textContent = String(selectedFamilies.size + selectedSupport.size);
   };
 
   const renderSelections = () => {
-    const selections = Array.isArray(draft.selections) ? draft.selections : [];
-    elements.selectionCount.textContent = String(selections.length);
-    elements.projectType.textContent = draft.projectLabel || projectLabels[projectType];
+    elements.selectionCount.textContent = String(draft.selections.length);
+    elements.projectType.textContent = `${draft.projectLabel} · ${draft.environment}`;
     elements.back.href = simulatorPages[projectType] || "index.html";
-
-    if (!selections.length) {
-      elements.recordedSelections.innerHTML = "<p>No detailed options were recorded. Return to the simulator to refine the build, or continue with the standard material groups shown here.</p>";
+    if (!draft.selections.length) {
+      elements.recordedSelections.innerHTML = "<p>No detailed options were recorded. Return to the simulator to refine the build, or use the voltage-and-protection matches shown here.</p>";
       return;
     }
-
-    elements.recordedSelections.innerHTML = selections.map((selection) => `
-      <div class="recorded-selection">
-        <strong>${escapeHtml(selection.label)}</strong>
-        <span>${escapeHtml(selection.value)}</span>
-      </div>`).join("");
+    elements.recordedSelections.innerHTML = draft.selections.map((selection) => `
+      <div class="recorded-selection"><strong>${escapeHtml(selection.label)}</strong><span>${escapeHtml(selection.value)}</span></div>`).join("");
   };
 
-  const renderFamilyGrid = () => {
+  function renderFamilyGrid() {
+    const products = visibleProducts();
     if (!products.length) {
-      elements.familyGrid.innerHTML = '<div class="recommendations-empty">The selected BTF product families could not be loaded. The consultation can still continue with the recorded simulator build.</div>';
+      elements.familyGrid.innerHTML = '<div class="recommendations-empty">No matched catalog rows fit this filter. Clear the search or choose another category.</div>';
+      updateCounts();
       return;
     }
-
     elements.familyGrid.innerHTML = products.map((product) => {
       const checked = selectedFamilies.has(product.id);
       return `
         <article class="recommendation-card${checked ? "" : " is-unselected"}" data-family-card="${escapeHtml(product.id)}">
+          <div class="recommendation-card__image">
+            ${product.image ? `<img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.imageAlt || product.name)}" loading="lazy">` : `<span>${escapeHtml(product.control || product.category)}</span>`}
+          </div>
           <div class="recommendation-card__top">
             <span class="recommendation-card__category">${escapeHtml(product.category)}</span>
-            <label class="recommendation-card__toggle">
-              <input type="checkbox" data-family-toggle="${escapeHtml(product.id)}"${checked ? " checked" : ""}>
-              Include
-            </label>
+            <label class="recommendation-card__toggle"><input type="checkbox" data-family-toggle="${escapeHtml(product.id)}"${checked ? " checked" : ""}> Include</label>
           </div>
           <div class="recommendation-card__body">
             <h3>${escapeHtml(product.name)}</h3>
-            <p>${escapeHtml(product.description)}</p>
+            <p>${escapeHtml(product.productDetails || product.description)}</p>
             <div class="recommendation-card__chips">
               <span class="recommendation-card__chip">${escapeHtml(product.voltages)}</span>
               <span class="recommendation-card__chip">${escapeHtml(product.waterproof)}</span>
-              <span class="recommendation-card__chip">${escapeHtml(product.control)}</span>
-              <span class="recommendation-card__chip">${product.variants.length} configurations</span>
+              <span class="recommendation-card__chip">${escapeHtml(product.densities)}</span>
+              <span class="recommendation-card__chip">${escapeHtml(product.length)}</span>
             </div>
+            <div class="recommendation-card__source">${escapeHtml(product.sourceItems)}</div>
           </div>
         </article>`;
     }).join("");
-  };
+    updateCounts();
+  }
 
   const renderSupportGrid = () => {
     elements.supportGrid.innerHTML = draft.supportItems.map((item) => {
@@ -202,73 +263,61 @@
         <article class="recommendation-card${checked ? "" : " is-unselected"}" data-support-card="${escapeHtml(item.id)}">
           <div class="recommendation-card__top">
             <span class="recommendation-card__category">${escapeHtml(item.category)}</span>
-            <label class="recommendation-card__toggle">
-              <input type="checkbox" data-support-toggle="${escapeHtml(item.id)}"${checked ? " checked" : ""}>
-              Include
-            </label>
+            <label class="recommendation-card__toggle"><input type="checkbox" data-support-toggle="${escapeHtml(item.id)}"${checked ? " checked" : ""}> Include</label>
           </div>
-          <div class="recommendation-card__body">
-            <h3>${escapeHtml(item.name)}</h3>
-            <p>${escapeHtml(item.description)}</p>
-            <div class="recommendation-card__chips">
-              <span class="recommendation-card__chip">Quantity after measurement</span>
-              <span class="recommendation-card__chip">Included in project quote</span>
-            </div>
-          </div>
+          <div class="recommendation-card__body"><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.description)}</p><div class="recommendation-card__chips"><span class="recommendation-card__chip">Finalized after measurement</span><span class="recommendation-card__chip">Included in project quote</span></div></div>
         </article>`;
     }).join("");
   };
 
   const saveSelections = () => {
-    draft.selectionCustomized = true;
-    draft.selectedFamilyIds = [...selectedFamilies];
-    draft.selectedSupportIds = [...selectedSupport];
-    writeDraft(draft);
+    writeDraft();
     updateCounts();
   };
 
   const materialSummary = () => {
-    const buildLines = draft.selections?.length
+    const selectedProducts = [...selectedFamilies].map((id) => productMap.get(id)).filter(Boolean);
+    const buildLines = draft.selections.length
       ? draft.selections.map((item) => `- ${item.label}: ${item.value}`).join("\n")
       : "- Exact simulator options to be confirmed during consultation.";
-    const familyLines = products
-      .filter((product) => selectedFamilies.has(product.id))
-      .map((product) => `- ${product.name}`)
-      .join("\n");
-    const supportLines = draft.supportItems
-      .filter((item) => selectedSupport.has(item.id))
-      .map((item) => `- ${item.name}`)
-      .join("\n");
-
+    const productLines = selectedProducts.length
+      ? selectedProducts.map((product) => `- ${product.name} (${product.voltages}; ${product.waterproof}; ${product.sourceItems})`).join("\n")
+      : "- Exact catalog rows to be finalized during consultation.";
+    const supportLines = draft.supportItems.filter((item) => selectedSupport.has(item.id)).map((item) => `- ${item.name}`).join("\n");
     return [
-      draft.projectLabel || projectLabels[projectType],
+      draft.projectLabel,
+      `Environment: ${draft.environment}`,
       "",
-      "Simulator selections:",
-      buildLines,
+      "Simulator selections:", buildLines,
       "",
-      "Selected lighting systems:",
-      familyLines || "- Final lighting system selected after measurements.",
+      "Selected exact catalog items:", productLines,
       "",
-      "Selected project support materials:",
-      supportLines || "- Final support materials selected after measurements.",
+      "Selected project services:", supportLines,
       draft.flags?.garagePanelStories ? "\nComing soon interest: Garage-door LED panel story animations." : ""
     ].filter(Boolean).join("\n");
   };
 
   const continueToConsultation = () => {
     saveSelections();
-    const chosenProducts = products.filter((product) => selectedFamilies.has(product.id));
-    const chosenSupport = draft.supportItems.filter((item) => selectedSupport.has(item.id));
     const now = new Date().toISOString();
-
+    const selectedProducts = [...selectedFamilies].map((id) => productMap.get(id)).filter(Boolean);
+    const chosenSupport = draft.supportItems.filter((item) => selectedSupport.has(item.id));
     const project = [
-      ...chosenProducts.map((product) => ({
+      ...selectedProducts.map((product) => ({
         key: `recommendation-${product.id}`,
         productId: product.id,
         productName: product.name,
         category: product.category,
         sourceItems: product.sourceItems,
-        variant: null,
+        variant: {
+          item: product.sourceItem || "Selected",
+          length: product.length,
+          voltage: product.voltages,
+          density: product.densities,
+          waterproof: product.waterproof,
+          width: product.widths,
+          detail: product.productDetails || product.description
+        },
         addedAt: now
       })),
       ...chosenSupport.map((item) => ({
@@ -281,7 +330,6 @@
         addedAt: now
       }))
     ];
-
     localStorage.setItem(CONTACT_KEY, JSON.stringify({
       source: "project-recommendations",
       createdAt: now,
@@ -291,34 +339,31 @@
       pricingModel: "ShyneTyme-supplied materials, design, controls, fabrication and installation",
       designDraft: draft
     }));
-
     window.location.href = "contact.html?source=project-recommendations#contact-request";
   };
 
   elements.familyGrid.addEventListener("change", (event) => {
     const toggle = event.target.closest("[data-family-toggle]");
     if (!toggle) return;
-    const id = toggle.dataset.familyToggle;
-    toggle.checked ? selectedFamilies.add(id) : selectedFamilies.delete(id);
+    toggle.checked ? selectedFamilies.add(toggle.dataset.familyToggle) : selectedFamilies.delete(toggle.dataset.familyToggle);
     toggle.closest(".recommendation-card")?.classList.toggle("is-unselected", !toggle.checked);
     saveSelections();
   });
-
   elements.supportGrid.addEventListener("change", (event) => {
     const toggle = event.target.closest("[data-support-toggle]");
     if (!toggle) return;
-    const id = toggle.dataset.supportToggle;
-    toggle.checked ? selectedSupport.add(id) : selectedSupport.delete(id);
+    toggle.checked ? selectedSupport.add(toggle.dataset.supportToggle) : selectedSupport.delete(toggle.dataset.supportToggle);
     toggle.closest(".recommendation-card")?.classList.toggle("is-unselected", !toggle.checked);
     saveSelections();
   });
-
   elements.requestTop.addEventListener("click", continueToConsultation);
   elements.requestBottom.addEventListener("click", continueToConsultation);
 
+  injectControls();
   renderSelections();
   renderFamilyGrid();
   renderSupportGrid();
   elements.comingSoon.hidden = !(draft.flags?.garagePanelStories || draft.flags?.garageBorder);
   updateCounts();
+  localStorage.setItem(DESIGN_KEY, JSON.stringify(draft));
 })();
