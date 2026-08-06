@@ -1,56 +1,44 @@
 (() => {
   "use strict";
 
-  if (window.ShynetymeNodeSequence?.initialized) return;
+  if (window.ShynetymeAreaEffects?.initialized) return;
 
-  const PAGE_PATH = window.location.pathname.toLowerCase();
-  const simulator = PAGE_PATH.includes("bike")
+  const pagePath = window.location.pathname.toLowerCase();
+  const simulator = pagePath.includes("bike")
     ? "bike"
-    : PAGE_PATH.includes("home")
+    : pagePath.includes("home")
       ? "home"
-      : PAGE_PATH.includes("auto") || PAGE_PATH.includes("ledsimauto")
+      : pagePath.includes("auto") || pagePath.includes("ledsimauto")
         ? "auto"
         : "";
 
   if (!simulator) return;
 
-  const STORAGE_KEY = `shynetymeNodeSequenceV2:${simulator}`;
-  const CONTROLLERS = Object.freeze([
-    { id: "sp803e", label: "WLED ESP32 · SP803E", transport: "Wi-Fi / WLED" },
-    { id: "sp630e", label: "Bluetooth SPI · SP630E", transport: "Bluetooth" },
-    { id: "sp530e", label: "Smart Wi-Fi/Voice · SP530E", transport: "Wi-Fi + Bluetooth" }
-  ]);
+  const SHARED_PRESET_KEY = "shynetymeSavedAreaEffectsV1";
+  const ASSIGNMENT_KEY = `shynetymeAreaAssignmentsV1:${simulator}`;
+  const MAX_SAVED_PRESETS = 20;
+  const MAX_SEQUENCE_PRESETS = 10;
+  const DEFAULT_STEP_SECONDS = 4;
 
-  const PRESETS = Object.freeze([
-    { id: "solid", label: "Solid", base: "solid", editable: true, colors: ["#35e7ff", "#35e7ff", "#030918"] },
-    { id: "breathe", label: "Breathe", base: "breathe", editable: true, colors: ["#35e7ff", "#9b7cff", "#030918"] },
-    { id: "triple-twinkle", label: "Three-color twinkle", base: "twinkle", editable: true, colors: ["#35e7ff", "#ff5ab9", "#ffe76a"] },
-    { id: "gradient-chase", label: "Gradient chase", base: "chase", editable: true, colors: ["#35e7ff", "#9b7cff", "#030918"] },
-    { id: "rain-cascade", label: "Rain cascade", base: "wipe", editable: true, colors: ["#31e6ff", "#7aa7ff", "#06152f"] },
-    { id: "foreground-cascade", label: "Foreground cascade", base: "theater", editable: true, colors: ["#ff5ab9", "#35e7ff", "#06152f"] },
-    { id: "center-out", label: "Center-out sweep", base: "scanner", editable: true, colors: ["#ff3b47", "#ff8a3d", "#030918"] },
-    { id: "center-in", label: "Center-in sweep", base: "scanner", editable: true, colors: ["#35e7ff", "#9b7cff", "#030918"] },
-    { id: "section-scramble", label: "Section scramble", base: "sections", editable: true, colors: ["#35e7ff", "#ff5ab9", "#ffe76a"] },
-    { id: "rainbow", label: "Custom rainbow", base: "rainbow", editable: true, colors: ["#ff3b47", "#ffe76a", "#35e7ff"] },
-    { id: "meteor-cyan", label: "Cyan meteor", base: "chase", editable: false, colors: ["#eaffff", "#31e6ff", "#02111d"] },
-    { id: "fireworks", label: "Fireworks", base: "starlight", editable: false, colors: ["#ffffff", "#ff5ab9", "#35e7ff"] },
-    { id: "confetti", label: "Confetti field", base: "twinkle", editable: false, colors: ["#ff4a4a", "#ffe76a", "#35e7ff"] },
-    { id: "aurora", label: "Aurora flow", base: "sections", editable: false, colors: ["#55e6b5", "#35e7ff", "#9b7cff"] },
-    { id: "ocean-chase", label: "Ocean chase", base: "chase", editable: false, colors: ["#31e6ff", "#246bff", "#03142d"] },
-    { id: "sunset-chase", label: "Sunset chase", base: "chase", editable: false, colors: ["#ff3b47", "#ff8a3d", "#6b1b7c"] },
-    { id: "neon-pulse", label: "Neon pulse", base: "breathe", editable: false, colors: ["#ff2bd6", "#31e6ff", "#030918"] },
-    { id: "candy-stripe", label: "Candy stripe", base: "theater", editable: false, colors: ["#ff2f5b", "#ffffff", "#030918"] },
-    { id: "lava-flow", label: "Lava flow", base: "wipe", editable: false, colors: ["#ff2b1c", "#ff9a1f", "#210300"] },
-    { id: "star-field", label: "Star field", base: "starlight", editable: false, colors: ["#ffffff", "#b8d8ff", "#04091a"] },
-    { id: "dual-comet", label: "Dual comet", base: "scanner", editable: false, colors: ["#35e7ff", "#ff5ab9", "#030918"] },
-    { id: "sparkle-trail", label: "Sparkle trail", base: "twinkle", editable: false, colors: ["#ffffff", "#9b7cff", "#14082c"] },
-    { id: "heartbeat", label: "Heartbeat", base: "breathe", editable: false, colors: ["#ff1f3d", "#7a0015", "#030000"] },
-    { id: "gold-runner", label: "Gold runner", base: "theater", editable: false, colors: ["#ffe76a", "#ff9d24", "#150b00"] },
-    { id: "blackout-return", label: "Blackout + return", base: "wipe", editable: false, colors: ["#000000", "#35e7ff", "#000000"] }
+  const EFFECTS = Object.freeze([
+    { id: "solid", label: "Solid", base: "solid", directional: false, speed: false, palette: "single" },
+    { id: "breathe", label: "Breathe", base: "breathe", directional: false, speed: true, palette: "two" },
+    { id: "flash", label: "Flash", base: "breathe", directional: false, speed: true, palette: "two" },
+    { id: "race", label: "Race", base: "chase", directional: true, speed: true, palette: "gradient" },
+    { id: "wipe", label: "Color wipe", base: "wipe", directional: true, speed: true, palette: "two" },
+    { id: "twinkle", label: "Twinkle", base: "twinkle", directional: false, speed: true, palette: "gradient" },
+    { id: "stars", label: "Falling stars", base: "starlight", directional: true, speed: true, palette: "gradient" },
+    { id: "comet", label: "Comet", base: "chase", directional: true, speed: true, palette: "gradient" },
+    { id: "waterfall", label: "Waterfall", base: "wipe", directional: true, speed: true, palette: "gradient" },
+    { id: "rainbow", label: "Rainbow", base: "rainbow", directional: true, speed: true, palette: "gradient" },
+    { id: "scanner", label: "Scanner", base: "scanner", directional: false, speed: true, palette: "two" },
+    { id: "theater", label: "Theater chase", base: "theater", directional: true, speed: true, palette: "two" },
+    { id: "sparkle", label: "Sparkle field", base: "starlight", directional: false, speed: true, palette: "gradient" },
+    { id: "sections", label: "Section scramble", base: "sections", directional: false, speed: true, palette: "gradient" }
   ]);
 
   const SECTIONS = Object.freeze([
-    ["whole", "Whole strip"],
+    ["whole", "All LEDs"],
     ["first-half", "First half"],
     ["second-half", "Second half"],
     ["first-third", "First third"],
@@ -58,233 +46,241 @@
     ["last-third", "Last third"]
   ]);
 
-  const presetById = (id) => PRESETS.find((preset) => preset.id === id) || PRESETS[0];
-  const controllerById = (id) => CONTROLLERS.find((controller) => controller.id === id) || CONTROLLERS[0];
   const clone = (value) => JSON.parse(JSON.stringify(value));
-  const safeText = (value) => String(value ?? "").replace(/[<>]/g, "");
+  const safeText = (value) => String(value ?? "").replace(/[<>&"']/g, (character) => ({
+    "<": "&lt;",
+    ">": "&gt;",
+    "&": "&amp;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[character]);
+  const makeId = () => `effect-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+  const effectById = (id) => EFFECTS.find((effect) => effect.id === id) || EFFECTS[0];
 
-  function baseSequence() {
-    return PRESETS.slice(0, 10).map((preset, index) => ({
-      enabled: true,
-      preset: preset.id,
-      duration: index === 0 ? 4 : 3,
-      speed: 52 + ((index * 7) % 38),
-      brightness: 92,
-      direction: preset.id === "center-in" ? -1 : 1,
+  function defaultRecipe() {
+    return {
+      effect: "solid",
       section: "whole",
-      colors: [...preset.colors]
-    }));
-  }
-
-  function safetySequence(kind) {
-    const rows = Array.from({ length: 10 }, (_, index) => ({
-      enabled: index < 2,
-      preset: "solid",
-      duration: index === 0 ? 5 : 2,
-      speed: 60,
+      paletteMode: "single",
+      colors: ["#35e7ff", "#9b7cff", "#ff5ab9"],
       brightness: 100,
+      speed: 55,
       direction: 1,
-      section: "whole",
-      colors: ["#ff1f3d", "#ff1f3d", "#120000"]
-    }));
-
-    if (kind === "brake") {
-      rows[0].preset = "center-out";
-      rows[0].duration = 2;
-      rows[1].preset = "solid";
-      rows[1].duration = 5;
-    }
-
-    if (kind === "left" || kind === "right") {
-      rows[0].preset = "gradient-chase";
-      rows[0].duration = 1;
-      rows[0].direction = kind === "left" ? -1 : 1;
-      rows[0].colors = ["#ff9a1f", "#ff2b1c", "#1b0700"];
-      rows[1].preset = "solid";
-      rows[1].duration = 1;
-      rows[1].direction = rows[0].direction;
-      rows[1].colors = ["#ff9a1f", "#ff9a1f", "#1b0700"];
-    }
-
-    return rows;
+      duration: DEFAULT_STEP_SECONDS
+    };
   }
 
-  function makeNodes() {
+  function makeAreas() {
     if (simulator === "bike") {
       return [
-        { id: "bike-front-wheel", name: "Front wheel", deviceId: "HB-6702-01", controller: "sp630e", targets: ["#frontWheelSvg"] },
-        { id: "bike-rear-wheel", name: "Rear wheel", deviceId: "HB-6702-02", controller: "sp630e", targets: ["#rearWheelSvg"] },
-        { id: "bike-front-forks", name: "Front fork / shock", deviceId: "HB-6702-03", controller: "sp630e", targets: ["#frontForksSvg"] },
-        { id: "bike-front-cockpit", name: "Handlebars + front basket", deviceId: "HB-6702-04", controller: "sp630e", targets: ["#handlebarsSvg", "#frontBasketSvg", "#handlebarPouchSvg"] },
-        { id: "bike-frame-front", name: "Frame front / upper", deviceId: "HB-6702-05", controller: "sp803e", targets: ["#frameLightsSvg path:nth-child(1)", "#frameLightsSvg path:nth-child(2)"] },
-        { id: "bike-frame-rear", name: "Frame rear / lower", deviceId: "HB-6702-06", controller: "sp803e", targets: ["#frameLightsSvg path:nth-child(3)", "#underglowSvg path"] },
-        { id: "bike-rear-storage", name: "Rear basket + flag pole", deviceId: "HB-6702-07", controller: "sp630e", targets: ["#rearBasketSvg", "#seatPouchSvg", "#flagPoleSvg .flag-pole-light"] },
-        { id: "bike-tail-brake", name: "Rear brake / tail light", deviceId: "HB-6702-08", controller: "sp630e", targets: ["#rearBrakeSvg", "#rearBrakeRearSvg"], safety: "brake" },
-        { id: "bike-left-signal", name: "Left turn signal", deviceId: "HB-6702-09", controller: "sp630e", targets: ["#turnSignalsSvg .signal-left", "#turnSignalsRearSvg .signal-left"], safety: "left" },
-        { id: "bike-right-signal", name: "Right turn signal", deviceId: "HB-6702-10", controller: "sp630e", targets: ["#turnSignalsSvg .signal-right", "#turnSignalsRearSvg .signal-right"], safety: "right" }
+        { id: "bike-front-wheel", label: "Front wheel", targets: ["#frontWheelSvg"] },
+        { id: "bike-rear-wheel", label: "Rear wheel", targets: ["#rearWheelSvg"] },
+        { id: "bike-front-forks", label: "Front fork / shock", targets: ["#frontForksSvg"] },
+        { id: "bike-front-cockpit", label: "Handlebars + front basket", targets: ["#handlebarsSvg", "#frontBasketSvg", "#handlebarPouchSvg"] },
+        { id: "bike-frame-front", label: "Frame front / upper", targets: ["#frameLightsSvg path:nth-child(1)", "#frameLightsSvg path:nth-child(2)"] },
+        { id: "bike-frame-rear", label: "Frame rear / lower", targets: ["#frameLightsSvg path:nth-child(3)", "#underglowSvg path"] },
+        { id: "bike-rear-storage", label: "Rear basket + flag pole", targets: ["#rearBasketSvg", "#seatPouchSvg", "#flagPoleSvg .flag-pole-light"] },
+        { id: "bike-tail-brake", label: "Rear brake / tail light", targets: ["#rearBrakeSvg", "#rearBrakeRearSvg"], safety: "brake" },
+        { id: "bike-left-signal", label: "Left turn signal", targets: ["#turnSignalsSvg .signal-left", "#turnSignalsRearSvg .signal-left"], safety: "left" },
+        { id: "bike-right-signal", label: "Right turn signal", targets: ["#turnSignalsSvg .signal-right", "#turnSignalsRearSvg .signal-right"], safety: "right" }
       ];
     }
 
     if (simulator === "home") {
       return [
-        { id: "home-front-roof", name: "Front roofline", deviceId: "HB-6702-01", controller: "sp803e", homeZones: ["front-roofline"] },
-        { id: "home-front-windows", name: "Front windows + entry", deviceId: "HB-6702-02", controller: "sp803e", homeZones: ["front-window-trim", "front-entry"] },
-        { id: "home-front-porch", name: "Front porch + steps", deviceId: "HB-6702-03", controller: "sp530e", homeZones: ["front-porch", "front-steps"] },
-        { id: "home-front-garage", name: "Garage doors", deviceId: "HB-6702-04", controller: "sp530e", homeZones: ["front-garage"] },
-        { id: "home-front-ground", name: "Walkway + front accents", deviceId: "HB-6702-05", controller: "sp530e", homeZones: ["front-walkway", "front-fixtures", "front-landscape"] },
-        { id: "home-rear-roof", name: "Rear roofline", deviceId: "HB-6702-06", controller: "sp803e", homeZones: ["rear-roofline"] },
-        { id: "home-rear-deck", name: "Deck + balcony", deviceId: "HB-6702-07", controller: "sp803e", homeZones: ["rear-balcony"] },
-        { id: "home-rear-stairs", name: "Rear stairs", deviceId: "HB-6702-08", controller: "sp803e", homeZones: ["rear-stair-rails", "rear-stair-treads"] },
-        { id: "home-rear-patio", name: "Patio doors + perimeter", deviceId: "HB-6702-09", controller: "sp530e", homeZones: ["rear-doors", "rear-patio"] },
-        { id: "home-rear-gazebo", name: "Gazebo + rear accents", deviceId: "HB-6702-10", controller: "sp530e", homeZones: ["rear-gazebo", "rear-fixtures", "rear-landscape"] }
+        { id: "home-front-roof", label: "Front roofline", homeZones: ["front-roofline"] },
+        { id: "home-front-windows", label: "Front windows + entry", homeZones: ["front-window-trim", "front-entry"] },
+        { id: "home-front-porch", label: "Front porch + steps", homeZones: ["front-porch", "front-steps"] },
+        { id: "home-front-garage", label: "Garage doors", homeZones: ["front-garage"] },
+        { id: "home-front-ground", label: "Walkway + front accents", homeZones: ["front-walkway", "front-fixtures", "front-landscape"] },
+        { id: "home-rear-roof", label: "Back roofline", homeZones: ["rear-roofline"] },
+        { id: "home-rear-deck", label: "Back deck + balcony", homeZones: ["rear-balcony"] },
+        { id: "home-rear-stairs", label: "Back stairs", homeZones: ["rear-stair-rails", "rear-stair-treads"] },
+        { id: "home-rear-patio", label: "Patio doors + perimeter", homeZones: ["rear-doors", "rear-patio"] },
+        { id: "home-rear-gazebo", label: "Gazebo + back accents", homeZones: ["rear-gazebo", "rear-fixtures", "rear-landscape"] }
       ];
     }
 
     return [
-      { id: "auto-left-headlight", name: "Left headlight", deviceId: "HB-6702-01", controller: "sp630e", autoGroup: "headlights", autoIndex: 0 },
-      { id: "auto-right-headlight", name: "Right headlight", deviceId: "HB-6702-02", controller: "sp630e", autoGroup: "headlights", autoIndex: 1 },
-      { id: "auto-front-wheel", name: "Front wheel rim", deviceId: "HB-6702-03", controller: "sp630e", autoGroup: "rings", autoIndex: 0 },
-      { id: "auto-rear-wheel", name: "Rear wheel rim", deviceId: "HB-6702-04", controller: "sp630e", autoGroup: "rings", autoIndex: 1 },
-      { id: "auto-front-well", name: "Front wheel well", deviceId: "HB-6702-05", controller: "sp803e", autoGroup: "wells", autoIndex: 0 },
-      { id: "auto-rear-well", name: "Rear wheel well", deviceId: "HB-6702-06", controller: "sp803e", autoGroup: "wells", autoIndex: 1 },
-      { id: "auto-front-underglow", name: "Front underglow", deviceId: "HB-6702-07", controller: "sp803e", autoGroup: "underglow", autoIndex: 0 },
-      { id: "auto-side-underglow", name: "Side underglow", deviceId: "HB-6702-08", controller: "sp803e", autoGroup: "underglow", autoIndex: 2 },
-      { id: "auto-rear-underglow", name: "Rear underglow", deviceId: "HB-6702-09", controller: "sp803e", autoGroup: "underglow", autoIndex: 1 },
-      { id: "auto-rocker", name: "Rocker panels", deviceId: "HB-6702-10", controller: "sp803e", autoGroup: "rocker", autoIndex: 0 }
+      { id: "auto-left-headlight", label: "Left headlight", autoGroup: "headlights", autoIndex: 0 },
+      { id: "auto-right-headlight", label: "Right headlight", autoGroup: "headlights", autoIndex: 1 },
+      { id: "auto-front-wheel", label: "Front wheel rim", autoGroup: "rings", autoIndex: 0 },
+      { id: "auto-rear-wheel", label: "Rear wheel rim", autoGroup: "rings", autoIndex: 1 },
+      { id: "auto-front-well", label: "Front wheel well", autoGroup: "wells", autoIndex: 0 },
+      { id: "auto-rear-well", label: "Rear wheel well", autoGroup: "wells", autoIndex: 1 },
+      { id: "auto-front-underglow", label: "Front underglow", autoGroup: "underglow", autoIndex: 0 },
+      { id: "auto-side-underglow", label: "Side underglow", autoGroup: "underglow", autoIndex: 2 },
+      { id: "auto-rear-underglow", label: "Rear underglow", autoGroup: "underglow", autoIndex: 1 },
+      { id: "auto-rocker", label: "Rocker panels", autoGroup: "rocker", autoIndex: 0 }
     ];
   }
 
-  const nodes = makeNodes().map((node) => ({
-    ...node,
+  const areas = makeAreas().map((area) => ({
+    ...area,
     selected: false,
-    enabled: false,
-    sequence: node.safety ? safetySequence(node.safety) : baseSequence(),
+    active: false,
+    mode: "single",
+    program: [defaultRecipe()],
     startedAt: performance.now(),
     currentStep: -1
   }));
 
-  let editorSequence = baseSequence();
-  let statusMessage = "Check one or more controller nodes, edit the ten sequence rows, then apply.";
   let root = null;
+  let editorRecipe = defaultRecipe();
+  let savedPresets = [];
+  let sequencePresetIds = [];
+  let playAsSequence = false;
+  let editingPresetId = "";
+  let statusMessage = "Select one or more installation areas, create an effect, then press Apply.";
   let homeRefreshPending = false;
 
-  function saveState() {
-    const payload = {
-      version: 2,
-      simulator,
-      editorSequence,
-      nodes: nodes.map((node) => ({
-        id: node.id,
-        name: node.name,
-        controller: node.controller,
-        selected: node.selected,
-        enabled: node.enabled,
-        sequence: node.sequence
-      }))
+  function normalizeRecipe(recipe) {
+    const fallback = defaultRecipe();
+    const effect = effectById(recipe?.effect);
+    const colors = Array.isArray(recipe?.colors) ? recipe.colors.slice(0, 3) : fallback.colors;
+    while (colors.length < 3) colors.push(fallback.colors[colors.length]);
+    return {
+      effect: effect.id,
+      section: SECTIONS.some(([id]) => id === recipe?.section) ? recipe.section : "whole",
+      paletteMode: ["single", "two", "gradient"].includes(recipe?.paletteMode) ? recipe.paletteMode : effect.palette,
+      colors,
+      brightness: Math.min(100, Math.max(5, Number(recipe?.brightness) || fallback.brightness)),
+      speed: Math.min(100, Math.max(1, Number(recipe?.speed) || fallback.speed)),
+      direction: Number(recipe?.direction) < 0 ? -1 : 1,
+      duration: DEFAULT_STEP_SECONDS
     };
-
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-    } catch (error) {
-      console.warn("Node simulator state could not be saved.", error);
-    }
   }
 
-  function restoreState() {
+  function normalizedColors(recipe) {
+    const colors = [...recipe.colors];
+    if (recipe.paletteMode === "single") return [colors[0], colors[0], colors[0]];
+    if (recipe.paletteMode === "two") return [colors[0], colors[1], colors[0]];
+    return colors;
+  }
+
+  function normalizeForSafety(area, sourceRecipe) {
+    const recipe = normalizeRecipe(sourceRecipe);
+    if (area.safety === "brake") {
+      recipe.effect = ["solid", "breathe", "flash"].includes(recipe.effect) ? recipe.effect : "flash";
+      recipe.paletteMode = "single";
+      recipe.colors = ["#ff1f3d", "#ff1f3d", "#ff1f3d"];
+    }
+    if (area.safety === "left" || area.safety === "right") {
+      recipe.effect = ["solid", "race", "wipe", "comet"].includes(recipe.effect) ? recipe.effect : "race";
+      recipe.paletteMode = "gradient";
+      recipe.colors = ["#ff9a1f", "#ff2b1c", "#1b0700"];
+      recipe.direction = area.safety === "left" ? -1 : 1;
+    }
+    return recipe;
+  }
+
+  function loadState() {
     try {
-      const payload = JSON.parse(localStorage.getItem(STORAGE_KEY));
-      if (payload?.version !== 2 || payload.simulator !== simulator) return;
-      if (Array.isArray(payload.editorSequence) && payload.editorSequence.length === 10) {
-        editorSequence = payload.editorSequence;
+      const storedPresets = JSON.parse(localStorage.getItem(SHARED_PRESET_KEY));
+      if (Array.isArray(storedPresets)) {
+        savedPresets = storedPresets.slice(0, MAX_SAVED_PRESETS).map((preset) => ({
+          id: String(preset.id || makeId()),
+          name: String(preset.name || effectById(preset.recipe?.effect).label).slice(0, 42),
+          recipe: normalizeRecipe(preset.recipe),
+          createdAt: preset.createdAt || new Date().toISOString()
+        }));
       }
-      (payload.nodes || []).forEach((saved) => {
-        const node = nodes.find((item) => item.id === saved.id);
-        if (!node) return;
-        node.name = saved.name || node.name;
-        node.controller = CONTROLLERS.some((item) => item.id === saved.controller) ? saved.controller : node.controller;
-        node.selected = Boolean(saved.selected);
-        node.enabled = Boolean(saved.enabled);
-        node.sequence = Array.isArray(saved.sequence) && saved.sequence.length === 10
-          ? saved.sequence
-          : node.sequence;
-        node.startedAt = performance.now();
+    } catch (error) {
+      console.warn("Saved effect presets could not be restored.", error);
+    }
+
+    try {
+      const stored = JSON.parse(localStorage.getItem(ASSIGNMENT_KEY));
+      if (stored?.version !== 1 || stored.simulator !== simulator) return;
+      sequencePresetIds = Array.isArray(stored.sequencePresetIds)
+        ? stored.sequencePresetIds.filter((id) => savedPresets.some((preset) => preset.id === id)).slice(0, MAX_SEQUENCE_PRESETS)
+        : [];
+      playAsSequence = Boolean(stored.playAsSequence);
+      (stored.areas || []).forEach((savedArea) => {
+        const area = areas.find((item) => item.id === savedArea.id);
+        if (!area) return;
+        area.active = Boolean(savedArea.active);
+        area.mode = savedArea.mode === "sequence" ? "sequence" : "single";
+        area.program = Array.isArray(savedArea.program) && savedArea.program.length
+          ? savedArea.program.slice(0, MAX_SEQUENCE_PRESETS).map(normalizeRecipe)
+          : [defaultRecipe()];
+        area.startedAt = performance.now();
       });
     } catch (error) {
-      console.warn("Node simulator state could not be restored.", error);
+      console.warn("Area assignments could not be restored.", error);
     }
   }
 
-  function selectedNodes() {
-    return nodes.filter((node) => node.selected);
-  }
-
-  function normalizedStepForNode(node, sourceStep) {
-    const step = clone(sourceStep);
-    if (node.safety === "brake") {
-      step.colors = ["#ff1f3d", "#ff1f3d", "#120000"];
-      if (!["solid", "breathe", "center-out"].includes(step.preset)) step.preset = "center-out";
+  function saveState() {
+    try {
+      localStorage.setItem(SHARED_PRESET_KEY, JSON.stringify(savedPresets));
+      localStorage.setItem(ASSIGNMENT_KEY, JSON.stringify({
+        version: 1,
+        simulator,
+        sequencePresetIds,
+        playAsSequence,
+        areas: areas.map((area) => ({
+          id: area.id,
+          active: area.active,
+          mode: area.mode,
+          program: area.program
+        }))
+      }));
+    } catch (error) {
+      console.warn("Area effect state could not be saved.", error);
     }
-    if (node.safety === "left" || node.safety === "right") {
-      step.colors = ["#ff9a1f", "#ff2b1c", "#1b0700"];
-      step.direction = node.safety === "left" ? -1 : 1;
-      if (!["solid", "gradient-chase", "foreground-cascade"].includes(step.preset)) step.preset = "gradient-chase";
-    }
-    return step;
   }
 
-  function activeSequence(node) {
-    const active = node.sequence.filter((step) => step.enabled && Number(step.duration) > 0);
-    return active.length ? active : [node.sequence[0]];
+  function selectedAreas() {
+    return areas.filter((area) => area.selected);
   }
 
-  function currentStepFor(node, now) {
-    const sequence = activeSequence(node);
-    const total = sequence.reduce((sum, step) => sum + Math.max(0.25, Number(step.duration) || 1), 0);
-    let elapsed = ((now - node.startedAt) / 1000) % total;
-    for (let index = 0; index < sequence.length; index += 1) {
-      const duration = Math.max(0.25, Number(sequence[index].duration) || 1);
-      if (elapsed < duration) return { step: sequence[index], index };
-      elapsed -= duration;
-    }
-    return { step: sequence[0], index: 0 };
+  function activeProgram(area) {
+    return area.program.length ? area.program : [defaultRecipe()];
   }
 
-  function elementTargets(node) {
+  function currentRecipeFor(area, now) {
+    const program = activeProgram(area);
+    if (area.mode !== "sequence" || program.length === 1) return { recipe: program[0], index: 0 };
+    const stepSeconds = DEFAULT_STEP_SECONDS;
+    const index = Math.floor(((now - area.startedAt) / 1000) / stepSeconds) % program.length;
+    return { recipe: program[index], index };
+  }
+
+  function elementTargets(area) {
     if (simulator === "auto") {
-      const lines = document.querySelectorAll(`.auto-zone[data-zone="${node.autoGroup}"] .led-line`);
-      return lines[node.autoIndex] ? [lines[node.autoIndex]] : [];
+      const lines = document.querySelectorAll(`.auto-zone[data-zone="${area.autoGroup}"] .led-line`);
+      return lines[area.autoIndex] ? [lines[area.autoIndex]] : [];
     }
-    return (node.targets || []).flatMap((selector) => [...document.querySelectorAll(selector)]);
+    return (area.targets || []).flatMap((selector) => [...document.querySelectorAll(selector)]);
   }
 
-  function clearDomNode(node) {
-    elementTargets(node).forEach((element) => {
-      delete element.dataset.simNodeActive;
+  function clearDomArea(area) {
+    elementTargets(area).forEach((element) => {
+      delete element.dataset.simAreaActive;
       delete element.dataset.simEffect;
-      element.style.removeProperty("--sim-a");
-      element.style.removeProperty("--sim-b");
-      element.style.removeProperty("--sim-c");
-      element.style.removeProperty("--sim-brightness");
-      element.style.removeProperty("--sim-speed");
-      element.style.removeProperty("--sim-direction");
-      element.style.removeProperty("--sim-section");
+      delete element.dataset.simSection;
+      element.classList.remove("zone-on");
+      element.classList.add("zone-off");
+      ["--sim-a", "--sim-b", "--sim-c", "--sim-brightness", "--sim-speed", "--sim-direction"].forEach((property) => element.style.removeProperty(property));
     });
   }
 
-  function applyDomNode(node, step) {
-    const preset = presetById(step.preset);
-    elementTargets(node).forEach((element) => {
-      element.dataset.simNodeActive = "true";
-      element.dataset.simEffect = preset.id;
+  function applyDomArea(area, sourceRecipe) {
+    const recipe = normalizeForSafety(area, sourceRecipe);
+    const colors = normalizedColors(recipe);
+    elementTargets(area).forEach((element) => {
+      element.dataset.simAreaActive = "true";
+      element.dataset.simEffect = recipe.effect;
+      element.dataset.simSection = recipe.section;
       element.classList.add("zone-on");
       element.classList.remove("zone-off");
-      element.style.setProperty("--sim-a", step.colors[0]);
-      element.style.setProperty("--sim-b", step.colors[1]);
-      element.style.setProperty("--sim-c", step.colors[2]);
-      element.style.setProperty("--sim-brightness", String(Math.max(0.05, step.brightness / 100)));
-      element.style.setProperty("--sim-speed", `${Math.max(0.35, 3.6 - ((step.speed / 100) * 3.15)).toFixed(2)}s`);
-      element.style.setProperty("--sim-direction", step.direction < 0 ? "reverse" : "normal");
-      element.style.setProperty("--sim-section", step.section);
+      element.style.setProperty("--sim-a", colors[0]);
+      element.style.setProperty("--sim-b", colors[1]);
+      element.style.setProperty("--sim-c", colors[2]);
+      element.style.setProperty("--sim-brightness", String(recipe.brightness / 100));
+      element.style.setProperty("--sim-speed", `${Math.max(0.3, 3.7 - ((recipe.speed / 100) * 3.3)).toFixed(2)}s`);
+      element.style.setProperty("--sim-direction", recipe.direction < 0 ? "reverse" : "normal");
     });
   }
 
@@ -295,388 +291,555 @@
       homeRefreshPending = false;
       const api = window.ShynetymeHomeSim;
       if (!api?.setScene) return;
-      const active = document.querySelector("[data-scene].is-active, [data-scene][aria-pressed='true']");
-      void api.setScene(active?.dataset.scene === "rear" ? "rear" : "front");
-    }, 60);
+      const activeView = document.querySelector("[data-scene].is-active, [data-scene][aria-pressed='true']");
+      void api.setScene(activeView?.dataset.scene === "rear" ? "rear" : "front");
+    }, 50);
   }
 
-  function applyHomeNode(node, step) {
+  function applyHomeArea(area, sourceRecipe) {
     const api = window.ShynetymeHomeSim;
     const presetApi = window.ShynetymeSimPresets;
-    if (!api?.zoneSettings || !api?.selectedZones || !presetApi) return;
-    const preset = presetById(step.preset);
-    const basePreset = presetApi.getPreset(preset.base);
-    (node.homeZones || []).forEach((zoneId) => {
+    if (!api?.zoneSettings || !api?.selectedZones || !presetApi) return false;
+    const recipe = normalizeForSafety(area, sourceRecipe);
+    const effect = effectById(recipe.effect);
+    const knownPreset = presetApi.getPreset(effect.base);
+    (area.homeZones || []).forEach((zoneId) => {
       api.selectedZones.add(zoneId);
       api.zoneSettings.set(zoneId, {
-        effect: preset.base,
-        direction: Number(step.direction) || 1,
-        brightness: Number(step.brightness) || 100,
-        speed: Number(step.speed) || 55,
-        intensity: basePreset.intensity,
-        paletteMode: "gradient",
-        colors: [...step.colors],
+        effect: effect.base,
+        direction: recipe.direction,
+        brightness: recipe.brightness,
+        speed: recipe.speed,
+        intensity: knownPreset.intensity,
+        paletteMode: recipe.paletteMode,
+        colors: normalizedColors(recipe),
+        section: recipe.section,
         syncTarget: "",
         mirror: false,
         mirrorDirection: "same"
       });
     });
-  }
-
-  function clearHomeNode(node) {
-    const api = window.ShynetymeHomeSim;
-    if (!api?.selectedZones) return;
-    (node.homeZones || []).forEach((zoneId) => api.selectedZones.delete(zoneId));
     scheduleHomeRefresh();
+    return true;
   }
 
-  function applyNodeStep(node, step, force = false) {
-    if (!node.enabled) {
-      if (simulator === "home") clearHomeNode(node);
-      else clearDomNode(node);
-      node.currentStep = -1;
+  function clearHomeArea(area) {
+    const api = window.ShynetymeHomeSim;
+    if (!api?.selectedZones) return false;
+    (area.homeZones || []).forEach((zoneId) => api.selectedZones.delete(zoneId));
+    scheduleHomeRefresh();
+    return true;
+  }
+
+  function applyAreaRecipe(area, recipe) {
+    if (!area.active) {
+      if (simulator === "home") clearHomeArea(area);
+      else clearDomArea(area);
+      area.currentStep = -1;
       return;
     }
-
-    if (simulator === "home") applyHomeNode(node, step);
-    else applyDomNode(node, step);
-
-    if (force && simulator === "home") scheduleHomeRefresh();
+    if (simulator === "home") applyHomeArea(area, recipe);
+    else applyDomArea(area, recipe);
   }
 
   function tick() {
     const now = performance.now();
-    nodes.forEach((node) => {
-      if (!node.enabled) return;
-      const current = currentStepFor(node, now);
-      if (node.currentStep !== current.index || simulator !== "home") {
-        node.currentStep = current.index;
-        applyNodeStep(node, current.step);
-        updateNodeStatus(node);
+    areas.forEach((area) => {
+      if (!area.active) return;
+      const current = currentRecipeFor(area, now);
+      if (area.currentStep !== current.index) {
+        area.currentStep = current.index;
+        applyAreaRecipe(area, current.recipe);
+        updateAreaButton(area);
       }
     });
   }
 
-  function presetOptions(selectedId) {
-    return PRESETS.map((preset, index) => {
-      const divider = index === 10 ? '<option disabled>──────── Curated locked palettes ────────</option>' : "";
-      return `${divider}<option value="${preset.id}"${preset.id === selectedId ? " selected" : ""}>${safeText(preset.label)}</option>`;
-    }).join("");
-  }
-
-  function controllerOptions(selectedId) {
-    return CONTROLLERS.map((controller) => (
-      `<option value="${controller.id}"${controller.id === selectedId ? " selected" : ""}>${safeText(controller.label)}</option>`
-    )).join("");
+  function effectOptions(selectedId) {
+    return EFFECTS.map((effect) => `<option value="${effect.id}"${effect.id === selectedId ? " selected" : ""}>${safeText(effect.label)}</option>`).join("");
   }
 
   function sectionOptions(selectedId) {
-    return SECTIONS.map(([id, label]) => (
-      `<option value="${id}"${id === selectedId ? " selected" : ""}>${label}</option>`
-    )).join("");
+    return SECTIONS.map(([id, label]) => `<option value="${id}"${id === selectedId ? " selected" : ""}>${safeText(label)}</option>`).join("");
   }
 
-  function nodeMarkup(node, index) {
-    const controller = controllerById(node.controller);
+  function areaButtonMarkup(area) {
+    const current = area.active ? currentRecipeFor(area, performance.now()).recipe : null;
+    const state = area.selected
+      ? "Selected for next Apply"
+      : area.active
+        ? `${effectById(current.effect).label}${area.mode === "sequence" ? ` · ${area.program.length}-preset sequence` : ""}`
+        : "Off";
     return `
-      <article class="sim-node-card${node.selected ? " is-targeted" : ""}${node.enabled ? " is-running" : ""}" data-node-card="${node.id}">
-        <label class="sim-node-target">
-          <input type="checkbox" data-node-action="target" data-node-id="${node.id}"${node.selected ? " checked" : ""}>
-          <span>${String(index + 1).padStart(2, "0")}</span>
+      <button class="sim-area-button${area.selected ? " is-selected" : ""}${area.active ? " is-active" : ""}" type="button" data-area-id="${area.id}" aria-pressed="${area.selected}">
+        <span class="sim-area-button__indicator" aria-hidden="true"></span>
+        <strong>${safeText(area.label)}</strong>
+        <small>LED area / controller run</small>
+        <em>${safeText(state)}</em>
+      </button>`;
+  }
+
+  function savedPresetMarkup(preset) {
+    const recipe = preset.recipe;
+    const colors = normalizedColors(recipe);
+    const queued = sequencePresetIds.includes(preset.id);
+    const order = sequencePresetIds.indexOf(preset.id);
+    return `
+      <article class="sim-saved-preset${queued ? " is-queued" : ""}${editingPresetId === preset.id ? " is-editing" : ""}" data-saved-preset="${preset.id}">
+        <label class="sim-saved-preset__queue" title="Add to sequence">
+          <input type="checkbox" data-preset-action="queue" data-preset-id="${preset.id}"${queued ? " checked" : ""}>
+          <span>${queued ? order + 1 : "+"}</span>
         </label>
-        <div class="sim-node-card__main">
-          <input class="sim-node-name" type="text" maxlength="42" data-node-action="rename" data-node-id="${node.id}" value="${safeText(node.name)}" aria-label="Rename ${safeText(node.name)}">
-          <small>${safeText(node.deviceId)} · ${safeText(controller.transport)}${node.safety ? " · safety output" : ""}</small>
-          <select data-node-action="controller" data-node-id="${node.id}" aria-label="Controller type for ${safeText(node.name)}">${controllerOptions(node.controller)}</select>
-        </div>
-        <button class="sim-node-power" type="button" data-node-action="power" data-node-id="${node.id}" aria-pressed="${node.enabled}">${node.enabled ? "On" : "Off"}</button>
-        <div class="sim-node-card__status" data-node-status="${node.id}">${node.enabled ? "Sequence running" : "Ready"}</div>
+        <button class="sim-saved-preset__load" type="button" data-preset-action="load" data-preset-id="${preset.id}">
+          <span class="sim-preset-swatches" style="--swatch-a:${colors[0]};--swatch-b:${colors[1]};--swatch-c:${colors[2]}"></span>
+          <strong>${safeText(preset.name)}</strong>
+          <small>${safeText(effectById(recipe.effect).label)} · ${safeText(SECTIONS.find(([id]) => id === recipe.section)?.[1] || "All LEDs")}</small>
+        </button>
+        <button class="sim-saved-preset__delete" type="button" data-preset-action="delete" data-preset-id="${preset.id}" aria-label="Delete ${safeText(preset.name)}">×</button>
       </article>`;
   }
 
-  function sequenceRowMarkup(step, index) {
-    const preset = presetById(step.preset);
-    return `
-      <article class="sim-sequence-row${step.enabled ? " is-enabled" : ""}" data-sequence-row="${index}">
-        <div class="sim-sequence-row__line">
-          <strong>${index + 1}</strong>
-          <label class="sim-sequence-enable"><input type="checkbox" data-step-action="enabled" data-step-index="${index}"${step.enabled ? " checked" : ""}><span>Use</span></label>
-          <select data-step-action="preset" data-step-index="${index}" aria-label="Preset for sequence row ${index + 1}">${presetOptions(step.preset)}</select>
-          <select data-step-action="section" data-step-index="${index}" aria-label="LED section for row ${index + 1}">${sectionOptions(step.section)}</select>
-          <label class="sim-step-duration"><input type="number" min="0.25" max="120" step="0.25" value="${step.duration}" data-step-action="duration" data-step-index="${index}"><span>sec</span></label>
-          <button type="button" data-step-action="details" data-step-index="${index}" aria-expanded="false">Tune</button>
-          <span class="sim-step-move"><button type="button" data-step-action="up" data-step-index="${index}" aria-label="Move row ${index + 1} up">↑</button><button type="button" data-step-action="down" data-step-index="${index}" aria-label="Move row ${index + 1} down">↓</button></span>
-        </div>
-        <div class="sim-sequence-row__details" data-step-details="${index}" hidden>
-          <label>Speed <output>${step.speed}</output><input type="range" min="1" max="100" value="${step.speed}" data-step-action="speed" data-step-index="${index}"></label>
-          <label>Brightness <output>${step.brightness}%</output><input type="range" min="5" max="100" value="${step.brightness}" data-step-action="brightness" data-step-index="${index}"></label>
-          <label>Direction <select data-step-action="direction" data-step-index="${index}"><option value="1"${step.direction >= 0 ? " selected" : ""}>Forward</option><option value="-1"${step.direction < 0 ? " selected" : ""}>Reverse</option></select></label>
-          <label>Primary <input type="color" value="${step.colors[0]}" data-step-action="color0" data-step-index="${index}"${preset.editable ? "" : " disabled"}></label>
-          <label>Foreground <input type="color" value="${step.colors[1]}" data-step-action="color1" data-step-index="${index}"${preset.editable ? "" : " disabled"}></label>
-          <label>Background <input type="color" value="${step.colors[2]}" data-step-action="color2" data-step-index="${index}"${preset.editable ? "" : " disabled"}></label>
-          <small>${preset.editable ? "Custom palette: colors can be changed." : "Curated preset: palette is locked; speed and brightness remain adjustable."}</small>
-        </div>
-      </article>`;
+  function sequenceMarkup() {
+    if (!sequencePresetIds.length) return '<p class="sim-sequence-empty">No saved presets selected. Check up to 10 saved presets below.</p>';
+    return sequencePresetIds.map((id, index) => {
+      const preset = savedPresets.find((item) => item.id === id);
+      if (!preset) return "";
+      return `
+        <div class="sim-sequence-chip" data-sequence-id="${id}">
+          <b>${index + 1}</b>
+          <span>${safeText(preset.name)}</span>
+          <button type="button" data-sequence-action="up" data-sequence-id="${id}" aria-label="Move ${safeText(preset.name)} earlier">↑</button>
+          <button type="button" data-sequence-action="down" data-sequence-id="${id}" aria-label="Move ${safeText(preset.name)} later">↓</button>
+          <button type="button" data-sequence-action="remove" data-sequence-id="${id}" aria-label="Remove ${safeText(preset.name)} from sequence">×</button>
+        </div>`;
+    }).join("");
   }
 
   function renderWorkbench() {
     if (!root) return;
+    const effect = effectById(editorRecipe.effect);
+    const selectedCount = selectedAreas().length;
     root.innerHTML = `
-      <header class="sim-workbench-header">
-        <div><p>Shared controller workflow</p><h2>Controller nodes + ten-step sequence</h2><span>Each button is one physical controller. Check the nodes that should receive the same sequence, then press Apply.</span></div>
-        <div class="sim-workbench-count"><b>${nodes.length}</b><span>nodes</span></div>
-      </header>
-      <section class="sim-node-panel" aria-labelledby="simNodePanelTitle">
-        <div class="sim-panel-heading"><div><p>Step 1</p><h3 id="simNodePanelTitle">Choose controller nodes</h3></div><span id="simTargetCount">${selectedNodes().length} checked</span></div>
-        <div class="sim-node-toolbar"><button type="button" data-workbench-action="select-all">Check all</button><button type="button" data-workbench-action="clear-targets">Clear checks</button><button type="button" data-workbench-action="load-node">Load first checked sequence</button><button type="button" data-workbench-action="stop-targets">Turn checked off</button></div>
-        <div class="sim-node-grid">${nodes.map(nodeMarkup).join("")}</div>
-      </section>
-      <section class="sim-sequence-panel" aria-labelledby="simSequenceTitle">
-        <div class="sim-panel-heading"><div><p>Step 2</p><h3 id="simSequenceTitle">Build the shared ten-row sequence</h3></div><span>25 curated + editable presets</span></div>
-        <div class="sim-sequence-columns" aria-hidden="true"><span>#</span><span>Use</span><span>Preset</span><span>LED section</span><span>Time</span><span>Controls</span><span>Order</span></div>
-        <div class="sim-sequence-list">${editorSequence.map(sequenceRowMarkup).join("")}</div>
-        <div class="sim-apply-bar">
-          <div><strong id="simApplyStatus">${safeText(statusMessage)}</strong><small>Checked nodes begin together and stay synchronized until one is changed or restarted separately.</small></div>
-          <button type="button" data-workbench-action="apply">Apply sequence to checked nodes</button>
+      <section class="sim-area-panel sim-attention-frame" aria-labelledby="simAreaTitle">
+        <div class="sim-panel-heading">
+          <div><p>Step 1</p><h2 id="simAreaTitle">Select the LED installation areas</h2></div>
+          <span id="simAreaSelectedCount">${selectedCount} selected</span>
         </div>
+        <p class="sim-panel-note">These square buttons represent the physical LED areas. They are not controller setup menus.</p>
+        <div class="sim-area-toolbar">
+          <button type="button" data-workbench-action="select-all">Select all areas</button>
+          <button type="button" data-workbench-action="clear-selection">Clear selection</button>
+          <button type="button" data-workbench-action="turn-off">Turn selected areas off</button>
+        </div>
+        <div class="sim-area-grid">${areas.map(areaButtonMarkup).join("")}</div>
       </section>
-      <section class="sim-controller-note">
-        <strong>Controller choices</strong>
-        <span>SP803E = WLED/ESP32 · SP630E = Bluetooth · SP530E = Wi-Fi, Bluetooth and smart-home control.</span>
+
+      <section class="sim-effect-panel sim-attention-frame" aria-labelledby="simEffectTitle">
+        <div class="sim-panel-heading">
+          <div><p>Step 2</p><h2 id="simEffectTitle">Create the effect for the selected areas</h2></div>
+          <span>One shared context editor</span>
+        </div>
+        <div class="sim-effect-grid">
+          <label class="sim-field sim-field--wide">Effect
+            <select id="simEffectType">${effectOptions(editorRecipe.effect)}</select>
+          </label>
+          <label class="sim-field">LED section
+            <select id="simEffectSection">${sectionOptions(editorRecipe.section)}</select>
+          </label>
+          <label class="sim-field">Color use
+            <select id="simPaletteMode">
+              <option value="single"${editorRecipe.paletteMode === "single" ? " selected" : ""}>One color</option>
+              <option value="two"${editorRecipe.paletteMode === "two" ? " selected" : ""}>Foreground + background</option>
+              <option value="gradient"${editorRecipe.paletteMode === "gradient" ? " selected" : ""}>Three colors / gradient</option>
+            </select>
+          </label>
+          <label class="sim-field sim-color-field">Primary
+            <input id="simColor1" type="color" value="${editorRecipe.colors[0]}">
+          </label>
+          <label class="sim-field sim-color-field" data-color-wrap="2"${editorRecipe.paletteMode === "single" ? " hidden" : ""}>Foreground / second
+            <input id="simColor2" type="color" value="${editorRecipe.colors[1]}">
+          </label>
+          <label class="sim-field sim-color-field" data-color-wrap="3"${editorRecipe.paletteMode !== "gradient" ? " hidden" : ""}>Background / third
+            <input id="simColor3" type="color" value="${editorRecipe.colors[2]}">
+          </label>
+          <label class="sim-field">Brightness <output id="simBrightnessOut">${editorRecipe.brightness}%</output>
+            <input id="simBrightness" type="range" min="5" max="100" value="${editorRecipe.brightness}">
+          </label>
+          <label class="sim-field" id="simSpeedWrap"${effect.speed ? "" : " hidden"}>Speed <output id="simSpeedOut">${editorRecipe.speed}</output>
+            <input id="simSpeed" type="range" min="1" max="100" value="${editorRecipe.speed}">
+          </label>
+          <label class="sim-field" id="simDirectionWrap"${effect.directional ? "" : " hidden"}>Direction
+            <select id="simDirection"><option value="1"${editorRecipe.direction >= 0 ? " selected" : ""}>Forward</option><option value="-1"${editorRecipe.direction < 0 ? " selected" : ""}>Reverse</option></select>
+          </label>
+          <div class="sim-effect-preview" id="simEffectPreview" style="--preview-a:${editorRecipe.colors[0]};--preview-b:${editorRecipe.colors[1]};--preview-c:${editorRecipe.colors[2]}">
+            <span>${safeText(effect.label)}</span>
+          </div>
+        </div>
+        <div class="sim-effect-actions">
+          <label class="sim-preset-name">Preset name
+            <input id="simPresetName" type="text" maxlength="42" value="${safeText(editingPresetId ? savedPresets.find((item) => item.id === editingPresetId)?.name || "" : `${effect.label} ${savedPresets.length + 1}`)}">
+          </label>
+          ${editingPresetId ? '<button type="button" data-workbench-action="new-preset">New preset</button>' : ""}
+          <button class="sim-save-button" type="button" data-workbench-action="save-preset">${editingPresetId ? "Update saved preset" : "Save preset"}</button>
+          <button class="sim-apply-button" type="button" data-workbench-action="apply">Apply to selected areas</button>
+        </div>
+        <p class="sim-apply-status" id="simApplyStatus" role="status" aria-live="polite">${safeText(statusMessage)}</p>
+      </section>
+
+      <section class="sim-saved-panel sim-attention-frame" aria-labelledby="simSavedTitle">
+        <div class="sim-panel-heading">
+          <div><p>Step 3 · Optional</p><h2 id="simSavedTitle">Saved presets and sequence</h2></div>
+          <span>${savedPresets.length} / ${MAX_SAVED_PRESETS} saved</span>
+        </div>
+        <div class="sim-sequence-controls">
+          <label class="sim-sequence-toggle">
+            <input id="simPlaySequence" type="checkbox"${playAsSequence ? " checked" : ""}>
+            <span><strong>Play selected presets as a sequence</strong><small>Only the currently selected installation areas receive this sequence when Apply is pressed.</small></span>
+          </label>
+          <span>${sequencePresetIds.length} / ${MAX_SEQUENCE_PRESETS} in sequence</span>
+        </div>
+        <div class="sim-sequence-tray">${sequenceMarkup()}</div>
+        <div class="sim-saved-grid">${savedPresets.length ? savedPresets.map(savedPresetMarkup).join("") : '<p class="sim-saved-empty">No presets saved yet. Build an effect above and press Save preset.</p>'}</div>
+      </section>
+
+      <section class="sim-build-actions sim-attention-frame">
+        <div><strong>Finished assigning effects?</strong><span>The quote carries each active installation area and its applied effect or sequence.</span></div>
         <button type="button" data-workbench-action="request">Request this installation</button>
       </section>`;
   }
 
-  function updateTargetCount() {
-    const count = root?.querySelector("#simTargetCount");
-    if (count) count.textContent = `${selectedNodes().length} checked`;
+  function readEditor() {
+    const effect = effectById(root.querySelector("#simEffectType")?.value || editorRecipe.effect);
+    return normalizeRecipe({
+      effect: effect.id,
+      section: root.querySelector("#simEffectSection")?.value,
+      paletteMode: root.querySelector("#simPaletteMode")?.value,
+      colors: [
+        root.querySelector("#simColor1")?.value || editorRecipe.colors[0],
+        root.querySelector("#simColor2")?.value || editorRecipe.colors[1],
+        root.querySelector("#simColor3")?.value || editorRecipe.colors[2]
+      ],
+      brightness: root.querySelector("#simBrightness")?.value,
+      speed: root.querySelector("#simSpeed")?.value,
+      direction: root.querySelector("#simDirection")?.value
+    });
   }
 
-  function updateNodeStatus(node) {
-    const status = root?.querySelector(`[data-node-status="${node.id}"]`);
-    const card = root?.querySelector(`[data-node-card="${node.id}"]`);
-    const power = root?.querySelector(`[data-node-action="power"][data-node-id="${node.id}"]`);
-    if (card) {
-      card.classList.toggle("is-targeted", node.selected);
-      card.classList.toggle("is-running", node.enabled);
+  function updateEditorVisibility() {
+    editorRecipe = readEditor();
+    const effect = effectById(editorRecipe.effect);
+    const speedWrap = root.querySelector("#simSpeedWrap");
+    const directionWrap = root.querySelector("#simDirectionWrap");
+    const color2Wrap = root.querySelector('[data-color-wrap="2"]');
+    const color3Wrap = root.querySelector('[data-color-wrap="3"]');
+    if (speedWrap) speedWrap.hidden = !effect.speed;
+    if (directionWrap) directionWrap.hidden = !effect.directional;
+    if (color2Wrap) color2Wrap.hidden = editorRecipe.paletteMode === "single";
+    if (color3Wrap) color3Wrap.hidden = editorRecipe.paletteMode !== "gradient";
+    const preview = root.querySelector("#simEffectPreview");
+    if (preview) {
+      preview.style.setProperty("--preview-a", editorRecipe.colors[0]);
+      preview.style.setProperty("--preview-b", editorRecipe.colors[1]);
+      preview.style.setProperty("--preview-c", editorRecipe.colors[2]);
+      preview.querySelector("span").textContent = effect.label;
     }
-    if (power) {
-      power.textContent = node.enabled ? "On" : "Off";
-      power.setAttribute("aria-pressed", String(node.enabled));
-    }
-    if (!status) return;
-    if (!node.enabled) {
-      status.textContent = "Ready";
-      return;
-    }
-    const current = currentStepFor(node, performance.now());
-    status.textContent = `Row ${current.index + 1} · ${presetById(current.step.preset).label}`;
+    const brightnessOut = root.querySelector("#simBrightnessOut");
+    const speedOut = root.querySelector("#simSpeedOut");
+    if (brightnessOut) brightnessOut.textContent = `${editorRecipe.brightness}%`;
+    if (speedOut) speedOut.textContent = String(editorRecipe.speed);
   }
 
-  function updateApplyStatus(message) {
+  function updateStatus(message) {
     statusMessage = message;
     const status = root?.querySelector("#simApplyStatus");
     if (status) status.textContent = message;
   }
 
-  function applyEditorToTargets() {
-    const targets = selectedNodes();
-    if (!targets.length) {
-      updateApplyStatus("No controller nodes are checked.");
-      return;
-    }
-    const start = performance.now();
-    targets.forEach((node) => {
-      node.sequence = editorSequence.map((step) => normalizedStepForNode(node, step));
-      node.enabled = true;
-      node.startedAt = start;
-      node.currentStep = -1;
-      const first = activeSequence(node)[0];
-      applyNodeStep(node, first, true);
-      updateNodeStatus(node);
-    });
-    if (simulator === "home") scheduleHomeRefresh();
-    saveState();
-    updateApplyStatus(`Applied the ten-row sequence to ${targets.length} checked node${targets.length === 1 ? "" : "s"}.`);
+  function updateAreaButton(area) {
+    const existing = root?.querySelector(`[data-area-id="${area.id}"]`);
+    if (!existing) return;
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = areaButtonMarkup(area).trim();
+    existing.replaceWith(wrapper.firstElementChild);
+    const count = root.querySelector("#simAreaSelectedCount");
+    if (count) count.textContent = `${selectedAreas().length} selected`;
   }
 
-  function stopTargets() {
-    const targets = selectedNodes();
-    targets.forEach((node) => {
-      node.enabled = false;
-      applyNodeStep(node, node.sequence[0], true);
-      updateNodeStatus(node);
+  function clearAreaSelections() {
+    areas.forEach((area) => { area.selected = false; });
+  }
+
+  function applyToSelectedAreas() {
+    const targets = selectedAreas();
+    if (!targets.length) {
+      updateStatus("Select at least one installation area before pressing Apply.");
+      return;
+    }
+
+    editorRecipe = readEditor();
+    let program = [editorRecipe];
+    let mode = "single";
+
+    if (playAsSequence) {
+      program = sequencePresetIds
+        .map((id) => savedPresets.find((preset) => preset.id === id)?.recipe)
+        .filter(Boolean)
+        .map(normalizeRecipe);
+      if (!program.length) {
+        updateStatus("Select at least one saved preset for the sequence, or turn off Play as sequence.");
+        return;
+      }
+      mode = "sequence";
+    }
+
+    const startedAt = performance.now();
+    targets.forEach((area) => {
+      area.active = true;
+      area.mode = mode;
+      area.program = program.map((recipe) => normalizeForSafety(area, recipe));
+      area.startedAt = startedAt;
+      area.currentStep = -1;
+      applyAreaRecipe(area, area.program[0]);
     });
-    if (simulator === "home") scheduleHomeRefresh();
+
+    const targetCount = targets.length;
+    clearAreaSelections();
     saveState();
-    updateApplyStatus(targets.length ? `Turned off ${targets.length} checked node${targets.length === 1 ? "" : "s"}.` : "No controller nodes are checked.");
+    renderWorkbench();
+    updateStatus(mode === "sequence"
+      ? `Applied the ${program.length}-preset sequence to ${targetCount} area${targetCount === 1 ? "" : "s"}. The area selections were cleared.`
+      : `Applied ${effectById(editorRecipe.effect).label} to ${targetCount} area${targetCount === 1 ? "" : "s"}. The area selections were cleared.`);
+  }
+
+  function turnSelectedOff() {
+    const targets = selectedAreas();
+    if (!targets.length) {
+      updateStatus("Select the installation areas you want to turn off.");
+      return;
+    }
+    targets.forEach((area) => {
+      area.active = false;
+      area.currentStep = -1;
+      applyAreaRecipe(area, area.program[0]);
+    });
+    const count = targets.length;
+    clearAreaSelections();
+    saveState();
+    renderWorkbench();
+    updateStatus(`Turned off ${count} area${count === 1 ? "" : "s"}. The area selections were cleared.`);
+  }
+
+  function savePreset() {
+    editorRecipe = readEditor();
+    const nameInput = root.querySelector("#simPresetName");
+    const name = String(nameInput?.value || effectById(editorRecipe.effect).label).trim().slice(0, 42);
+
+    if (editingPresetId) {
+      const preset = savedPresets.find((item) => item.id === editingPresetId);
+      if (!preset) {
+        editingPresetId = "";
+        updateStatus("That saved preset no longer exists.");
+        return;
+      }
+      preset.name = name || effectById(editorRecipe.effect).label;
+      preset.recipe = clone(editorRecipe);
+      saveState();
+      renderWorkbench();
+      updateStatus(`Updated the saved preset “${preset.name}”.`);
+      return;
+    }
+
+    if (savedPresets.length >= MAX_SAVED_PRESETS) {
+      updateStatus(`The 20 saved-preset slots are full. Delete one before saving another.`);
+      return;
+    }
+
+    const preset = {
+      id: makeId(),
+      name: name || `${effectById(editorRecipe.effect).label} ${savedPresets.length + 1}`,
+      recipe: clone(editorRecipe),
+      createdAt: new Date().toISOString()
+    };
+    savedPresets.push(preset);
+    editingPresetId = preset.id;
+    saveState();
+    renderWorkbench();
+    updateStatus(`Saved “${preset.name}” as preset ${savedPresets.length} of ${MAX_SAVED_PRESETS}.`);
+  }
+
+  function loadPreset(presetId) {
+    const preset = savedPresets.find((item) => item.id === presetId);
+    if (!preset) return;
+    editorRecipe = clone(preset.recipe);
+    editingPresetId = preset.id;
+    renderWorkbench();
+    updateStatus(`Loaded “${preset.name}” into the effect editor. Change it and press Update saved preset only when needed.`);
+  }
+
+  function deletePreset(presetId) {
+    const preset = savedPresets.find((item) => item.id === presetId);
+    if (!preset) return;
+    savedPresets = savedPresets.filter((item) => item.id !== presetId);
+    sequencePresetIds = sequencePresetIds.filter((id) => id !== presetId);
+    if (editingPresetId === presetId) editingPresetId = "";
+    saveState();
+    renderWorkbench();
+    updateStatus(`Deleted the saved preset “${preset.name}”.`);
+  }
+
+  function togglePresetInSequence(presetId, shouldQueue) {
+    if (shouldQueue) {
+      if (sequencePresetIds.includes(presetId)) return;
+      if (sequencePresetIds.length >= MAX_SEQUENCE_PRESETS) {
+        updateStatus("A sequence can contain no more than 10 saved presets.");
+        renderWorkbench();
+        return;
+      }
+      sequencePresetIds.push(presetId);
+    } else {
+      sequencePresetIds = sequencePresetIds.filter((id) => id !== presetId);
+    }
+    saveState();
+    renderWorkbench();
+  }
+
+  function moveSequencePreset(presetId, offset) {
+    const index = sequencePresetIds.indexOf(presetId);
+    const target = index + offset;
+    if (index < 0 || target < 0 || target >= sequencePresetIds.length) return;
+    [sequencePresetIds[index], sequencePresetIds[target]] = [sequencePresetIds[target], sequencePresetIds[index]];
+    saveState();
+    renderWorkbench();
   }
 
   function requestInstallation() {
-    const configured = nodes.filter((node) => node.enabled || node.selected).map((node) => ({
-      id: node.id,
-      deviceId: node.deviceId,
-      name: node.name,
-      controller: controllerById(node.controller),
-      enabled: node.enabled,
-      sequence: node.sequence.filter((step) => step.enabled).map((step, index) => ({
+    const configured = areas.filter((area) => area.active).map((area) => ({
+      id: area.id,
+      label: area.label,
+      controllerRun: true,
+      mode: area.mode,
+      program: area.program.map((recipe, index) => ({
         order: index + 1,
-        ...step,
-        presetLabel: presetById(step.preset).label
+        ...recipe,
+        effectLabel: effectById(recipe.effect).label
       }))
     }));
-    const payload = { version: 2, simulator, architecture: "controller-nodes", nodes: configured, updatedAt: new Date().toISOString() };
+    const payload = {
+      version: 3,
+      simulator,
+      architecture: "installation-areas-with-shared-effect-editor",
+      configuredAreas: configured,
+      savedPresetCount: savedPresets.length,
+      updatedAt: new Date().toISOString()
+    };
     sessionStorage.setItem(`shynetymeSim${simulator[0].toUpperCase()}${simulator.slice(1)}Selections`, JSON.stringify(payload));
     localStorage.setItem("shynetymeContactDraft", JSON.stringify({
-      source: `${simulator}-sim-node-sequence`,
+      source: `${simulator}-sim-area-effects`,
       projectType: `${simulator[0].toUpperCase()}${simulator.slice(1)} LED installation`,
-      message: configured.map((node) => `${node.name} (${node.controller.label}): ${node.sequence.length} active sequence rows`).join("\n"),
+      message: configured.map((area) => `${area.label}: ${area.mode === "sequence" ? `${area.program.length}-preset sequence` : effectById(area.program[0].effect).label}`).join("\n"),
       simulatorPayload: payload
     }));
-    window.location.href = simulator === "auto" ? "../contact.html?source=sim-auto#contact-request" : "contact.html?source=sim-node-sequence#contact-request";
+    window.location.href = "contact.html?source=sim-area-effects#contact-request";
   }
 
   function bindWorkbench() {
-    root.addEventListener("change", (event) => {
-      const target = event.target;
-      const nodeAction = target.dataset.nodeAction;
-      const stepAction = target.dataset.stepAction;
-
-      if (nodeAction) {
-        const node = nodes.find((item) => item.id === target.dataset.nodeId);
-        if (!node) return;
-        if (nodeAction === "target") node.selected = target.checked;
-        if (nodeAction === "controller") node.controller = target.value;
-        updateTargetCount();
-        updateNodeStatus(node);
-        saveState();
+    root.addEventListener("click", (event) => {
+      const areaButton = event.target.closest("[data-area-id]");
+      if (areaButton) {
+        const area = areas.find((item) => item.id === areaButton.dataset.areaId);
+        if (!area) return;
+        area.selected = !area.selected;
+        updateAreaButton(area);
         return;
       }
 
-      if (!stepAction) return;
-      const index = Number(target.dataset.stepIndex);
-      const step = editorSequence[index];
-      if (!step) return;
-      if (stepAction === "enabled") step.enabled = target.checked;
-      if (stepAction === "preset") {
-        const preset = presetById(target.value);
-        step.preset = preset.id;
-        step.colors = [...preset.colors];
+      const button = event.target.closest("button");
+      if (!button) return;
+      const workbenchAction = button.dataset.workbenchAction;
+      const presetAction = button.dataset.presetAction;
+      const sequenceAction = button.dataset.sequenceAction;
+
+      if (presetAction === "load") loadPreset(button.dataset.presetId);
+      if (presetAction === "delete") deletePreset(button.dataset.presetId);
+      if (sequenceAction === "up") moveSequencePreset(button.dataset.sequenceId, -1);
+      if (sequenceAction === "down") moveSequencePreset(button.dataset.sequenceId, 1);
+      if (sequenceAction === "remove") togglePresetInSequence(button.dataset.sequenceId, false);
+
+      if (workbenchAction === "select-all") {
+        areas.forEach((area) => { area.selected = true; });
+        renderWorkbench();
       }
-      if (stepAction === "section") step.section = target.value;
-      if (stepAction === "duration") step.duration = Math.max(0.25, Number(target.value) || 1);
-      if (stepAction === "direction") step.direction = Number(target.value) < 0 ? -1 : 1;
-      renderWorkbench();
-      saveState();
+      if (workbenchAction === "clear-selection") {
+        clearAreaSelections();
+        renderWorkbench();
+      }
+      if (workbenchAction === "turn-off") turnSelectedOff();
+      if (workbenchAction === "apply") applyToSelectedAreas();
+      if (workbenchAction === "save-preset") savePreset();
+      if (workbenchAction === "new-preset") {
+        editingPresetId = "";
+        editorRecipe = defaultRecipe();
+        renderWorkbench();
+        updateStatus("Started a new unsaved effect preset.");
+      }
+      if (workbenchAction === "request") requestInstallation();
+    });
+
+    root.addEventListener("change", (event) => {
+      const target = event.target;
+      if (target.dataset.presetAction === "queue") {
+        togglePresetInSequence(target.dataset.presetId, target.checked);
+        return;
+      }
+      if (target.id === "simPlaySequence") {
+        playAsSequence = target.checked;
+        saveState();
+        updateStatus(playAsSequence
+          ? "Sequence mode is on. Apply will use the ordered saved presets below."
+          : "Sequence mode is off. Apply will use the single effect in the editor.");
+        return;
+      }
+      if (target.id === "simEffectType") {
+        const effect = effectById(target.value);
+        editorRecipe.effect = effect.id;
+        editorRecipe.paletteMode = effect.palette;
+        const palette = root.querySelector("#simPaletteMode");
+        if (palette) palette.value = effect.palette;
+      }
+      if (["simEffectType", "simEffectSection", "simPaletteMode", "simDirection"].includes(target.id)) updateEditorVisibility();
     });
 
     root.addEventListener("input", (event) => {
-      const target = event.target;
-      if (target.dataset.nodeAction === "rename") {
-        const node = nodes.find((item) => item.id === target.dataset.nodeId);
-        if (node) {
-          node.name = target.value.trim() || node.deviceId;
-          saveState();
-        }
-        return;
-      }
-      const action = target.dataset.stepAction;
-      if (!action) return;
-      const step = editorSequence[Number(target.dataset.stepIndex)];
-      if (!step) return;
-      if (action === "speed") step.speed = Number(target.value);
-      if (action === "brightness") step.brightness = Number(target.value);
-      if (action.startsWith("color")) {
-        const colorIndex = Number(action.slice(-1));
-        step.colors[colorIndex] = target.value;
-      }
-      const output = target.closest("label")?.querySelector("output");
-      if (output) output.textContent = action === "brightness" ? `${target.value}%` : target.value;
-      saveState();
-    });
-
-    root.addEventListener("click", (event) => {
-      const button = event.target.closest("button");
-      if (!button) return;
-      const action = button.dataset.workbenchAction;
-      const nodeAction = button.dataset.nodeAction;
-      const stepAction = button.dataset.stepAction;
-
-      if (nodeAction === "power") {
-        const node = nodes.find((item) => item.id === button.dataset.nodeId);
-        if (!node) return;
-        node.enabled = !node.enabled;
-        node.startedAt = performance.now();
-        node.currentStep = -1;
-        applyNodeStep(node, activeSequence(node)[0], true);
-        updateNodeStatus(node);
-        saveState();
-        return;
-      }
-
-      if (stepAction === "details") {
-        const index = Number(button.dataset.stepIndex);
-        const details = root.querySelector(`[data-step-details="${index}"]`);
-        if (details) {
-          details.hidden = !details.hidden;
-          button.setAttribute("aria-expanded", String(!details.hidden));
-        }
-        return;
-      }
-
-      if (stepAction === "up" || stepAction === "down") {
-        const index = Number(button.dataset.stepIndex);
-        const targetIndex = stepAction === "up" ? index - 1 : index + 1;
-        if (targetIndex < 0 || targetIndex >= editorSequence.length) return;
-        [editorSequence[index], editorSequence[targetIndex]] = [editorSequence[targetIndex], editorSequence[index]];
-        renderWorkbench();
-        saveState();
-        return;
-      }
-
-      if (action === "select-all") {
-        nodes.forEach((node) => { node.selected = true; });
-        renderWorkbench();
-        saveState();
-      }
-      if (action === "clear-targets") {
-        nodes.forEach((node) => { node.selected = false; });
-        renderWorkbench();
-        saveState();
-      }
-      if (action === "load-node") {
-        const first = selectedNodes()[0];
-        if (!first) updateApplyStatus("Check a controller node before loading its sequence.");
-        else {
-          editorSequence = clone(first.sequence);
-          updateApplyStatus(`Loaded ${first.name}'s sequence into the editor.`);
-          renderWorkbench();
-          saveState();
-        }
-      }
-      if (action === "stop-targets") stopTargets();
-      if (action === "apply") applyEditorToTargets();
-      if (action === "request") requestInstallation();
+      if (["simColor1", "simColor2", "simColor3", "simBrightness", "simSpeed"].includes(event.target.id)) updateEditorVisibility();
     });
   }
 
   function preparePage() {
-    document.body.classList.add("sim-node-mode", `sim-node-${simulator}`);
-    root = document.createElement("section");
-    root.id = "simNodeSequenceWorkbench";
-    root.className = "sim-node-workbench";
+    document.body.classList.add("sim-area-mode", `sim-area-${simulator}`);
+    root = document.createElement("div");
+    root.id = "simAreaEffectsWorkbench";
+    root.className = "sim-area-workbench";
 
     if (simulator === "bike") {
-      document.querySelectorAll("#builderAccordion .accordion-item").forEach((item, index) => {
-        if (index > 0) item.hidden = true;
-      });
-      const shell = document.querySelector(".builder-shell") || document.querySelector("main .container");
-      shell?.appendChild(root);
+      const form = document.querySelector(".builder-form");
+      if (form) form.hidden = true;
+      const shell = document.querySelector(".builder-shell") || document.querySelector("main .container") || document.querySelector("main");
+      const preview = document.querySelector(".preview-card");
+      if (shell && preview) {
+        shell.prepend(preview);
+        preview.after(root);
+      } else {
+        shell?.appendChild(root);
+      }
     } else if (simulator === "home") {
       const consolePanel = document.querySelector(".home-sim-console");
       if (consolePanel) consolePanel.hidden = true;
+      const oldDialog = document.getElementById("homeZoneDialog");
+      if (oldDialog) oldDialog.hidden = true;
       const layout = document.querySelector(".home-sim-layout") || document.querySelector("main");
-      layout?.appendChild(root);
+      const viewer = document.querySelector(".home-sim-viewer");
+      if (layout && viewer) viewer.after(root);
+      else layout?.appendChild(root);
     } else {
       document.getElementById("controls")?.closest("section,aside,div")?.setAttribute("hidden", "");
       document.getElementById("summary")?.closest("aside")?.setAttribute("hidden", "");
@@ -689,35 +852,30 @@
   }
 
   function initialize() {
-    restoreState();
+    loadState();
     preparePage();
-    nodes.forEach((node) => {
-      if (node.enabled) {
-        node.startedAt = performance.now();
-        applyNodeStep(node, activeSequence(node)[0], true);
-      }
+    areas.forEach((area) => {
+      if (!area.active) return;
+      area.startedAt = performance.now();
+      applyAreaRecipe(area, area.program[0]);
     });
-    if (simulator === "home" && nodes.some((node) => node.enabled)) scheduleHomeRefresh();
     window.setInterval(tick, 120);
-    window.ShynetymeNodeSequence = {
+    window.ShynetymeAreaEffects = {
       initialized: true,
       simulator,
-      nodes,
-      presets: PRESETS,
-      controllers: CONTROLLERS,
-      get editorSequence() { return editorSequence; },
-      apply: applyEditorToTargets,
-      stop: stopTargets,
+      areas,
+      effects: EFFECTS,
+      get savedPresets() { return savedPresets; },
+      get sequencePresetIds() { return sequencePresetIds; },
+      apply: applyToSelectedAreas,
       reset() {
-        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(ASSIGNMENT_KEY);
         window.location.reload();
       }
     };
+    window.ShynetymeNodeSequence = window.ShynetymeAreaEffects;
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initialize, { once: true });
-  } else {
-    initialize();
-  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialize, { once: true });
+  else initialize();
 })();
