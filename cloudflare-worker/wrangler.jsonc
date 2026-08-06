@@ -1,0 +1,21 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "shynetyme-lead-receiver",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-05",
+  "routes": [
+    {
+      "pattern": "shynetyme.works/api/leads*",
+      "zone_name": "shynetyme.works"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB"
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
+}
