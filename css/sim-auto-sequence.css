@@ -71,16 +71,16 @@
   animation-timing-function: linear !important;
 }
 
-.auto-logical-led[data-effect="solid"] { stroke-dasharray: none !important; animation-name: none !important; }
-.auto-logical-led[data-effect="breathe"] { stroke-dasharray: none !important; animation: autoZoneBreathe var(--zspeed) ease-in-out infinite !important; }
-.auto-logical-led[data-effect="wipe"] { stroke-dasharray: 35 210 !important; animation-name: autoZoneTravel !important; }
-.auto-logical-led[data-effect="chase"] { stroke-dasharray: 9 22 !important; animation-name: autoZoneTravel !important; }
-.auto-logical-led[data-effect="theater"] { stroke-dasharray: 3 17 !important; animation-name: autoZoneTravel !important; animation-timing-function: steps(8, end) !important; }
-.auto-logical-led[data-effect="scanner"] { stroke-dasharray: 38 250 !important; animation-name: autoZoneScanner !important; animation-direction: alternate !important; }
-.auto-logical-led[data-effect="twinkle"] { stroke-dasharray: 2 13 !important; animation: autoZoneTwinkle var(--zspeed) steps(5, end) infinite !important; }
-.auto-logical-led[data-effect="starlight"] { stroke-dasharray: 1.7 18 !important; animation: autoZoneStar var(--zspeed) ease-in-out infinite !important; }
-.auto-logical-led[data-effect="sections"] { stroke-dasharray: 24 12 5 14 !important; animation: autoZoneSections var(--zspeed) steps(6, end) infinite !important; }
-.auto-logical-led[data-effect="rainbow"] { stroke: url(#rgbGradient) !important; stroke-dasharray: 2.2 8 !important; animation-name: autoZoneTravel !important; }
+.auto-zone.is-on .auto-logical-led[data-effect="solid"] { stroke-dasharray: none !important; animation-name: none !important; }
+.auto-zone.is-on .auto-logical-led[data-effect="breathe"] { stroke-dasharray: none !important; animation: autoZoneBreathe var(--zspeed) ease-in-out infinite !important; }
+.auto-zone.is-on .auto-logical-led[data-effect="wipe"] { stroke-dasharray: 35 210 !important; animation-name: autoZoneTravel !important; }
+.auto-zone.is-on .auto-logical-led[data-effect="chase"] { stroke-dasharray: 9 22 !important; animation-name: autoZoneTravel !important; }
+.auto-zone.is-on .auto-logical-led[data-effect="theater"] { stroke-dasharray: 3 17 !important; animation-name: autoZoneTravel !important; animation-timing-function: steps(8, end) !important; }
+.auto-zone.is-on .auto-logical-led[data-effect="scanner"] { stroke-dasharray: 38 250 !important; animation-name: autoZoneScanner !important; animation-direction: alternate !important; }
+.auto-zone.is-on .auto-logical-led[data-effect="twinkle"] { stroke-dasharray: 2 13 !important; animation: autoZoneTwinkle var(--zspeed) steps(5, end) infinite !important; }
+.auto-zone.is-on .auto-logical-led[data-effect="starlight"] { stroke-dasharray: 1.7 18 !important; animation: autoZoneStar var(--zspeed) ease-in-out infinite !important; }
+.auto-zone.is-on .auto-logical-led[data-effect="sections"] { stroke-dasharray: 24 12 5 14 !important; animation: autoZoneSections var(--zspeed) steps(6, end) infinite !important; }
+.auto-zone.is-on .auto-logical-led[data-effect="rainbow"] { stroke: url(#rgbGradient) !important; stroke-dasharray: 2.2 8 !important; animation-name: autoZoneTravel !important; }
 
 @keyframes autoZoneTravel { to { stroke-dashoffset: -180; } }
 @keyframes autoZoneScanner { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -270; } }
