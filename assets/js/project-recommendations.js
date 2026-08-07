@@ -13,9 +13,9 @@
     auto: "LED Auto Simulator"
   };
   const simulatorPages = {
-    bike: "build-my-bike.html",
-    home: "build-my-home.html",
-    auto: "build-my-auto.html"
+    bike: "ledbikesim.html",
+    home: "ledhomesim.html",
+    auto: "ledautosim.html"
   };
   const fallbackSupport = [
     { id: "service-measurement-layout", name: "Measurement and Layout Package", category: "Design", description: "Final lengths, zones, wire routes and controller positions are verified before products are ordered." },

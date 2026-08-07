@@ -17,9 +17,9 @@
   const laptopAtlasUrl = new URL("assets/brand/chuck-search-laptop.webp", siteRoot).href;
   const fallbackImageUrl = new URL("assets/brand/pet-chuck-mark.png", siteRoot).href;
   const aboutDekeUrl = new URL("aboutme.html", siteRoot).href;
-  const bikeBuilderUrl = new URL("build-my-bike.html", siteRoot).href;
-  const homeBuilderUrl = new URL("build-my-home.html", siteRoot).href;
-  const autoBuilderUrl = new URL("build-my-auto.html", siteRoot).href;
+  const bikeBuilderUrl = new URL("ledbikesim.html", siteRoot).href;
+  const homeBuilderUrl = new URL("ledhomesim.html", siteRoot).href;
+  const autoBuilderUrl = new URL("ledautosim.html", siteRoot).href;
 
   const loadStylesheet = (href, attribute) => {
     const existing = document.querySelector(`link[${attribute}]`);
@@ -355,9 +355,9 @@
   const pageKey = (window.location.pathname.split("/").filter(Boolean).pop() || "index.html").toLowerCase();
   const chainManagedPages = new Set([
     "index.html",
-    "build-my-bike.html",
-    "build-my-home.html",
-    "build-my-auto.html",
+    "ledbikesim.html",
+    "ledhomesim.html",
+    "ledautosim.html",
     "project-recommendations.html",
     "contact.html"
   ]);

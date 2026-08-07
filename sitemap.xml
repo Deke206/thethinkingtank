@@ -31,7 +31,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://shynetyme.works/build-my-bike.html</loc>
+    <loc>https://shynetyme.works/ledbikesim.html</loc>
     <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -41,7 +41,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://shynetyme.works/build-my-home.html</loc>
+    <loc>https://shynetyme.works/ledhomesim.html</loc>
     <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -51,7 +51,7 @@
     </image:image>
   </url>
   <url>
-    <loc>https://shynetyme.works/build-my-auto.html</loc>
+    <loc>https://shynetyme.works/ledautosim.html</loc>
     <lastmod>2026-07-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>

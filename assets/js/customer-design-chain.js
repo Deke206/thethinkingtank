@@ -20,9 +20,9 @@
   const SETS_URL = new URL("assets/data/btf-recommendation-sets.js?v=20260805-row-complete-1", siteRoot);
 
   const projectPages = {
-    "build-my-bike.html": { type: "bike", label: "LED Bike Simulator" },
-    "build-my-home.html": { type: "home", label: "LED Home Simulator" },
-    "build-my-auto.html": { type: "auto", label: "LED Auto Simulator" }
+    "ledbikesim.html": { type: "bike", label: "LED Bike Simulator" },
+    "ledhomesim.html": { type: "home", label: "LED Home Simulator" },
+    "ledautosim.html": { type: "auto", label: "LED Auto Simulator" }
   };
 
   const serviceSupport = {
@@ -420,7 +420,7 @@
   };
 
   const installHomeComingSoon = (attempt = 0) => {
-    if (pageKey !== "build-my-home.html" || document.getElementById("garagePanelStoryComingSoon")) return;
+    if (pageKey !== "ledhomesim.html" || document.getElementById("garagePanelStoryComingSoon")) return;
     const candidates = [...document.querySelectorAll("main label, main button, main h2, main h3, main h4, main .form-check, main .option-card, main .accordion-item")]
       .filter((element) => /garage/i.test(element.textContent || ""));
     const anchor = candidates.sort((a, b) => (a.textContent || "").length - (b.textContent || "").length)[0]
@@ -500,9 +500,9 @@
     chuck.showChoices(
       "What do you want\nto light up?",
       [
-        { label: "Bike", href: new URL("build-my-bike.html?from=chuck", siteRoot).href, primary: true },
-        { label: "Home", href: new URL("build-my-home.html?from=chuck", siteRoot).href },
-        { label: "Auto", href: new URL("build-my-auto.html?from=chuck", siteRoot).href },
+        { label: "Bike", href: new URL("ledbikesim.html?from=chuck", siteRoot).href, primary: true },
+        { label: "Home", href: new URL("ledhomesim.html?from=chuck", siteRoot).href },
+        { label: "Auto", href: new URL("ledautosim.html?from=chuck", siteRoot).href },
         { label: "Consultation", action: "consultation" }
       ],
       0

@@ -3,9 +3,9 @@
 ## Production routes
 
 ```text
-build-my-bike.html  -> LED Bike SIM
-build-my-home.html  -> LED Home SIM
-build-my-auto.html  -> LED Auto SIM
+ledbikesim.html  -> LED Bike SIM
+ledhomesim.html  -> LED Home SIM
+ledautosim.html  -> LED Auto SIM
 ```
 
 ## Shared presentation files
@@ -27,7 +27,7 @@ replacing their existing simulator event logic.
 ## Home SIM production objects
 
 ```text
-build-my-home.html
+ledhomesim.html
   homeSimApp             Complete simulator application shell
   homeSurface            Fixed 1448 x 1086 image and overlay viewport
   homeSourceImage        Approved Front or Back View image
