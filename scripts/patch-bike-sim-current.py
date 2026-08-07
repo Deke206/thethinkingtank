@@ -1,7 +1,8 @@
 from pathlib import Path
 
 js = Path('js/sim-node-sequence.js')
-css = Path('css/sim-node-sequence.css')
+base_css = Path('css/sim-node-sequence-base.css')
+bike_css = Path('css/sim-node-sequence.css')
 html = Path('build-my-bike.html')
 
 s = js.read_text(encoding='utf-8')
@@ -28,7 +29,6 @@ assert old_preview_update in s
 s = s.replace(old_preview_update, '''    const gradientWrap = root.querySelector("#simGradientLengthWrap");\n    const gradientStrip = root.querySelector("#simGradientStrip");\n    if (gradientWrap) gradientWrap.hidden = editorRecipe.paletteMode !== "gradient";\n    if (gradientStrip) {\n      gradientStrip.hidden = editorRecipe.paletteMode !== "gradient";\n      gradientStrip.style.setProperty("--preview-a", editorRecipe.colors[0]);\n      gradientStrip.style.setProperty("--preview-b", editorRecipe.colors[1]);\n      gradientStrip.style.setProperty("--preview-c", editorRecipe.colors[2]);\n    }''', 1)
 
 s = s.replace('''["simEffectType", "simEffectSection", "simPaletteMode", "simDirection"]''', '''["simEffectType", "simEffectSection", "simPaletteMode", "simDirection", "simGradientLength"]''', 1)
-
 s = s.replace('''      element.dataset.simSection = recipe.section;\n      element.classList.add("zone-on");''', '''      element.dataset.simSection = recipe.section;\n      element.dataset.simGradientLength = recipe.gradientLength;\n      element.classList.add("zone-on");''', 1)
 s = s.replace('''      delete element.dataset.simSection;\n      element.classList.remove("zone-on");''', '''      delete element.dataset.simSection;\n      delete element.dataset.simGradientLength;\n      element.classList.remove("zone-on");''', 1)
 
@@ -43,27 +43,30 @@ s = s.replace(init_old, '''    areas.forEach((area) => {\n      area.startedAt =
 prep_marker = '''  function preparePage() {\n    document.body.classList.add("sim-area-mode", `sim-area-${simulator}`);'''
 assert prep_marker in s
 s = s.replace(prep_marker, prep_marker + '''\n    if (simulator === "bike") {\n      const tagline = document.querySelector("#page-subheader-text [aria-current='page']");\n      if (tagline) tagline.textContent = "LED Bike Sim";\n    }''', 1)
-
 js.write_text(s, encoding='utf-8')
 
-c = css.read_text(encoding='utf-8')
+c = base_css.read_text(encoding='utf-8')
 old_css_preview = '''.sim-effect-preview {\n  grid-column: span 2;\n  display: grid;\n  min-height: 4.2rem;\n  place-items: center;\n  border: 1px solid rgba(255, 255, 255, .15);\n  border-radius: .7rem;\n  color: #fff;\n  background: linear-gradient(110deg, var(--preview-a), var(--preview-b), var(--preview-c));\n  box-shadow: inset 0 0 2rem rgba(0, 0, 0, .35);\n  font: 800 .78rem Oxanium, sans-serif;\n  text-shadow: 0 2px 7px #000;\n}\n'''
 assert old_css_preview in c
 c = c.replace(old_css_preview, '''.sim-gradient-strip {\n  grid-column: span 2;\n  min-height: 2.35rem;\n  border: 1px solid rgba(255, 255, 255, .15);\n  border-radius: .55rem;\n  background: linear-gradient(90deg, var(--preview-a) 0 33.33%, var(--preview-b) 33.33% 66.66%, var(--preview-c) 66.66% 100%);\n  box-shadow: inset 0 0 1rem rgba(0, 0, 0, .22);\n}\n''', 1)
 
-page_marker = '/* Page integration: viewport first, one shared editor directly below it. */'
-assert page_marker in c
-c = c.replace(page_marker, '''.sim-area-bike .sim-area-grid {\n  grid-template-columns: repeat(5, minmax(96px, 132px));\n  justify-content: start;\n}\n\n.sim-area-bike .sim-area-button {\n  aspect-ratio: auto;\n  min-height: 82px;\n  padding: .48rem .52rem;\n}\n\n.sim-area-bike .sim-area-button strong { font-size: .69rem; }\n.sim-area-bike .sim-area-button small,\n.sim-area-bike .sim-area-button em { font-size: .54rem; }\n\n''' + page_marker, 1)
-
 keyframe_marker = '@keyframes sim-area-solid'
 assert keyframe_marker in c
 c = c.replace(keyframe_marker, '''[data-sim-area-active="true"][data-sim-gradient-length="quarter"][data-sim-effect="rainbow"] { stroke-dasharray: 4 3 !important; }\n[data-sim-area-active="true"][data-sim-gradient-length="half"][data-sim-effect="rainbow"] { stroke-dasharray: 8 5 !important; }\n[data-sim-area-active="true"][data-sim-gradient-length="three-quarter"][data-sim-effect="rainbow"] { stroke-dasharray: 12 7 !important; }\n[data-sim-area-active="true"][data-sim-gradient-length="whole"][data-sim-effect="rainbow"] { stroke-dasharray: 18 10 !important; }\n\n''' + keyframe_marker, 1)
-
 c = c.replace('''.sim-field--wide,\n  .sim-effect-preview { grid-column: 1 / -1; }''', '''.sim-field--wide,\n  .sim-gradient-strip { grid-column: 1 / -1; }''', 1)
-c = c.replace('''  .sim-area-grid,\n  .sim-saved-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }''', '''  .sim-area-grid,\n  .sim-saved-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }\n  .sim-area-bike .sim-area-grid { grid-template-columns: repeat(2, minmax(96px, 132px)); }''', 1)
-css.write_text(c, encoding='utf-8')
+base_css.write_text(c, encoding='utf-8')
+
+b = bike_css.read_text(encoding='utf-8')
+b = b.replace('content: "LED BIKE SIM";', 'content: "LED Bike Sim";', 1)
+b = b.replace('repeat(5, minmax(0, 140px))', 'repeat(5, minmax(0, 118px))', 1)
+b = b.replace('width: 140px;', 'width: 118px;\n  height: 84px;\n  aspect-ratio: auto;', 1)
+b = b.replace('repeat(4, minmax(0, 132px))', 'repeat(4, minmax(0, 112px))', 1)
+b = b.replace('width: 132px;', 'width: 112px;\n    height: 82px;', 1)
+b = b.replace('repeat(2, minmax(0, 128px))', 'repeat(2, minmax(0, 108px))', 1)
+b = b.replace('width: 128px;', 'width: 108px;\n    height: 80px;', 1)
+bike_css.write_text(b, encoding='utf-8')
 
 h = html.read_text(encoding='utf-8')
-assert '<span aria-current="page">LED SIM BIKE</span>' in h
-h = h.replace('<span aria-current="page">LED SIM BIKE</span>', '<span aria-current="page">LED Bike Sim</span>', 1)
+if '<span aria-current="page">LED SIM BIKE</span>' in h:
+    h = h.replace('<span aria-current="page">LED SIM BIKE</span>', '<span aria-current="page">LED Bike Sim</span>', 1)
 html.write_text(h, encoding='utf-8')
