@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-08-07T04:56:45.951Z",
-  "commitCount": 457,
+  "generatedAt": "2026-08-07T04:57:34.074Z",
+  "commitCount": 458,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -2288,6 +2288,11 @@
       "sha": "08a56b6e68d81b0a954f9bb589f7fd801c7f8042",
       "date": "2026-08-07T04:56:30Z",
       "message": "fix: force corrected simulator navigation cache refresh"
+    },
+    {
+      "sha": "6275eb986f5de6927bc23abf7daee918ec231789",
+      "date": "2026-08-07T04:57:17Z",
+      "message": "fix: refresh Auto SIM embedded navigation asset"
     }
   ]
 }
