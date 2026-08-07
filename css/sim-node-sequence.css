@@ -68,6 +68,11 @@
   filter: none !important;
 }
 
+/* Custom Bike effects must not inherit the legacy zone-on translucent fill haze. */
+.sim-area-bike [data-sim-area-active="true"] {
+  fill: none !important;
+}
+
 [data-sim-area-active="true"][data-sim-palette="gradient"] {
   stroke: var(--sim-gradient-stroke, var(--sim-a, #35e7ff)) !important;
 }
