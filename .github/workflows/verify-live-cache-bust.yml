@@ -1,0 +1,38 @@
+name: Verify live cache-busted navigation
+
+on:
+  push:
+    branches:
+      - agent/fix-nav-cache-bust
+    paths:
+      - .github/workflows/verify-live-cache-bust.yml
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify actual page-loaded navigation script
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='https://shynetyme.works'
+          stamp="live-$(date +%s)"
+          for page in ledbikesim.html ledautosim.html ledhomesim.html; do
+            curl --fail --location --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 \
+              "$base/$page?verify=$stamp" -o "/tmp/$page"
+            src=$(grep -oE 'assets/js/site-guide\.js\?v=shared-ui-[0-9]+' "/tmp/$page" | tail -1)
+            test -n "$src"
+            revision=${src##*=shared-ui-}
+            test "$revision" -ge 15
+            curl --fail --location --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 \
+              "$base/$src&verify=$stamp" -o "/tmp/site-guide-$page.js"
+            grep -Fq 'const siteRoot = new URL("../../", scriptUrl);' "/tmp/site-guide-$page.js"
+          done
+          for wrong in assets/ledbikesim.html assets/ledautosim.html assets/ledhomesim.html; do
+            code=$(curl --location --silent --output /dev/null --write-out '%{http_code}' "$base/$wrong?verify=$stamp")
+            test "$code" = '404'
+          done
+          echo 'Live pages load cache-busted site-guide >= shared-ui-15 with root navigation resolver.'
