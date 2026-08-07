@@ -164,7 +164,6 @@
   }
 
   function normalizedColors(recipe) {
-    if (recipe.effect === "rainbow") return [RAINBOW_COLORS[0], RAINBOW_COLORS[3], RAINBOW_COLORS[6]];
     const colors = [...recipe.colors];
     if (recipe.paletteMode === "single") return [colors[0], colors[0], colors[0]];
     if (recipe.paletteMode === "two") return [colors[0], colors[1], colors[0]];
@@ -205,6 +204,7 @@
     try {
       const stored = JSON.parse(localStorage.getItem(ASSIGNMENT_KEY));
       if (stored?.version !== 2 || stored.simulator !== simulator) return;
+      if (simulator === "bike") return;
       sequencePresetIds = Array.isArray(stored.sequencePresetIds)
         ? stored.sequencePresetIds.filter((id) => savedPresets.some((preset) => preset.id === id)).slice(0, MAX_SEQUENCE_PRESETS)
         : [];
@@ -307,9 +307,7 @@
     const length = GRADIENT_LENGTHS.find(([id]) => id === recipe.gradientLength)?.[2] || "100%";
     gradient.setAttribute("x2", length);
     gradient.replaceChildren();
-    const stops = recipe.effect === "rainbow"
-      ? RAINBOW_COLORS.map((color, index) => [index / (RAINBOW_COLORS.length - 1), color])
-      : [[0, colors[0]], [0.5, colors[1]], [1, colors[2]]];
+    const stops = [[0, colors[0]], [0.5, colors[1]], [1, colors[2]]];
     stops.forEach(([offset, color]) => {
       const stop = document.createElementNS("http://www.w3.org/2000/svg", "stop");
       stop.setAttribute("offset", `${Math.round(offset * 100)}%`);
@@ -511,7 +509,7 @@
           <label class="sim-field">LED section
             <select id="simEffectSection">${sectionOptions(editorRecipe.section)}</select>
           </label>
-          <label class="sim-field" id="simPaletteModeWrap"${editorRecipe.effect === "rainbow" ? " hidden" : ""}>Color use
+          <label class="sim-field" id="simPaletteModeWrap">Color use
             <select id="simPaletteMode">
               <option value="single"${editorRecipe.paletteMode === "single" ? " selected" : ""}>One color</option>
               <option value="two"${editorRecipe.paletteMode === "two" ? " selected" : ""}>Foreground + background</option>
@@ -521,22 +519,22 @@
           <label class="sim-field" id="simGradientLengthWrap"${editorRecipe.paletteMode === "gradient" ? "" : " hidden"}>Gradient length
             <select id="simGradientLength">${gradientLengthOptions(editorRecipe.gradientLength)}</select>
           </label>
-          <label class="sim-field sim-color-field" id="simColor1Wrap"${editorRecipe.effect === "rainbow" ? " hidden" : ""}>Primary
+          <label class="sim-field sim-color-field" id="simColor1Wrap">Primary
             <input id="simColor1" type="color" value="${editorRecipe.colors[0]}">
           </label>
-          <label class="sim-field sim-color-field" data-color-wrap="2"${editorRecipe.paletteMode === "single" || editorRecipe.effect === "rainbow" ? " hidden" : ""}>Foreground / second
+          <label class="sim-field sim-color-field" data-color-wrap="2"${editorRecipe.paletteMode === "single" ? " hidden" : ""}>Foreground / second
             <input id="simColor2" type="color" value="${editorRecipe.colors[1]}">
           </label>
-          <label class="sim-field sim-color-field" data-color-wrap="3"${editorRecipe.paletteMode !== "gradient" || editorRecipe.effect === "rainbow" ? " hidden" : ""}>Background / third
+          <label class="sim-field sim-color-field" data-color-wrap="3"${editorRecipe.paletteMode !== "gradient" ? " hidden" : ""}>Background / third
             <input id="simColor3" type="color" value="${editorRecipe.colors[2]}">
           </label>
           <label class="sim-field">Brightness <output id="simBrightnessOut">${editorRecipe.brightness}%</output>
             <input id="simBrightness" type="range" min="5" max="100" value="${editorRecipe.brightness}">
           </label>
-          <label class="sim-field" id="simSpeedWrap"${effect.speed && effect.id !== "rainbow" ? "" : " hidden"}>Speed <output id="simSpeedOut">${editorRecipe.speed}</output>
+          <label class="sim-field" id="simSpeedWrap"${effect.speed ? "" : " hidden"}>Speed <output id="simSpeedOut">${editorRecipe.speed}</output>
             <input id="simSpeed" type="range" min="1" max="100" value="${editorRecipe.speed}">
           </label>
-          <label class="sim-field" id="simDirectionWrap"${effect.directional && effect.id !== "rainbow" ? "" : " hidden"}>Direction
+          <label class="sim-field" id="simDirectionWrap"${effect.directional ? "" : " hidden"}>Direction
             <select id="simDirection"><option value="1"${editorRecipe.direction >= 0 ? " selected" : ""}>Forward</option><option value="-1"${editorRecipe.direction < 0 ? " selected" : ""}>Reverse</option></select>
           </label>
         </div>
@@ -601,18 +599,13 @@
     const color1Wrap = root.querySelector("#simColor1Wrap");
     const color2Wrap = root.querySelector('[data-color-wrap="2"]');
     const color3Wrap = root.querySelector('[data-color-wrap="3"]');
-    const isRainbow = effect.id === "rainbow";
-    if (isRainbow) {
-      editorRecipe.paletteMode = "gradient";
-      editorRecipe.colors = [RAINBOW_COLORS[0], RAINBOW_COLORS[3], RAINBOW_COLORS[6]];
-    }
-    if (speedWrap) speedWrap.hidden = !effect.speed || isRainbow;
-    if (directionWrap) directionWrap.hidden = !effect.directional || isRainbow;
-    if (paletteWrap) paletteWrap.hidden = isRainbow;
+    if (speedWrap) speedWrap.hidden = !effect.speed;
+    if (directionWrap) directionWrap.hidden = !effect.directional;
+    if (paletteWrap) paletteWrap.hidden = false;
     if (gradientLengthWrap) gradientLengthWrap.hidden = editorRecipe.paletteMode !== "gradient";
-    if (color1Wrap) color1Wrap.hidden = isRainbow;
-    if (color2Wrap) color2Wrap.hidden = editorRecipe.paletteMode === "single" || isRainbow;
-    if (color3Wrap) color3Wrap.hidden = editorRecipe.paletteMode !== "gradient" || isRainbow;
+    if (color1Wrap) color1Wrap.hidden = false;
+    if (color2Wrap) color2Wrap.hidden = editorRecipe.paletteMode === "single";
+    if (color3Wrap) color3Wrap.hidden = editorRecipe.paletteMode !== "gradient";
     const preview = root.querySelector("#simEffectPreview");
     if (preview) {
       preview.style.setProperty("--preview-a", editorRecipe.colors[0]);
