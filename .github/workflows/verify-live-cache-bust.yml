@@ -14,25 +14,31 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - name: Verify actual page-loaded navigation script
+      - name: Verify rendered navigation links in Chrome
         shell: bash
         run: |
           set -euo pipefail
           base='https://shynetyme.works'
-          stamp="live-$(date +%s)"
+          stamp="chrome-$(date +%s)"
+          chrome=$(command -v google-chrome || command -v chromium || command -v chromium-browser)
+          test -n "$chrome"
+
           for page in ledbikesim.html ledautosim.html ledhomesim.html; do
-            curl --fail --location --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 \
-              "$base/$page?verify=$stamp" -o "/tmp/$page"
-            src=$(grep -oE 'assets/js/site-guide\.js\?v=shared-ui-[0-9]+' "/tmp/$page" | tail -1)
-            test -n "$src"
-            revision=${src##*=shared-ui-}
-            test "$revision" -ge 15
-            curl --fail --location --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 \
-              "$base/$src&verify=$stamp" -o "/tmp/site-guide-$page.js"
-            grep -Fq 'const siteRoot = new URL("../../", scriptUrl);' "/tmp/site-guide-$page.js"
+            "$chrome" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage \
+              --virtual-time-budget=7000 --dump-dom "$base/$page?verify=$stamp" > "/tmp/$page.dom"
+            echo "--- $page rendered navigation ---"
+            grep -oE 'https://shynetyme\.works/(assets/)?led(bike|auto|home)sim\.html' "/tmp/$page.dom" | sort -u || true
+            if grep -qE 'https://shynetyme\.works/assets/led(bike|auto|home)sim\.html|href="/?assets/led(bike|auto|home)sim\.html' "/tmp/$page.dom"; then
+              echo "Rendered page still contains an /assets/ simulator navigation target." >&2
+              exit 1
+            fi
+            grep -qE 'https://shynetyme\.works/ledbikesim\.html|href="/?ledbikesim\.html' "/tmp/$page.dom"
+            grep -qE 'https://shynetyme\.works/ledautosim\.html|href="/?ledautosim\.html' "/tmp/$page.dom"
+            grep -qE 'https://shynetyme\.works/ledhomesim\.html|href="/?ledhomesim\.html' "/tmp/$page.dom"
           done
+
           for wrong in assets/ledbikesim.html assets/ledautosim.html assets/ledhomesim.html; do
             code=$(curl --location --silent --output /dev/null --write-out '%{http_code}' "$base/$wrong?verify=$stamp")
             test "$code" = '404'
           done
-          echo 'Live pages load cache-busted site-guide >= shared-ui-15 with root navigation resolver.'
+          echo 'Rendered live navigation uses only root-level simulator URLs.'
