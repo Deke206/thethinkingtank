@@ -15,9 +15,13 @@ stops = '    const stops = [[0, colors[0]], [0.5, colors[1]], [1, colors[2]]];'
 assert stops in s
 s = s.replace(stops, '''    const stops = recipe.effect === "base-rainbow"\n      ? RAINBOW_COLORS.map((color, index) => [index / (RAINBOW_COLORS.length - 1), color])\n      : [[0, colors[0]], [0.5, colors[1]], [1, colors[2]]];''', 1)
 
-# Base Rainbow is fixed-color, but still keeps gradient length, speed, and direction controls.
-visibility = '''    if (speedWrap) speedWrap.hidden = !effect.speed;\n    if (directionWrap) directionWrap.hidden = !effect.directional;\n    if (paletteWrap) paletteWrap.hidden = false;\n    if (gradientLengthWrap) gradientLengthWrap.hidden = editorRecipe.paletteMode !== "gradient";\n    if (color1Wrap) color1Wrap.hidden = false;\n    if (color2Wrap) color2Wrap.hidden = editorRecipe.paletteMode === "single";\n    if (color3Wrap) color3Wrap.hidden = editorRecipe.paletteMode !== "gradient";'''
-assert visibility in s
-s = s.replace(visibility, '''    const isBaseRainbow = effect.id === "base-rainbow";\n    if (isBaseRainbow) editorRecipe.paletteMode = "gradient";\n    if (speedWrap) speedWrap.hidden = !effect.speed;\n    if (directionWrap) directionWrap.hidden = !effect.directional;\n    if (paletteWrap) paletteWrap.hidden = isBaseRainbow;\n    if (gradientLengthWrap) gradientLengthWrap.hidden = editorRecipe.paletteMode !== "gradient";\n    if (color1Wrap) color1Wrap.hidden = isBaseRainbow;\n    if (color2Wrap) color2Wrap.hidden = editorRecipe.paletteMode === "single" || isBaseRainbow;\n    if (color3Wrap) color3Wrap.hidden = editorRecipe.paletteMode !== "gradient" || isBaseRainbow;''', 1)
+# Base Rainbow keeps the original fixed spectrum; only its color-edit fields are hidden.
+needle = '    if (speedWrap) speedWrap.hidden = !effect.speed;\n'
+assert needle in s
+s = s.replace(needle, '    const isBaseRainbow = effect.id === "base-rainbow";\n    if (isBaseRainbow) editorRecipe.paletteMode = "gradient";\n' + needle, 1)
+s = s.replace('    if (paletteWrap) paletteWrap.hidden = false;', '    if (paletteWrap) paletteWrap.hidden = isBaseRainbow;', 1)
+s = s.replace('    if (color1Wrap) color1Wrap.hidden = false;', '    if (color1Wrap) color1Wrap.hidden = isBaseRainbow;', 1)
+s = s.replace('    if (color2Wrap) color2Wrap.hidden = editorRecipe.paletteMode === "single";', '    if (color2Wrap) color2Wrap.hidden = editorRecipe.paletteMode === "single" || isBaseRainbow;', 1)
+s = s.replace('    if (color3Wrap) color3Wrap.hidden = editorRecipe.paletteMode !== "gradient";', '    if (color3Wrap) color3Wrap.hidden = editorRecipe.paletteMode !== "gradient" || isBaseRainbow;', 1)
 
 p.write_text(s, encoding='utf-8')
