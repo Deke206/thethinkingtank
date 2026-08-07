@@ -42,39 +42,60 @@
   }
 }
 
-
 /* Bike SIM compact Step 1 buttons and gradient/rainbow corrections. */
 .sim-area-bike .sim-area-grid {
   grid-template-columns: repeat(auto-fit, 112px);
   justify-content: center;
   gap: .42rem;
 }
+
 .sim-area-bike .sim-area-button {
   width: 112px;
   height: 86px;
   aspect-ratio: auto;
   padding: .48rem;
 }
+
 .sim-area-bike .sim-area-button strong { font-size: .68rem; }
 .sim-area-bike .sim-area-button small { font-size: .5rem; }
 .sim-area-bike .sim-area-button em { font-size: .53rem; }
+
 .sim-effect-preview { display: none !important; }
+
+/* Legacy Bike Builder lighting must start visibly off until the shared editor applies it. */
+.sim-area-bike .zone.zone-off {
+  opacity: 0 !important;
+  filter: none !important;
+}
+
 [data-sim-area-active="true"][data-sim-palette="gradient"] {
   stroke: var(--sim-gradient-stroke, var(--sim-a, #35e7ff)) !important;
 }
+
+[data-sim-area-active="true"][data-sim-palette="gradient"] :is(path, circle, ellipse, line, polyline, polygon, rect) {
+  stroke: var(--sim-gradient-stroke, var(--sim-a, #35e7ff)) !important;
+}
+
 [data-sim-area-active="true"][data-sim-effect="rainbow"] {
   animation-name: sim-area-rainbow-shift !important;
   stroke: var(--sim-gradient-stroke, var(--sim-a, #35e7ff)) !important;
   stroke-dasharray: none !important;
 }
+
+[data-sim-area-active="true"][data-sim-effect="rainbow"] :is(path, circle, ellipse, line, polyline, polygon, rect) {
+  stroke: var(--sim-gradient-stroke, var(--sim-a, #35e7ff)) !important;
+}
+
 @keyframes sim-area-rainbow-shift {
   from { stroke-dashoffset: 0; }
   to { stroke-dashoffset: -96; }
 }
+
 @media (max-width: 760px) {
   .sim-area-bike .sim-area-grid { grid-template-columns: repeat(auto-fit, 102px); }
   .sim-area-bike .sim-area-button { width: 102px; height: 80px; }
 }
+
 @media (max-width: 430px) {
   .sim-area-bike .sim-area-grid { grid-template-columns: repeat(auto-fit, 94px); }
   .sim-area-bike .sim-area-button { width: 94px; height: 76px; }
