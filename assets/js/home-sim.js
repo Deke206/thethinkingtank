@@ -22,7 +22,7 @@
   const scriptUrl = document.currentScript?.src
     ? new URL(document.currentScript.src, window.location.href)
     : new URL("assets/js/home-sim.js", window.location.href);
-  const siteRoot = new URL("../", scriptUrl);
+  const siteRoot = new URL("../../", scriptUrl);
   // END OBJECT: Production Home SIM source package.
 
   // BEGIN API CALL: Load and execute the formatted Home SIM controller.
@@ -78,6 +78,7 @@
     initialized: true,
     revision: SOURCE_REVISION,
     sourceParts: SOURCE_PARTS,
+    siteRoot: siteRoot.href,
     load: loadHomeSimController
   };
   // END OBJECT: Public Home SIM loader API.

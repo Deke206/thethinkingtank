@@ -7,7 +7,7 @@
   const scriptUrl = scriptElement?.src
     ? new URL(scriptElement.src, window.location.href)
     : new URL("assets/js/site-chuck.js", window.location.href);
-  const siteRoot = new URL("../", scriptUrl);
+  const siteRoot = new URL("../../", scriptUrl);
 
   const chuckCssUrl = new URL("assets/css/site-chuck.css?v=20260724-cloud-guidance", siteRoot).href;
   const cloudCssUrl = new URL("assets/css/site-chuck-cloud.css?v=20260806-compact-cloud-v2", siteRoot).href;

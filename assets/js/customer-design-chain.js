@@ -9,7 +9,7 @@
   const scriptUrl = document.currentScript?.src
     ? new URL(document.currentScript.src, window.location.href)
     : new URL("assets/js/customer-design-chain.js", window.location.href);
-  const siteRoot = new URL("../", scriptUrl);
+  const siteRoot = new URL("../../", scriptUrl);
   const pageKey = (window.location.pathname.split("/").filter(Boolean).pop() || "index.html").toLowerCase();
 
   const DESIGN_KEY = "shynetymeDesignChainDraft";
