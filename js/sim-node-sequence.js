@@ -145,9 +145,26 @@
   let statusMessage = "Select one or more installation areas, create an effect, then press Apply.";
   let homeRefreshPending = false;
 
+  function defaultRainbowRecipe() {
+    return normalizeRecipe({ effect: "rainbow" });
+  }
+
   function normalizeRecipe(recipe) {
     const fallback = defaultRecipe();
     const effect = effectById(recipe?.effect);
+    if (effect.id === "rainbow") {
+      return {
+        effect: "rainbow",
+        section: "whole",
+        gradientLength: "whole",
+        paletteMode: "gradient",
+        colors: [...RAINBOW_COLORS],
+        brightness: 100,
+        speed: 55,
+        direction: 1,
+        duration: DEFAULT_STEP_SECONDS
+      };
+    }
     const colors = Array.isArray(recipe?.colors) ? recipe.colors.slice(0, 3) : fallback.colors;
     while (colors.length < 3) colors.push(fallback.colors[colors.length]);
     return {
@@ -203,7 +220,7 @@
 
     try {
       const stored = JSON.parse(localStorage.getItem(ASSIGNMENT_KEY));
-      if (stored?.version !== 2 || stored.simulator !== simulator) return;
+      if (stored?.version !== 3 || stored.simulator !== simulator) return;
       if (simulator === "bike") return;
       sequencePresetIds = Array.isArray(stored.sequencePresetIds)
         ? stored.sequencePresetIds.filter((id) => savedPresets.some((preset) => preset.id === id)).slice(0, MAX_SEQUENCE_PRESETS)
@@ -228,7 +245,7 @@
     try {
       localStorage.setItem(SHARED_PRESET_KEY, JSON.stringify(savedPresets));
       localStorage.setItem(ASSIGNMENT_KEY, JSON.stringify({
-        version: 2,
+        version: 3,
         simulator,
         sequencePresetIds,
         playAsSequence,
@@ -266,6 +283,29 @@
       return lines[area.autoIndex] ? [lines[area.autoIndex]] : [];
     }
     return (area.targets || []).flatMap((selector) => [...document.querySelectorAll(selector)]);
+  }
+
+  function applyDefaultRainbow(area) {
+    const recipe = defaultRainbowRecipe();
+    if (simulator === "bike") {
+      elementTargets(area).forEach((element) => {
+        delete element.dataset.simAreaActive;
+        delete element.dataset.simEffect;
+        delete element.dataset.simSection;
+        delete element.dataset.simPalette;
+        delete element.dataset.simGradientLength;
+        delete element.dataset.simGradientOwner;
+        element.classList.remove("zone-off");
+        element.classList.add("zone-on");
+        ["--sim-a", "--sim-b", "--sim-c", "--sim-brightness", "--sim-speed", "--sim-direction", "--sim-gradient-stroke"].forEach((property) => element.style.removeProperty(property));
+      });
+      return;
+    }
+    if (simulator === "home") {
+      applyHomeArea(area, recipe);
+      return;
+    }
+    applyDomArea(area, recipe);
   }
 
   function clearDomArea(area) {
@@ -332,8 +372,12 @@
       element.dataset.simGradientLength = recipe.gradientLength;
       element.dataset.simGradientOwner = area.id;
       ensureSvgGradient(element, recipe, colors);
-      element.classList.add("zone-on");
-      element.classList.remove("zone-off");
+      if (simulator === "bike") {
+        element.classList.remove("zone-on", "zone-off");
+      } else {
+        element.classList.add("zone-on");
+        element.classList.remove("zone-off");
+      }
       element.style.setProperty("--sim-a", colors[0]);
       element.style.setProperty("--sim-b", colors[1]);
       element.style.setProperty("--sim-c", colors[2]);
@@ -392,8 +436,7 @@
 
   function applyAreaRecipe(area, recipe) {
     if (!area.active) {
-      if (simulator === "home") clearHomeArea(area);
-      else clearDomArea(area);
+      applyDefaultRainbow(area);
       area.currentStep = -1;
       return;
     }
@@ -432,7 +475,7 @@
       ? "Selected for next Apply"
       : area.active
         ? `${effectById(current.effect).label}${area.mode === "sequence" ? ` · ${area.program.length}-preset sequence` : ""}`
-        : "Off";
+        : "Default rainbow";
     return `
       <button class="sim-area-button${area.selected ? " is-selected" : ""}${area.active ? " is-active" : ""}" type="button" data-area-id="${area.id}" aria-pressed="${area.selected}">
         <span class="sim-area-button__indicator" aria-hidden="true"></span>
@@ -509,7 +552,7 @@
           <label class="sim-field">LED section
             <select id="simEffectSection">${sectionOptions(editorRecipe.section)}</select>
           </label>
-          <label class="sim-field" id="simPaletteModeWrap">Color use
+          <label class="sim-field" id="simPaletteModeWrap"${editorRecipe.effect === "rainbow" ? " hidden" : ""}>Color use
             <select id="simPaletteMode">
               <option value="single"${editorRecipe.paletteMode === "single" ? " selected" : ""}>One color</option>
               <option value="two"${editorRecipe.paletteMode === "two" ? " selected" : ""}>Foreground + background</option>
@@ -519,22 +562,22 @@
           <label class="sim-field" id="simGradientLengthWrap"${editorRecipe.paletteMode === "gradient" ? "" : " hidden"}>Gradient length
             <select id="simGradientLength">${gradientLengthOptions(editorRecipe.gradientLength)}</select>
           </label>
-          <label class="sim-field sim-color-field" id="simColor1Wrap">Primary
+          <label class="sim-field sim-color-field" id="simColor1Wrap"${editorRecipe.effect === "rainbow" ? " hidden" : ""}>Primary
             <input id="simColor1" type="color" value="${editorRecipe.colors[0]}">
           </label>
-          <label class="sim-field sim-color-field" data-color-wrap="2"${editorRecipe.paletteMode === "single" ? " hidden" : ""}>Foreground / second
+          <label class="sim-field sim-color-field" data-color-wrap="2"${editorRecipe.paletteMode === "single" || editorRecipe.effect === "rainbow" ? " hidden" : ""}>Foreground / second
             <input id="simColor2" type="color" value="${editorRecipe.colors[1]}">
           </label>
-          <label class="sim-field sim-color-field" data-color-wrap="3"${editorRecipe.paletteMode !== "gradient" ? " hidden" : ""}>Background / third
+          <label class="sim-field sim-color-field" data-color-wrap="3"${editorRecipe.paletteMode !== "gradient" || editorRecipe.effect === "rainbow" ? " hidden" : ""}>Background / third
             <input id="simColor3" type="color" value="${editorRecipe.colors[2]}">
           </label>
           <label class="sim-field">Brightness <output id="simBrightnessOut">${editorRecipe.brightness}%</output>
             <input id="simBrightness" type="range" min="5" max="100" value="${editorRecipe.brightness}">
           </label>
-          <label class="sim-field" id="simSpeedWrap"${effect.speed ? "" : " hidden"}>Speed <output id="simSpeedOut">${editorRecipe.speed}</output>
+          <label class="sim-field" id="simSpeedWrap"${effect.speed && effect.id !== "rainbow" ? "" : " hidden"}>Speed <output id="simSpeedOut">${editorRecipe.speed}</output>
             <input id="simSpeed" type="range" min="1" max="100" value="${editorRecipe.speed}">
           </label>
-          <label class="sim-field" id="simDirectionWrap"${effect.directional ? "" : " hidden"}>Direction
+          <label class="sim-field" id="simDirectionWrap"${effect.directional && effect.id !== "rainbow" ? "" : " hidden"}>Direction
             <select id="simDirection"><option value="1"${editorRecipe.direction >= 0 ? " selected" : ""}>Forward</option><option value="-1"${editorRecipe.direction < 0 ? " selected" : ""}>Reverse</option></select>
           </label>
         </div>
@@ -599,13 +642,19 @@
     const color1Wrap = root.querySelector("#simColor1Wrap");
     const color2Wrap = root.querySelector('[data-color-wrap="2"]');
     const color3Wrap = root.querySelector('[data-color-wrap="3"]');
-    if (speedWrap) speedWrap.hidden = !effect.speed;
-    if (directionWrap) directionWrap.hidden = !effect.directional;
-    if (paletteWrap) paletteWrap.hidden = false;
-    if (gradientLengthWrap) gradientLengthWrap.hidden = editorRecipe.paletteMode !== "gradient";
-    if (color1Wrap) color1Wrap.hidden = false;
-    if (color2Wrap) color2Wrap.hidden = editorRecipe.paletteMode === "single";
-    if (color3Wrap) color3Wrap.hidden = editorRecipe.paletteMode !== "gradient";
+    const isRainbow = effect.id === "rainbow";
+    if (isRainbow) {
+      editorRecipe = defaultRainbowRecipe();
+      const palette = root.querySelector("#simPaletteMode");
+      if (palette) palette.value = "gradient";
+    }
+    if (speedWrap) speedWrap.hidden = !effect.speed || isRainbow;
+    if (directionWrap) directionWrap.hidden = !effect.directional || isRainbow;
+    if (paletteWrap) paletteWrap.hidden = isRainbow;
+    if (gradientLengthWrap) gradientLengthWrap.hidden = editorRecipe.paletteMode !== "gradient" || isRainbow;
+    if (color1Wrap) color1Wrap.hidden = isRainbow;
+    if (color2Wrap) color2Wrap.hidden = editorRecipe.paletteMode === "single" || isRainbow;
+    if (color3Wrap) color3Wrap.hidden = editorRecipe.paletteMode !== "gradient" || isRainbow;
     const preview = root.querySelector("#simEffectPreview");
     if (preview) {
       preview.style.setProperty("--preview-a", editorRecipe.colors[0]);
@@ -925,14 +974,11 @@
     loadState();
     preparePage();
     areas.forEach((area) => {
-      if (!area.active) {
-        if (simulator === "home") clearHomeArea(area);
-        else clearDomArea(area);
-      }
+      if (!area.active) applyDefaultRainbow(area);
     });
     if (simulator === "home") {
       window.setTimeout(() => {
-        areas.forEach((area) => { if (!area.active) clearHomeArea(area); });
+        areas.forEach((area) => { if (!area.active) applyDefaultRainbow(area); });
       }, 350);
     }
     areas.forEach((area) => {
