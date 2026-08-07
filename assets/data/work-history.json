@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-08-07T04:40:34.859Z",
-  "commitCount": 454,
+  "generatedAt": "2026-08-07T04:51:09.662Z",
+  "commitCount": 455,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -2273,6 +2273,11 @@
       "sha": "b526fa352cffb5523e3a7a5506a500f7db959498",
       "date": "2026-08-07T04:40:17Z",
       "message": "fix: resolve simulator navigation from site root"
+    },
+    {
+      "sha": "e799551306149ddae30fa4dadb10bf12f9767898",
+      "date": "2026-08-07T04:50:56Z",
+      "message": "fix: refresh shared navigation asset revision"
     }
   ]
 }
