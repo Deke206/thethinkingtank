@@ -1,0 +1,52 @@
+name: Fix Auto SIM navigation cache
+on:
+  push:
+    branches: [agent/fix-auto-nav-cache]
+    paths: [.github/workflows/fix-auto-nav-cache.yml]
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/fix-auto-nav-cache
+          fetch-depth: 0
+      - name: Patch embedded Auto SIM shared UI revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import base64
+          parts=[Path(f'assets/sim-auto/car-base-{n}.txt') for n in range(1,7)]
+          encoded=''.join(p.read_text().strip() for p in parts)
+          html=base64.b64decode(encoded).decode('utf-8')
+          old='site-guide.js?v=shared-ui-9'; new='site-guide.js?v=shared-ui-15'
+          if html.count(old)!=1: raise SystemExit(f'Expected one {old}; found {html.count(old)}')
+          html=html.replace(old,new)
+          updated=base64.b64encode(html.encode()).decode()
+          size=len(updated)//6; pos=0
+          for i,p in enumerate(parts):
+              chunk=updated[pos:] if i==5 else updated[pos:pos+size]
+              if i<5: pos+=size
+              p.write_text(chunk+'\n')
+          verify=base64.b64decode(''.join(p.read_text().strip() for p in parts)).decode()
+          assert new in verify and old not in verify
+          PY
+          for n in 1 2 3 4 5 6; do cat "assets/sim-auto/car-base-$n.txt"; done >/tmp/auto.b64
+          base64 -d /tmp/auto.b64 >/tmp/auto.html
+          grep -Fq 'site-guide.js?v=shared-ui-15' /tmp/auto.html
+          ! grep -Fq 'site-guide.js?v=shared-ui-9' /tmp/auto.html
+      - name: Commit verified package
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/fix-auto-nav-cache.yml
+          git add -A
+          git diff --cached --check
+          git config user.name 'Deke310'
+          git config user.email '135410011+Deke206@users.noreply.github.com'
+          git commit -m 'fix: refresh Auto SIM shared navigation asset'
+          git push origin HEAD:agent/fix-auto-nav-cache
