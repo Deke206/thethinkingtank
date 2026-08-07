@@ -1,4 +1,5 @@
 name: Add Base Rainbow effect
+# retry after matching current editor visibility logic
 on:
   push:
     branches: [agent/base-rainbow-effect]
