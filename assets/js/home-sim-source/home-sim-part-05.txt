@@ -15,7 +15,9 @@
   const scriptUrl = document.currentScript?.src
     ? new URL(document.currentScript.src, window.location.href)
     : new URL("assets/js/home-sim.js", window.location.href);
-  const siteRoot = new URL("../", scriptUrl);
+  const siteRoot = new URL(
+  window.ShynetymeHomeSimLoader?.siteRoot || window.location.href
+);
   // END OBJECT: Approved Home SIM production image recovery.
 
   // BEGIN OBJECT: Base64 image format detection.

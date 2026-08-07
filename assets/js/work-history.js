@@ -8,7 +8,7 @@
   const scriptUrl = scriptElement?.src
     ? new URL(scriptElement.src, window.location.href)
     : new URL("assets/js/work-history.js", window.location.href);
-  const siteRoot = new URL("../", scriptUrl);
+  const siteRoot = new URL("../../", scriptUrl);
 
   const repository = root.dataset.repository || "Deke206/thethinkingtank";
   const branch = root.dataset.branch || "main";
