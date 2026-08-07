@@ -9,19 +9,19 @@
   // The formatted controller remains plain readable JavaScript split into
   // numbered source files so no page contains one compressed run-on string.
   const SOURCE_PARTS = Object.freeze([
-    "js/home-sim-source/home-sim-part-00.txt",
-    "js/home-sim-source/home-sim-part-01.txt",
-    "js/home-sim-source/home-sim-part-02.txt",
-    "js/home-sim-source/home-sim-part-03.txt",
-    "js/home-sim-source/home-sim-part-04.txt",
-    "js/home-sim-source/home-sim-part-05.txt"
+    "assets/js/home-sim-source/home-sim-part-00.txt",
+    "assets/js/home-sim-source/home-sim-part-01.txt",
+    "assets/js/home-sim-source/home-sim-part-02.txt",
+    "assets/js/home-sim-source/home-sim-part-03.txt",
+    "assets/js/home-sim-source/home-sim-part-04.txt",
+    "assets/js/home-sim-source/home-sim-part-05.txt"
   ]);
 
   const SOURCE_REVISION = "20260806-approved-home-images-v4";
 
   const scriptUrl = document.currentScript?.src
     ? new URL(document.currentScript.src, window.location.href)
-    : new URL("js/home-sim.js", window.location.href);
+    : new URL("assets/js/home-sim.js", window.location.href);
   const siteRoot = new URL("../", scriptUrl);
   // END OBJECT: Production Home SIM source package.
 

@@ -8,7 +8,7 @@
 
   const scriptUrl = document.currentScript?.src
     ? new URL(document.currentScript.src, window.location.href)
-    : new URL("js/customer-design-chain.js", window.location.href);
+    : new URL("assets/js/customer-design-chain.js", window.location.href);
   const siteRoot = new URL("../", scriptUrl);
   const pageKey = (window.location.pathname.split("/").filter(Boolean).pop() || "index.html").toLowerCase();
 
@@ -16,8 +16,8 @@
   const CONTACT_KEY = "shynetymeContactDraft";
   const RECOMMENDATIONS_URL = new URL("project-recommendations.html", siteRoot);
   const CONTACT_URL = new URL("contact.html", siteRoot);
-  const CATALOG_URL = new URL("data/btf-catalog-items.json", siteRoot);
-  const SETS_URL = new URL("data/btf-recommendation-sets.js?v=20260805-row-complete-1", siteRoot);
+  const CATALOG_URL = new URL("assets/data/btf-catalog-items.json", siteRoot);
+  const SETS_URL = new URL("assets/data/btf-recommendation-sets.js?v=20260805-row-complete-1", siteRoot);
 
   const projectPages = {
     "build-my-bike.html": { type: "bike", label: "LED Bike Simulator" },

@@ -11,11 +11,11 @@ build-my-auto.html  -> LED Auto SIM
 ## Shared presentation files
 
 ```text
-css/site-navigation.css
+assets/css/site-navigation.css
   BEGIN: Shared simulator stylesheet loader
   END:   Shared simulator stylesheet loader
 
-css/sim-controls-shared.css
+assets/css/sim-controls-shared.css
   BEGIN: Shared ShyneTyme simulator design tokens
   END:   Shared simulator form controls
 ```
@@ -43,7 +43,7 @@ build-my-home.html
 ## Home SIM data and media
 
 ```text
-data/home-sim-approved-geometry.json
+assets/data/home-sim-approved-geometry.json
   Locked coordinate source for Front and Back View installation zones
 
 assets/images/home-sim-front-1.b64
@@ -56,7 +56,7 @@ assets/images/home-sim-rear-1.b64
 ## Shared effect registry
 
 ```text
-js/sim-preset-core.js
+assets/js/sim-preset-core.js
   solid       WLED 00
   breathe     WLED 02
   wipe        WLED 03
@@ -72,12 +72,12 @@ js/sim-preset-core.js
 ## Home SIM loader and formatted controller package
 
 ```text
-js/home-sim.js
+assets/js/home-sim.js
   BEGIN OBJECT: Production Home SIM source package
   BEGIN API CALL: Load and execute the formatted Home SIM controller
   BEGIN OBJECT: Public Home SIM loader API
 
-js/home-sim-source/home-sim-part-01.txt through part-04.txt
+assets/js/home-sim-source/home-sim-part-01.txt through part-04.txt
   Plain readable JavaScript source, concatenated in numeric order at runtime
   No minification, eval call, or compressed run-on source string
 ```

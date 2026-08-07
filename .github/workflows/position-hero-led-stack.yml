@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Move hero LED stack left and size to 450px
         run: |
-          cat >> css/site.css <<'CSS'
+          cat >> assets/css/site.css <<'CSS'
 
 /* Left-positioned 450px hero LED stack */
 .hero .hero-led-stack {
@@ -27,7 +27,7 @@ CSS
           from pathlib import Path
           p = Path('index.html')
           s = p.read_text()
-          s = s.replace('css/site.css?v=20260722-led-motion', 'css/site.css?v=20260722-led-stack-450-left')
+          s = s.replace('assets/css/site.css?v=20260722-led-motion', 'assets/css/site.css?v=20260722-led-stack-450-left')
           p.write_text(s)
           PY
       - name: Commit changes and remove workflow
@@ -35,6 +35,6 @@ CSS
           rm .github/workflows/position-hero-led-stack.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add css/site.css index.html .github/workflows/position-hero-led-stack.yml
+          git add assets/css/site.css index.html .github/workflows/position-hero-led-stack.yml
           git commit -m 'Move hero LED stack left and resize to 450px'
           git push

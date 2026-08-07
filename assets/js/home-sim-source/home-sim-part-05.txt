@@ -14,7 +14,7 @@
 
   const scriptUrl = document.currentScript?.src
     ? new URL(document.currentScript.src, window.location.href)
-    : new URL("js/home-sim.js", window.location.href);
+    : new URL("assets/js/home-sim.js", window.location.href);
   const siteRoot = new URL("../", scriptUrl);
   // END OBJECT: Approved Home SIM production image recovery.
 

@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths-ignore:
-      - data/work-history.json
+      - assets/data/work-history.json
   workflow_dispatch:
 
 permissions:
@@ -30,7 +30,7 @@ jobs:
           node-version: 20
 
       - name: Generate public history snapshot
-        run: node scripts/build-work-history.mjs
+        run: node assets/scripts/build-work-history.mjs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WORK_HISTORY_REPOSITORY: Deke206/thethinkingtank
@@ -38,14 +38,14 @@ jobs:
 
       - name: Save refreshed snapshot
         run: |
-          if git diff --quiet -- data/work-history.json; then
+          if git diff --quiet -- assets/data/work-history.json; then
             echo "History snapshot is already current."
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/work-history.json
+          git add assets/data/work-history.json
           # Do not add [skip ci]: the follow-up history commit must trigger a new
           # GitHub Pages deployment after it supersedes the original site commit.
           git commit -m "chore(history): refresh read-only website timeline"

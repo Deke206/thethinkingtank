@@ -45,7 +45,7 @@
       return;
     }
     const script = document.createElement("script");
-    script.src = "data/btf-recommendation-sets.js?v=20260805-row-complete-1";
+    script.src = "assets/data/btf-recommendation-sets.js?v=20260805-row-complete-1";
     script.defer = true;
     script.addEventListener("load", () => resolve(window.SHYNETYME_BTF_RECOMMENDATION_SETS || {}), { once: true });
     script.addEventListener("error", () => resolve({}), { once: true });

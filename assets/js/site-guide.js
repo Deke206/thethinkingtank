@@ -9,7 +9,7 @@
 
   const scriptUrl = document.currentScript?.src
     ? new URL(document.currentScript.src, window.location.href)
-    : new URL("js/site-guide.js", window.location.href);
+    : new URL("assets/js/site-guide.js", window.location.href);
   const siteRoot = new URL("../", scriptUrl);
   const sharedRevision = scriptUrl.searchParams.get("v") || "shared-ui-14";
   const withRevision = (path) => {
@@ -19,11 +19,11 @@
   };
 
   const sharedStyles = [
-    ["css/site-motion.css", "data-shynetyme-motion"],
-    ["css/site-navigation.css", "data-shynetyme-navigation"],
-    ["css/site-hero.css", "data-shynetyme-hero"],
-    ["css/site-chuck.css", "data-shynetyme-site-chuck"],
-    ["css/site-chuck-cloud.css", "data-shynetyme-site-chuck-cloud"]
+    ["assets/css/site-motion.css", "data-shynetyme-motion"],
+    ["assets/css/site-navigation.css", "data-shynetyme-navigation"],
+    ["assets/css/site-hero.css", "data-shynetyme-hero"],
+    ["assets/css/site-chuck.css", "data-shynetyme-site-chuck"],
+    ["assets/css/site-chuck-cloud.css", "data-shynetyme-site-chuck-cloud"]
   ];
 
   const loadStyle = ([path, attribute]) => {
@@ -309,5 +309,5 @@
   installNavigation();
   installBikePreviewRules();
   installContactRequestFields();
-  loadScript("js/site-chuck.js", "data-shynetyme-site-chuck-script", "ShynetymeChuck");
+  loadScript("assets/js/site-chuck.js", "data-shynetyme-site-chuck-script", "ShynetymeChuck");
 })();

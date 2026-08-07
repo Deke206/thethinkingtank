@@ -87,7 +87,7 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: #06152f url('../assets/images/bike-planner-street.webp') center center / cover no-repeat;
+  background: #06152f url('../images/bike-planner-street.webp') center center / cover no-repeat;
 }
 
 .bike-stage svg {

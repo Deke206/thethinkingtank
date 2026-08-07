@@ -4,7 +4,7 @@ import { dirname, resolve } from "node:path";
 const repository = process.env.WORK_HISTORY_REPOSITORY || process.env.GITHUB_REPOSITORY || "Deke206/thethinkingtank";
 const branch = process.env.WORK_HISTORY_BRANCH || "main";
 const token = process.env.GITHUB_TOKEN || "";
-const outputPath = resolve(process.cwd(), process.env.WORK_HISTORY_OUTPUT || "data/work-history.json");
+const outputPath = resolve(process.cwd(), process.env.WORK_HISTORY_OUTPUT || "assets/data/work-history.json");
 const [owner, repo] = repository.split("/");
 
 if (!owner || !repo) throw new Error(`Invalid repository name: ${repository}`);

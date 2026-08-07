@@ -7,7 +7,7 @@
   const scriptElement = document.currentScript;
   const scriptUrl = scriptElement?.src
     ? new URL(scriptElement.src, window.location.href)
-    : new URL("js/work-history.js", window.location.href);
+    : new URL("assets/js/work-history.js", window.location.href);
   const siteRoot = new URL("../", scriptUrl);
 
   const repository = root.dataset.repository || "Deke206/thethinkingtank";
@@ -128,7 +128,7 @@
   };
 
   const fetchStaticHistory = async () => {
-    const url = new URL("data/work-history.json", siteRoot);
+    const url = new URL("assets/data/work-history.json", siteRoot);
     url.searchParams.set("v", "20260724-root-cleanup");
     const response = await fetch(url, { cache: "no-store" });
     if (!response.ok) throw new Error("Static history is not generated yet.");

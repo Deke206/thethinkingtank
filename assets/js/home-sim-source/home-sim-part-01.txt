@@ -13,7 +13,7 @@
   }
 
   // BEGIN OBJECT: Home SIM application constants and DOM references.
-  const GEOMETRY_PATH = "data/home-sim-approved-geometry.json";
+  const GEOMETRY_PATH = "assets/data/home-sim-approved-geometry.json";
   const STORAGE_KEY = "shynetymeHomeSimBuild";
   const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
   const LED_SIZE_MULTIPLIER = 2.45;
@@ -24,7 +24,7 @@
 
   const scriptUrl = document.currentScript?.src
     ? new URL(document.currentScript.src, window.location.href)
-    : new URL("js/home-sim.js", window.location.href);
+    : new URL("assets/js/home-sim.js", window.location.href);
   const siteRoot = new URL("../", scriptUrl);
 
   const byId = (id) => document.getElementById(id);
