@@ -11,7 +11,7 @@
     ? new URL(document.currentScript.src, window.location.href)
     : new URL("assets/js/site-guide.js", window.location.href);
   const siteRoot = new URL("../../", scriptUrl);
-  const sharedRevision = scriptUrl.searchParams.get("v") || "shared-ui-14";
+  const sharedRevision = scriptUrl.searchParams.get("v") || "shared-ui-15";
   const withRevision = (path) => {
     const url = new URL(path, siteRoot);
     url.searchParams.set("v", sharedRevision);
