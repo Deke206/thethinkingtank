@@ -112,7 +112,7 @@ jobs:
           if missing:raise SystemExit('Broken moved-asset refs:\n'+'\n'.join(missing[:80]))
           print('HTML asset references resolve.')
           PY
-          if grep -RInE '(["'"'"'`(=]|^)(css|data|docs|js|scripts)/' --exclude-dir=.git --exclude-dir=assets .; then exit 1; fi
+          if grep -RInE '(["'"'"'`(=]|^)(css|data|docs|js|scripts)/' --exclude-dir=.git --exclude-dir=assets --exclude=consolidate-assets-once.yml .; then exit 1; fi
           git diff --check
       - name: Commit to main and remove temporary branch
         shell: bash
