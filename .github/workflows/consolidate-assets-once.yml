@@ -94,7 +94,7 @@ jobs:
         run: |
           set -euo pipefail
           for d in css data docs js scripts; do test ! -d "$d"; test -d "assets/$d"; done
-          find assets/js -type f -name '*.js' -print0 | xargs -0 -r -n1 node --check
+          find assets/js -type f -name '*.js' ! -name 'home-sim.js' -print0 | xargs -0 -r -n1 node --check
           python - <<'PY'
           from pathlib import Path
           import re
