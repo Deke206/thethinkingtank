@@ -1,0 +1,42 @@
+name: Patch Bike rainbow SVG gradient
+
+on:
+  push:
+    branches:
+      - agent/bike-sim-gradient-fix
+    paths:
+      - .github/workflows/patch-bike-rainbow-svg.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/bike-sim-gradient-fix
+          fetch-depth: 0
+      - name: Apply true selected-color rainbow gradient
+        run: python scripts/patch-bike-rainbow-svg.py
+      - name: Validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check js/sim-node-sequence.js
+          grep -q 'applyBikeRainbowGradient' js/sim-node-sequence.js
+          grep -q 'spreadMethod' js/sim-node-sequence.js
+          grep -q 'normalizedColors(recipe)' js/sim-node-sequence.js
+          grep -q 'sim-area-rainbow' css/sim-node-sequence-base.css
+          git diff --check
+      - name: Commit validated rendering fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f scripts/patch-bike-rainbow-svg.py .github/workflows/patch-bike-rainbow-svg.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Render Bike rainbow with selected gradient colors"
+          git push origin HEAD:agent/bike-sim-gradient-fix
