@@ -1,0 +1,33 @@
+name: Apply Bike SIM cache final
+on:
+  push:
+    branches: [agent/bike-sim-cache-final]
+    paths: [.github/workflows/apply-bike-cache-final.yml]
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/bike-sim-cache-final
+      - shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          for name in ['build-my-bike.html','build-my-home.html','build-my-auto.html']:
+              p=Path(name); p.write_text(p.read_text().replace('20260806-node-sequence-v2','20260807-bike-rainbow-v2'))
+          p=Path('css/sim-node-sequence.css'); p.write_text(p.read_text().replace('20260807-bike-polish-v1','20260807-bike-rainbow-v2'))
+          p=Path('css/sim-node-sequence-base.css'); s=p.read_text()
+          if '.sim-build-actions{' not in s:
+              s += '\n.sim-build-actions{display:grid;grid-template-columns:1fr auto;align-items:center;gap:.7rem;margin-top:.7rem;padding:.72rem;border:1px solid rgba(49,230,255,.3);border-radius:.8rem;background:linear-gradient(180deg,rgba(9,27,51,.98),rgba(3,10,24,.98))}.sim-build-actions strong,.sim-build-actions span{display:block}.sim-build-actions strong{color:#fff;font:800 .7rem Oxanium,sans-serif}.sim-build-actions span{margin-top:.18rem;color:#8fa5bd;font-size:.58rem}.sim-build-actions button{min-height:2.2rem;padding:.35rem .7rem;border:0;border-radius:.5rem;color:#04111f;background:linear-gradient(135deg,#31e6ff,#7aa7ff 52%,#9b7cff);font-size:.64rem;font-weight:800;cursor:pointer}@media(max-width:620px){.sim-build-actions{grid-template-columns:1fr}.sim-build-actions button{width:100%}}\n'
+          p.write_text(s)
+          PY
+          git diff --check
+          rm -f .github/workflows/apply-bike-cache-final.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Refresh Bike SIM assets and quote action styling'
+          git push origin HEAD:agent/bike-sim-cache-final
