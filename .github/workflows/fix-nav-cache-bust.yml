@@ -1,0 +1,90 @@
+name: Fix navigation cache bust
+
+on:
+  push:
+    branches:
+      - agent/fix-nav-cache-bust
+    paths:
+      - .github/workflows/fix-nav-cache-bust.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/fix-nav-cache-bust
+          fetch-depth: 0
+
+      - name: Force pages to load corrected shared navigation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          token = 'shared-ui-15'
+          changed = []
+          for path in sorted(Path('.').glob('*.html')):
+              text = path.read_text(encoding='utf-8')
+              new = re.sub(
+                  r'assets/js/site-guide\.js\?v=[^"\'\s<>]+',
+                  f'assets/js/site-guide.js?v={token}',
+                  text,
+              )
+              if new != text:
+                  path.write_text(new, encoding='utf-8')
+                  changed.append(path.as_posix())
+
+          guide = Path('assets/js/site-guide.js')
+          text = guide.read_text(encoding='utf-8')
+          text = text.replace('scriptUrl.searchParams.get("v") || "shared-ui-14"',
+                              'scriptUrl.searchParams.get("v") || "shared-ui-15"')
+          guide.write_text(text, encoding='utf-8')
+
+          if not changed:
+              raise SystemExit('No HTML site-guide cache tokens were updated.')
+          print('Updated HTML:', ', '.join(changed))
+          PY
+
+      - name: Validate cache-bust and root navigation together
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check assets/js/site-guide.js
+          grep -Fq 'const siteRoot = new URL("../../", scriptUrl);' assets/js/site-guide.js
+          grep -Fq 'scriptUrl.searchParams.get("v") || "shared-ui-15"' assets/js/site-guide.js
+
+          count=$(grep -l 'assets/js/site-guide.js?v=shared-ui-15' ./*.html | wc -l)
+          test "$count" -ge 8
+
+          if grep -RInE --include='*.html' 'assets/js/site-guide\.js\?v=shared-ui-(9|10|11|12|13|14)' .; then
+            echo 'A stale shared navigation cache token remains in root HTML.' >&2
+            exit 1
+          fi
+
+          node <<'NODE'
+          const scriptUrl = new URL('https://shynetyme.works/assets/js/site-guide.js?v=shared-ui-15');
+          const siteRoot = new URL('../../', scriptUrl);
+          for (const page of ['ledbikesim.html','ledautosim.html','ledhomesim.html']) {
+            const actual = new URL(page, siteRoot).href;
+            const expected = `https://shynetyme.works/${page}`;
+            if (actual !== expected) throw new Error(`${page}: ${actual}`);
+          }
+          NODE
+
+      - name: Commit only production cache-bust changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/fix-nav-cache-bust.yml
+          git add -A
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix: force corrected root navigation assets to reload'
+          git push origin HEAD:agent/fix-nav-cache-bust
