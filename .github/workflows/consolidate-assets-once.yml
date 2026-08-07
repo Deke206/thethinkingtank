@@ -34,12 +34,9 @@ jobs:
                   prefix=f'assets/{name}/'
                   if rel.startswith(prefix): return PurePosixPath(rel[len('assets/'):])
               return PurePosixPath(rel)
-          def new_target(old):
-              return PurePosixPath('assets')/old if old.parts and old.parts[0] in moved else old
+          def new_target(old): return PurePosixPath('assets')/old if old.parts and old.parts[0] in moved else old
           def norm(base,raw,root_logical=False):
-              raw=raw.replace('\\','/')
-              p=PurePosixPath(raw.lstrip('/')) if raw.startswith('/') or root_logical else base/raw
-              out=[]
+              raw=raw.replace('\\','/'); p=PurePosixPath(raw.lstrip('/')) if raw.startswith('/') or root_logical else base/raw; out=[]
               for part in p.parts:
                   if part in ('','.'): continue
                   if part=='..':
@@ -50,11 +47,12 @@ jobs:
               if absolute:return '/'+target.as_posix()
               start=file.relative_to(root).parent.as_posix() or '.'
               return os.path.relpath(target.as_posix(),start).replace('\\','/')
-          def split(v):
-              m=re.match(r'^([^?#]*)(.*)$',v,re.S); return m.group(1),m.group(2)
+          def split(v): m=re.match(r'^([^?#]*)(.*)$',v,re.S); return m.group(1),m.group(2)
           attr=re.compile(r'(?P<h>\b(?:src|href)\s*=\s*["\'])(?P<u>[^"\']+)(?P<t>["\'])',re.I)
           for path in root.rglob('*.html'):
-              text=path.read_text(encoding='utf-8'); base=old_file(path).parent
+              try: text=path.read_text(encoding='utf-8')
+              except UnicodeDecodeError: continue
+              base=old_file(path).parent
               def f(m):
                   v=m.group('u')
                   if re.match(r'^(?:https?:|mailto:|tel:|data:|javascript:|#)',v,re.I):return m.group(0)
@@ -79,8 +77,7 @@ jobs:
               text=path.read_text(encoding='utf-8',errors='ignore'); base=old_file(path).parent
               def f(m):
                   v=m.group('u'); raw,suf=split(v); first=raw.lstrip('/').split('/',1)[0]
-                  logical=not raw.startswith(('./','../','/')) and first in (*moved,'assets')
-                  target=norm(base,raw,logical)
+                  logical=not raw.startswith(('./','../','/')) and first in (*moved,'assets'); target=norm(base,raw,logical)
                   if target.as_posix() not in old_files and target.as_posix() not in old_dirs:return m.group(0)
                   nv=new_target(target).as_posix() if logical else relref(path,new_target(target),raw.startswith('/'))
                   return m.group('q')+nv+suf+m.group('q')
@@ -103,7 +100,8 @@ jobs:
           import re
           root=Path('.'); missing=[]; rx=re.compile(r'\b(?:src|href)\s*=\s*["\']([^"\']+)["\']',re.I)
           for page in root.rglob('*.html'):
-              for v in rx.findall(page.read_text(encoding='utf-8',errors='ignore')):
+              text=page.read_text(encoding='utf-8',errors='ignore')
+              for v in rx.findall(text):
                   if re.match(r'^(?:https?:|mailto:|tel:|data:|javascript:|#)',v,re.I):continue
                   raw=v.split('#',1)[0].split('?',1)[0]
                   if not raw:continue
