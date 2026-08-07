@@ -41,6 +41,7 @@
     { id: "comet", label: "Comet", base: "chase", directional: true, speed: true, palette: "gradient" },
     { id: "waterfall", label: "Waterfall", base: "wipe", directional: true, speed: true, palette: "gradient" },
     { id: "rainbow", label: "Rainbow", base: "rainbow", directional: true, speed: true, palette: "gradient" },
+    { id: "base-rainbow", label: "Base rainbow", base: "rainbow", directional: true, speed: true, palette: "gradient" },
     { id: "scanner", label: "Scanner", base: "scanner", directional: false, speed: true, palette: "two" },
     { id: "theater", label: "Theater chase", base: "theater", directional: true, speed: true, palette: "two" },
     { id: "sparkle", label: "Sparkle field", base: "starlight", directional: false, speed: true, palette: "gradient" },
@@ -81,19 +82,6 @@
     };
   }
 
-  function defaultRainbowDemoRecipe() {
-    return {
-      effect: "rainbow",
-      section: "whole",
-      gradientLength: "whole",
-      paletteMode: "gradient",
-      colors: [RAINBOW_COLORS[0], RAINBOW_COLORS[3], RAINBOW_COLORS[6]],
-      brightness: 100,
-      speed: 55,
-      direction: 1,
-      duration: DEFAULT_STEP_SECONDS
-    };
-  }
 
   function makeAreas() {
     if (simulator === "bike") {
@@ -321,7 +309,9 @@
     const length = GRADIENT_LENGTHS.find(([id]) => id === recipe.gradientLength)?.[2] || "100%";
     gradient.setAttribute("x2", length);
     gradient.replaceChildren();
-    const stops = [[0, colors[0]], [0.5, colors[1]], [1, colors[2]]];
+    const stops = recipe.effect === "base-rainbow"
+      ? RAINBOW_COLORS.map((color, index) => [index / (RAINBOW_COLORS.length - 1), color])
+      : [[0, colors[0]], [0.5, colors[1]], [1, colors[2]]];
     stops.forEach(([offset, color]) => {
       const stop = document.createElementNS("http://www.w3.org/2000/svg", "stop");
       stop.setAttribute("offset", `${Math.round(offset * 100)}%`);
@@ -613,13 +603,15 @@
     const color1Wrap = root.querySelector("#simColor1Wrap");
     const color2Wrap = root.querySelector('[data-color-wrap="2"]');
     const color3Wrap = root.querySelector('[data-color-wrap="3"]');
+    const isBaseRainbow = effect.id === "base-rainbow";
+    if (isBaseRainbow) editorRecipe.paletteMode = "gradient";
     if (speedWrap) speedWrap.hidden = !effect.speed;
     if (directionWrap) directionWrap.hidden = !effect.directional;
-    if (paletteWrap) paletteWrap.hidden = false;
+    if (paletteWrap) paletteWrap.hidden = isBaseRainbow;
     if (gradientLengthWrap) gradientLengthWrap.hidden = editorRecipe.paletteMode !== "gradient";
-    if (color1Wrap) color1Wrap.hidden = false;
-    if (color2Wrap) color2Wrap.hidden = editorRecipe.paletteMode === "single";
-    if (color3Wrap) color3Wrap.hidden = editorRecipe.paletteMode !== "gradient";
+    if (color1Wrap) color1Wrap.hidden = isBaseRainbow;
+    if (color2Wrap) color2Wrap.hidden = editorRecipe.paletteMode === "single" || isBaseRainbow;
+    if (color3Wrap) color3Wrap.hidden = editorRecipe.paletteMode !== "gradient" || isBaseRainbow;
     const preview = root.querySelector("#simEffectPreview");
     if (preview) {
       preview.style.setProperty("--preview-a", editorRecipe.colors[0]);
@@ -937,33 +929,23 @@
 
   function initialize() {
     loadState();
-
-    // Default showroom state: every installation area is active with the base
-    // rainbow demonstration, while Step 1 target selection remains clear.
-    const demoRecipe = defaultRainbowDemoRecipe();
-    const demoStartedAt = performance.now();
-    areas.forEach((area) => {
-      area.selected = false;
-      area.active = true;
-      area.mode = "single";
-      area.program = [normalizeForSafety(area, demoRecipe)];
-      area.startedAt = demoStartedAt;
-      area.currentStep = -1;
-    });
-
     preparePage();
-    areas.forEach((area) => applyAreaRecipe(area, area.program[0]));
-
-    // Home SIM finishes its canvas/controller API asynchronously; re-apply the
-    // same default demo once that API has had time to initialize.
+    areas.forEach((area) => {
+      if (!area.active) {
+        if (simulator === "home") clearHomeArea(area);
+        else clearDomArea(area);
+      }
+    });
     if (simulator === "home") {
       window.setTimeout(() => {
-        areas.forEach((area) => {
-          area.currentStep = -1;
-          applyAreaRecipe(area, area.program[0]);
-        });
+        areas.forEach((area) => { if (!area.active) clearHomeArea(area); });
       }, 350);
     }
+    areas.forEach((area) => {
+      if (!area.active) return;
+      area.startedAt = performance.now();
+      applyAreaRecipe(area, area.program[0]);
+    });
     window.setInterval(tick, 120);
     window.ShynetymeAreaEffects = {
       initialized: true,
