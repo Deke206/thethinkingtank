@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-08-07T07:51:26.243Z",
-  "commitCount": 459,
+  "generatedAt": "2026-08-07T07:53:35.273Z",
+  "commitCount": 460,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -2298,6 +2298,11 @@
       "sha": "845445d6a0ade60cd2cb8eec922f0dfdb7f4d476",
       "date": "2026-08-07T07:51:06Z",
       "message": "fix: restore Auto SIM theme breadcrumb and preview frame"
+    },
+    {
+      "sha": "1fd7b1e3a99aa330c2bcdbe8fafbaceeec3d06bb",
+      "date": "2026-08-07T07:53:20Z",
+      "message": "fix: refresh Auto SIM package cache key"
     }
   ]
 }
