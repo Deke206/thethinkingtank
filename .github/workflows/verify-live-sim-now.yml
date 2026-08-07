@@ -1,0 +1,37 @@
+name: Verify live SIM routes now
+on:
+  push:
+    branches: [verify/live-sim-pages-now]
+    paths: [.github/workflows/verify-live-sim-now.yml]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe live routes
+        shell: bash
+        run: |
+          set -u
+          urls=(
+            "https://shynetyme.works/"
+            "https://shynetyme.works/ledbikesim.html"
+            "https://shynetyme.works/ledautosim.html"
+            "https://shynetyme.works/ledhomesim.html"
+            "https://shynetyme.works/assets/ledbikesim.html"
+            "https://shynetyme.works/assets/ledautosim.html"
+            "https://shynetyme.works/assets/ledhomesim.html"
+            "https://shynetyme.works/assets/js/site-chuck.js?probe=${GITHUB_RUN_ID}"
+          )
+          for url in "${urls[@]}"; do
+            code=$(curl -L -sS --connect-timeout 15 --max-time 30 -o /tmp/body -w '%{http_code}' "$url" || echo CURLFAIL)
+            bytes=$(wc -c </tmp/body 2>/dev/null || echo 0)
+            printf '%s bytes=%s %s\n' "$code" "$bytes" "$url"
+          done
+          echo '--- deployed site-chuck root line ---'
+          curl -L -sS --connect-timeout 15 --max-time 30 "https://shynetyme.works/assets/js/site-chuck.js?probe=${GITHUB_RUN_ID}" | grep -n 'const siteRoot' | head -5 || true
+          echo '--- repo files at main ---'
+          for p in ledbikesim.html ledautosim.html ledhomesim.html; do
+            code=$(curl -L -sS -o /tmp/repo -w '%{http_code}' "https://raw.githubusercontent.com/Deke206/thethinkingtank/main/$p")
+            printf '%s %s\n' "$code" "$p"
+          done
