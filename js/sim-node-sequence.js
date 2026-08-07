@@ -15,10 +15,20 @@
   if (!simulator) return;
 
   const SHARED_PRESET_KEY = "shynetymeSavedAreaEffectsV1";
-  const ASSIGNMENT_KEY = `shynetymeAreaAssignmentsV1:${simulator}`;
+  const ASSIGNMENT_KEY = `shynetymeAreaAssignmentsV2:${simulator}`;
   const MAX_SAVED_PRESETS = 20;
   const MAX_SEQUENCE_PRESETS = 10;
   const DEFAULT_STEP_SECONDS = 4;
+  const RAINBOW_COLORS = Object.freeze([
+    "#ff004c", "#ff9500", "#ffe100", "#00d084",
+    "#00c8ff", "#3b82f6", "#6f42c1"
+  ]);
+  const GRADIENT_LENGTHS = Object.freeze([
+    ["quarter", "Quarter of the LEDs", "25%"],
+    ["half", "Half of the LEDs", "50%"],
+    ["three-quarter", "Three-quarters of the LEDs", "75%"],
+    ["whole", "Whole LED run", "100%"]
+  ]);
 
   const EFFECTS = Object.freeze([
     { id: "solid", label: "Solid", base: "solid", directional: false, speed: false, palette: "single" },
@@ -61,6 +71,7 @@
     return {
       effect: "solid",
       section: "whole",
+      gradientLength: "whole",
       paletteMode: "single",
       colors: ["#35e7ff", "#9b7cff", "#ff5ab9"],
       brightness: 100,
@@ -142,6 +153,7 @@
     return {
       effect: effect.id,
       section: SECTIONS.some(([id]) => id === recipe?.section) ? recipe.section : "whole",
+      gradientLength: GRADIENT_LENGTHS.some(([id]) => id === recipe?.gradientLength) ? recipe.gradientLength : "whole",
       paletteMode: ["single", "two", "gradient"].includes(recipe?.paletteMode) ? recipe.paletteMode : effect.palette,
       colors,
       brightness: Math.min(100, Math.max(5, Number(recipe?.brightness) || fallback.brightness)),
@@ -152,6 +164,7 @@
   }
 
   function normalizedColors(recipe) {
+    if (recipe.effect === "rainbow") return [RAINBOW_COLORS[0], RAINBOW_COLORS[3], RAINBOW_COLORS[6]];
     const colors = [...recipe.colors];
     if (recipe.paletteMode === "single") return [colors[0], colors[0], colors[0]];
     if (recipe.paletteMode === "two") return [colors[0], colors[1], colors[0]];
@@ -191,7 +204,7 @@
 
     try {
       const stored = JSON.parse(localStorage.getItem(ASSIGNMENT_KEY));
-      if (stored?.version !== 1 || stored.simulator !== simulator) return;
+      if (stored?.version !== 2 || stored.simulator !== simulator) return;
       sequencePresetIds = Array.isArray(stored.sequencePresetIds)
         ? stored.sequencePresetIds.filter((id) => savedPresets.some((preset) => preset.id === id)).slice(0, MAX_SEQUENCE_PRESETS)
         : [];
@@ -215,7 +228,7 @@
     try {
       localStorage.setItem(SHARED_PRESET_KEY, JSON.stringify(savedPresets));
       localStorage.setItem(ASSIGNMENT_KEY, JSON.stringify({
-        version: 1,
+        version: 2,
         simulator,
         sequencePresetIds,
         playAsSequence,
@@ -260,10 +273,54 @@
       delete element.dataset.simAreaActive;
       delete element.dataset.simEffect;
       delete element.dataset.simSection;
+      delete element.dataset.simPalette;
+      delete element.dataset.simGradientLength;
       element.classList.remove("zone-on");
       element.classList.add("zone-off");
-      ["--sim-a", "--sim-b", "--sim-c", "--sim-brightness", "--sim-speed", "--sim-direction"].forEach((property) => element.style.removeProperty(property));
+      ["--sim-a", "--sim-b", "--sim-c", "--sim-brightness", "--sim-speed", "--sim-direction", "--sim-gradient-stroke"].forEach((property) => element.style.removeProperty(property));
     });
+  }
+
+  function ensureSvgGradient(element, recipe, colors) {
+    const svg = element.closest?.("svg");
+    if (!svg || recipe.paletteMode !== "gradient") {
+      element.style.removeProperty("--sim-gradient-stroke");
+      return;
+    }
+    let defs = svg.querySelector("defs[data-sim-area-gradients]");
+    if (!defs) {
+      defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+      defs.dataset.simAreaGradients = "true";
+      svg.prepend(defs);
+    }
+    const gradientId = `sim-area-gradient-${areaSafeId(element.dataset.simGradientOwner || "shared")}`;
+    let gradient = defs.querySelector(`#${gradientId}`);
+    if (!gradient) {
+      gradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
+      gradient.id = gradientId;
+      gradient.setAttribute("x1", "0%");
+      gradient.setAttribute("y1", "0%");
+      gradient.setAttribute("y2", "0%");
+      gradient.setAttribute("spreadMethod", "repeat");
+      defs.append(gradient);
+    }
+    const length = GRADIENT_LENGTHS.find(([id]) => id === recipe.gradientLength)?.[2] || "100%";
+    gradient.setAttribute("x2", length);
+    gradient.replaceChildren();
+    const stops = recipe.effect === "rainbow"
+      ? RAINBOW_COLORS.map((color, index) => [index / (RAINBOW_COLORS.length - 1), color])
+      : [[0, colors[0]], [0.5, colors[1]], [1, colors[2]]];
+    stops.forEach(([offset, color]) => {
+      const stop = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+      stop.setAttribute("offset", `${Math.round(offset * 100)}%`);
+      stop.setAttribute("stop-color", color);
+      gradient.append(stop);
+    });
+    element.style.setProperty("--sim-gradient-stroke", `url(#${gradientId})`);
+  }
+
+  function areaSafeId(value) {
+    return String(value || "area").replace(/[^a-z0-9_-]/gi, "-");
   }
 
   function applyDomArea(area, sourceRecipe) {
@@ -273,6 +330,10 @@
       element.dataset.simAreaActive = "true";
       element.dataset.simEffect = recipe.effect;
       element.dataset.simSection = recipe.section;
+      element.dataset.simPalette = recipe.paletteMode;
+      element.dataset.simGradientLength = recipe.gradientLength;
+      element.dataset.simGradientOwner = area.id;
+      ensureSvgGradient(element, recipe, colors);
       element.classList.add("zone-on");
       element.classList.remove("zone-off");
       element.style.setProperty("--sim-a", colors[0]);
@@ -363,6 +424,10 @@
     return SECTIONS.map(([id, label]) => `<option value="${id}"${id === selectedId ? " selected" : ""}>${safeText(label)}</option>`).join("");
   }
 
+  function gradientLengthOptions(selectedId) {
+    return GRADIENT_LENGTHS.map(([id, label]) => `<option value="${id}"${id === selectedId ? " selected" : ""}>${safeText(label)}</option>`).join("");
+  }
+
   function areaButtonMarkup(area) {
     const current = area.active ? currentRecipeFor(area, performance.now()).recipe : null;
     const state = area.selected
@@ -428,7 +493,7 @@
         <p class="sim-panel-note">These square buttons represent the physical LED areas. They are not controller setup menus.</p>
         <div class="sim-area-toolbar">
           <button type="button" data-workbench-action="select-all">Select all areas</button>
-          <button type="button" data-workbench-action="clear-selection">Clear selection</button>
+          <button type="button" data-workbench-action="clear-selection">Unselect areas</button>
           <button type="button" data-workbench-action="turn-off">Turn selected areas off</button>
         </div>
         <div class="sim-area-grid">${areas.map(areaButtonMarkup).join("")}</div>
@@ -446,34 +511,34 @@
           <label class="sim-field">LED section
             <select id="simEffectSection">${sectionOptions(editorRecipe.section)}</select>
           </label>
-          <label class="sim-field">Color use
+          <label class="sim-field" id="simPaletteModeWrap"${editorRecipe.effect === "rainbow" ? " hidden" : ""}>Color use
             <select id="simPaletteMode">
               <option value="single"${editorRecipe.paletteMode === "single" ? " selected" : ""}>One color</option>
               <option value="two"${editorRecipe.paletteMode === "two" ? " selected" : ""}>Foreground + background</option>
               <option value="gradient"${editorRecipe.paletteMode === "gradient" ? " selected" : ""}>Three colors / gradient</option>
             </select>
           </label>
-          <label class="sim-field sim-color-field">Primary
+          <label class="sim-field" id="simGradientLengthWrap"${editorRecipe.paletteMode === "gradient" ? "" : " hidden"}>Gradient length
+            <select id="simGradientLength">${gradientLengthOptions(editorRecipe.gradientLength)}</select>
+          </label>
+          <label class="sim-field sim-color-field" id="simColor1Wrap"${editorRecipe.effect === "rainbow" ? " hidden" : ""}>Primary
             <input id="simColor1" type="color" value="${editorRecipe.colors[0]}">
           </label>
-          <label class="sim-field sim-color-field" data-color-wrap="2"${editorRecipe.paletteMode === "single" ? " hidden" : ""}>Foreground / second
+          <label class="sim-field sim-color-field" data-color-wrap="2"${editorRecipe.paletteMode === "single" || editorRecipe.effect === "rainbow" ? " hidden" : ""}>Foreground / second
             <input id="simColor2" type="color" value="${editorRecipe.colors[1]}">
           </label>
-          <label class="sim-field sim-color-field" data-color-wrap="3"${editorRecipe.paletteMode !== "gradient" ? " hidden" : ""}>Background / third
+          <label class="sim-field sim-color-field" data-color-wrap="3"${editorRecipe.paletteMode !== "gradient" || editorRecipe.effect === "rainbow" ? " hidden" : ""}>Background / third
             <input id="simColor3" type="color" value="${editorRecipe.colors[2]}">
           </label>
           <label class="sim-field">Brightness <output id="simBrightnessOut">${editorRecipe.brightness}%</output>
             <input id="simBrightness" type="range" min="5" max="100" value="${editorRecipe.brightness}">
           </label>
-          <label class="sim-field" id="simSpeedWrap"${effect.speed ? "" : " hidden"}>Speed <output id="simSpeedOut">${editorRecipe.speed}</output>
+          <label class="sim-field" id="simSpeedWrap"${effect.speed && effect.id !== "rainbow" ? "" : " hidden"}>Speed <output id="simSpeedOut">${editorRecipe.speed}</output>
             <input id="simSpeed" type="range" min="1" max="100" value="${editorRecipe.speed}">
           </label>
-          <label class="sim-field" id="simDirectionWrap"${effect.directional ? "" : " hidden"}>Direction
+          <label class="sim-field" id="simDirectionWrap"${effect.directional && effect.id !== "rainbow" ? "" : " hidden"}>Direction
             <select id="simDirection"><option value="1"${editorRecipe.direction >= 0 ? " selected" : ""}>Forward</option><option value="-1"${editorRecipe.direction < 0 ? " selected" : ""}>Reverse</option></select>
           </label>
-          <div class="sim-effect-preview" id="simEffectPreview" style="--preview-a:${editorRecipe.colors[0]};--preview-b:${editorRecipe.colors[1]};--preview-c:${editorRecipe.colors[2]}">
-            <span>${safeText(effect.label)}</span>
-          </div>
         </div>
         <div class="sim-effect-actions">
           <label class="sim-preset-name">Preset name
@@ -513,6 +578,7 @@
     return normalizeRecipe({
       effect: effect.id,
       section: root.querySelector("#simEffectSection")?.value,
+      gradientLength: root.querySelector("#simGradientLength")?.value || editorRecipe.gradientLength,
       paletteMode: root.querySelector("#simPaletteMode")?.value,
       colors: [
         root.querySelector("#simColor1")?.value || editorRecipe.colors[0],
@@ -530,12 +596,23 @@
     const effect = effectById(editorRecipe.effect);
     const speedWrap = root.querySelector("#simSpeedWrap");
     const directionWrap = root.querySelector("#simDirectionWrap");
+    const paletteWrap = root.querySelector("#simPaletteModeWrap");
+    const gradientLengthWrap = root.querySelector("#simGradientLengthWrap");
+    const color1Wrap = root.querySelector("#simColor1Wrap");
     const color2Wrap = root.querySelector('[data-color-wrap="2"]');
     const color3Wrap = root.querySelector('[data-color-wrap="3"]');
-    if (speedWrap) speedWrap.hidden = !effect.speed;
-    if (directionWrap) directionWrap.hidden = !effect.directional;
-    if (color2Wrap) color2Wrap.hidden = editorRecipe.paletteMode === "single";
-    if (color3Wrap) color3Wrap.hidden = editorRecipe.paletteMode !== "gradient";
+    const isRainbow = effect.id === "rainbow";
+    if (isRainbow) {
+      editorRecipe.paletteMode = "gradient";
+      editorRecipe.colors = [RAINBOW_COLORS[0], RAINBOW_COLORS[3], RAINBOW_COLORS[6]];
+    }
+    if (speedWrap) speedWrap.hidden = !effect.speed || isRainbow;
+    if (directionWrap) directionWrap.hidden = !effect.directional || isRainbow;
+    if (paletteWrap) paletteWrap.hidden = isRainbow;
+    if (gradientLengthWrap) gradientLengthWrap.hidden = editorRecipe.paletteMode !== "gradient";
+    if (color1Wrap) color1Wrap.hidden = isRainbow;
+    if (color2Wrap) color2Wrap.hidden = editorRecipe.paletteMode === "single" || isRainbow;
+    if (color3Wrap) color3Wrap.hidden = editorRecipe.paletteMode !== "gradient" || isRainbow;
     const preview = root.querySelector("#simEffectPreview");
     if (preview) {
       preview.style.setProperty("--preview-a", editorRecipe.colors[0]);
@@ -806,7 +883,7 @@
         const palette = root.querySelector("#simPaletteMode");
         if (palette) palette.value = effect.palette;
       }
-      if (["simEffectType", "simEffectSection", "simPaletteMode", "simDirection"].includes(target.id)) updateEditorVisibility();
+      if (["simEffectType", "simEffectSection", "simGradientLength", "simPaletteMode", "simDirection"].includes(target.id)) updateEditorVisibility();
     });
 
     root.addEventListener("input", (event) => {
@@ -854,6 +931,17 @@
   function initialize() {
     loadState();
     preparePage();
+    areas.forEach((area) => {
+      if (!area.active) {
+        if (simulator === "home") clearHomeArea(area);
+        else clearDomArea(area);
+      }
+    });
+    if (simulator === "home") {
+      window.setTimeout(() => {
+        areas.forEach((area) => { if (!area.active) clearHomeArea(area); });
+      }, 350);
+    }
     areas.forEach((area) => {
       if (!area.active) return;
       area.startedAt = performance.now();
