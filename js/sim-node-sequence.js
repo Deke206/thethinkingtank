@@ -81,6 +81,20 @@
     };
   }
 
+  function defaultRainbowDemoRecipe() {
+    return {
+      effect: "rainbow",
+      section: "whole",
+      gradientLength: "whole",
+      paletteMode: "gradient",
+      colors: [RAINBOW_COLORS[0], RAINBOW_COLORS[3], RAINBOW_COLORS[6]],
+      brightness: 100,
+      speed: 55,
+      direction: 1,
+      duration: DEFAULT_STEP_SECONDS
+    };
+  }
+
   function makeAreas() {
     if (simulator === "bike") {
       return [
@@ -923,23 +937,33 @@
 
   function initialize() {
     loadState();
-    preparePage();
+
+    // Default showroom state: every installation area is active with the base
+    // rainbow demonstration, while Step 1 target selection remains clear.
+    const demoRecipe = defaultRainbowDemoRecipe();
+    const demoStartedAt = performance.now();
     areas.forEach((area) => {
-      if (!area.active) {
-        if (simulator === "home") clearHomeArea(area);
-        else clearDomArea(area);
-      }
+      area.selected = false;
+      area.active = true;
+      area.mode = "single";
+      area.program = [normalizeForSafety(area, demoRecipe)];
+      area.startedAt = demoStartedAt;
+      area.currentStep = -1;
     });
+
+    preparePage();
+    areas.forEach((area) => applyAreaRecipe(area, area.program[0]));
+
+    // Home SIM finishes its canvas/controller API asynchronously; re-apply the
+    // same default demo once that API has had time to initialize.
     if (simulator === "home") {
       window.setTimeout(() => {
-        areas.forEach((area) => { if (!area.active) clearHomeArea(area); });
+        areas.forEach((area) => {
+          area.currentStep = -1;
+          applyAreaRecipe(area, area.program[0]);
+        });
       }, 350);
     }
-    areas.forEach((area) => {
-      if (!area.active) return;
-      area.startedAt = performance.now();
-      applyAreaRecipe(area, area.program[0]);
-    });
     window.setInterval(tick, 120);
     window.ShynetymeAreaEffects = {
       initialized: true,
