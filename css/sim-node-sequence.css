@@ -8,36 +8,40 @@
 }
 
 .sim-area-bike #page-subheader-text [aria-current="page"]::after {
-  content: "LED BIKE SIM";
+  content: "LED Bike Sim";
   font-size: .78rem;
   line-height: 1;
 }
 
 .sim-area-bike .sim-area-grid {
-  grid-template-columns: repeat(5, minmax(0, 140px));
+  grid-template-columns: repeat(5, minmax(0, 118px));
   justify-content: start;
 }
 
 .sim-area-bike .sim-area-button {
-  width: 140px;
+  width: 118px;
+  height: 84px;
+  aspect-ratio: auto;
   min-height: 0;
   padding: .55rem;
 }
 
 @media (max-width: 980px) {
   .sim-area-bike .sim-area-grid {
-    grid-template-columns: repeat(4, minmax(0, 132px));
+    grid-template-columns: repeat(4, minmax(0, 112px));
   }
   .sim-area-bike .sim-area-button {
-    width: 132px;
+    width: 112px;
+    height: 82px;
   }
 }
 
 @media (max-width: 620px) {
   .sim-area-bike .sim-area-grid {
-    grid-template-columns: repeat(2, minmax(0, 128px));
+    grid-template-columns: repeat(2, minmax(0, 108px));
   }
   .sim-area-bike .sim-area-button {
-    width: 128px;
+    width: 108px;
+    height: 80px;
   }
 }

@@ -224,18 +224,13 @@
   background: #07152b;
 }
 
-.sim-effect-preview {
+.sim-gradient-strip {
   grid-column: span 2;
-  display: grid;
-  min-height: 4.2rem;
-  place-items: center;
+  min-height: 2.35rem;
   border: 1px solid rgba(255, 255, 255, .15);
-  border-radius: .7rem;
-  color: #fff;
-  background: linear-gradient(110deg, var(--preview-a), var(--preview-b), var(--preview-c));
-  box-shadow: inset 0 0 2rem rgba(0, 0, 0, .35);
-  font: 800 .78rem Oxanium, sans-serif;
-  text-shadow: 0 2px 7px #000;
+  border-radius: .55rem;
+  background: linear-gradient(90deg, var(--preview-a) 0 33.33%, var(--preview-b) 33.33% 66.66%, var(--preview-c) 66.66% 100%);
+  box-shadow: inset 0 0 1rem rgba(0, 0, 0, .22);
 }
 
 .sim-effect-actions {
@@ -568,6 +563,11 @@
 [data-sim-area-active="true"][data-sim-section="middle-third"] { stroke-dasharray: 33 67 !important; stroke-dashoffset: -33 !important; }
 [data-sim-area-active="true"][data-sim-section="last-third"] { stroke-dasharray: 33 67 !important; stroke-dashoffset: -66 !important; }
 
+[data-sim-area-active="true"][data-sim-gradient-length="quarter"][data-sim-effect="rainbow"] { stroke-dasharray: 4 3 !important; }
+[data-sim-area-active="true"][data-sim-gradient-length="half"][data-sim-effect="rainbow"] { stroke-dasharray: 8 5 !important; }
+[data-sim-area-active="true"][data-sim-gradient-length="three-quarter"][data-sim-effect="rainbow"] { stroke-dasharray: 12 7 !important; }
+[data-sim-area-active="true"][data-sim-gradient-length="whole"][data-sim-effect="rainbow"] { stroke-dasharray: 18 10 !important; }
+
 @keyframes sim-area-solid { from, to { opacity: var(--sim-brightness, .95); } }
 @keyframes sim-area-breathe { 0%, 100% { opacity: calc(var(--sim-brightness, 1) * .28); stroke: var(--sim-a) !important; } 50% { opacity: var(--sim-brightness, 1); stroke: var(--sim-b) !important; } }
 @keyframes sim-area-flash { 0%, 48% { opacity: var(--sim-brightness, 1); } 49%, 100% { opacity: .08; } }
@@ -597,7 +597,7 @@
   .sim-area-button { aspect-ratio: 1.12 / 1; padding: .58rem; }
   .sim-effect-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sim-field--wide,
-  .sim-effect-preview { grid-column: 1 / -1; }
+  .sim-gradient-strip { grid-column: 1 / -1; }
   .sim-effect-actions,
   .sim-build-actions { grid-template-columns: 1fr; }
   .sim-effect-actions button,

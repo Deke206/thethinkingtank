@@ -46,6 +46,13 @@
     ["last-third", "Last third"]
   ]);
 
+  const GRADIENT_LENGTHS = Object.freeze([
+    ["quarter", "Quarter of the LEDs"],
+    ["half", "Half of the LEDs"],
+    ["three-quarter", "Three-quarters of the LEDs"],
+    ["whole", "Whole LED run"]
+  ]);
+
   const clone = (value) => JSON.parse(JSON.stringify(value));
   const safeText = (value) => String(value ?? "").replace(/[<>&"']/g, (character) => ({
     "<": "&lt;",
@@ -66,6 +73,7 @@
       brightness: 100,
       speed: 55,
       direction: 1,
+      gradientLength: "whole",
       duration: DEFAULT_STEP_SECONDS
     };
   }
@@ -147,6 +155,7 @@
       brightness: Math.min(100, Math.max(5, Number(recipe?.brightness) || fallback.brightness)),
       speed: Math.min(100, Math.max(1, Number(recipe?.speed) || fallback.speed)),
       direction: Number(recipe?.direction) < 0 ? -1 : 1,
+      gradientLength: GRADIENT_LENGTHS.some(([id]) => id === recipe?.gradientLength) ? recipe.gradientLength : "whole",
       duration: DEFAULT_STEP_SECONDS
     };
   }
@@ -192,6 +201,7 @@
     try {
       const stored = JSON.parse(localStorage.getItem(ASSIGNMENT_KEY));
       if (stored?.version !== 1 || stored.simulator !== simulator) return;
+      if (simulator === "bike") return;
       sequencePresetIds = Array.isArray(stored.sequencePresetIds)
         ? stored.sequencePresetIds.filter((id) => savedPresets.some((preset) => preset.id === id)).slice(0, MAX_SEQUENCE_PRESETS)
         : [];
@@ -260,6 +270,7 @@
       delete element.dataset.simAreaActive;
       delete element.dataset.simEffect;
       delete element.dataset.simSection;
+      delete element.dataset.simGradientLength;
       element.classList.remove("zone-on");
       element.classList.add("zone-off");
       ["--sim-a", "--sim-b", "--sim-c", "--sim-brightness", "--sim-speed", "--sim-direction"].forEach((property) => element.style.removeProperty(property));
@@ -273,6 +284,7 @@
       element.dataset.simAreaActive = "true";
       element.dataset.simEffect = recipe.effect;
       element.dataset.simSection = recipe.section;
+      element.dataset.simGradientLength = recipe.gradientLength;
       element.classList.add("zone-on");
       element.classList.remove("zone-off");
       element.style.setProperty("--sim-a", colors[0]);
@@ -361,6 +373,10 @@
 
   function sectionOptions(selectedId) {
     return SECTIONS.map(([id, label]) => `<option value="${id}"${id === selectedId ? " selected" : ""}>${safeText(label)}</option>`).join("");
+  }
+
+  function gradientLengthOptions(selectedId) {
+    return GRADIENT_LENGTHS.map(([id, label]) => `<option value="${id}"${id === selectedId ? " selected" : ""}>${safeText(label)}</option>`).join("");
   }
 
   function areaButtonMarkup(area) {
@@ -471,9 +487,10 @@
           <label class="sim-field" id="simDirectionWrap"${effect.directional ? "" : " hidden"}>Direction
             <select id="simDirection"><option value="1"${editorRecipe.direction >= 0 ? " selected" : ""}>Forward</option><option value="-1"${editorRecipe.direction < 0 ? " selected" : ""}>Reverse</option></select>
           </label>
-          <div class="sim-effect-preview" id="simEffectPreview" style="--preview-a:${editorRecipe.colors[0]};--preview-b:${editorRecipe.colors[1]};--preview-c:${editorRecipe.colors[2]}">
-            <span>${safeText(effect.label)}</span>
-          </div>
+          <label class="sim-field sim-gradient-length" id="simGradientLengthWrap"${editorRecipe.paletteMode === "gradient" ? "" : " hidden"}>Gradient length
+            <select id="simGradientLength">${gradientLengthOptions(editorRecipe.gradientLength)}</select>
+          </label>
+          <div class="sim-gradient-strip" id="simGradientStrip" style="--preview-a:${editorRecipe.colors[0]};--preview-b:${editorRecipe.colors[1]};--preview-c:${editorRecipe.colors[2]}" aria-label="Primary, secondary, and third gradient colors"></div>
         </div>
         <div class="sim-effect-actions">
           <label class="sim-preset-name">Preset name
@@ -521,7 +538,8 @@
       ],
       brightness: root.querySelector("#simBrightness")?.value,
       speed: root.querySelector("#simSpeed")?.value,
-      direction: root.querySelector("#simDirection")?.value
+      direction: root.querySelector("#simDirection")?.value,
+      gradientLength: root.querySelector("#simGradientLength")?.value || editorRecipe.gradientLength
     });
   }
 
@@ -536,12 +554,14 @@
     if (directionWrap) directionWrap.hidden = !effect.directional;
     if (color2Wrap) color2Wrap.hidden = editorRecipe.paletteMode === "single";
     if (color3Wrap) color3Wrap.hidden = editorRecipe.paletteMode !== "gradient";
-    const preview = root.querySelector("#simEffectPreview");
-    if (preview) {
-      preview.style.setProperty("--preview-a", editorRecipe.colors[0]);
-      preview.style.setProperty("--preview-b", editorRecipe.colors[1]);
-      preview.style.setProperty("--preview-c", editorRecipe.colors[2]);
-      preview.querySelector("span").textContent = effect.label;
+    const gradientWrap = root.querySelector("#simGradientLengthWrap");
+    const gradientStrip = root.querySelector("#simGradientStrip");
+    if (gradientWrap) gradientWrap.hidden = editorRecipe.paletteMode !== "gradient";
+    if (gradientStrip) {
+      gradientStrip.hidden = editorRecipe.paletteMode !== "gradient";
+      gradientStrip.style.setProperty("--preview-a", editorRecipe.colors[0]);
+      gradientStrip.style.setProperty("--preview-b", editorRecipe.colors[1]);
+      gradientStrip.style.setProperty("--preview-c", editorRecipe.colors[2]);
     }
     const brightnessOut = root.querySelector("#simBrightnessOut");
     const speedOut = root.querySelector("#simSpeedOut");
@@ -806,7 +826,7 @@
         const palette = root.querySelector("#simPaletteMode");
         if (palette) palette.value = effect.palette;
       }
-      if (["simEffectType", "simEffectSection", "simPaletteMode", "simDirection"].includes(target.id)) updateEditorVisibility();
+      if (["simEffectType", "simEffectSection", "simPaletteMode", "simDirection", "simGradientLength"].includes(target.id)) updateEditorVisibility();
     });
 
     root.addEventListener("input", (event) => {
@@ -816,6 +836,10 @@
 
   function preparePage() {
     document.body.classList.add("sim-area-mode", `sim-area-${simulator}`);
+    if (simulator === "bike") {
+      const tagline = document.querySelector("#page-subheader-text [aria-current='page']");
+      if (tagline) tagline.textContent = "LED Bike Sim";
+    }
     root = document.createElement("div");
     root.id = "simAreaEffectsWorkbench";
     root.className = "sim-area-workbench";
@@ -855,9 +879,10 @@
     loadState();
     preparePage();
     areas.forEach((area) => {
-      if (!area.active) return;
       area.startedAt = performance.now();
-      applyAreaRecipe(area, area.program[0]);
+      if (area.active) applyAreaRecipe(area, area.program[0]);
+      else if (simulator === "home") clearHomeArea(area);
+      else clearDomArea(area);
     });
     window.setInterval(tick, 120);
     window.ShynetymeAreaEffects = {
