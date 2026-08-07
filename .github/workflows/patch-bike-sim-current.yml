@@ -31,7 +31,8 @@ jobs:
           grep -q 'Gradient length' js/sim-node-sequence.js
           grep -q 'Quarter of the LEDs' js/sim-node-sequence.js
           grep -q 'if (simulator === "bike") return;' js/sim-node-sequence.js
-          grep -q 'min-height: 82px' css/sim-node-sequence.css
+          grep -q 'width: 118px' css/sim-node-sequence.css
+          grep -q 'sim-gradient-strip' css/sim-node-sequence-base.css
           ! grep -q 'sim-effect-preview' js/sim-node-sequence.js
           git diff --check
 
