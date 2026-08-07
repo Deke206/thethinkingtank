@@ -7,19 +7,16 @@ html = Path('build-my-bike.html')
 
 s = js.read_text(encoding='utf-8')
 
-s, count = re.subn(
-    r'\n    if \(effect\.id === "rainbow"\) \{\n      return \{.*?\n      \};\n    \}\n',
-    '\n', s, count=1, flags=re.S,
-)
-assert count == 1, 'Rainbow normalize override not found'
+# Selected primary/secondary/third colors stay authoritative for Rainbow.
+needle = '    if (recipe.effect === "rainbow") return [RAINBOW_COLORS[0], RAINBOW_COLORS[3], RAINBOW_COLORS[6]];\n'
+assert needle in s
+s = s.replace(needle, '', 1)
 
-s, count = re.subn(
-    r'    const rainbowPalette = recipe\.effect === "rainbow" \? \[\.\.\.RAINBOW_COLORS\] : null;\n    const colors = rainbowPalette \|\| normalizedColors\(recipe\);\n    const gradientUrl = buildSvgGradient\(area, recipe, rainbowPalette\);',
-    '    const colors = normalizedColors(recipe);\n    const gradientUrl = buildSvgGradient(area, recipe, colors);',
-    s, count=1,
-)
-assert count == 1, 'Rainbow apply override not found'
+old_stops = '''    const stops = recipe.effect === "rainbow"\n      ? RAINBOW_COLORS.map((color, index) => [index / (RAINBOW_COLORS.length - 1), color])\n      : [[0, colors[0]], [0.5, colors[1]], [1, colors[2]]];'''
+assert old_stops in s
+s = s.replace(old_stops, '    const stops = [[0, colors[0]], [0.5, colors[1]], [1, colors[2]]];', 1)
 
+# Rainbow uses the normal three-color gradient editor plus gradient length, speed, and direction.
 s = s.replace('<label class="sim-field" id="simPaletteModeWrap"${editorRecipe.effect === "rainbow" ? " hidden" : ""}>Color use', '<label class="sim-field" id="simPaletteModeWrap">Color use', 1)
 s = s.replace('<label class="sim-field sim-color-field" id="simColor1Wrap"${editorRecipe.effect === "rainbow" ? " hidden" : ""}>Primary', '<label class="sim-field sim-color-field" id="simColor1Wrap">Primary', 1)
 s = s.replace('${editorRecipe.paletteMode === "single" || editorRecipe.effect === "rainbow" ? " hidden" : ""}>Foreground / second', '${editorRecipe.paletteMode === "single" ? " hidden" : ""}>Foreground / second', 1)
@@ -27,13 +24,11 @@ s = s.replace('${editorRecipe.paletteMode !== "gradient" || editorRecipe.effect 
 s = s.replace('id="simSpeedWrap"${effect.speed && effect.id !== "rainbow" ? "" : " hidden"}', 'id="simSpeedWrap"${effect.speed ? "" : " hidden"}', 1)
 s = s.replace('id="simDirectionWrap"${effect.directional && effect.id !== "rainbow" ? "" : " hidden"}', 'id="simDirectionWrap"${effect.directional ? "" : " hidden"}', 1)
 
-s, count = re.subn(
-    r'    const isRainbow = effect\.id === "rainbow";\n    if \(isRainbow\) \{.*?\n    if \(color3Wrap\) color3Wrap\.hidden = editorRecipe\.paletteMode !== "gradient" \|\| isRainbow;',
-    '''    if (speedWrap) speedWrap.hidden = !effect.speed;\n    if (directionWrap) directionWrap.hidden = !effect.directional;\n    if (paletteWrap) paletteWrap.hidden = false;\n    if (gradientLengthWrap) gradientLengthWrap.hidden = editorRecipe.paletteMode !== "gradient";\n    if (color1Wrap) color1Wrap.hidden = false;\n    if (color2Wrap) color2Wrap.hidden = editorRecipe.paletteMode === "single";\n    if (color3Wrap) color3Wrap.hidden = editorRecipe.paletteMode !== "gradient";''',
-    s, count=1, flags=re.S,
-)
-assert count == 1, 'Rainbow editor visibility block not found'
+old_visibility = '''    const isRainbow = effect.id === "rainbow";\n    if (isRainbow) {\n      editorRecipe.paletteMode = "gradient";\n      editorRecipe.colors = [RAINBOW_COLORS[0], RAINBOW_COLORS[3], RAINBOW_COLORS[6]];\n    }\n    if (speedWrap) speedWrap.hidden = !effect.speed || isRainbow;\n    if (directionWrap) directionWrap.hidden = !effect.directional || isRainbow;\n    if (paletteWrap) paletteWrap.hidden = isRainbow;\n    if (gradientLengthWrap) gradientLengthWrap.hidden = editorRecipe.paletteMode !== "gradient";\n    if (color1Wrap) color1Wrap.hidden = isRainbow;\n    if (color2Wrap) color2Wrap.hidden = editorRecipe.paletteMode === "single" || isRainbow;\n    if (color3Wrap) color3Wrap.hidden = editorRecipe.paletteMode !== "gradient" || isRainbow;'''
+assert old_visibility in s
+s = s.replace(old_visibility, '''    if (speedWrap) speedWrap.hidden = !effect.speed;\n    if (directionWrap) directionWrap.hidden = !effect.directional;\n    if (paletteWrap) paletteWrap.hidden = false;\n    if (gradientLengthWrap) gradientLengthWrap.hidden = editorRecipe.paletteMode !== "gradient";\n    if (color1Wrap) color1Wrap.hidden = false;\n    if (color2Wrap) color2Wrap.hidden = editorRecipe.paletteMode === "single";\n    if (color3Wrap) color3Wrap.hidden = editorRecipe.paletteMode !== "gradient";''', 1)
 
+# Bike opens with every LED area off; saved presets remain available from the separate shared preset key.
 load_marker = '''      const stored = JSON.parse(localStorage.getItem(ASSIGNMENT_KEY));\n      if (stored?.version !== 2 || stored.simulator !== simulator) return;'''
 assert load_marker in s
 s = s.replace(load_marker, load_marker + '\n      if (simulator === "bike") return;', 1)
