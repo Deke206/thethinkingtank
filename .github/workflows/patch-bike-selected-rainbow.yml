@@ -29,7 +29,9 @@ jobs:
           grep -q 'buildSvgGradient(area, recipe, colors)' js/sim-node-sequence.js
           grep -q 'if (simulator === "bike") return;' js/sim-node-sequence.js
           grep -q 'width: 102px' css/sim-node-sequence.css
+          grep -q 'width: 90px; height: 70px' css/sim-node-sequence.css
           ! grep -q 'colors: \[...RAINBOW_COLORS\]' js/sim-node-sequence.js
+          ! grep -q 'id="simColor1Wrap".*rainbow' js/sim-node-sequence.js
           git diff --check
       - name: Commit validated fix
         shell: bash
