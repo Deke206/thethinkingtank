@@ -1,5 +1,5 @@
 name: Add Base Rainbow effect
-# retry after matching current editor visibility logic
+# retry against the current shared SVG gradient renderer
 on:
   push:
     branches: [agent/base-rainbow-effect]
