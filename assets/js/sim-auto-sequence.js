@@ -363,7 +363,7 @@
       const payload = { version: 1, simulator: "auto", vehicle: "Four-door sedan", selectedZones, sequenceSteps: steps };
       sessionStorage.setItem("shynetymeSimAutoSelections", JSON.stringify(payload));
       localStorage.setItem("shynetymeContactDraft", JSON.stringify({ source: "auto-sim", projectType: "Automobile LED installation", message: selectedZones.map((zone) => `${zone.label}: ${zone.effectLabel}`).join("\n") }));
-      location.href = "../contact.html?source=sim-auto#contact-request";
+      location.href = "contact.html?source=sim-auto#contact-request";
     };
   }
   // END OBJECT: Summary and contact handoff.
