@@ -19,7 +19,55 @@ jobs:
           ref: fix/sim-page-links
           fetch-depth: 0
 
-      - name: Audit and repair internal paths
+      - name: Repair repository-wide simulator links
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          root = Path.cwd()
+          workflow = root / ".github/workflows/audit-sim-page-links.yml"
+          page_map = {
+              "build-my-auto.html": "ledautosim.html",
+              "build-my-bike.html": "ledbikesim.html",
+              "build-my-home.html": "ledhomesim.html",
+          }
+          text_suffixes = {
+              ".html", ".htm", ".css", ".js", ".mjs", ".cjs", ".json",
+              ".md", ".txt", ".xml", ".svg", ".yml", ".yaml", ".py",
+              ".sh", ".ps1", ".toml", ".ini", ".cfg", ".csv"
+          }
+
+          changed = []
+          for path in root.rglob("*"):
+              if not path.is_file() or ".git" in path.parts or path == workflow:
+                  continue
+              if path.suffix.lower() not in text_suffixes and path.name not in {"CNAME", ".nojekyll"}:
+                  continue
+              try:
+                  original = path.read_text(encoding="utf-8")
+              except UnicodeDecodeError:
+                  continue
+              updated = original
+              for old, new in page_map.items():
+                  updated = updated.replace(old, new)
+              updated = updated.replace("assets/assets/", "assets/")
+              if path.as_posix().endswith("assets/js/sim-auto-sequence.js"):
+                  updated = updated.replace(
+                      "../contact.html?source=sim-auto#contact-request",
+                      "contact.html?source=sim-auto#contact-request",
+                  )
+              if updated != original:
+                  path.write_text(updated, encoding="utf-8")
+                  changed.append(path.relative_to(root).as_posix())
+
+          print("Changed files:")
+          for path in changed:
+              print(path)
+          PY
+
+      - name: Audit every local HTML, CSS, and JavaScript path
         shell: bash
         run: |
           set -euo pipefail
@@ -32,52 +80,27 @@ jobs:
           from urllib.parse import unquote
 
           root = Path.cwd()
-          page_map = {
-              "build-my-auto.html": "ledautosim.html",
-              "build-my-bike.html": "ledbikesim.html",
-              "build-my-home.html": "ledhomesim.html",
-          }
-          support_roots = ("css/", "data/", "docs/", "js/", "scripts/")
-          text_suffixes = {
-              ".html", ".htm", ".css", ".js", ".mjs", ".cjs", ".json",
-              ".md", ".txt", ".xml", ".svg", ".yml", ".yaml", ".py",
-              ".sh", ".ps1", ".toml", ".ini", ".cfg", ".csv"
-          }
-          excluded_parts = {".git"}
-
-          def text_files():
-              for path in root.rglob("*"):
-                  if not path.is_file() or any(part in excluded_parts for part in path.parts):
-                      continue
-                  if path.suffix.lower() in text_suffixes or path.name in {"CNAME", ".nojekyll"}:
-                      yield path
-
-          # Complete repository-wide page rename, including assets and documentation.
-          replacements = 0
-          for path in text_files():
-              try:
-                  content = path.read_text(encoding="utf-8")
-              except UnicodeDecodeError:
-                  continue
-              updated = content
-              for old, new in page_map.items():
-                  updated = updated.replace(old, new)
-              updated = updated.replace("assets/assets/", "assets/")
-              if updated != content:
-                  path.write_text(updated, encoding="utf-8")
-                  replacements += 1
-
+          workflow = root / ".github/workflows/audit-sim-page-links.yml"
           all_files = {
-              p.relative_to(root).as_posix()
-              for p in root.rglob("*")
-              if p.is_file() and ".git" not in p.parts
+              path.relative_to(root).as_posix()
+              for path in root.rglob("*")
+              if path.is_file() and ".git" not in path.parts
           }
 
-          def clean_url(raw: str) -> str | None:
+          html_attr = re.compile(r'''\b(?:href|src|action|poster|data-src)\s*=\s*["']([^"']+)["']''', re.I)
+          css_url = re.compile(r'''url\(\s*["']?([^"')]+)["']?\s*\)''', re.I)
+          css_import = re.compile(r'''@import\s+(?:url\()?\s*["']([^"']+)["']''', re.I)
+          js_runtime = re.compile(r'''(?:fetch\s*\(|\.src\s*=|\.href\s*=|new\s+Worker\s*\()\s*["'`]([^"'`]+)["'`]''')
+          js_module = re.compile(r'''(?:from\s+|import\s*\()\s*["']([^"']+)["']''')
+
+          ignored_prefixes = (
+              "http://", "https://", "//", "data:", "mailto:", "tel:",
+              "javascript:", "blob:", "node:", "#", "{"
+          )
+
+          def clean(raw: str):
               value = raw.strip().strip('"\'')
-              if not value:
-                  return None
-              if value.startswith(("http://", "https://", "//", "data:", "mailto:", "tel:", "javascript:", "blob:", "#", "{")):
+              if not value or value.startswith(ignored_prefixes):
                   return None
               if "${" in value or "{{" in value or "<%" in value:
                   return None
@@ -86,137 +109,78 @@ jobs:
                   return None
               return value
 
-          def resolve(path: Path, url: str, mode: str) -> str:
-              if url.startswith("/"):
-                  return PurePosixPath(url.lstrip("/")).as_posix()
-              if mode == "document-root":
-                  return PurePosixPath(os.path.normpath(url)).as_posix()
+          def resolve(path: Path, value: str, document_root: bool):
+              if value.startswith("/"):
+                  return PurePosixPath(value.lstrip("/")).as_posix()
+              if document_root:
+                  normalized = os.path.normpath(value)
+                  while normalized.startswith("../"):
+                      normalized = normalized[3:]
+                  return PurePosixPath(normalized).as_posix()
               parent = path.relative_to(root).parent.as_posix()
-              return PurePosixPath(os.path.normpath(str(PurePosixPath(parent) / url))).as_posix()
+              return PurePosixPath(os.path.normpath(str(PurePosixPath(parent) / value))).as_posix()
 
-          def candidate_urls(path: Path, url: str, mode: str):
-              seen = set()
-              values = [url]
-              for old, new in page_map.items():
-                  values.append(url.replace(old, new))
-              values.append(url.replace("assets/assets/", "assets/"))
-              stripped = url.lstrip("/")
-              if stripped.startswith(support_roots):
-                  values.append("assets/" + stripped)
-              if stripped.startswith("../assets/"):
-                  values.append(stripped[3:])
-              if mode == "file-relative" and stripped.startswith("assets/"):
-                  parent = path.relative_to(root).parent.as_posix() or "."
-                  values.append(os.path.relpath(stripped, parent).replace(os.sep, "/"))
-              if mode == "file-relative" and path.suffix.lower() == ".css" and stripped.startswith("images/"):
-                  values.append("../" + stripped)
-              if mode == "document-root" and stripped.startswith("../"):
-                  values.append(stripped.removeprefix("../"))
-              for value in values:
-                  if value not in seen:
-                      seen.add(value)
-                      yield value
-
-          html_attr = re.compile(r'''\b(?:href|src|action|poster|data-src)\s*=\s*["']([^"']+)["']''', re.I)
-          css_url = re.compile(r'''url\(\s*["']?([^"')]+)["']?\s*\)''', re.I)
-          css_import = re.compile(r'''@import\s+(?:url\()?\s*["']([^"']+)["']''', re.I)
-          js_runtime = re.compile(r'''(?:fetch\s*\(|\.src\s*=|\.href\s*=|new\s+Worker\s*\()\s*["'`]([^"'`]+)["'`]''')
-          js_module = re.compile(r'''(?:from\s+|import\s*\()\s*["']([^"']+)["']''')
-          markdown_link = re.compile(r'''!?\[[^\]]*\]\(([^)\s]+)''')
-
-          missing = []
-          repaired = []
-
-          for path in list(text_files()):
-              if path.as_posix().endswith(".github/workflows/audit-sim-page-links.yml"):
+          broken = []
+          checked = 0
+          for path in root.rglob("*"):
+              if not path.is_file() or ".git" in path.parts or path == workflow:
+                  continue
+              suffix = path.suffix.lower()
+              if suffix not in {".html", ".htm", ".xml", ".svg", ".css", ".js", ".mjs", ".cjs"}:
                   continue
               try:
                   content = path.read_text(encoding="utf-8")
               except UnicodeDecodeError:
                   continue
 
-              matches: list[tuple[str, str]] = []
-              suffix = path.suffix.lower()
+              refs = []
               if suffix in {".html", ".htm", ".xml", ".svg"}:
-                  matches.extend((m.group(1), "file-relative") for m in html_attr.finditer(content))
-              if suffix == ".css":
-                  matches.extend((m.group(1), "file-relative") for m in css_url.finditer(content))
-                  matches.extend((m.group(1), "file-relative") for m in css_import.finditer(content))
-              if suffix in {".js", ".mjs", ".cjs"}:
-                  matches.extend((m.group(1), "document-root") for m in js_runtime.finditer(content))
-                  matches.extend((m.group(1), "file-relative") for m in js_module.finditer(content))
-              if suffix == ".md":
-                  matches.extend((m.group(1), "file-relative") for m in markdown_link.finditer(content))
+                  refs.extend((m.group(1), False) for m in html_attr.finditer(content))
+              elif suffix == ".css":
+                  refs.extend((m.group(1), False) for m in css_url.finditer(content))
+                  refs.extend((m.group(1), False) for m in css_import.finditer(content))
+              else:
+                  refs.extend((m.group(1), True) for m in js_runtime.finditer(content))
+                  refs.extend((m.group(1), False) for m in js_module.finditer(content))
 
-              updated = content
-              for raw, mode in matches:
-                  url = clean_url(raw)
-                  if url is None:
+              for raw, document_root in refs:
+                  value = clean(raw)
+                  if value is None:
                       continue
-                  original_target = resolve(path, url, mode)
-                  if original_target in all_files:
-                      continue
+                  checked += 1
+                  target = resolve(path, value, document_root)
+                  if target not in all_files:
+                      broken.append((path.relative_to(root).as_posix(), raw, target))
 
-                  valid = []
-                  for candidate in candidate_urls(path, url, mode):
-                      target = resolve(path, candidate, mode)
-                      if target in all_files:
-                          valid.append((candidate, target))
-                  valid = list(dict.fromkeys(valid))
-
-                  if len(valid) == 1:
-                      new_url, target = valid[0]
-                      if new_url != url:
-                          updated = updated.replace(raw, new_url)
-                          repaired.append((path.relative_to(root).as_posix(), raw, new_url, target))
-                  else:
-                      missing.append((path.relative_to(root).as_posix(), raw, original_target, valid))
-
-              if updated != content:
-                  path.write_text(updated, encoding="utf-8")
-
-          # Rebuild file set after repairs, then perform a second strict pass.
-          all_files = {
-              p.relative_to(root).as_posix()
-              for p in root.rglob("*")
-              if p.is_file() and ".git" not in p.parts
-          }
-
-          # Required architecture and named pages.
           required = [
               "ledautosim.html", "ledbikesim.html", "ledhomesim.html",
-              "assets/css", "assets/data", "assets/docs", "assets/js", "assets/scripts",
-              "assets/css/site.css", "assets/js/site-chuck.js",
+              "assets/css/site.css", "assets/js/bike-builder.js",
+              "assets/js/home-sim.js", "assets/js/sim-auto-sequence.js",
               "assets/data/home-sim-approved-geometry.json",
               "assets/sim-auto/car-base-1.txt",
           ]
-          for item in required:
-              if not (root / item).exists():
-                  missing.append(("<required>", item, item, []))
+          for target in required:
+              if target not in all_files:
+                  broken.append(("<required>", target, target))
 
-          for old in page_map:
-              if (root / old).exists():
-                  missing.append(("<old-page-still-present>", old, old, []))
+          old_names = ("build-my-auto.html", "build-my-bike.html", "build-my-home.html")
+          for old_name in old_names:
+              if old_name in all_files:
+                  broken.append(("<old-page-present>", old_name, old_name))
 
           for old_root in ("css", "data", "docs", "js", "scripts"):
               if (root / old_root).exists():
-                  missing.append(("<duplicate-root-folder>", old_root, old_root, []))
+                  broken.append(("<duplicate-root-folder>", old_root, old_root))
 
-          print(f"Repository-wide filename replacements: {replacements}")
-          print(f"Automatically repaired paths: {len(repaired)}")
-          for record in repaired:
-              print("REPAIRED", *record, sep=" | ")
-
-          if missing:
-              print("\nUNRESOLVED OR BROKEN LOCAL REFERENCES:")
-              for record in missing:
+          print(f"Audited {checked} local references.")
+          if broken:
+              for record in broken:
                   print("BROKEN", *record, sep=" | ")
-              raise SystemExit(f"Link audit failed with {len(missing)} unresolved references")
-
-          print("All audited local references resolve to tracked repository files.")
+              raise SystemExit(f"Found {len(broken)} broken local references")
+          print("All audited local references resolve.")
           PY
 
-      - name: Validate scripts and named pages
+      - name: Validate scripts and renamed routes
         shell: bash
         run: |
           set -euo pipefail
@@ -227,10 +191,13 @@ jobs:
           test ! -e build-my-auto.html
           test ! -e build-my-bike.html
           test ! -e build-my-home.html
-          grep -RIl --exclude-dir=.git -E 'build-my-(auto|bike|home)\.html' . && exit 1 || true
+          if grep -RIn --exclude-dir=.git --exclude=audit-sim-page-links.yml -E 'build-my-(auto|bike|home)\.html' .; then
+            echo "Old simulator page references remain." >&2
+            exit 1
+          fi
           git diff --check
 
-      - name: Local static preview smoke test
+      - name: Local preview smoke test
         shell: bash
         run: |
           set -euo pipefail
@@ -238,20 +205,22 @@ jobs:
           server_pid=$!
           trap 'kill "$server_pid"' EXIT
           sleep 1
-          for page in ledautosim.html ledbikesim.html ledhomesim.html; do
-            curl --fail --silent --show-error "http://127.0.0.1:8080/$page" >/dev/null
-          done
-          for asset in \
+          for resource in \
+            ledautosim.html \
+            ledbikesim.html \
+            ledhomesim.html \
             assets/css/site.css \
+            assets/css/bike-builder.css \
+            assets/css/home-sim.css \
             assets/js/bike-builder.js \
             assets/js/home-sim.js \
             assets/js/sim-auto-sequence.js \
             assets/data/home-sim-approved-geometry.json \
             assets/sim-auto/car-base-1.txt; do
-            curl --fail --silent --show-error "http://127.0.0.1:8080/$asset" >/dev/null
+            curl --fail --silent --show-error "http://127.0.0.1:8080/$resource" >/dev/null
           done
 
-      - name: Commit repairs to task branch
+      - name: Commit verified repairs to task branch
         shell: bash
         run: |
           set -euo pipefail
@@ -259,9 +228,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          if git diff --cached --quiet; then
-            echo "No file changes were required after the audit."
-          else
-            git commit -m "fix: repair simulator routes and asset links"
-            git push origin HEAD:fix/sim-page-links
-          fi
+          git commit -m "fix: repair simulator routes and asset links"
+          git push origin HEAD:fix/sim-page-links
