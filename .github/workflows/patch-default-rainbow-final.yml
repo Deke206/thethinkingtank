@@ -1,4 +1,5 @@
 name: Patch final default rainbow
+# validation retry after current Base rainbow editor inspection
 
 on:
   push:
