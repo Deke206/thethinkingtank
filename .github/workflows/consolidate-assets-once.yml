@@ -62,7 +62,9 @@ jobs:
               path.write_text(attr.sub(f,text),encoding='utf-8')
           cssurl=re.compile(r'url\((?P<q>["\']?)(?P<u>[^)"\']+)(?P=q)\)',re.I)
           for path in (root/'assets/css').rglob('*.css'):
-              text=path.read_text(encoding='utf-8'); base=old_file(path).parent
+              try: text=path.read_text(encoding='utf-8')
+              except UnicodeDecodeError: continue
+              base=old_file(path).parent
               def f(m):
                   v=m.group('u').strip()
                   if re.match(r'^(?:https?:|data:|#)',v,re.I):return m.group(0)
