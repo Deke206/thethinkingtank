@@ -1,0 +1,35 @@
+name: Audit live ShyneTyme site now
+
+on:
+  push:
+    branches:
+      - audit/live-site-now
+    paths:
+      - .github/workflows/audit-live-site-now.yml
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: DNS and HTTP evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '=== DNS ==='
+          echo 'A:'; dig +short A shynetyme.works || true
+          echo 'AAAA:'; dig +short AAAA shynetyme.works || true
+          echo 'NS:'; dig +short NS shynetyme.works || true
+          echo 'www CNAME:'; dig +short CNAME www.shynetyme.works || true
+          echo
+          for path in / /ledbikesim.html /ledautosim.html /ledhomesim.html /assets/ledbikesim.html /assets/ledautosim.html /assets/ledhomesim.html /assets/js/site-chuck.js /assets/js/site-guide.js; do
+            echo "=== $path ==="
+            curl -sS -L -D /tmp/headers -o /tmp/body -w 'HTTP=%{http_code} FINAL=%{url_effective} IP=%{remote_ip}\n' "https://shynetyme.works${path}?audit=$(date +%s%N)" || true
+            sed -n '1,20p' /tmp/headers
+            printf 'BODY_HEAD='; head -c 180 /tmp/body | tr '\n' ' '; echo
+          done
+          echo '=== Deployed nav-root evidence ==='
+          curl -fsSL "https://shynetyme.works/assets/js/site-chuck.js?audit=$(date +%s%N)" | grep -n 'siteRoot = new URL' | head
+          curl -fsSL "https://shynetyme.works/assets/js/site-guide.js?audit=$(date +%s%N)" | grep -n 'siteRoot = new URL' | head
