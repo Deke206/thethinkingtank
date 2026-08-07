@@ -26,11 +26,11 @@ jobs:
           set -euo pipefail
           node --check js/sim-node-sequence.js
           grep -q 'LED Bike Sim' build-my-bike.html
-          grep -q 'buildSvgGradient(area, recipe, colors)' js/sim-node-sequence.js
+          grep -Fq 'const stops = [[0, colors[0]], [0.5, colors[1]], [1, colors[2]]];' js/sim-node-sequence.js
           grep -q 'if (simulator === "bike") return;' js/sim-node-sequence.js
           grep -q 'width: 102px' css/sim-node-sequence.css
           grep -q 'width: 90px; height: 70px' css/sim-node-sequence.css
-          ! grep -q 'colors: \[...RAINBOW_COLORS\]' js/sim-node-sequence.js
+          ! grep -Fq 'if (recipe.effect === "rainbow") return' js/sim-node-sequence.js
           ! grep -q 'id="simColor1Wrap".*rainbow' js/sim-node-sequence.js
           git diff --check
       - name: Commit validated fix
