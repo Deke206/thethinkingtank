@@ -1,0 +1,34 @@
+name: Add Base Rainbow effect
+on:
+  push:
+    branches: [agent/base-rainbow-effect]
+    paths: [.github/workflows/add-base-rainbow.yml]
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/base-rainbow-effect
+          fetch-depth: 0
+      - run: python scripts/add-base-rainbow.py
+      - name: Validate
+        run: |
+          set -euo pipefail
+          node --check js/sim-node-sequence.js
+          grep -q 'id: "base-rainbow"' js/sim-node-sequence.js
+          grep -q 'label: "Base rainbow"' js/sim-node-sequence.js
+          grep -q 'RAINBOW_COLORS.map' js/sim-node-sequence.js
+          grep -q 'const isBaseRainbow' js/sim-node-sequence.js
+          git diff --check
+      - name: Commit
+        run: |
+          set -euo pipefail
+          rm -f scripts/add-base-rainbow.py .github/workflows/add-base-rainbow.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Add original Base Rainbow effect"
+          git push origin HEAD:agent/base-rainbow-effect
