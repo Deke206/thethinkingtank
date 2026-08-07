@@ -552,7 +552,7 @@
 [data-sim-area-active="true"][data-sim-effect="twinkle"],
 [data-sim-area-active="true"][data-sim-effect="sparkle"],
 [data-sim-area-active="true"][data-sim-effect="stars"] { animation-name: sim-area-twinkle !important; }
-[data-sim-area-active="true"][data-sim-effect="rainbow"],
+[data-sim-area-active="true"][data-sim-effect="rainbow"] { animation-name: sim-area-rainbow !important; stroke-dasharray: none !important; }
 [data-sim-area-active="true"][data-sim-effect="sections"],
 [data-sim-area-active="true"][data-sim-effect="theater"] { animation-name: sim-area-palette !important; stroke-dasharray: 12 8 !important; }
 [data-sim-area-active="true"][data-sim-effect="scanner"] { animation-name: sim-area-scanner !important; stroke-dasharray: 28 72 !important; }
@@ -563,11 +563,8 @@
 [data-sim-area-active="true"][data-sim-section="middle-third"] { stroke-dasharray: 33 67 !important; stroke-dashoffset: -33 !important; }
 [data-sim-area-active="true"][data-sim-section="last-third"] { stroke-dasharray: 33 67 !important; stroke-dashoffset: -66 !important; }
 
-[data-sim-area-active="true"][data-sim-gradient-length="quarter"][data-sim-effect="rainbow"] { stroke-dasharray: 4 3 !important; }
-[data-sim-area-active="true"][data-sim-gradient-length="half"][data-sim-effect="rainbow"] { stroke-dasharray: 8 5 !important; }
-[data-sim-area-active="true"][data-sim-gradient-length="three-quarter"][data-sim-effect="rainbow"] { stroke-dasharray: 12 7 !important; }
-[data-sim-area-active="true"][data-sim-gradient-length="whole"][data-sim-effect="rainbow"] { stroke-dasharray: 18 10 !important; }
 
+@keyframes sim-area-rainbow { from, to { opacity: var(--sim-brightness, .95); } }
 @keyframes sim-area-solid { from, to { opacity: var(--sim-brightness, .95); } }
 @keyframes sim-area-breathe { 0%, 100% { opacity: calc(var(--sim-brightness, 1) * .28); stroke: var(--sim-a) !important; } 50% { opacity: var(--sim-brightness, 1); stroke: var(--sim-b) !important; } }
 @keyframes sim-area-flash { 0%, 48% { opacity: var(--sim-brightness, 1); } 49%, 100% { opacity: .08; } }

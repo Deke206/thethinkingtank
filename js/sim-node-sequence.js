@@ -265,6 +265,59 @@
     return (area.targets || []).flatMap((selector) => [...document.querySelectorAll(selector)]);
   }
 
+  function applyBikeRainbowGradient(area, recipe, element) {
+    if (simulator !== "bike" || recipe.effect !== "rainbow" || recipe.paletteMode !== "gradient") {
+      element.style.removeProperty("stroke");
+      return;
+    }
+
+    const svg = element.ownerSVGElement || element.closest?.("svg");
+    if (!svg) return;
+    const namespace = "http://www.w3.org/2000/svg";
+    let defs = svg.querySelector("defs");
+    if (!defs) {
+      defs = document.createElementNS(namespace, "defs");
+      svg.prepend(defs);
+    }
+
+    const gradientId = `sim-rainbow-${area.id.replace(/[^a-z0-9_-]/gi, "-")}`;
+    let gradient = defs.querySelector(`#${gradientId}`);
+    if (!gradient) {
+      gradient = document.createElementNS(namespace, "linearGradient");
+      gradient.id = gradientId;
+      defs.appendChild(gradient);
+    }
+
+    const spans = { quarter: .25, half: .5, "three-quarter": .75, whole: 1 };
+    const span = spans[recipe.gradientLength] || 1;
+    gradient.setAttribute("x1", "0");
+    gradient.setAttribute("y1", "0");
+    gradient.setAttribute("x2", String(span));
+    gradient.setAttribute("y2", "0");
+    gradient.setAttribute("spreadMethod", "repeat");
+    gradient.replaceChildren();
+
+    const colors = normalizedColors(recipe);
+    [["0%", colors[0]], ["50%", colors[1]], ["100%", colors[2]]].forEach(([offset, color]) => {
+      const stop = document.createElementNS(namespace, "stop");
+      stop.setAttribute("offset", offset);
+      stop.setAttribute("stop-color", color);
+      gradient.appendChild(stop);
+    });
+
+    const animate = document.createElementNS(namespace, "animateTransform");
+    const seconds = Math.max(.3, 3.7 - ((recipe.speed / 100) * 3.3)).toFixed(2);
+    animate.setAttribute("attributeName", "gradientTransform");
+    animate.setAttribute("type", "translate");
+    animate.setAttribute("from", "0 0");
+    animate.setAttribute("to", recipe.direction < 0 ? "-1 0" : "1 0");
+    animate.setAttribute("dur", `${seconds}s`);
+    animate.setAttribute("repeatCount", "indefinite");
+    gradient.appendChild(animate);
+
+    element.style.setProperty("stroke", `url(#${gradientId})`, "important");
+  }
+
   function clearDomArea(area) {
     elementTargets(area).forEach((element) => {
       delete element.dataset.simAreaActive;
@@ -273,7 +326,7 @@
       delete element.dataset.simGradientLength;
       element.classList.remove("zone-on");
       element.classList.add("zone-off");
-      ["--sim-a", "--sim-b", "--sim-c", "--sim-brightness", "--sim-speed", "--sim-direction"].forEach((property) => element.style.removeProperty(property));
+      ["--sim-a", "--sim-b", "--sim-c", "--sim-brightness", "--sim-speed", "--sim-direction", "stroke"].forEach((property) => element.style.removeProperty(property));
     });
   }
 
@@ -293,6 +346,7 @@
       element.style.setProperty("--sim-brightness", String(recipe.brightness / 100));
       element.style.setProperty("--sim-speed", `${Math.max(0.3, 3.7 - ((recipe.speed / 100) * 3.3)).toFixed(2)}s`);
       element.style.setProperty("--sim-direction", recipe.direction < 0 ? "reverse" : "normal");
+      applyBikeRainbowGradient(area, recipe, element);
     });
   }
 
