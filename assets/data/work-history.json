@@ -1,8 +1,8 @@
 {
   "repository": "Deke206/thethinkingtank",
   "branch": "main",
-  "generatedAt": "2026-08-07T03:14:10.909Z",
-  "commitCount": 452,
+  "generatedAt": "2026-08-07T04:24:14.550Z",
+  "commitCount": 453,
   "commits": [
     {
       "sha": "28172bc6235ffeea85f23c90e7e6c5be2f5f1c44",
@@ -2263,6 +2263,11 @@
       "sha": "3799ab4a46e70ce7efa6e9b21204b9636fae74aa",
       "date": "2026-08-07T03:13:49Z",
       "message": "Create AGENTS.md with web development guidelines"
+    },
+    {
+      "sha": "8e3be1df0ec3c808cb9aade9f8b9ec8e33e113f0",
+      "date": "2026-08-07T04:23:54Z",
+      "message": "fix: repair simulator routes and asset links"
     }
   ]
 }
