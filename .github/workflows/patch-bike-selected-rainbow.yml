@@ -1,0 +1,43 @@
+name: Patch Bike selected-color rainbow
+
+on:
+  push:
+    branches:
+      - agent/bike-sim-selected-rainbow
+    paths:
+      - .github/workflows/patch-bike-selected-rainbow.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/bike-sim-selected-rainbow
+          fetch-depth: 0
+      - name: Apply selected-color rainbow corrections
+        run: python scripts/patch-bike-selected-rainbow.py
+      - name: Validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check js/sim-node-sequence.js
+          grep -q 'LED Bike Sim' build-my-bike.html
+          grep -q 'buildSvgGradient(area, recipe, colors)' js/sim-node-sequence.js
+          grep -q 'if (simulator === "bike") return;' js/sim-node-sequence.js
+          grep -q 'width: 102px' css/sim-node-sequence.css
+          ! grep -q 'colors: \[...RAINBOW_COLORS\]' js/sim-node-sequence.js
+          git diff --check
+      - name: Commit validated fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f scripts/patch-bike-selected-rainbow.py .github/workflows/patch-bike-selected-rainbow.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Use selected colors for Bike rainbow gradients"
+          git push origin HEAD:agent/bike-sim-selected-rainbow
