@@ -45,17 +45,31 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top" aria-label="Primary navigation">
     <div class="container">
-      <a class="navbar-brand fw-bold brand-lockup" href="index.html"><img src="assets/brand/favicon-32.png" width="34" height="34" alt=""> <span>ShyneTyme <em>Works</em></span></a>
+      <a class="navbar-brand fw-bold brand-lockup" href="index.html" aria-label="ShyneTyme.Works" title="ShyneTyme.Works"><img src="assets/brand/favicon-32.png" width="34" height="34" alt=""> <span>ShyneTyme.<em>Works</em></span></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navMenu">
         <div class="navbar-nav ms-auto">
-          <a class="nav-link" href="index.html#effects">Effects</a>
-          <a class="nav-link active" aria-current="page" href="ledbikesim.html">Build</a>
-          <a class="nav-link" href="led-catalog.html">LED Catalog</a>
-          <a class="nav-link" href="contact.html">Request Install</a>
-        </div>
+      <div class="nav-item dropdown shynetyme-build-menu" data-shynetyme-build-menu="true">
+        <button class="nav-link dropdown-toggle active" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open LED simulator menu">Sim</button>
+        <ul class="dropdown-menu dropdown-menu-dark" aria-label="LED simulator pages">
+          <li><a class="dropdown-item" href="https://shynetyme.works/ledbikesim.html">LED BIKE SIM</a></li>
+          <li><a class="dropdown-item active" aria-current="page" href="https://shynetyme.works/ledhomesim.html">LED HOME SIM</a></li>
+          <li><a class="dropdown-item" href="https://shynetyme.works/ledautosim.html">LED AUTO SIM</a></li>
+        </ul>
+      </div>
+      <a class="nav-link" href="https://shynetyme.works/led-catalog.html">Catalog</a>
+      <a class="nav-link" href="https://shynetyme.works/LEDexpo.html">LED EXPO</a>
+      <a class="nav-link" href="https://shynetyme.works/aboutme.html">About Deke</a>
+      <a class="nav-link" href="https://shynetyme.works/contact.html">Contact</a>
+      <div class="nav-item dropdown shynetyme-language-menu" data-shynetyme-language-menu="true">
+        <button class="nav-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Change language">Language</button>
+        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-label="Choose page language">
+          <li><a class="dropdown-item active" aria-current="page" href="https://shynetyme.works/ledhomesim.html" hreflang="en" lang="en">English</a></li>
+          <li><a class="dropdown-item" href="https://translate.google.com/translate?sl=auto&amp;tl=es&amp;u=https%3A%2F%2Fshynetyme.works%2Fledhomesim.html" hreflang="es" lang="es" rel="nofollow">Español</a></li>
+        </ul>
+      </div></div>
       </div>
     </div>
   </nav>
@@ -67,13 +81,13 @@
         </div>
     <div id="siteBannerCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-touch="true" aria-label="ShyneTyme Works project scenes">
       <div class="carousel-indicators">
-      <button type="button" data-bs-target="#siteBannerCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-      <button type="button" data-bs-target="#siteBannerCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-      <button type="button" data-bs-target="#siteBannerCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-      <button type="button" data-bs-target="#siteBannerCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+      <button type="button" data-bs-target="#siteBannerCarousel" data-bs-slide-to="0" class="" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#siteBannerCarousel" data-bs-slide-to="1" aria-label="Slide 2" class=""></button>
+      <button type="button" data-bs-target="#siteBannerCarousel" data-bs-slide-to="2" aria-label="Slide 3" class=""></button>
+      <button type="button" data-bs-target="#siteBannerCarousel" data-bs-slide-to="3" aria-label="Slide 4" class="active" aria-current="true"></button>
       </div>
       <div class="carousel-inner">
-      <div class="carousel-item active" data-bs-interval="6000">
+      <div class="carousel-item" data-bs-interval="6000">
         <img src="assets/images/hero-scene-work.webp" class="d-block w-100 site-banner-image" width="1600" height="900" alt="Deke working on a ShyneTyme project" fetchpriority="high">
         <div class="carousel-caption site-banner-caption">
           <span class="site-banner-callout site-banner-callout--cyan">CUSTOM LED BUILDS</span>
@@ -91,7 +105,7 @@
           <span class="site-banner-callout site-banner-callout--amber">LIGHT UP EVERYTHING</span>
         </div>
       </div>
-      <div class="carousel-item" data-bs-interval="6000">
+      <div class="carousel-item active" data-bs-interval="6000">
         <img src="assets/images/hero-scene-marina.webp" class="d-block w-100 site-banner-image" width="1600" height="900" alt="Marina lighting scene" loading="lazy">
         <div class="carousel-caption site-banner-caption">
           <span class="site-banner-callout site-banner-callout--violet">BUILT BY DEKE</span>
@@ -117,8 +131,9 @@
   </nav>
   </header>
 <main id="main-content">
-      <div align="center"><img src="assets/images/stupidaicouldnotdojackshitright.png"></div>
-  </main>
+        <div align="center"><img src="assets/images/stupidaicouldnotdojackshitright.png"></div>
+
+              </main>
 
 
 <!-- Scripts. -->
@@ -127,5 +142,19 @@
   <script src="assets/js/home-sim.js?v=20260805-production-home-v1"></script>
     <script src="assets/js/site-guide.js?v=shared-ui-17"></script>
   <!-- END OBJECT: Production scripts. -->
-</body>
+
+<div class="deke-chuck-widget" id="dekeChuckWidget" data-chuck-mounted="true">
+      <div class="deke-chuck-thought deke-chuck-thought--pink is-materializing is-visible" id="dekeChuckThought" role="status" aria-live="polite">
+        <button class="deke-chuck-thought__close" id="dekeChuckClose" type="button" aria-label="Close Chuck's message">×</button>
+        <p class="deke-chuck-thought__text" id="dekeChuckText">Need Shyne?
+Try the LED
+Bike Factory.</p>
+        <a class="deke-chuck-thought__action" id="dekeChuckAction" href="https://shynetyme.works/ledbikesim.html">LED
+Bike Sim</a>
+        <div class="deke-chuck-thought__choices" id="dekeChuckChoices" hidden=""></div>
+      </div>
+      <button class="deke-chuck-trigger" id="dekeChuckTrigger" type="button" aria-expanded="true" aria-controls="dekeChuckThought" aria-label="Tickle Chuck for another thought">
+        <span class="deke-chuck-search-light" aria-hidden="true"></span>
+        <img src="https://shynetyme.works/assets/brand/pet-chuck-mark.png" width="118" height="118" alt="Chuck, the ShyneTyme Works robot-cat helper" class="chuck-idle-image" style="display: block !important; animation: auto ease 0s 1 normal none running none !important; transform: none !important; opacity: 1 !important;"><span class="chuck-frame-sprite" aria-hidden="true" style="position: absolute; inset: 0px; display: block; width: 100%; height: 100%; opacity: 0; background-image: url(&quot;https://shynetyme.works/assets/brand/chuck-search-map.webp&quot;); background-repeat: no-repeat; background-size: 600% 100%; background-position: 0% center; filter: drop-shadow(rgba(49, 230, 255, 0.82) 0px 0px 9px); pointer-events: none; z-index: 1; transition: opacity 0.12s;"></span>
+      </button></div></body>
 </html>
